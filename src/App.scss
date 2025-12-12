@@ -27,6 +27,12 @@ body {
   flex-direction: column;
 }
 
+main {
+  //   background-color: blue;
+  display: flex;
+  flex: 1;
+}
+
 a {
   color: white;
   &:hover {
