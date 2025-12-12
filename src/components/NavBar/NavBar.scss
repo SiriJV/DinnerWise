@@ -1,0 +1,20 @@
+@use '../../styles/variables.scss' as var;
+
+.NavBar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: var.$mainred;
+  width: 500px;
+}
+
+.NavBar__menu {
+  display: flex;
+  justify-content: space-between;
+  min-width: 50%;
+}
