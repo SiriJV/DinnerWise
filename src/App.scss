@@ -1,0 +1,35 @@
+@use './styles/variables' as var;
+
+* {
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+html,
+body {
+  //   color: var.$darkbrown;
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  //   font-family: var.$font-mixone;
+  font-size: 1.1rem;
+  overflow-x: hidden;
+}
+
+body {
+  // min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: white;
+  &:hover {
+    color: lightgray;
+  }
+}
