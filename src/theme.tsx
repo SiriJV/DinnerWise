@@ -88,5 +88,9 @@ export const theme = createTheme({
     md: '0.8rem',
   },
 
-  fontFamily: "'Mixone', 'Georgia', 'Times New Roman', serif",
+  fontFamily: "'Open Sans', sans-serif",
+
+  headings: {
+    fontFamily: "'Open Sans', sans-serif",
+  },
 });
