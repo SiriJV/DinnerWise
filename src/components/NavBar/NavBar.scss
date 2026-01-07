@@ -1,20 +1,55 @@
-@use '../../styles/variables.scss' as var;
-
-.NavBar {
-  position: sticky;
-  top: 0;
+/* ===== Overlay bakom navbar ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
   z-index: 100;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1rem;
-  background-color: var.$primaryred;
-  width: 100vw;
 }
 
-.NavBar__menu {
+/* ===== Navbar ovanpå main ===== */
+.navbar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 300px;
+  height: calc(100vh - 60px);
+  background: white;
+  z-index: 200;
+  border-right: 1px solid red;
+}
+
+/* ===== Scrollbart innehåll ===== */
+.navWrapper {
   display: flex;
-  justify-content: space-between;
-  min-width: 50%;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 20px;
+  overflow-y: auto;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  h2 {
+    padding-left: var(--mantine-spacing-md);
+  }
+}
+
+/* ===== Länkar ===== */
+.navLinks {
+  border-bottom: 1px solid red;
+
+  .control {
+    display: block;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+    border-radius: var(--mantine-radius-md);
+    font-weight: 500;
+
+    &:last-child {
+      margin-bottom: var(--mantine-spacing-lg);
+    }
+  }
 }
