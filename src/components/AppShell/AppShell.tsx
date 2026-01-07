@@ -4,9 +4,10 @@ import Header from '../Header/Header';
 import './AppShell.scss';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
+import Footer from '../Footer/Footer';
 
 export default function AppShell() {
-// { children }: { children: React.ReactNode }
+  // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
 
   return (
@@ -22,7 +23,9 @@ export default function AppShell() {
         <MantineAppShell.Main>
           <Outlet />
         </MantineAppShell.Main>
-        <MantineAppShell.Footer>Footer</MantineAppShell.Footer>
+        <MantineAppShell.Footer>
+          <Footer />
+        </MantineAppShell.Footer>
       </MantineAppShell>
 
       <NavBar opened={opened} onClose={close} />
