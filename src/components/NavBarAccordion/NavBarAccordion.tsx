@@ -1,5 +1,5 @@
 import { Accordion, type AccordionControlProps, Center } from '@mantine/core';
-import './Accordion.css';
+import './NavBarAccordion.scss';
 
 function AccordionControl(props: AccordionControlProps) {
   return <Accordion.Control {...props} />;
