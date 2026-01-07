@@ -55,14 +55,18 @@
     }
 
     &.navLink {
-      color: var.$gray7;
+      color: black;
       &:hover {
-        color: var.$gray4;
+        color: var.$gray5;
       }
     }
 
     &.active {
-      color: black;
+      background-color: var.$gray3;
+      &:hover {
+        background-color: var.$gray2;
+        color: black;
+      }
     }
   }
 }
