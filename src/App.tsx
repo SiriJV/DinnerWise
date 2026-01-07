@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
+import { navLinks, accordionItems } from './data/NavLinks';
 
 const router = createBrowserRouter([
   {
@@ -14,13 +15,18 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <div>Home</div> },
-      { path: 'litteratur', element: <div>Litteratur och skrivande</div> },
-      { path: 'musik', element: <div>Musik</div> },
-      { path: 'natur', element: <div>Natur och friluftsliv</div> },
-      { path: 'it', element: <div>IT och teknik</div> },
-      { path: 'sprak', element: <div>Språk</div> },
-      { path: 'konst', element: <div>Konst och kultur</div> },
-      { path: 'sport', element: <div>Sport och träning</div> },
+
+      ...navLinks.map((link) => ({
+        path: link.path,
+        element: link.element,
+      })),
+
+      ...accordionItems.flatMap((item) =>
+        item.panels.map((panel) => ({
+          path: panel.path,
+          element: panel.element,
+        }))
+      ),
     ],
   },
 ]);
