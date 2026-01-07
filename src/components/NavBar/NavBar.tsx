@@ -25,8 +25,8 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
           <div className='navLinks'>
             {navLinks.map((link) => (
               <NavLink
-                key={link.to}
-                to={link.to}
+                key={`/${link.path}`}
+                to={`/${link.path}`}
                 className={({ isActive }) =>
                   `navLink navBarLink ${isActive ? 'active navBarLink' : ''}`
                 }
