@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
 import { navLinks, accordionItems } from './data/NavLinks';
+import HomePage from './routes/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
       </MantineProvider>
     ),
     children: [
-      { index: true, element: <div>Home</div> },
+      { index: true, element: HomePage() },
 
       ...navLinks.map((link) => ({
         path: link.path,
