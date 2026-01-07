@@ -1,5 +1,6 @@
 import { UnstyledButton } from '@mantine/core';
 import { navLinks } from '../../data/NavLinks';
+import { NavLink } from 'react-router-dom';
 import './NavBar.scss';
 // import DemoAccordion from '../../Accordion';
 // import RedButton from '../../RedButton';
@@ -22,12 +23,17 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
 
           <div className='navLinks'>
             {navLinks.map((link) => (
-              <UnstyledButton
+              <NavLink
                 key={link.to}
-                className='control'
+                to={link.to}
+                className={({ isActive }) =>
+                  `navLink ${isActive ? 'active' : ''}`
+                }
                 onClick={onClose}>
-                {link.label}
-              </UnstyledButton>
+                <UnstyledButton className='control'>
+                  {link.label}
+                </UnstyledButton>
+              </NavLink>
             ))}
           </div>
 
