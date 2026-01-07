@@ -57,14 +57,15 @@
     &.navLink {
       color: black;
       &:hover {
-        color: var.$gray5;
+        color: var.$gray7;
       }
     }
 
     &.active {
-      background-color: var.$gray3;
+      background-color: var.$gray2;
+      border-radius: 0;
       &:hover {
-        background-color: var.$gray2;
+        background-color: var.$gray3;
         color: black;
       }
     }
