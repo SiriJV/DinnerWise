@@ -3,8 +3,10 @@ import { useDisclosure } from '@mantine/hooks';
 import Header from '../Header/Header';
 import './AppShell.scss';
 import NavBar from '../NavBar/NavBar';
+import { Outlet } from 'react-router-dom';
 
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function AppShell() {
+// { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
 
   return (
@@ -17,7 +19,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Header opened={opened} onToggle={toggle} />
         </MantineAppShell.Header>
 
-        <MantineAppShell.Main>{children}</MantineAppShell.Main>
+        <MantineAppShell.Main>
+          <Outlet />
+        </MantineAppShell.Main>
         <MantineAppShell.Footer>Footer</MantineAppShell.Footer>
       </MantineAppShell>
 
