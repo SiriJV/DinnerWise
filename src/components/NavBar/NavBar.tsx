@@ -1,16 +1,40 @@
-import { NavLink } from 'react-router-dom';
+import { UnstyledButton } from '@mantine/core';
+import { navLinks } from '../../data/NavLinks';
 import './NavBar.scss';
+// import DemoAccordion from '../../Accordion';
+// import RedButton from '../../RedButton';
 
-export default function NavBar() {
-  //   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
-  //     `Link${isActive ? ' active' : ''}`;
+interface NavBarProps {
+  opened: boolean;
+  onClose: () => void;
+}
+
+export default function NavBar({ opened, onClose }: NavBarProps) {
+  if (!opened) return null;
+
   return (
-    <div className='NavBar__menu'>
-      <nav className='NavBar'>
-        <NavLink to='/'>Home</NavLink>
+    <>
+      <div className='overlay' onClick={onClose} />
 
-        <NavLink to='/search'>Search</NavLink>
+      <nav className='navbar'>
+        <div className='navWrapper'>
+          <h2>Utforska efter kategori</h2>
+
+          <div className='navLinks'>
+            {navLinks.map((link) => (
+              <UnstyledButton
+                key={link.to}
+                className='control'
+                onClick={onClose}>
+                {link.label}
+              </UnstyledButton>
+            ))}
+          </div>
+
+          {/* <DemoAccordion />
+          <RedButton /> */}
+        </div>
       </nav>
-    </div>
+    </>
   );
 }
