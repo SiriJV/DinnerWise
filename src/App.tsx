@@ -1,11 +1,8 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
-
-const theme = createTheme({
-  primaryColor: 'red',
-});
 
 const router = createBrowserRouter([
   {
