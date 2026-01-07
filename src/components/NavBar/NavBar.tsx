@@ -27,12 +27,10 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `navLink ${isActive ? 'active' : ''}`
+                  `navLink navBarLink ${isActive ? 'active navBarLink' : ''}`
                 }
                 onClick={onClose}>
-                <UnstyledButton className='control'>
-                  {link.label}
-                </UnstyledButton>
+                <UnstyledButton>{link.label}</UnstyledButton>
               </NavLink>
             ))}
           </div>

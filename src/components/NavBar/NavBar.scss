@@ -1,3 +1,5 @@
+@use '../../styles/variables.scss' as var;
+
 /* ===== Overlay bakom navbar ===== */
 .overlay {
   position: fixed;
@@ -42,7 +44,7 @@
 .navLinks {
   border-bottom: 1px solid red;
 
-  .control {
+  .navBarLink {
     display: block;
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
     border-radius: var(--mantine-radius-md);
@@ -50,6 +52,17 @@
 
     &:last-child {
       margin-bottom: var(--mantine-spacing-lg);
+    }
+
+    &.navLink {
+      color: var.$gray7;
+      &:hover {
+        color: var.$gray4;
+      }
+    }
+
+    &.active {
+      color: black;
     }
   }
 }
