@@ -2,6 +2,7 @@ import { UnstyledButton } from '@mantine/core';
 import { navLinks } from '../../data/NavLinks';
 import { NavLink } from 'react-router-dom';
 import './NavBar.scss';
+import NavBarAccordion from '../Accordion/Accordion';
 // import DemoAccordion from '../../Accordion';
 // import RedButton from '../../RedButton';
 
@@ -34,6 +35,8 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
               </NavLink>
             ))}
           </div>
+
+          <NavBarAccordion />
 
           {/* <DemoAccordion />
           <RedButton /> */}
