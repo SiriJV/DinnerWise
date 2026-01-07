@@ -1,6 +1,24 @@
 import type { ReactNode } from 'react';
+import AboutPage from '../routes/info pages/AboutPage';
+import CreateAccountPage from '../routes/info pages/CreateAccountPage';
+import LiteraturePage from '../routes/category pages/LiteraturePage';
+import MusicPage from '../routes/category pages/MusicPage';
+import SportPage from '../routes/category pages/SportPage';
+import ArtsPage from '../routes/category pages/ArtsPage';
+import NaturePage from '../routes/category pages/NaturePage';
+import ITPage from '../routes/category pages/ITPage';
+import LanguagePage from '../routes/category pages/LanguagePage';
+import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
+import FAQPage from '../routes/info pages/FAQPage';
+import TermsPage from '../routes/info pages/TermsPage';
+import PrivacyPage from '../routes/info pages/PrivacyPage';
+import ContactPage from '../routes/info pages/ContactPage';
+import SupportPage from '../routes/info pages/SupportPage';
+import LoginPage from '../routes/info pages/LoginPage';
+import HelpPage from '../routes/info pages/HelpPage';
+import NewsletterPage from '../routes/info pages/NewsletterPage';
 
-export type NavLinkItem = {
+type NavLinkItem = {
   title?: string;
   label: string;
   path: string;
@@ -11,37 +29,37 @@ export const navLinks: NavLinkItem[] = [
   {
     label: 'Litteratur och skrivande',
     path: 'litteratur-och-skrivande',
-    element: <div>Litteratur och skrivande</div>,
+    element: LiteraturePage(),
   },
   {
     label: 'Musik',
     path: 'musik',
-    element: <div>Musik</div>,
+    element: MusicPage(),
   },
   {
     label: 'Natur och friluftsliv',
     path: 'natur-och-friluftsliv',
-    element: <div>Natur och friluftsliv</div>,
+    element: NaturePage(),
   },
   {
     label: 'IT och teknik',
     path: 'it-och-teknik',
-    element: <div>IT och teknik</div>,
+    element: ITPage(),
   },
   {
     label: 'Språk',
     path: 'sprak',
-    element: <div>Språk</div>,
+    element: LanguagePage(),
   },
   {
     label: 'Konst och kultur',
     path: 'konst-och-kultur',
-    element: <div>Konst och kultur</div>,
+    element: ArtsPage(),
   },
   {
     label: 'Sport och träning',
     path: 'sport-och-träning',
-    element: <div>Sport och träning</div>,
+    element: SportPage(),
   },
 ];
 
@@ -51,22 +69,22 @@ type AccordionPanelItem = {
   element: ReactNode;
 };
 
-interface AccordionItem {
+type AccordionItem = {
   value: string;
   label: string;
   panels: AccordionPanelItem[];
-}
+};
 
 export const accordionItems: AccordionItem[] = [
   {
     value: 'dinnerwise',
     label: 'DinnerWise',
     panels: [
-      { label: 'Om oss', path: '/om-oss', element: <div>Om oss</div> },
+      { label: 'Om oss', path: '/om-oss', element: AboutPage() },
       {
         label: 'Nyhetsbrev',
         path: '/nyhetsbrev',
-        element: <div>Nyhetsbrev</div>,
+        element: NewsletterPage(),
       },
     ],
   },
@@ -77,27 +95,27 @@ export const accordionItems: AccordionItem[] = [
       {
         label: 'Skapa konto',
         path: '/skapa-konto',
-        element: <div>Skapa konto</div>,
+        element: CreateAccountPage(),
       },
-      { label: 'Logga in', path: '/logga-in', element: <div>Logga in</div> },
-      { label: 'Hjälp', path: '/hjalp', element: <div>Hjälp</div> },
+      { label: 'Logga in', path: '/logga-in', element: LoginPage() },
+      { label: 'Hjälp', path: '/hjalp', element: HelpPage() },
     ],
   },
   {
     value: 'help',
     label: 'Hjälp',
     panels: [
-      { label: 'Betalning', path: '/betalning', element: <div>Betalning</div> },
-      { label: 'FAQ', path: '/faq', element: <div>FAQ</div> },
+      { label: 'Betalning', path: '/betalning', element: PaymentInfoPage() },
+      { label: 'FAQ', path: '/faq', element: FAQPage() },
       {
         label: 'Köpvillkor',
         path: '/kopvillkor',
-        element: <div>Köpvillkor</div>,
+        element: TermsPage(),
       },
       {
         label: 'Integritetspolicy',
         path: '/integritetspolicy',
-        element: <div>Integritetspolicy</div>,
+        element: PrivacyPage(),
       },
     ],
   },
@@ -108,9 +126,9 @@ export const accordionItems: AccordionItem[] = [
       {
         label: 'Kundservice',
         path: '/kundservice',
-        element: <div>Kundservice</div>,
+        element: SupportPage(),
       },
-      { label: 'Kontakt', path: '/kontakt', element: <div>Kontakt</div> },
+      { label: 'Kontakt', path: '/kontakt', element: ContactPage() },
     ],
   },
   {

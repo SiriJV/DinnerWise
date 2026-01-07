@@ -1,4 +1,4 @@
-export default function SearchPage() {
+export default function SearchPage(): React.ReactNode {
   return (
     <>
       <div>Search Page</div>
