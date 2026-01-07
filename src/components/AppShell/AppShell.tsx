@@ -18,6 +18,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>{children}</MantineAppShell.Main>
+        <MantineAppShell.Footer>Footer</MantineAppShell.Footer>
       </MantineAppShell>
 
       <NavBar opened={opened} onClose={close} />
