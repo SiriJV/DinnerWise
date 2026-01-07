@@ -36,7 +36,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
             ))}
           </div>
 
-          <NavBarAccordion />
+          <NavBarAccordion onClose={onClose} />
         </div>
       </nav>
     </>
