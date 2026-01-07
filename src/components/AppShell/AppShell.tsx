@@ -17,7 +17,7 @@ export default function AppShell() {
         padding='md'
         style={{ height: '100vh' }}>
         <MantineAppShell.Header className='appHeader'>
-          <Header opened={opened} onToggle={toggle} />
+          <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>
