@@ -1,3 +1,13 @@
 .lastPanel {
   padding-bottom: 16px; /* extra padding på sista panelen */
 }
+
+.accordionLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+
+  &.active {
+    font-weight: 600;
+  }
+}
