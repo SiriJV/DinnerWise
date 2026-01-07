@@ -16,7 +16,7 @@
   height: calc(100vh - 60px);
   background: white;
   z-index: 200;
-  border-right: 1px solid red;
+  border-right: 1px solid var.$gray6;
 }
 
 /* ===== Scrollbart innehåll ===== */
@@ -42,7 +42,7 @@
 
 /* ===== Länkar ===== */
 .navLinks {
-  border-bottom: 1px solid red;
+  border-bottom: 1px solid var.$gray6;
 
   .navBarLink {
     display: block;
