@@ -11,7 +11,7 @@
   display: block;
 
   &.active {
-    font-weight: 600;
+    @include active-font-weight;
   }
 
   &:hover {
