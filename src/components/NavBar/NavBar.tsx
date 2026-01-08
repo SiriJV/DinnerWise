@@ -3,6 +3,7 @@ import { navLinks } from '../../data/NavLinks';
 import { NavLink } from 'react-router-dom';
 import './NavBar.scss';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
+import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 // import DemoAccordion from '../../Accordion';
 // import RedButton from '../../RedButton';
 
@@ -37,6 +38,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
           </div>
 
           <NavBarAccordion onClose={onClose} />
+          <LoginButtons />
         </div>
       </nav>
     </>
