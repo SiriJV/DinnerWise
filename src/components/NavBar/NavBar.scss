@@ -1,4 +1,5 @@
 @use '../../styles/variables.scss' as var;
+@use '../../styles/mixins.scss' as *;
 
 /* ===== Overlay bakom navbar ===== */
 .overlay {
@@ -16,7 +17,7 @@
   height: calc(100vh - 60px);
   background: white;
   z-index: 200;
-  border-right: 1px solid var.$gray6;
+  @include gray-border(border-right);
 }
 
 /* ===== Scrollbart innehåll ===== */
@@ -42,7 +43,7 @@
 
 /* ===== Länkar ===== */
 .navLinks {
-  border-bottom: 1px solid var.$gray6;
+  @include gray-border(border-bottom);
 
   .navBarLink {
     display: block;
@@ -57,7 +58,7 @@
     &.navLink {
       color: black;
       &:hover {
-        color: var.$gray7;
+        @include hover-color;
       }
     }
 

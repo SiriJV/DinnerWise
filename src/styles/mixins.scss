@@ -1,5 +1,15 @@
+@use 'variables.scss' as var;
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@mixin gray-border($property: border) {
+  #{$property}: 1px solid var.$gray6;
+}
+
+@mixin hover-color {
+  color: var.$gray7;
 }
