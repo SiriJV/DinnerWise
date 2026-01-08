@@ -23,7 +23,7 @@ export default function LoginPage() {
       <Paper withBorder shadow='sm' p={22} mt={30} radius='xs'>
         <TextInput
           label='E-post'
-          placeholder='mejl@dinnerwise.se'
+          placeholder='e-post@dinnerwise.se'
           required
           radius='xs'
         />
