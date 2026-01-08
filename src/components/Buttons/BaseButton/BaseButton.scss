@@ -1,0 +1,73 @@
+@use '../../../styles/variables.scss' as var;
+
+.baseButton {
+  border-radius: var(--mantine-radius-xs);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 6px 14px;
+
+  /* ===== SIZE MODIFIERS ===== */
+  &--sm {
+    // padding: 4px 10px;
+    min-width: 80px;
+    // font-size: 13px;
+  }
+
+  &--md {
+    // padding: 6px 14px;
+    min-width: 100px;
+    // font-size: 14px;
+  }
+
+  &--lg {
+    // padding: 10px 18px;
+    min-width: 140px;
+    // font-size: 16px;
+  }
+
+  /* ===== VARIANTS ===== */
+  &--primary {
+    background-color: var.$primaryred;
+    color: white;
+
+    &:hover {
+      background-color: var.$red;
+    }
+  }
+
+  &--secondary {
+    background-color: white;
+    border: 1px solid var.$gray6;
+    color: black;
+
+    &:hover {
+      background-color: var.$gray2;
+    }
+  }
+
+  &--danger {
+    background-color: var.$lightred;
+    color: var.$darkred;
+
+    &:hover {
+      background-color: var.$lightbeige;
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var.$darkgrey;
+
+    &:hover {
+      background-color: var.$gray2;
+    }
+  }
+
+  /* ===== FULL WIDTH ===== */
+  &--full {
+    width: 100%;
+    min-width: 0;
+  }
+}
