@@ -63,10 +63,10 @@
     }
 
     &.active {
-      background-color: var.$gray2;
+      @include active-background;
       border-radius: 0;
       &:hover {
-        background-color: var.$gray3;
+        @include active-background-hover;
         color: black;
       }
     }
