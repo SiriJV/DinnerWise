@@ -1,15 +1,30 @@
 import BaseButton from '../BaseButton/BaseButton';
 import './LoginButtons.scss';
 
-export default function LoginButtons() {
+type LoginButtonsProps = {
+  onClose: () => void;
+};
+
+export default function LoginButtons({ onClose }: LoginButtonsProps) {
   return (
     <div className='loginButtons-wrapper'>
-      <BaseButton variantType='primary' fullWidth={true}>
-        Logga in
-      </BaseButton>
-      <BaseButton variantType='secondary' fullWidth={true}>
-        Skapa konto
-      </BaseButton>
+      <p className='loginButtons-welcome'>Välkommen till DinnerWise</p>
+      <div className='buttons-wrapper'>
+        <BaseButton
+          variantType='primary'
+          fullWidth
+          to='/logga-in'
+          onClose={onClose}>
+          Logga in
+        </BaseButton>
+        <BaseButton
+          variantType='secondary'
+          fullWidth
+          to='/skapa-konto'
+          onClose={onClose}>
+          Skapa konto
+        </BaseButton>
+      </div>
     </div>
   );
 }
