@@ -13,3 +13,15 @@
 @mixin hover-color {
   color: var.$gray7;
 }
+
+@mixin active-font-weight {
+  font-weight: 600;
+}
+
+@mixin active-background {
+  background-color: var.$gray2;
+}
+
+@mixin active-background-hover {
+  background-color: var.$gray3;
+}
