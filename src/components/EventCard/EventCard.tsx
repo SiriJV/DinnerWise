@@ -2,7 +2,7 @@ import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
 
 export default function EventCard() {
   return (
-    <Card shadow='sm' padding='lg' radius='md' withBorder w='30vw'>
+    <Card shadow='sm' padding='lg' radius='md' withBorder w='31vw'>
       <Card.Section>
         <Image
           src='https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'
