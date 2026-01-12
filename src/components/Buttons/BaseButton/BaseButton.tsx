@@ -13,7 +13,7 @@ interface BaseButtonProps extends ButtonProps {
   children: ReactNode;
   to?: string;
   onClick?: () => void;
-  onClose?: () => void; // <-- ny prop
+  onClose?: () => void;
 }
 
 export default function BaseButton({
@@ -31,13 +31,13 @@ export default function BaseButton({
 
   const handleClick = () => {
     if (onClose) {
-      onClose(); // <-- stänger navbar först
+      onClose();
     }
     if (to) {
-      navigate(to); // sedan navigerar
+      navigate(to);
     }
     if (onClick) {
-      onClick(); // kör extra logik
+      onClick();
     }
   };
 
