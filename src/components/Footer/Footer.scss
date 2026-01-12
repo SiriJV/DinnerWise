@@ -1,3 +1,6 @@
-.Footer {
+@use '../../styles/mixins.scss' as *;
+
+.footer {
   min-height: 3rem;
+  @include gray-border(border-top);
 }
