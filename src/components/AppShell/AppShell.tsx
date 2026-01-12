@@ -14,18 +14,17 @@ export default function AppShell() {
     <>
       <MantineAppShell
         header={{ height: 60 }}
-        padding='md'
-        style={{ height: '100vh' }}>
+        padding='0'
+        style={{ height: '100vh' }}
+        withBorder={false}>
         <MantineAppShell.Header className='appHeader'>
           <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>
           <Outlet />
-        </MantineAppShell.Main>
-        <MantineAppShell.Footer>
           <Footer />
-        </MantineAppShell.Footer>
+        </MantineAppShell.Main>
       </MantineAppShell>
 
       <NavBar opened={opened} onClose={close} />
