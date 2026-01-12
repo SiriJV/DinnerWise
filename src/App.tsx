@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
 import { navLinks, accordionItems } from './data/NavLinks';
-import HomePage from './routes/HomePage';
+import HomePage from './routes/HomePage/HomePage';
 
 const router = createBrowserRouter([
   {
