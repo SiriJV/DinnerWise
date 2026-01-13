@@ -1,42 +1,41 @@
 import { Carousel } from '@mantine/carousel';
-import { Image } from '@mantine/core';
+import { Box, Card, Image, Text } from '@mantine/core';
+import { NavLink } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
+import { navLinks } from '../../data/NavLinks';
+import './ImageCarousel.scss';
 
-const images = [
-  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba',
-  'https://images.unsplash.com/photo-1494526585095-c41746248156',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470',
-  'https://images.unsplash.com/photo-1519608487953-e999c86e7455',
-  'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429',
-  'https://images.unsplash.com/photo-1526772662000-3f88f10405ff',
-  'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429',
-];
-
-export default function ImageCarousel() {
+export default function NavCarousel() {
   return (
-    <Carousel
-      withControls
-      slideGap='md'
-      // loop
-      emblaOptions={{ align: 'start' }}
-      slideSize={{
-        base: '100%', // mobil
-        sm: '50%', // tablet
-        md: '33.3333%', // 3
-        lg: '16.6667%', // 6 på desktop
-      }}>
-      {images.map((src, index) => (
-        <Carousel.Slide key={index}>
-          <Image
-            src={src}
-            h={160}
-            radius='md'
-            fit='cover'
-            alt={`Slide ${index + 1}`}
-          />
-        </Carousel.Slide>
-      ))}
-    </Carousel>
+    <Box>
+      <Text fw={800} pb='xs'>
+        Populära kategorier
+      </Text>
+      <Carousel
+        slideGap='md'
+        emblaOptions={{ align: 'start', loop: true }}
+        slideSize={{
+          base: '100%',
+          sm: '50%',
+          md: '33.3333%',
+          lg: '16.6667%',
+        }}
+        nextControlIcon={<ChevronRight size={32} />}
+        previousControlIcon={<ChevronLeft size={32} />}>
+        {navLinks.map((link) => (
+          <Carousel.Slide key={link.path}>
+            <NavLink to={`/${link.path}`} className='navCarousel-link'>
+              <Card radius='0' padding={0} className='navCarousel-card'>
+                <Image src={link.image} h={160} fit='cover' radius='md' />
+                <Text fw='600' className='navCarousel-label'>
+                  {link.label}
+                </Text>
+              </Card>
+            </NavLink>
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+    </Box>
   );
 }
