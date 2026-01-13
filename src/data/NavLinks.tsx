@@ -19,10 +19,10 @@ import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 
 type NavLinkItem = {
-  title?: string;
   label: string;
   path: string;
   element: ReactNode;
+  image: string;
 };
 
 export const navLinks: NavLinkItem[] = [
@@ -30,36 +30,43 @@ export const navLinks: NavLinkItem[] = [
     label: 'Litteratur och skrivande',
     path: 'litteratur-och-skrivande',
     element: LiteraturePage(),
+    image: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc',
   },
   {
     label: 'Musik',
     path: 'musik',
     element: MusicPage(),
+    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
   },
   {
     label: 'Natur och friluftsliv',
     path: 'natur-och-friluftsliv',
     element: NaturePage(),
+    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
   },
   {
     label: 'IT och teknik',
     path: 'it-och-teknik',
     element: ITPage(),
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475',
   },
   {
     label: 'Språk',
     path: 'sprak',
     element: LanguagePage(),
+    image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df',
   },
   {
     label: 'Konst och kultur',
     path: 'konst-och-kultur',
     element: ArtsPage(),
+    image: 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc',
   },
   {
     label: 'Sport och träning',
     path: 'sport-och-träning',
     element: SportPage(),
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438',
   },
 ];
 
