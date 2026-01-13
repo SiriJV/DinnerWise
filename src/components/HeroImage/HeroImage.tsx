@@ -1,3 +1,4 @@
+import { Paper, Stack, Text } from '@mantine/core';
 import './HeroImage.scss';
 
 interface HeroImageProps {
@@ -12,10 +13,24 @@ export default function HeroImage({
   top = false,
 }: HeroImageProps) {
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={`heroImage${top ? ' top-position' : ''}`}
-    />
+    <div className='heroWrapper'>
+      <img
+        src={src}
+        alt={alt}
+        className={`heroImage${top ? ' top-position' : ''}`}
+      />
+
+      <Paper className='heroOverlay' p='lg'>
+        <Stack gap='xs'>
+          <Text fw={700} size='lg' c='white'>
+            Små event, stora upplevelser.
+          </Text>
+          <Text size='sm' c='white'>
+            Möt nya människor, utforska intressen och dela god mat i en
+            avslappnad miljö.
+          </Text>
+        </Stack>
+      </Paper>
+    </div>
   );
 }
