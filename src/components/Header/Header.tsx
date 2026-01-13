@@ -1,4 +1,4 @@
-import { Burger, Group, UnstyledButton } from '@mantine/core';
+import { Burger, Group, Title, UnstyledButton } from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
 
@@ -14,7 +14,11 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
       <Burger opened={opened} onClick={onToggle} size='sm' color='white' />
       <div>
         <NavLink to='/' onClick={onClose}>
-          <UnstyledButton className='logo'>DinnerWise</UnstyledButton>
+          <UnstyledButton className='logo'>
+            {' '}
+            {/* <Title order={1}>DinnerWise</Title> */}
+            DinnerWise
+          </UnstyledButton>
         </NavLink>
       </div>
     </Group>
