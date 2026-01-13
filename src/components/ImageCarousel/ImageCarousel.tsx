@@ -9,7 +9,7 @@ import './ImageCarousel.scss';
 export default function NavCarousel() {
   return (
     <Box>
-      <Text fw={800} pb='xs'>
+      <Text fw={700} pb='xs'>
         Populära kategorier
       </Text>
       <Carousel
