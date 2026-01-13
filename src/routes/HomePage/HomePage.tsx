@@ -8,17 +8,25 @@ export default function HomePage(): React.ReactNode {
     <>
       {/* <Image
         className='heroImage'
-        radius='0'
-        h='50vh'
-        src='src\assets\4087.jpg'
-      /> */}
-      <Image
-        className='heroImage'
         radius={0}
         h='50vh'
         src='src/assets/4087.jpg'
+        // fit='cover'
+      /> */}
+
+      {/* <Image
+        className='heroImage'
+        radius={0}
+        height='50vh'
+        src='src/assets/4087.jpg'
         fit='cover'
-      />
+        styles={{
+          image: {
+            objectPosition: 'top',
+          },
+        }}
+      /> */}
+      <img src='src/assets/4087.jpg' className='heroImage' alt='Hero image' />
 
       <Flex direction='column' gap='md' p='md'>
         <ImageCarousel />
