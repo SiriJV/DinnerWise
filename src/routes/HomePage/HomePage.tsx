@@ -1,20 +1,39 @@
-import { Flex, Image } from '@mantine/core';
-import './HomePage.scss';
+import { Flex, Image, SimpleGrid } from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
+import './HomePage.scss';
 
 export default function HomePage(): React.ReactNode {
   return (
     <>
-      <Image radius='0' h='50vh' src='src\assets\9010.jpg' />
+      {/* <Image
+        className='heroImage'
+        radius='0'
+        h='50vh'
+        src='src\assets\4087.jpg'
+      /> */}
+      <Image
+        className='heroImage'
+        radius={0}
+        h='50vh'
+        src='src/assets/4087.jpg'
+        fit='cover'
+      />
+
       <Flex direction='column' gap='md' p='md'>
         <ImageCarousel />
-        <Flex w='100%' gap='md' justify='space-between'>
-          <EventCard />
-          <EventCard />
 
+        <SimpleGrid
+          cols={{ base: 1, sm: 1, md: 2, lg: 3 }}
+          spacing='md'
+          mt='lg'>
           <EventCard />
-        </Flex>
+          <EventCard />
+          <EventCard />
+          <EventCard />
+          <EventCard />
+          <EventCard />
+        </SimpleGrid>
       </Flex>
     </>
   );
