@@ -1,5 +1,5 @@
+import { Stack, Text } from '@mantine/core';
 import BaseButton from '../BaseButton/BaseButton';
-import './LoginButtons.scss';
 
 type LoginButtonsProps = {
   onClose: () => void;
@@ -7,24 +7,27 @@ type LoginButtonsProps = {
 
 export default function LoginButtons({ onClose }: LoginButtonsProps) {
   return (
-    <div className='loginButtons-wrapper'>
-      <p className='loginButtons-welcome'>Välkommen till DinnerWise</p>
-      <div className='buttons-wrapper'>
+    <Stack gap='xs' align='stretch' p='md'>
+      <Text fw={600} ta='left'>
+        Välkommen till DinnerWise
+      </Text>
+      <Stack gap='xs'>
         <BaseButton
           variantType='primary'
           fullWidth
-          to='/logga-in'
-          onClose={onClose}>
+          onClose={onClose}
+          to='/logga-in'>
           Logga in
         </BaseButton>
+
         <BaseButton
           variantType='secondary'
           fullWidth
-          to='/skapa-konto'
-          onClose={onClose}>
+          onClose={onClose}
+          to='/skapa-konto'>
           Skapa konto
         </BaseButton>
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 }
