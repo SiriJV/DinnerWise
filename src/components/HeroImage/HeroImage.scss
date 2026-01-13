@@ -1,0 +1,11 @@
+.heroImage {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  display: block;
+  object-position: center 25%;
+}
+
+.heroImage.top-position {
+  object-position: top;
+}
