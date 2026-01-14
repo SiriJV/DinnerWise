@@ -34,7 +34,7 @@ export default function HomePage(): React.ReactNode {
           />
 
           <EventCard
-            title='Plocka svamp med proffs'
+            title='Plocka svamp som ett proffs'
             image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/d1/5c/33/caption.jpg?w=1100&h=-1&s=1'
             host='Sara Flinck'
             hostImage=''
