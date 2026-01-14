@@ -50,15 +50,30 @@ export default function Footer() {
           </Text>
 
           <Group gap='md'>
-            <Anchor size='sm' c='dimmed' underline='never'>
+            <Anchor
+              component={NavLink}
+              to='/kopvillkor'
+              size='sm'
+              c='dimmed'
+              underline='never'>
               Köpvillkor
             </Anchor>
 
-            <Anchor size='sm' c='dimmed' underline='never'>
+            <Anchor
+              component={NavLink}
+              to='/integritetspolicy'
+              size='sm'
+              c='dimmed'
+              underline='never'>
               Integritetspolicy
             </Anchor>
 
-            <Anchor size='sm' c='dimmed' underline='never'>
+            <Anchor
+              component={NavLink}
+              to='/cookies'
+              size='sm'
+              c='dimmed'
+              underline='never'>
               Cookies
             </Anchor>
           </Group>
