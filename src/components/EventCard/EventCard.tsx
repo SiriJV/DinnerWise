@@ -7,7 +7,8 @@ type EventCardProps = {
   host: string;
   restaurant: string;
   address: string;
-  dateTime: Date;
+  startTime: Date;
+  endTime: Date;
   price: number;
   spots: number;
   maxSpots: number;
@@ -20,7 +21,8 @@ export default function EventCard({
   host,
   restaurant,
   address,
-  dateTime,
+  startTime,
+  endTime,
   price,
   spots,
   maxSpots,
@@ -29,16 +31,23 @@ export default function EventCard({
 }: EventCardProps) {
   const isFull = spots >= maxSpots;
 
-  const date = dateTime.toLocaleDateString('sv-SE', {
+  const date = startTime.toLocaleDateString('sv-SE', {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
   });
 
-  const time = dateTime.toLocaleTimeString('sv-SE', {
+  const start = startTime.toLocaleTimeString('sv-SE', {
     hour: '2-digit',
     minute: '2-digit',
   });
+
+  const end = endTime.toLocaleTimeString('sv-SE', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  const timeRange = `${start}–${end}`;
 
   const shortDescription =
     description.length > maxDescriptionLength
@@ -60,12 +69,12 @@ export default function EventCard({
         med {host}
       </Text>
 
-      <Text size='xs' c='dimmed' mb='xs' fw={600}>
+      <Text size='xs' c='dimmed' fw={600}>
         {restaurant} · {address}
       </Text>
 
       <Text size='xs' c='dimmed' mb='xs'>
-        {date} · {time}
+        {date} · {timeRange}
       </Text>
 
       <Text size='sm' c='dimmed'>
