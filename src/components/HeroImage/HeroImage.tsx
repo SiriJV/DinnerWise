@@ -1,11 +1,11 @@
 import { Paper, Stack, Text } from '@mantine/core';
 import './HeroImage.scss';
 
-interface HeroImageProps {
+type HeroImageProps = {
   src: string;
   alt?: string;
   top?: boolean;
-}
+};
 
 export default function HeroImage({
   src,
