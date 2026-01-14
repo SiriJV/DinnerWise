@@ -22,6 +22,7 @@ export default function HomePage(): React.ReactNode {
             title='Zero Waste i vardagen'
             image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
             host='Anders Blom'
+            hostImage=''
             restaurant='Noosh'
             address='Österlånggatan 35, Borås'
             startTime={new Date('2026-01-19T17:00:00')}
@@ -36,6 +37,7 @@ export default function HomePage(): React.ReactNode {
             title='Plocka svamp med proffs'
             image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/d1/5c/33/caption.jpg?w=1100&h=-1&s=1'
             host='Sara Flinck'
+            hostImage=''
             restaurant='Vinci'
             address='Sandwalls Plats 7A, Borås'
             startTime={new Date('2026-01-24T18:00:00')}
@@ -49,6 +51,7 @@ export default function HomePage(): React.ReactNode {
             title='Heraldriska vapen och deras historia'
             image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/91/05/5b/caption.jpg?w=1100&h=-1&s=1'
             host='Roger Göransson'
+            hostImage=''
             restaurant='La Copita'
             address='Allégatan 63, Borås'
             startTime={new Date('2026-02-04T16:30:00')}
@@ -62,6 +65,7 @@ export default function HomePage(): React.ReactNode {
             title='Grundläggande statistik i Excel'
             image='https://cdn.thefork.com/tf-lab/image/upload/restaurant/39ac3238-7869-41f1-adee-45867c734f47/d57afc05-19fa-4fba-a2db-cd738092b887.jpg'
             host='Patrik Eklund'
+            hostImage=''
             restaurant='Muchacho'
             address='Vasagatan 5A, Göteborg'
             startTime={new Date('2026-01-22T16:30:00')}
@@ -75,6 +79,7 @@ export default function HomePage(): React.ReactNode {
             title='Planera din vecka med bullet journaling'
             image='https://thatsup.website/storage/379/34769/_DSF0792.jpg?v=1714657166'
             host='Kerstin Wallin'
+            hostImage=''
             restaurant='Kalle Glader'
             address='Friggagatan 14B, Göteborg'
             startTime={new Date('2026-02-03T18:30:00')}
@@ -88,6 +93,7 @@ export default function HomePage(): React.ReactNode {
             title='Studiecirkel: Förstå EU-valet'
             image='https://i.ytimg.com/vi/EXiwW2bZiT4/maxresdefault.jpg'
             host='Amir Hassan'
+            hostImage=''
             restaurant='Pacha Grill'
             address='Linnégatan 74, Göteborg'
             startTime={new Date('2026-01-22T16:30:00')}
@@ -101,6 +107,7 @@ export default function HomePage(): React.ReactNode {
             title='Lär dig laga vegetariskt'
             image='https://www.lillatavernan.se/wp-content/uploads/2024/08/d3c27d52-1b27-447c-afca-5d405313cbeb.jpg'
             host='Mia Johansson'
+            hostImage=''
             restaurant='Lilla Tavernan'
             address='Olivedalsgatan 17, Göteborg'
             startTime={new Date('2026-01-19T17:00:00')}
@@ -114,6 +121,7 @@ export default function HomePage(): React.ReactNode {
             title='Grundkurs i urban odling'
             image='https://thatsup.se/content/img/place/goteborg/ge/263fe12a-173d-11ef-8e2e-86d7fdd99ed5/gezana-e60e95b0-x2400.jpg'
             host='Markus Thede'
+            hostImage=''
             restaurant='Gezana'
             address='Lorensbergsgatan 8, Göteborg'
             startTime={new Date('2026-01-30T18:00:00')}
