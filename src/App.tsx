@@ -7,6 +7,7 @@ import { navLinks, accordionItems } from './data/NavLinks';
 import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
+import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,11 @@ const router = createBrowserRouter([
       {
         path: '/event/:id',
         element: <EventDetails />,
+      },
+
+      {
+        path: '/restaurang/:id',
+        element: <RestaurangDetails />,
       },
     ],
   },
