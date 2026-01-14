@@ -27,7 +27,7 @@ export default function EventCard({
   spots,
   maxSpots,
   description,
-  maxDescriptionLength = 130,
+  maxDescriptionLength = 120,
 }: EventCardProps) {
   const isFull = spots >= maxSpots;
 
@@ -82,9 +82,17 @@ export default function EventCard({
       </Text>
 
       <Group justify='space-between' mt='sm'>
-        <Badge color={isFull ? 'pink' : 'green'}>
-          {isFull ? 'Fullt' : 'Platser kvar'} ({spots}/{maxSpots})
+        <Badge
+          variant='filled'
+          style={{
+            backgroundColor: isFull
+              ? 'rgba(255, 204, 199, 1)'
+              : 'rgba(216, 227, 222, 1)',
+            color: isFull ? 'rgba(116, 39, 62, 1)' : 'rgba(36, 56, 33, 1)',
+          }}>
+          {isFull ? 'Fullt' : `${maxSpots - spots} av ${maxSpots} platser kvar`}
         </Badge>
+
         <Text fw={600}>{price} kr</Text>
       </Group>
     </Card>
