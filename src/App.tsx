@@ -5,6 +5,7 @@ import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
 import { navLinks, accordionItems } from './data/NavLinks';
 import HomePage from './routes/HomePage/HomePage';
+import CookiesPage from './routes/info pages/CookiesPage';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
           element: panel.element,
         }))
       ),
+
+      {
+        path: '/cookies',
+        element: <CookiesPage />,
+      },
     ],
   },
 ]);
