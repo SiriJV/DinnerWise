@@ -1,5 +1,6 @@
 import { Card, Image, Text, Badge, Group, Avatar, Box } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
+import './EventCard.scss';
 
 type EventCardProps = {
   title: string;
@@ -86,16 +87,19 @@ export default function EventCard({
         <Text size='sm' mb='xs'>
           med {host}
         </Text>
+        <Box className='eventInfo'>
+          <Text size='xs' c='dimmed' fw={600}>
+            {restaurant} · {address}
+          </Text>
+          <Text size='xs' c='dimmed' className='separator'>
+            |
+          </Text>
+          <Text size='xs' c='dimmed'>
+            {date} {timeRange}
+          </Text>
+        </Box>
 
-        <Text size='xs' c='dimmed' fw={600}>
-          {restaurant} · {address}
-        </Text>
-
-        <Text size='xs' c='dimmed' mb='xs'>
-          {date} · {timeRange}
-        </Text>
-
-        <Text size='sm' c='dimmed'>
+        <Text size='sm' c='dimmed' className='eventDescription'>
           {shortDescription}
         </Text>
 
