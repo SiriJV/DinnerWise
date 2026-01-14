@@ -1,10 +1,11 @@
-import { Card, Image, Text, Badge, Group } from '@mantine/core';
+import { Card, Image, Text, Badge, Group, Avatar, Box } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 
 type EventCardProps = {
   title: string;
   image: string;
   host: string;
+  hostImage: string;
   restaurant: string;
   address: string;
   startTime: Date;
@@ -15,10 +16,12 @@ type EventCardProps = {
   description: string;
   maxDescriptionLength?: number;
 };
+
 export default function EventCard({
   title,
   image,
   host,
+  hostImage,
   restaurant,
   address,
   startTime,
@@ -55,46 +58,64 @@ export default function EventCard({
       : description;
 
   return (
-    <Card shadow='sm' padding='lg' radius='md' withBorder>
-      <Card.Section>
-        <Image src={image} height={160} alt={title} fit='cover' />
+    <Card shadow='sm' radius='md' withBorder>
+      <Card.Section pos='relative'>
+        <Image src={image} h={160} alt={title} fit='cover' />
+
+        <Avatar
+          src={hostImage}
+          alt={host}
+          radius='xl'
+          size={56}
+          style={{
+            position: 'absolute',
+            bottom: -28,
+            left: '1rem',
+            border: '3px solid white',
+            backgroundColor: 'white',
+          }}
+        />
       </Card.Section>
 
-      <Group justify='space-between' mt='md'>
-        <Text fw={800}>{title}</Text>
-        <BookmarkIcon size={18} />
-      </Group>
+      <Box mt='xl' px='xs' pb='xs'>
+        <Group justify='space-between'>
+          <Text fw={800}>{title}</Text>
+          <BookmarkIcon size={18} />
+        </Group>
 
-      <Text size='sm' mb='xs'>
-        med {host}
-      </Text>
+        <Text size='sm' mb='xs'>
+          med {host}
+        </Text>
 
-      <Text size='xs' c='dimmed' fw={600}>
-        {restaurant} · {address}
-      </Text>
+        <Text size='xs' c='dimmed' fw={600}>
+          {restaurant} · {address}
+        </Text>
 
-      <Text size='xs' c='dimmed' mb='xs'>
-        {date} · {timeRange}
-      </Text>
+        <Text size='xs' c='dimmed' mb='xs'>
+          {date} · {timeRange}
+        </Text>
 
-      <Text size='sm' c='dimmed'>
-        {shortDescription}
-      </Text>
+        <Text size='sm' c='dimmed'>
+          {shortDescription}
+        </Text>
 
-      <Group justify='space-between' mt='sm'>
-        <Badge
-          variant='filled'
-          style={{
-            backgroundColor: isFull
-              ? 'rgba(255, 204, 199, 1)'
-              : 'rgba(216, 227, 222, 1)',
-            color: isFull ? 'rgba(116, 39, 62, 1)' : 'rgba(36, 56, 33, 1)',
-          }}>
-          {isFull ? 'Fullt' : `${maxSpots - spots} av ${maxSpots} platser kvar`}
-        </Badge>
+        <Group justify='space-between' mt='sm'>
+          <Badge
+            variant='filled'
+            style={{
+              backgroundColor: isFull
+                ? 'rgba(255, 204, 199, 1)'
+                : 'rgba(216, 227, 222, 1)',
+              color: isFull ? 'rgba(116, 39, 62, 1)' : 'rgba(36, 56, 33, 1)',
+            }}>
+            {isFull
+              ? 'Fullt'
+              : `${maxSpots - spots} av ${maxSpots} platser kvar`}
+          </Badge>
 
-        <Text fw={600}>{price} kr</Text>
-      </Group>
+          <Text fw={600}>{price} kr</Text>
+        </Group>
+      </Box>
     </Card>
   );
 }
