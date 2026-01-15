@@ -1,7 +1,7 @@
 @use '../../../styles/variables.scss' as var;
 
 .baseButton {
-  border-radius: var(--mantine-radius-xs);
+  border-radius: var(--mantine-radius-sm);
   display: flex;
   justify-content: center;
   align-items: center;
