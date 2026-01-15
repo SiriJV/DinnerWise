@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import './App.scss';
 import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
