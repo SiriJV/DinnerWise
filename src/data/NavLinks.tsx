@@ -30,7 +30,7 @@ export const navLinks: NavLinkItem[] = [
     label: 'Litteratur och skrivande',
     path: 'litteratur-och-skrivande',
     element: LiteraturePage(),
-    image: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc',
+    image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2',
   },
   {
     label: 'Musik',
@@ -66,7 +66,7 @@ export const navLinks: NavLinkItem[] = [
     label: 'Sport och träning',
     path: 'sport-och-träning',
     element: SportPage(),
-    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438',
+    image: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5',
   },
 ];
 
