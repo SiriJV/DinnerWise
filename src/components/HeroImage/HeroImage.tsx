@@ -4,20 +4,20 @@ import './HeroImage.scss';
 type HeroImageProps = {
   src: string;
   alt?: string;
-  top?: boolean;
+  position?: 'top' | 'center' | 'bottom';
 };
 
 export default function HeroImage({
   src,
   alt = 'Hero image',
-  top = false,
+  position = 'top',
 }: HeroImageProps) {
   return (
     <div className='heroWrapper'>
       <img
         src={src}
         alt={alt}
-        className={`heroImage${top ? ' top-position' : ''}`}
+        className={`heroImage ${position ? `${position}-position` : ''}`}
       />
 
       <Paper className='heroOverlay' p='lg'>

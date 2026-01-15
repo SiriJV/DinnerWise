@@ -9,13 +9,19 @@
 
 .heroImage {
   width: 100%;
-  height: 100%;
+  height: 50vh;
   object-fit: cover;
   display: block;
   object-position: center;
 
   &.top-position {
-    object-position: 75% 0%;
+    object-position: 75% 5%;
+  }
+  &.center-position {
+    object-position: 75% 25%;
+  }
+  &.bottom-position {
+    object-position: 75% 35%;
   }
 }
 
