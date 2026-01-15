@@ -36,7 +36,9 @@ export default function EventCard({
   description,
   maxDescriptionLength = 120,
 }: EventCardProps) {
-  const isFull = spots >= maxSpots;
+  const remainingSpots = maxSpots - spots;
+  const isFull = remainingSpots <= 0;
+  const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
 
   const date = startTime.toLocaleDateString('sv-SE', {
     weekday: 'short',
@@ -127,21 +129,28 @@ export default function EventCard({
           {shortDescription}
         </Text>
 
-        <Group justify='space-between' mt='sm'>
-          <Badge
-            className='spotsBadge'
-            variant='filled'
-            style={{
-              backgroundColor: isFull
-                ? 'rgba(255, 204, 199, 1)'
-                : 'rgba(216, 227, 222, 1)',
-              color: isFull ? 'rgba(116, 39, 62, 1)' : 'rgba(36, 56, 33, 1)',
-            }}>
-            {isFull
-              ? 'Fullt'
-              : `${maxSpots - spots} av ${maxSpots} platser kvar`}
-          </Badge>
-        </Group>
+        <Badge
+          className='spotsBadge'
+          variant='filled'
+          style={{
+            backgroundColor: isFull
+              ? 'rgba(255, 204, 199, 1)'
+              : isAlmostFull
+              ? 'rgba(255, 238, 186, 1)'
+              : 'rgba(216, 227, 222, 1)',
+
+            color: isFull
+              ? 'rgba(116, 39, 62, 1)'
+              : isAlmostFull
+              ? 'rgba(120, 90, 10, 1)'
+              : 'rgba(36, 56, 33, 1)',
+          }}>
+          {isFull
+            ? 'Fullt'
+            : isAlmostFull
+            ? `${remainingSpots} av ${maxSpots} platser kvar`
+            : `${remainingSpots} av ${maxSpots} platser kvar`}
+        </Badge>
       </Box>
     </Card>
   );
