@@ -1,3 +1,17 @@
+@use '../../styles/variables.scss' as var;
+
+.eventCard {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
 .eventDescription {
   display: block;
   @media (max-width: 768px) {
@@ -21,5 +35,60 @@
     .separator {
       display: none;
     }
+  }
+}
+
+.spotsBadge {
+  position: absolute;
+  top: var(--mantine-radius-md);
+  left: var(--mantine-radius-md);
+  z-index: 2;
+}
+
+.bookmarkButton {
+  position: absolute;
+  top: var(--mantine-radius-md);
+  right: var(--mantine-radius-md);
+  z-index: 2;
+
+  width: 32px;
+  height: 32px;
+
+  background: white;
+
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  transition: transform 120ms ease, box-shadow 120ms ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.hostAvatar {
+  position: absolute;
+  bottom: -28px;
+  left: var(--mantine-radius-md);
+
+  border: 3px solid white;
+  background: white;
+
+  z-index: 3;
+}
+
+.unstyledNavLink {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: var.$gray5;
   }
 }
