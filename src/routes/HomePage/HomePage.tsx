@@ -1,18 +1,83 @@
-import { Flex, SimpleGrid, Stack, Text } from '@mantine/core';
+import { Badge, Flex, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 import './HomePage.scss';
 import HeroImage from '../../components/HeroImage/HeroImage';
+import {
+  BookOpenText,
+  Calendar,
+  ChevronDown,
+  CreditCard,
+  MapPin,
+} from 'lucide-react';
 
 export default function HomePage(): React.ReactNode {
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
 
-      <Flex direction='column' gap='md' p='md'>
+      <Stack p='md'>
         <ImageCarousel />
-        <Stack mt='lg'>
-          <Text pb='0'>Sortera</Text>
+        <Group mt='lg'>
+          <Badge
+            pt='md'
+            pb='md'
+            fz='sm'
+            tt='none'
+            fw='500'
+            c='rgba(116, 39, 62, 1)'
+            bg='rgba(255, 204, 199, 1)'>
+            <Group gap='xs' pb='sm' pt='sm'>
+              <MapPin size='18px' />
+              Borås
+              <ChevronDown size='18px' />
+            </Group>
+          </Badge>
+          <Badge
+            pt='md'
+            pb='md'
+            fz='sm'
+            tt='none'
+            fw='500'
+            c='rgba(116, 39, 62, 1)'
+            bg='rgba(255, 204, 199, 1)'>
+            <Group gap='xs' pb='sm' pt='sm'>
+              <BookOpenText size='18px' />
+              Ämne
+              <ChevronDown size='18px' />
+            </Group>
+          </Badge>
+          <Badge
+            pt='md'
+            pb='md'
+            fz='sm'
+            tt='none'
+            fw='500'
+            c='rgba(116, 39, 62, 1)'
+            bg='rgba(255, 204, 199, 1)'>
+            <Group gap='xs' pb='sm' pt='sm'>
+              <CreditCard size='18px' />
+              Pris
+              <ChevronDown size='18px' />
+            </Group>
+          </Badge>
+          <Badge
+            pt='md'
+            pb='md'
+            fz='sm'
+            tt='none'
+            fw='500'
+            c='rgba(116, 39, 62, 1)'
+            bg='rgba(255, 204, 199, 1)'>
+            <Group gap='xs' pb='sm' pt='sm'>
+              <Calendar size='18px' />
+              Datum
+              <ChevronDown size='18px' />
+            </Group>
+          </Badge>
+        </Group>
+        <Stack mt='xs'>
+          <Text>Sortera</Text>
           <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
             <EventCard
               id={1}
@@ -137,7 +202,7 @@ export default function HomePage(): React.ReactNode {
             />
           </SimpleGrid>
         </Stack>
-      </Flex>
+      </Stack>
     </>
   );
 }
