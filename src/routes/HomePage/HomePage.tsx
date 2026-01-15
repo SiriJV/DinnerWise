@@ -1,4 +1,4 @@
-import { Badge, Group, SimpleGrid, Stack, Text } from '@mantine/core';
+import { Badge, Divider, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 import './HomePage.scss';
@@ -18,7 +18,8 @@ export default function HomePage(): React.ReactNode {
 
       <Stack p='md'>
         <ImageCarousel />
-        <Group mt='lg'>
+        <Divider mt='sm' mb='lg' />
+        <Group>
           <Badge
             pt='md'
             pb='md'
