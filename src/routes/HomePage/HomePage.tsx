@@ -1,4 +1,4 @@
-import { Badge, Flex, Group, SimpleGrid, Stack, Text } from '@mantine/core';
+import { Badge, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 import './HomePage.scss';
