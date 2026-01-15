@@ -1,6 +1,7 @@
-/* ===== Header ===== */
+@use '../../styles/variables.scss' as var;
+
 .appHeader {
-  background-color: rgba(211, 4, 59, 1);
+  background-color: var.$primaryred;
   color: white;
   z-index: 300;
 }
