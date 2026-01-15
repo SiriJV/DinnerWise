@@ -1,8 +1,10 @@
 import { Card, Image, Text, Badge, Group, Avatar, Box } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import './EventCard.scss';
+import { NavLink } from 'react-router-dom';
 
 type EventCardProps = {
+  id: number;
   title: string;
   image: string;
   host: string;
@@ -19,6 +21,7 @@ type EventCardProps = {
 };
 
 export default function EventCard({
+  id,
   title,
   image,
   host,
@@ -59,37 +62,58 @@ export default function EventCard({
       : description;
 
   return (
-    <Card shadow='sm' radius='md' withBorder>
+    <Card
+      className='eventCard'
+      component={NavLink}
+      to={`/event/${id}`}
+      shadow='sm'
+      radius='md'
+      pb='0'
+      withBorder>
       <Card.Section pos='relative'>
         <Image src={image} h={160} alt={title} fit='cover' />
+
+        <Box
+          className='bookmarkButton'
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
+          <BookmarkIcon size={18} />
+        </Box>
 
         <Avatar
           src={hostImage}
           alt={host}
           radius='xl'
           size={56}
-          style={{
-            position: 'absolute',
-            bottom: -28,
-            left: '1rem',
-            border: '3px solid white',
-            backgroundColor: 'white',
-          }}
+          className='hostAvatar'
         />
       </Card.Section>
 
-      <Box mt='xl' px='xs' pb='xs'>
+      <Box mt='xl' px='0' pb='xs'>
         <Group justify='space-between'>
           <Text fw={800}>{title}</Text>
-          <BookmarkIcon size={18} />
+          {/* <Badge bg='rgba(206, 212, 218, 1)'> */}
+          <Text fw={600} c='black' className='price'>
+            {price} kr
+          </Text>
+          {/* </Badge> */}
         </Group>
 
         <Text size='sm' mb='xs'>
           med {host}
         </Text>
-        <Box className='eventInfo'>
+
+        <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
-            {restaurant} · {address}
+            <NavLink
+              to='/restaurang/1'
+              className='unstyledNavLink'
+              onClick={(e) => e.stopPropagation()}>
+              {restaurant}
+            </NavLink>{' '}
+            · {address}
           </Text>
           <Text size='xs' c='dimmed' className='separator'>
             |
@@ -105,6 +129,7 @@ export default function EventCard({
 
         <Group justify='space-between' mt='sm'>
           <Badge
+            className='spotsBadge'
             variant='filled'
             style={{
               backgroundColor: isFull
@@ -116,8 +141,6 @@ export default function EventCard({
               ? 'Fullt'
               : `${maxSpots - spots} av ${maxSpots} platser kvar`}
           </Badge>
-
-          <Text fw={600}>{price} kr</Text>
         </Group>
       </Box>
     </Card>
