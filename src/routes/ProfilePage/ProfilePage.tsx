@@ -1,8 +1,9 @@
 import ProfilePageImage from './ProfilePageImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Stack, Text } from '@mantine/core';
+import { Box, Group, Stack, Text } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
+import { PenIcon, SettingsIcon } from 'lucide-react';
 
 export default function ProfilePage() {
   return (
@@ -13,7 +14,13 @@ export default function ProfilePage() {
         <ProfilePageStats followers={22} following={12} events={13} />
       </Box>
       <Stack m='md'>
-        <Text>Linda Larsson 💗</Text>
+        <Group justify='space-between'>
+          <Text>Linda Larsson 💗</Text>
+          <Group gap='xs'>
+            <PenIcon size='20px' />
+            <SettingsIcon size='20px' />
+          </Group>
+        </Group>
         <Text>
           Bor i Göteborg. Intresserad av hållbarhet, friluftsliv och kreativt
           skrivande. Älskar att upptäcka nya platser och lära mig nya språk.
