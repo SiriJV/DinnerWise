@@ -54,7 +54,7 @@ export const navLinks: NavLinkItem[] = [
     label: 'Språk',
     path: 'sprak',
     element: LanguagePage(),
-    image: 'https://images.unsplash.com/photo-1634128221889-82ed6efebfc3',
+    image: 'https://images.unsplash.com/photo-1592431913827-893545d23718',
   },
   {
     label: 'Konst och kultur',
