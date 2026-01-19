@@ -1,4 +1,5 @@
 @use '../../styles/mixins.scss' as *;
+@use '../../styles/variables.scss' as var;
 
 .mantine-Carousel-control {
   width: 50px;
@@ -19,9 +20,22 @@
   display: block;
 }
 
+.navCarousel-label {
+  @include hover-color;
+}
+
 .navCarousel-card {
   img {
-    transition: transform 0.3s ease, border-radius 0.4s ease;
+    transition: transform 0.3s ease, border-radius 0.5s ease;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.25);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
   }
 
   &:hover {
@@ -29,8 +43,13 @@
       border-radius: var(--mantine-radius-xs);
     }
 
+    &::after {
+      opacity: 0;
+    }
+
     .navCarousel-label {
-      @include hover-color;
+      // @include hover-color;
+      color: black;
     }
   }
 }
