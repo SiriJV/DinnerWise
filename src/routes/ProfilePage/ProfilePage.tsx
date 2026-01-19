@@ -12,7 +12,7 @@ export default function ProfilePage() {
         <ProfilePageAvatar src='https://plus.unsplash.com/premium_photo-1732450236324-8ba08aa1f769' />
         <ProfilePageStats followers={22} following={12} events={13} />
       </Box>
-      <Stack m='xl'>
+      <Stack m='md'>
         <Text>Linda Larsson 💗</Text>
         <Text>
           Bor i Göteborg. Intresserad av hållbarhet, friluftsliv och kreativt
