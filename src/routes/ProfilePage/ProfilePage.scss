@@ -1,0 +1,14 @@
+@use '../../styles/variables.scss' as var;
+
+.stats-wrapper,
+.stats {
+  border-radius: var(--mantine-radius-sm);
+}
+
+.stats {
+  background-color: var.$gray3;
+}
+
+.avatar {
+  border: solid white 2px;
+}
