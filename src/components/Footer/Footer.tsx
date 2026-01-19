@@ -1,4 +1,12 @@
-import { Container, Text, Group, Stack, Anchor } from '@mantine/core';
+import {
+  Container,
+  Text,
+  Group,
+  Stack,
+  Anchor,
+  TextInput,
+  Button,
+} from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import './Footer.scss';
 import { accordionItems } from '../../data/NavLinks';
@@ -11,8 +19,27 @@ export default function Footer() {
   return (
     <footer className='footer'>
       <Container size='lg'>
+        <Group align='flex-end' gap='md' pb='xl' className='newsletter-group'>
+          <Stack className='newsletter-stack'>
+            <Text fw={600}>Håll dig uppdaterad!</Text>
+            <Text size='sm'>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </Text>
+          </Stack>
+
+          <Group style={{ flex: 1, maxWidth: '50%' }} gap={0}>
+            <TextInput
+              className='newsletter-input'
+              placeholder='exempel@epost.se'
+              radius='0'
+            />
+            <Button className='newsletter-button'>Registrera dig</Button>
+          </Group>
+        </Group>
+
         {isMobile ? (
-          <Stack gap='md' pb='xl'>
+          <Stack gap='md' pt='xl' pb='xl'>
             <Stack gap='xs' className='footer-brand'>
               <Text fw={700} size='lg'>
                 DinnerWise
@@ -24,7 +51,7 @@ export default function Footer() {
             <NavBarAccordion />
           </Stack>
         ) : (
-          <Group align='flex-start' justify='space-between' pb='xl'>
+          <Group align='flex-start' justify='space-between' pt='xl' pb='xl'>
             <Stack gap='xs' className='footer-brand'>
               <Text fw={700} size='lg'>
                 DinnerWise
@@ -73,7 +100,7 @@ export default function Footer() {
               to='/kopvillkor'
               size='sm'
               c='dimmed'
-              underline='never'>
+              underline='hover'>
               Köpvillkor
             </Anchor>
 
@@ -82,7 +109,7 @@ export default function Footer() {
               to='/integritetspolicy'
               size='sm'
               c='dimmed'
-              underline='never'>
+              underline='hover'>
               Integritetspolicy
             </Anchor>
 
@@ -91,7 +118,7 @@ export default function Footer() {
               to='/cookies'
               size='sm'
               c='dimmed'
-              underline='never'>
+              underline='hover'>
               Cookies
             </Anchor>
           </Group>

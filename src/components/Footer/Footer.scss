@@ -1,4 +1,5 @@
 @use '../../styles/mixins.scss' as *;
+@use '../../styles/variables.scss' as var;
 
 .footer {
   min-height: 3rem;
@@ -48,6 +49,30 @@
   align-items: center;
   padding: var(--mantine-spacing-md) 0;
   border-top: 1px solid var(--mantine-color-gray-3);
+}
+
+.newsletter-group {
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+
+.newsletter-stack {
+  flex: 1;
+  max-width: '50%';
+}
+
+.newsletter-input {
+  flex: 1;
+
+  & input {
+    border-right: none;
+    border-radius: var(--mantine-radius-sm) 0 0 var(--mantine-radius-sm);
+  }
+}
+
+.newsletter-button {
+  border-right: none;
+  border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
+  background-color: var.$primaryred;
 }
 
 /* Mobile */
