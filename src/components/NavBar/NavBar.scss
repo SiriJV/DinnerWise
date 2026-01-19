@@ -1,74 +1,58 @@
 @use '../../styles/variables.scss' as var;
 @use '../../styles/mixins.scss' as *;
 
-/* ===== Overlay bakom navbar ===== */
-.overlay {
+.navOverlay {
   position: fixed;
   inset: 0;
+  background: rgba(0, 0, 0, 0.45);
   z-index: 100;
 }
 
-/* ===== Navbar ovanpå main ===== */
-.navbar {
+.sideNav {
   position: fixed;
-  top: 60px;
+  top: var(--header-height, 60px);
   left: 0;
   width: 300px;
-  height: calc(100vh - 60px);
+  height: calc(100vh - var(--header-height, 60px));
   background: white;
   z-index: 200;
+
   @include gray-border(border-right);
 }
 
-/* ===== Scrollbart innehåll ===== */
-.navWrapper {
-  display: flex;
-  flex-direction: column;
+.sideNavInner {
   height: 100%;
-  padding-bottom: 20px;
   overflow-y: auto;
+  padding-bottom: var(--mantine-spacing-lg);
 
   scrollbar-width: none;
   -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-
-  h2 {
-    padding-left: var(--mantine-spacing-md);
+    display: none;
   }
 }
 
-/* ===== Länkar ===== */
-.navLinks {
-  @include gray-border(border-bottom);
+.sideNavLink {
+  text-decoration: none;
+  color: inherit;
+}
 
-  .navBarLink {
-    display: block;
-    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
-    border-radius: var(--mantine-radius-md);
-    font-weight: 500;
+.sideNavButton {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--mantine-radius-sm);
+  font-weight: 500;
+  transition: background-color 0.15s ease;
 
-    &:last-child {
-      margin-bottom: var(--mantine-spacing-lg);
-    }
-
-    &.navLink {
-      color: black;
-      &:hover {
-        @include hover-color;
-      }
-    }
-
-    &.active {
-      @include active-background;
-      border-radius: 0;
-      &:hover {
-        @include active-background-hover;
-        color: black;
-      }
-    }
+  &:hover {
+    // background-color: var.$gray2;
+    @include hover-color;
   }
+}
+
+.sideNavLink.active .sideNavButton {
+  background-color: var.$gray3;
+  font-weight: 600;
 }

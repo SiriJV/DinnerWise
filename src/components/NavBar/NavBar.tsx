@@ -1,9 +1,9 @@
-import { UnstyledButton } from '@mantine/core';
-import { navLinks } from '../../data/NavLinks';
+import { Stack, Text, UnstyledButton, Divider } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-import './NavBar.scss';
+import { navLinks } from '../../data/NavLinks';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
+import './NavBar.scss';
 
 interface NavBarProps {
   opened: boolean;
@@ -15,29 +15,36 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
 
   return (
     <>
-      <div className='overlay' onClick={onClose} />
+      <div className='navOverlay' onClick={onClose} />
 
-      <nav className='navbar'>
-        <div className='navWrapper'>
-          <h2>Utforska efter kategori</h2>
+      <nav className='sideNav'>
+        <Stack className='sideNavInner' gap='md'>
+          <Text fw={800} size='lg' px='md' pt='md'>
+            Utforska efter kategori
+          </Text>
 
-          <div className='navLinks'>
+          <Stack gap={4} px='md'>
             {navLinks.map((link) => (
               <NavLink
-                key={`/${link.path}`}
+                key={link.path}
                 to={`/${link.path}`}
                 className={({ isActive }) =>
-                  `navLink navBarLink ${isActive ? 'active navBarLink' : ''}`
+                  `sideNavLink ${isActive ? 'active' : ''}`
                 }
                 onClick={onClose}>
-                <UnstyledButton>{link.label}</UnstyledButton>
+                <UnstyledButton className='sideNavButton'>
+                  {link.label}
+                </UnstyledButton>
               </NavLink>
             ))}
-          </div>
+          </Stack>
+
+          <Divider my='sm' />
 
           <NavBarAccordion onClose={onClose} />
+
           <LoginButtons onClose={onClose} />
-        </div>
+        </Stack>
       </nav>
     </>
   );
