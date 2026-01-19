@@ -10,7 +10,7 @@ import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
 import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
 import SearchPage from './routes/SearchPage';
-import ProfilePage from './routes/ProfilePage';
+import ProfilePage from './routes/ProfilePage/ProfilePage';
 
 const router = createBrowserRouter([
   {
