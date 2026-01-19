@@ -1,4 +1,13 @@
-import { Card, Image, Text, Badge, Group, Avatar, Box } from '@mantine/core';
+import {
+  Card,
+  Image,
+  Text,
+  Badge,
+  Group,
+  Avatar,
+  Box,
+  Divider,
+} from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import './EventCard.scss';
 import { NavLink } from 'react-router-dom';
@@ -117,9 +126,11 @@ export default function EventCard({
             </NavLink>{' '}
             · {address}
           </Text>
-          <Text size='xs' c='dimmed' className='separator'>
+          {/* <Text size='xs' c='dimmed' className='separator'>
             |
-          </Text>
+          </Text> */}
+          <Divider orientation='vertical' size='sm' />
+
           <Text size='xs' c='dimmed'>
             {date} {timeRange}
           </Text>
