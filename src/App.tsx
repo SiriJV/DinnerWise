@@ -9,6 +9,8 @@ import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
 import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
+import SearchPage from './routes/SearchPage';
+import ProfilePage from './routes/ProfilePage';
 
 const router = createBrowserRouter([
   {
@@ -34,10 +36,19 @@ const router = createBrowserRouter([
       ),
 
       {
+        path: '/sokresultat',
+        element: <SearchPage />,
+      },
+
+      {
         path: '/cookies',
         element: <CookiesPage />,
       },
 
+      {
+        path: '/profil/:id',
+        element: <ProfilePage />,
+      },
       {
         path: '/event/:id',
         element: <EventDetails />,
