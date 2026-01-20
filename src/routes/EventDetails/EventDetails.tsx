@@ -19,7 +19,9 @@ export default function EventDetails(): React.ReactNode {
               Fullt
             </Badge>
           </Group>
-          <Text>med Anders Blom</Text>
+          <Text component={NavLink} to='/profil/:id'>
+            med Anders Blom
+          </Text>
         </Stack>
         <Text>
           Den här träffen passar perfekt för dig som vill göra enkla val för en
