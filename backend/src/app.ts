@@ -22,13 +22,6 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/test', (_req, res) => {
-  res.json({
-    message: 'Test route works!',
-    timestamp: new Date().toISOString(),
-  });
-});
-
 // Database-dependent routes
 app.use('/restaurants', restaurantRoutes);
 app.use('/events', eventsRouter);
