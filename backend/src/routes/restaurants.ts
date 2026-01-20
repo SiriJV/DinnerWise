@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { db } from '../db';
+import { db } from '../db.js';
 
 const router = Router();
 
@@ -31,7 +31,7 @@ router.get('/search', async (req, res) => {
   const { q } = req.query;
 
   if (!q) {
-  return res.json([]);
+    return res.json([]);
   }
 
   const term = q.toString().toLowerCase();
@@ -80,7 +80,9 @@ router.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
   try {
-    const [rows] = await db.query(`SELECT * FROM restaurants WHERE id = ?`, [id]);
+    const [rows] = await db.query(`SELECT * FROM restaurants WHERE id = ?`, [
+      id,
+    ]);
 
     const restaurant = (rows as any[])[0];
     if (!restaurant) {

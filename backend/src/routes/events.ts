@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { db } from '../db';
+import { db } from '../db.js';
 
 const router = Router();
 
@@ -9,7 +9,8 @@ const router = Router();
  * sortera efter: order=price or order=date (närmast i datum)
  */
 router.get('/', async (req, res) => {
-  const { city_id, restaurant_id, category_id, price_lte, date, order } = req.query;
+  const { city_id, restaurant_id, category_id, price_lte, date, order } =
+    req.query;
 
   let sql = `
     SELECT e.*, 

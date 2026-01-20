@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { db } from '../db';
+import { db } from '../db.js';
 
 const router = Router();
 
@@ -17,7 +17,9 @@ router.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
   try {
-    const [rows] = await db.query('SELECT * FROM categories WHERE id = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM categories WHERE id = ?', [
+      id,
+    ]);
     const category = (rows as any[])[0];
 
     if (!category) {
