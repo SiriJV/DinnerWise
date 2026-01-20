@@ -5,6 +5,7 @@ import './AppShell.scss';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer/Footer';
+import ScrollToTop from '../ScrollToTop';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
@@ -22,6 +23,7 @@ export default function AppShell() {
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>
+          <ScrollToTop />
           <Outlet />
           <Footer />
         </MantineAppShell.Main>
