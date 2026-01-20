@@ -1,10 +1,10 @@
 import express from 'express';
-import restaurantRoutes from './routes/restaurants';
-import eventsRouter from './routes/events';
-import categoriesRouter from './routes/categories';
-import tagsRouter from './routes/tags';
-import usersRouter from './routes/users';
-import citiesRouter from './routes/cities';
+import restaurantRoutes from '../src/routes/restaurants';
+import eventsRouter from '../src/routes/events';
+import categoriesRouter from '../src/routes/categories';
+import tagsRouter from '../src/routes/tags';
+import usersRouter from '../src/routes/users';
+import citiesRouter from '../src/routes/cities';
 import cors from 'cors';
 
 const app = express();
