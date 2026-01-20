@@ -1,0 +1,114 @@
+@use '../../styles/variables.scss' as var;
+
+.event-second-column {
+  border-inline-start: solid 1px var.$gray5;
+  padding-inline-start: var(--mantine-spacing-lg);
+
+  @media (max-width: 768px) {
+    border-inline-start: none;
+    padding-inline-start: unset;
+  }
+}
+
+.restaurant-information,
+.host-image-information {
+  background-color: var.$gray2;
+  border: 1px solid var.$gray5;
+}
+
+.host-image-information {
+  border-radius: 0 var(--mantine-radius-md) var(--mantine-radius-md) 0;
+  border-left: 0;
+}
+
+.restaurant-information {
+  border-radius: 0 0 var(--mantine-radius-md) var(--mantine-radius-md);
+  border-top: 0;
+}
+
+.restaurant-image {
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+}
+
+.host-row {
+  height: 90px;
+  align-items: stretch;
+}
+
+.host-image {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: var(--mantine-radius-md) 0 0 var(--mantine-radius-md);
+}
+
+.host-image-information {
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.host-text {
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  display: box;
+  box-orient: vertical;
+
+  line-clamp: 3;
+
+  line-height: 1.4;
+  max-height: calc(1.4em * 3);
+}
+
+.restaurant-text {
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  display: box;
+  box-orient: vertical;
+
+  line-clamp: 2;
+
+  line-height: 1.4;
+  max-height: calc(1.4em * 3);
+}
+
+.host-chevron,
+.restaurant-chevron {
+  flex-shrink: 0;
+}
+
+.host-chevron-link,
+.restaurant-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+}
+
+.restaurant-text,
+.restaurant-chevron-link,
+.event-second-column a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.report-event-icon,
+.report-event-text {
+  color: var.$primaryred;
+}
+
+.report-event-icon {
+  height: 20px;
+  width: auto;
+}
