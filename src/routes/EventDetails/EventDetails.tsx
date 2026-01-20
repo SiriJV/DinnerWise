@@ -29,7 +29,7 @@ export default function EventDetails(): React.ReactNode {
         </Text>
 
         <Group gap='xs' wrap='nowrap' px='xs' py='xs' justify='center' mt='xl'>
-          <Box px='xs' py='xs'>
+          <Box px='xs' py='xs' className='event-info'>
             <Stack align='center' gap='0'>
               <Text size='md'>Datum</Text>
               <Text size='md' fw={600}>
@@ -38,7 +38,7 @@ export default function EventDetails(): React.ReactNode {
             </Stack>
           </Box>
 
-          <Box px='xs' py='xs' className='stats'>
+          <Box px='xs' py='xs' className='event-info'>
             <Stack align='center' gap='0'>
               <Text size='md'>Tid</Text>
               <Text size='md' fw={600}>
@@ -47,7 +47,7 @@ export default function EventDetails(): React.ReactNode {
             </Stack>
           </Box>
 
-          <Box px='xs' py='xs' className='stats'>
+          <Box px='xs' py='xs' className='event-info'>
             <Stack align='center' gap='0'>
               <Text size='md'>Pris</Text>
               <Text size='md' fw={600}>
@@ -68,7 +68,12 @@ export default function EventDetails(): React.ReactNode {
             />
 
             <Group p='md' wrap='nowrap' className='host-image-information'>
-              <Text component={NavLink} to='/profil/:id' className='host-text'>
+              <Text
+                component={NavLink}
+                to='/profil/:id'
+                className='host-text'
+                pr='md'
+                pl='sm'>
                 Hej! Anders heter jag. Utbildad jurist med miljöfokus och lång
                 erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa till
                 Ylva och Melker. På min fritid spelar jag golf, tränar på nya
