@@ -2,7 +2,8 @@ import { SimpleGrid, Tabs } from '@mantine/core';
 import { useState } from 'react';
 import EventCard from '../../components/EventCard/EventCard';
 
-type ProfilePageEventsProps = {};
+// type ProfilePageEventsProps = {
+// eventId: number};
 
 export default function ProfilePageEvents() {
   const [activeTab, setActiveTab] = useState<string | null>('first');
@@ -10,8 +11,12 @@ export default function ProfilePageEvents() {
   return (
     <Tabs value={activeTab} onChange={setActiveTab}>
       <Tabs.List>
-        <Tabs.Tab value='first'>Mina event</Tabs.Tab>
-        <Tabs.Tab value='second'>Sparade event</Tabs.Tab>
+        <Tabs.Tab value='first' color='black'>
+          Mina event
+        </Tabs.Tab>
+        <Tabs.Tab value='second' color='black'>
+          Sparade event
+        </Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value='first'>
