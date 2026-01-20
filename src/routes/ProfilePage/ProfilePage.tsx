@@ -13,9 +13,9 @@ export default function ProfilePage() {
         <ProfilePageAvatar src='https://plus.unsplash.com/premium_photo-1732450236324-8ba08aa1f769' />
         <ProfilePageStats followers={22} following={12} events={13} />
       </Box>
-      <Stack m='md'>
+      <Stack m='md' gap='xs'>
         <Group justify='space-between'>
-          <Text>Linda Larsson 💗</Text>
+          <Text fw='600'>Linda Larsson 💗</Text>
           <Group gap='xs'>
             <PenIcon size='20px' />
             <SettingsIcon size='20px' />
