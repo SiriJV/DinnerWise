@@ -28,15 +28,8 @@ export default function EventDetails(): React.ReactNode {
           ses där!
         </Text>
 
-        <Group
-          gap='xs'
-          wrap='nowrap'
-          bg='white'
-          px='xs'
-          py='xs'
-          justify='center'
-          mt='xl'>
-          <Box px='xs' py='xs' className='stats'>
+        <Group gap='xs' wrap='nowrap' px='xs' py='xs' justify='center' mt='xl'>
+          <Box px='xs' py='xs'>
             <Stack align='center' gap='0'>
               <Text size='md'>Datum</Text>
               <Text size='md' fw={600}>
