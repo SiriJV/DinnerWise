@@ -1,17 +1,24 @@
-import { Text, Image, Grid, Stack, Box, Group } from '@mantine/core';
-import EventCard from '../../components/EventCard/EventCard';
+import { Text, Image, Grid, Stack, Box, Group, Badge } from '@mantine/core';
 import './EventDetails.scss';
 import { ChevronRight, FlagIcon, MapPin } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export default function EventDetails(): React.ReactNode {
   return (
-    <Grid m='md'>
+    <Grid m='md' gutter='xl'>
       <Grid.Col span={{ base: 12, sm: 8 }}>
         <Stack gap={0} mb='md'>
-          <Text size='xl' fw={800}>
-            Zero Waste i vardagen
-          </Text>
+          <Group justify='space-between'>
+            <Text size='xl' fw={800}>
+              Zero Waste i vardagen
+            </Text>
+            <Badge
+              bg='rgba(255, 204, 199, 1)'
+              c='rgba(116, 39, 62, 1)'
+              size='lg'>
+              Fullt
+            </Badge>
+          </Group>
           <Text>med Anders Blom</Text>
         </Stack>
         <Text>
@@ -21,19 +28,14 @@ export default function EventDetails(): React.ReactNode {
           ses där!
         </Text>
 
-        {/* <Group>
-          <Box bg='lightgray'>Datum</Box>
-          <Box bg='lightgray'>Tid</Box>
-          <Box bg='lightgray'>Kostnad</Box>
-        </Group> */}
-
         <Group
           gap='xs'
           wrap='nowrap'
           bg='white'
           px='xs'
           py='xs'
-          justify='center'>
+          justify='center'
+          mt='xl'>
           <Box px='xs' py='xs' className='stats'>
             <Stack align='center' gap='0'>
               <Text size='md'>Datum</Text>
@@ -72,11 +74,7 @@ export default function EventDetails(): React.ReactNode {
               className='host-image'
             />
 
-            <Group
-              p='md'
-              mr='lg'
-              wrap='nowrap'
-              className='host-image-information'>
+            <Group p='md' wrap='nowrap' className='host-image-information'>
               <Text component={NavLink} to='/profil/:id' className='host-text'>
                 Hej! Anders heter jag. Utbildad jurist med miljöfokus och lång
                 erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa till
@@ -90,7 +88,7 @@ export default function EventDetails(): React.ReactNode {
               </NavLink>
             </Group>
           </Group>
-          <Group gap='xs'>
+          <Group gap='xs' mt='xl'>
             <FlagIcon className='report-event-icon' />
             <Text className='report-event-text'>Rapportera event</Text>
           </Group>
@@ -147,19 +145,3 @@ export default function EventDetails(): React.ReactNode {
     </Grid>
   );
 }
-
-<EventCard
-  id={1}
-  title='Zero Waste i vardagen'
-  image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
-  host='Anders Blom'
-  hostImage=''
-  restaurant='Noosh'
-  address='Österlånggatan 35, Borås'
-  startTime={new Date('2026-01-19T17:00:00')}
-  endTime={new Date('2026-01-19T18:45:00')}
-  price={150}
-  spots={6}
-  maxSpots={6}
-  description='Den här träffen passar perfekt för dig som vill göra enkla val för en bättre miljö. Vi går igenom olika tips för att bli Zero Waste i vardagen och diskuterar nya trender inom hållbarhetstänk. Hoppas vi ses där!'
-/>;
