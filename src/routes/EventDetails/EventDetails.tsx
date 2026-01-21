@@ -1,7 +1,24 @@
-import { Text, Image, Grid, Stack, Box, Group, Badge } from '@mantine/core';
+import {
+  Text,
+  Image,
+  Grid,
+  Stack,
+  Box,
+  Group,
+  Badge,
+  ActionIcon,
+  Flex,
+} from '@mantine/core';
 import './EventDetails.scss';
-import { ChevronRight, FlagIcon, MapPin } from 'lucide-react';
+import {
+  BookmarkIcon,
+  ChevronRight,
+  FlagIcon,
+  MapPin,
+  Share,
+} from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 
 export default function EventDetails(): React.ReactNode {
   return (
@@ -141,6 +158,24 @@ export default function EventDetails(): React.ReactNode {
             <Text>Österlånggatan 35, 503 31 Borås</Text>
           </Group>
         </Stack>
+        <Group
+          align='center'
+          bdrs='sm'
+          className='join-event-group'
+          px='8px'
+          pt='8px'
+          pb='8px'
+          w='fit-content'>
+          <Flex px='xs' py='xs' className='event-info'>
+            <BookmarkIcon />
+          </Flex>
+          <Flex px='xs' py='xs' className='event-info'>
+            <Share />
+          </Flex>
+          <BaseButton size='lg' className='join-event-button'>
+            Anmäl dig här
+          </BaseButton>
+        </Group>
       </Grid.Col>
     </Grid>
   );
