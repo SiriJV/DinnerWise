@@ -6,7 +6,7 @@ type SearchBarProps = {
   onHomePage?: boolean;
 };
 
-export default function SearchBar(onHomePage: SearchBarProps) {
+export default function SearchBar({ onHomePage = false }: SearchBarProps) {
   return (
     <Autocomplete
       className={`searchBar ${onHomePage ? 'searchBar-home-page' : ''}`}

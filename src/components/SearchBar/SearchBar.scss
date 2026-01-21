@@ -22,7 +22,9 @@
   color: var.$darkred;
 }
 
-// .searchBar .searchBar-home-page {
-//   position: absolute;
-//   top: -25;
-// }
+.searchBar-home-page {
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+}
