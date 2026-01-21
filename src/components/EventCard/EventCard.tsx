@@ -119,7 +119,7 @@ export default function EventCard({
         <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
-              to='/restaurang/1'
+              to='/restaurang/:id'
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
               {restaurant}
