@@ -1,6 +1,7 @@
 import { Breadcrumbs, Anchor } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import './Breadcrumb.scss';
 
 export default function Breadcrumb() {
   const location = useLocation();
@@ -73,7 +74,7 @@ export default function Breadcrumb() {
   }
 
   return (
-    <Breadcrumbs mt='md' ml='md'>
+    <Breadcrumbs mt='md' ml='md' className='breadcrumb'>
       {items}
     </Breadcrumbs>
   );
