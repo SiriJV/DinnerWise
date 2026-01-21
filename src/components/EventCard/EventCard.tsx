@@ -9,6 +9,7 @@ import {
   Divider,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
+import { useState } from 'react';
 import './EventCard.scss';
 import { NavLink } from 'react-router-dom';
 
@@ -45,9 +46,19 @@ export default function EventCard({
   description,
   maxDescriptionLength = 120,
 }: EventCardProps) {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
   const remainingSpots = maxSpots - spots;
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
+
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsBookmarked(!isBookmarked);
+    // TODO: Här kan vi senare lägga till API-call för att spara till användarens bookmarklista
+    // await addToBookmarks(id);
+  };
 
   const date = startTime.toLocaleDateString('sv-SE', {
     weekday: 'short',
@@ -85,12 +96,13 @@ export default function EventCard({
         <Image src={image} h={160} alt={title} fit='cover' />
 
         <Box
-          className='bookmarkButton'
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
-          <BookmarkIcon size={18} />
+          className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
+          onClick={handleBookmarkClick}>
+          <BookmarkIcon
+            size={18}
+            color='black'
+            fill={isBookmarked ? 'black' : 'none'}
+          />
         </Box>
 
         <Avatar
