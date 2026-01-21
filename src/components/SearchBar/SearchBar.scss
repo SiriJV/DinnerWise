@@ -1,0 +1,28 @@
+@use '../../styles/variables.scss' as var;
+
+.searchBar {
+  max-width: 400px;
+
+  & input {
+    border: 0;
+    border-radius: var(--mantine-radius-xl);
+    border: 1px solid white;
+
+    height: 40px;
+    font-size: 14px;
+    color: var.$darkred;
+
+    &:focus {
+      border-color: var.$darkred;
+    }
+  }
+}
+
+.searchBar-icon {
+  color: var.$darkred;
+}
+
+// .searchBar .searchBar-home-page {
+//   position: absolute;
+//   top: -25;
+// }
