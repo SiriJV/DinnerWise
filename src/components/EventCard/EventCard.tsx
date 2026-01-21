@@ -93,7 +93,7 @@ export default function EventCard({
       pb='0'
       withBorder>
       <Card.Section pos='relative'>
-        <Image src={image} h={160} alt={title} fit='cover' />
+        <Image src={image} h={140} alt={title} fit='cover' />
 
         <Box
           className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
