@@ -6,7 +6,6 @@ import {
   Box,
   Group,
   Badge,
-  ActionIcon,
   Flex,
 } from '@mantine/core';
 import './EventDetails.scss';
