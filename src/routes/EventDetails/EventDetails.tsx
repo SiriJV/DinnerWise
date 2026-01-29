@@ -24,9 +24,9 @@ export default function EventDetails(): React.ReactNode {
   return (
     <>
       <Breadcrumb />
-      <Grid m='md' gutter='xl'>
-        <Grid.Col span={{ base: 12, sm: 8 }}>
-          <Stack gap={0} mb='md'>
+      <Grid m='md' gutter='xl' mx='md'>
+        <Grid.Col span={{ base: 12, md: 7 }}>
+          <Stack gap={0} mb='lg'>
             <Group justify='space-between'>
               <Text size='xl' fw={800}>
                 Zero Waste i vardagen
@@ -120,15 +120,15 @@ export default function EventDetails(): React.ReactNode {
           </Stack>
         </Grid.Col>
 
-        <Grid.Col span={{ base: 12, sm: 4 }} className='event-second-column'>
+        <Grid.Col span={{ base: 12, sm: 5 }} className='event-second-column'>
           <Box component={NavLink} to='/restaurang/:id'>
             <Image
               src='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
               className='restaurant-image'
-              height={180}
+              height={140}
             />
             <Box p='md' className='restaurant-information'>
-              <Text td='none' tt='none' size='md' fw={600}>
+              <Text td='none' tt='none' size='sm' fw={600}>
                 Noosh, Österlånggatan 35, Borås
               </Text>
               <Group
@@ -140,7 +140,7 @@ export default function EventDetails(): React.ReactNode {
                   to='/restaurang/:id'
                   td='none'
                   c='dark'
-                  size='sm'
+                  size='xs'
                   className='restaurant-text'>
                   Välkommen in till oss på Noosh. I rådhuset på hörnet av Stora
                   torget, får du uppleva den latinamerikanska matkulturen och
@@ -160,7 +160,7 @@ export default function EventDetails(): React.ReactNode {
           <Stack gap='xs' mt='lg'>
             <Image
               src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
-              h={250}
+              h={200}
               bdrs='md'
             />
             <Group gap='xs'>
@@ -168,23 +168,16 @@ export default function EventDetails(): React.ReactNode {
               <Text>Österlånggatan 35, 503 31 Borås</Text>
             </Group>
           </Stack>
-          <Group
-            align='center'
-            bdrs='sm'
-            className='join-event-group'
-            px='8px'
-            pt='8px'
-            pb='8px'
-            w='fit-content'>
-            <Flex px='xs' py='xs' className='event-info'>
-              <BookmarkIcon />
-            </Flex>
-            <Flex px='xs' py='xs' className='event-info'>
-              <Share />
-            </Flex>
+          <Group gap='xs' mt='xl' wrap='nowrap' className='join-event-group'>
             <BaseButton size='lg' className='join-event-button'>
               Anmäl dig här
             </BaseButton>
+            <Flex px='md' py='sm' className='action-icon-button'>
+              <BookmarkIcon size={22} />
+            </Flex>
+            <Flex px='md' py='sm' className='action-icon-button'>
+              <Share size={22} />
+            </Flex>
           </Group>
         </Grid.Col>
       </Grid>
