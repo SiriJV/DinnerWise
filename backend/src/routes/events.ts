@@ -114,7 +114,9 @@ router.get('/', async (req, res) => {
       e.price,
       e.date,
       e.start_time,
-      e.end_time
+      e.end_time,
+      r.name AS restaurant_name,
+      r.address AS restaurant_address
     FROM events e
     JOIN restaurants r ON e.restaurant_id = r.id
     WHERE e.date >= CURDATE()
@@ -180,8 +182,11 @@ router.get('/:id', async (req, res) => {
         e.price,
         e.date,
         e.start_time,
-        e.end_time
+        e.end_time,
+        r.name AS restaurant_name,
+        r.address AS restaurant_address
       FROM events e
+      JOIN restaurants r ON e.restaurant_id = r.id
       WHERE e.id = ?
       `,
       [id],
