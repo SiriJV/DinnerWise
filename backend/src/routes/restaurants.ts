@@ -44,7 +44,7 @@ router.get('/search', async (req, res) => {
       WHERE LOWER(name) LIKE ?
       ORDER BY name ASC
       `,
-      [`${term}%`]
+      [`${term}%`],
     );
 
     res.json(rows);
@@ -60,13 +60,26 @@ router.get('/:id/events', async (req, res) => {
   try {
     const [events] = await db.query(
       `
-      SELECT *
-      FROM events
-      WHERE restaurant_id = ?
-        AND (date > CURDATE() OR (date = CURDATE() AND start_time > CURTIME()))
-      ORDER BY date ASC, start_time ASC
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.category_id,
+        e.restaurant_id,
+        e.current_participants,
+        e.price,
+        e.date,
+        e.start_time,
+        e.end_time,
+        r.name AS restaurant_name,
+        r.address AS restaurant_address
+      FROM events e
+      JOIN restaurants r ON e.restaurant_id = r.id
+      WHERE e.restaurant_id = ?
+        AND (e.date > CURDATE() OR (e.date = CURDATE() AND e.start_time > CURTIME()))
+      ORDER BY e.date ASC, e.start_time ASC
       `,
-      [restaurantId]
+      [restaurantId],
     );
 
     res.json(events);
