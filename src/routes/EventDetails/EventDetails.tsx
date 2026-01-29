@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Text,
   Image,
@@ -19,8 +21,59 @@ import {
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
+import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
+  const { id } = useParams<{ id: string }>();
+  const [event, setEvent] = useState<EventType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadEvent() {
+      try {
+        const res = await fetch(`http://localhost:3001/events/${id}`);
+        if (!res.ok) throw new Error('Kunde inte hämta event');
+        const data: EventType = await res.json();
+        setEvent(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) loadEvent();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <>
+        <Breadcrumb />
+        <Text p='xl' ta='center' c='dimmed'>
+          Laddar event...
+        </Text>
+      </>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <>
+        <Breadcrumb />
+        <Text p='xl' ta='center' c='red'>
+          {error || 'Event hittades inte'}
+        </Text>
+      </>
+    );
+  }
+
+  const eventDate = new Date(event.date);
+  const displayMaxSpots = 8;
+  const remainingSpots = displayMaxSpots - event.current_participants;
+  const isFull = remainingSpots <= 0;
+  const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
+
   return (
     <>
       <Breadcrumb />
@@ -29,25 +82,34 @@ export default function EventDetails(): React.ReactNode {
           <Stack gap={0} mb='lg'>
             <Group justify='space-between'>
               <Text size='xl' fw={800}>
-                Zero Waste i vardagen
+                {event.title}
               </Text>
               <Badge
-                bg='rgba(255, 204, 199, 1)'
-                c='rgba(116, 39, 62, 1)'
+                bg={
+                  isFull
+                    ? 'rgba(255, 204, 199, 1)'
+                    : isAlmostFull
+                      ? 'rgba(255, 238, 186, 1)'
+                      : 'rgba(216, 227, 222, 1)'
+                }
+                c={
+                  isFull
+                    ? 'rgba(116, 39, 62, 1)'
+                    : isAlmostFull
+                      ? 'rgba(120, 90, 10, 1)'
+                      : 'rgba(36, 56, 33, 1)'
+                }
                 size='lg'>
-                Fullt
+                {isFull
+                  ? 'Fullt'
+                  : `${event.current_participants}/${displayMaxSpots} platser`}
               </Badge>
             </Group>
             <Text component={NavLink} to='/profil/:id'>
               med Anders Blom
             </Text>
           </Stack>
-          <Text>
-            Den här träffen passar perfekt för dig som vill göra enkla val för
-            en bättre miljö. Vi går igenom olika tips för att bli Zero Waste i
-            vardagen och diskuterar nya trender inom hållbarhetstänk. Hoppas vi
-            ses där!
-          </Text>
+          <Text>{event.description}</Text>
 
           <Group
             gap='xs'
@@ -60,7 +122,11 @@ export default function EventDetails(): React.ReactNode {
               <Stack align='center' gap='0'>
                 <Text size='md'>Datum</Text>
                 <Text size='md' fw={600}>
-                  mån 19 jan.
+                  {eventDate.toLocaleDateString('sv-SE', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                  })}
                 </Text>
               </Stack>
             </Box>
@@ -69,7 +135,7 @@ export default function EventDetails(): React.ReactNode {
               <Stack align='center' gap='0'>
                 <Text size='md'>Tid</Text>
                 <Text size='md' fw={600}>
-                  17:00-18:45
+                  {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
                 </Text>
               </Stack>
             </Box>
@@ -78,7 +144,7 @@ export default function EventDetails(): React.ReactNode {
               <Stack align='center' gap='0'>
                 <Text size='md'>Pris</Text>
                 <Text size='md' fw={600}>
-                  150 kr
+                  {Math.floor(event.price)} kr
                 </Text>
               </Stack>
             </Box>
