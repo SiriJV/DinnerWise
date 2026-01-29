@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
+// import '@mantine/dates/styles.css';
 import './App.scss';
 import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -62,14 +62,13 @@ const router = createBrowserRouter([
         element: <RestaurangDetails />,
       },
       {
-  path: '/skapa-event',
-  element: <CreateEventPage />,
-},
-{
-  path: '/valj-restaurang',
-  element: <SelectRestaurantPage />,
-},
-
+        path: '/skapa-event',
+        element: <CreateEventPage />,
+      },
+      {
+        path: '/valj-restaurang',
+        element: <SelectRestaurantPage />,
+      },
     ],
   },
 ]);
