@@ -1,46 +1,140 @@
+// import { Router } from 'express';
+// import { db } from '../db.js';
+
+// const router = Router();
+
+// /**
+//  * GET /events
+//  * filtrera på: city_id, restaurant_id, category_id, price_lte, date
+//  * sortera efter: order=price or order=date (närmast i datum)
+//  */
+// router.get('/', async (req, res) => {
+//   const { city_id, restaurant_id, category_id, price_lte, date, order } =
+//     req.query;
+
+//   let sql = `
+//     SELECT e.*,
+//       c.id AS category_id,
+//       r.id AS restaurant_id,
+//       r.city AS city_id
+//     FROM events e
+//     JOIN categories c ON e.category_id = c.id
+//     JOIN restaurants r ON e.restaurant_id = r.id
+//   `;
+
+//   const params: any[] = [];
+
+//   // visar bara event i framtiden
+//   sql += ` WHERE e.date >= CURDATE() `;
+
+//   // filtrera på stad, restaurang, kategori, pris och datum
+//   if (city_id) {
+//     sql += ` AND r.city = ? `;
+//     params.push(city_id);
+//   }
+
+//   if (restaurant_id) {
+//     sql += ` AND r.id = ? `;
+//     params.push(restaurant_id);
+//   }
+
+//   if (category_id) {
+//     sql += ` AND c.id = ? `;
+//     params.push(category_id);
+//   }
+
+//   if (price_lte) {
+//     sql += ` AND e.price <= ? `;
+//     params.push(price_lte);
+//   }
+
+//   if (date) {
+//     sql += ` AND e.date = ? `;
+//     params.push(date);
+//   }
+
+//   if (order === 'price') {
+//     sql += ` ORDER BY e.price ASC, e.date ASC `;
+//   } else if (order === 'availability') {
+//     sql += ` ORDER BY spots_left DESC, e.date ASC `;
+//   } else {
+//     sql += ` ORDER BY e.date ASC, e.start_time ASC `;
+//   }
+
+//   try {
+//     const [rows] = await db.query(sql, params);
+//     res.json(rows);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Kunde inte hämta event' });
+//   }
+// });
+
+// router.get('/search', async (req, res) => {
+//   const { q } = req.query;
+//   if (!q) return res.json([]);
+
+//   const term = q.toString().toLowerCase();
+
+//   const [rows] = await db.query(
+//     `
+//     SELECT *
+//     FROM events
+//     WHERE date >= CURDATE()
+//       AND (
+//         LOWER(title) LIKE ?
+//         OR LOWER(title) LIKE ?
+//       )
+//     ORDER BY date ASC, start_time ASC
+//     `,
+//     [`${term}%`, `% ${term}%`]
+//   );
+
+//   res.json(rows);
+// });
+
+// export default router;
 import { Router } from 'express';
 import { db } from '../db.js';
 
 const router = Router();
 
-/**
- * GET /events
- * filtrera på: city_id, restaurant_id, category_id, price_lte, date
- * sortera efter: order=price or order=date (närmast i datum)
- */
 router.get('/', async (req, res) => {
-  const { city_id, restaurant_id, category_id, price_lte, date, order } =
+  const { category_id, restaurant_id, city_id, price_lte, date, order } =
     req.query;
 
   let sql = `
-    SELECT e.*, 
-      c.id AS category_id, 
-      r.id AS restaurant_id, 
-      r.city AS city_id
+    SELECT 
+      e.id,
+      e.title,
+      e.description,
+      e.category_id,
+      e.restaurant_id,
+      e.current_participants,
+      e.price,
+      e.date,
+      e.start_time,
+      e.end_time
     FROM events e
-    JOIN categories c ON e.category_id = c.id
     JOIN restaurants r ON e.restaurant_id = r.id
+    WHERE e.date >= CURDATE()
   `;
 
   const params: any[] = [];
 
-  // visar bara event i framtiden
-  sql += ` WHERE e.date >= CURDATE() `;
-
-  // filtrera på stad, restaurang, kategori, pris och datum
   if (city_id) {
     sql += ` AND r.city = ? `;
     params.push(city_id);
   }
 
-  if (restaurant_id) {
-    sql += ` AND r.id = ? `;
-    params.push(restaurant_id);
+  if (category_id) {
+    sql += ` AND e.category_id = ? `;
+    params.push(category_id);
   }
 
-  if (category_id) {
-    sql += ` AND c.id = ? `;
-    params.push(category_id);
+  if (restaurant_id) {
+    sql += ` AND e.restaurant_id = ? `;
+    params.push(restaurant_id);
   }
 
   if (price_lte) {
@@ -56,7 +150,7 @@ router.get('/', async (req, res) => {
   if (order === 'price') {
     sql += ` ORDER BY e.price ASC, e.date ASC `;
   } else if (order === 'availability') {
-    sql += ` ORDER BY spots_left DESC, e.date ASC `;
+    sql += ` ORDER BY e.current_participants ASC, e.date ASC `;
   } else {
     sql += ` ORDER BY e.date ASC, e.start_time ASC `;
   }
@@ -70,27 +164,39 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/search', async (req, res) => {
-  const { q } = req.query;
-  if (!q) return res.json([]);
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
 
-  const term = q.toString().toLowerCase();
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.category_id,
+        e.restaurant_id,
+        e.current_participants,
+        e.price,
+        e.date,
+        e.start_time,
+        e.end_time
+      FROM events e
+      WHERE e.id = ?
+      `,
+      [id],
+    );
 
-  const [rows] = await db.query(
-    `
-    SELECT *
-    FROM events
-    WHERE date >= CURDATE()
-      AND (
-        LOWER(title) LIKE ?
-        OR LOWER(title) LIKE ?
-      )
-    ORDER BY date ASC, start_time ASC
-    `,
-    [`${term}%`, `% ${term}%`]
-  );
+    const events = rows as any[];
+    if (events.length === 0) {
+      return res.status(404).json({ error: 'Event hittades inte' });
+    }
 
-  res.json(rows);
+    res.json(events[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Kunde inte hämta event' });
+  }
 });
 
 export default router;

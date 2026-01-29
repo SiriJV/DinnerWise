@@ -1,0 +1,12 @@
+.breadcrumb {
+  a {
+    color: black;
+    text-decoration: none;
+    transition: text-decoration 150ms ease;
+    font-size: small;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
