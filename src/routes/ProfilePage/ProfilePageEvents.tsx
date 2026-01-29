@@ -27,17 +27,15 @@ export default function ProfilePageEvents() {
           <EventCard
             id={1}
             title='Zero Waste i vardagen'
-            image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
-            host='Anders Blom'
-            hostImage=''
-            restaurant='Noosh'
-            address='Österlånggatan 35, Borås'
-            startTime={new Date('2026-01-19T17:00:00')}
-            endTime={new Date('2026-01-19T18:45:00')}
-            price={150}
-            spots={6}
-            maxSpots={6}
             description='Den här träffen passar perfekt för dig som vill göra enkla val för en bättre miljö. Vi går igenom olika tips för att bli Zero Waste i vardagen och diskuterar nya trender inom hållbarhetstänk. Hoppas vi ses där!'
+            current_participants={6}
+            price={150}
+            date={new Date('2026-01-19')}
+            start_time='17:00:00'
+            end_time='18:45:00'
+            restaurant_id={1}
+            restaurant_name='Noosh'
+            restaurant_address='Österlånggatan 35, Borås'
           />
         </SimpleGrid>
       </Tabs.Panel>
@@ -47,34 +45,30 @@ export default function ProfilePageEvents() {
           spacing='md'
           mt='md'>
           <EventCard
-            id={1}
+            id={2}
             title='Plocka svamp som ett proffs'
-            image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/d1/5c/33/caption.jpg?w=1100&h=-1&s=1'
-            host='Sara Flinck'
-            hostImage=''
-            restaurant='Vinci'
-            address='Sandwalls Plats 7A, Borås'
-            startTime={new Date('2026-01-24T18:00:00')}
-            endTime={new Date('2026-01-24T20:00:00')}
-            price={99}
-            spots={3}
-            maxSpots={5}
             description='Lär dig att hitta guldkornen i skogen och skilja på svamp och svamp med en riktig proffsplockare.'
+            current_participants={3}
+            price={99}
+            date={new Date('2026-01-24')}
+            start_time='18:00:00'
+            end_time='20:00:00'
+            restaurant_id={2}
+            restaurant_name='Vinci'
+            restaurant_address='Sandwalls Plats 7A, Borås'
           />
           <EventCard
-            id={1}
+            id={3}
             title='Heraldriska vapen och deras historia'
-            image='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/91/05/5b/caption.jpg?w=1100&h=-1&s=1'
-            host='Roger Göransson'
-            hostImage=''
-            restaurant='La Copita'
-            address='Allégatan 63, Borås'
-            startTime={new Date('2026-02-04T16:30:00')}
-            endTime={new Date('2026-02-04T18:00:00')}
-            price={120}
-            spots={2}
-            maxSpots={5}
             description='Vi pratar svenska hiraldriska vapen och deras historia. När kom de till Sverige och hur användes de under århundradena?'
+            current_participants={2}
+            price={120}
+            date={new Date('2026-02-04')}
+            start_time='16:30:00'
+            end_time='18:00:00'
+            restaurant_id={3}
+            restaurant_name='La Copita'
+            restaurant_address='Allégatan 63, Borås'
           />
         </SimpleGrid>
       </Tabs.Panel>
