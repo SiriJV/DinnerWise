@@ -1,4 +1,4 @@
-import { Breadcrumbs, Anchor } from '@mantine/core';
+import { Breadcrumbs, Anchor, Text } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Breadcrumb.scss';
@@ -16,16 +16,18 @@ export default function Breadcrumb() {
 
     if (eventIndex !== -1 && pathnames[eventIndex + 1]) {
       const eventId = pathnames[eventIndex + 1];
-      // TODO: Fetch event data from API
-      // fetch(`/api/events/${eventId}`).then(res => res.json()).then(data => setEventName(data.title));
-      setEventName(`Event ${eventId}`); // Placeholder
+      fetch(`http://localhost:3001/events/${eventId}`)
+        .then((res) => res.json())
+        .then((data) => setEventName(data.title))
+        .catch(() => setEventName(`Event ${eventId}`));
     }
 
     if (restaurantIndex !== -1 && pathnames[restaurantIndex + 1]) {
       const restaurantId = pathnames[restaurantIndex + 1];
-      // TODO: Fetch restaurant data from API
-      // fetch(`/api/restaurants/${restaurantId}`).then(res => res.json()).then(data => setRestaurantName(data.name));
-      setRestaurantName(`Restaurang ${restaurantId}`); // Placeholder
+      fetch(`http://localhost:3001/restaurants/${restaurantId}`)
+        .then((res) => res.json())
+        .then((data) => setRestaurantName(data.name))
+        .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
     }
   }, [pathnames]);
 
@@ -55,6 +57,16 @@ export default function Breadcrumb() {
         <Anchor component={Link} to={href} key={href}>
           {restaurantName}
         </Anchor>
+      );
+    }
+
+    // Don't link "Event" or "Restaurang" labels
+    if (value === 'event' || value === 'restaurang') {
+      const label = breadcrumbMap[value];
+      return (
+        <Text key={href} size='sm'>
+          {label}
+        </Text>
       );
     }
 
