@@ -108,6 +108,9 @@ export default function HomePage() {
                   date={new Date(event.date)}
                   start_time={event.start_time}
                   end_time={event.end_time}
+                  restaurant_id={event.restaurant_id}
+                  restaurant_name={event.restaurant_name}
+                  restaurant_address={event.restaurant_address}
                 />
               ))}
             </SimpleGrid>
