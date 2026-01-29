@@ -190,7 +190,6 @@ type EventCardProps = {
   title: string;
   description: string;
   current_participants: number;
-  max_spots: number;
   price: number;
   date: Date;
   start_time: string;
@@ -203,7 +202,6 @@ export default function EventCard({
   title,
   description,
   current_participants,
-  max_spots,
   price,
   date,
   start_time,
@@ -212,8 +210,8 @@ export default function EventCard({
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  // Placeholder values om data saknas
-  const displayMaxSpots = max_spots || 8;
+  // Placeholder values - max_spots finns inte i API än
+  const displayMaxSpots = 8;
   const displayCurrentParticipants =
     current_participants || Math.floor(Math.random() * 4) + 5;
   const displayPrice = typeof price === 'string' ? parseFloat(price) : price;
