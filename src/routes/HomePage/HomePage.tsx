@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Badge, Divider, Group, SimpleGrid, Stack, Text } from '@mantine/core';
-import {
-  MapPin,
-  BookOpenText,
-  CreditCard,
-  Calendar,
-  ChevronDown,
-} from 'lucide-react';
+import { Divider, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 // import DateFilterDropdown from '../../components/Filters/DatePickerFilter/DatePickerFilter';
-import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
@@ -44,6 +36,10 @@ export default function HomePage() {
 
     loadEvents();
   }, []);
+
+  const handleSortChange = (sortBy: SortValue) => {
+  console.log('Sortera efter:', sortBy);
+  };
 
   return (
     <>
