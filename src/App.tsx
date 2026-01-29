@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import './App.scss';
 import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -11,6 +12,8 @@ import EventDetails from './routes/EventDetails/EventDetails';
 import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
 import SearchPage from './routes/SearchPage';
 import ProfilePage from './routes/ProfilePage/ProfilePage';
+import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
+import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
 
 const router = createBrowserRouter([
   {
@@ -58,6 +61,15 @@ const router = createBrowserRouter([
         path: '/restaurang/:id',
         element: <RestaurangDetails />,
       },
+      {
+  path: '/skapa-event',
+  element: <CreateEventPage />,
+},
+{
+  path: '/valj-restaurang',
+  element: <SelectRestaurantPage />,
+},
+
     ],
   },
 ]);
