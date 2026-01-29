@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       </MantineProvider>
     ),
     children: [
-      { index: true, element: HomePage() },
+      { index: true, element: <HomePage /> },
 
       ...navLinks.map((link) => ({
         path: link.path,
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         item.panels.map((panel) => ({
           path: panel.path,
           element: panel.element,
-        }))
+        })),
       ),
 
       {
