@@ -203,6 +203,9 @@ type EventCardProps = {
   date: Date;
   start_time: string;
   end_time: string;
+  restaurant_id: number;
+  restaurant_name?: string;
+  restaurant_address?: string;
   maxDescriptionLength?: number;
 };
 
@@ -215,6 +218,9 @@ export default function EventCard({
   date,
   start_time,
   end_time,
+  restaurant_id,
+  restaurant_name,
+  restaurant_address,
   maxDescriptionLength = 120,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -302,12 +308,12 @@ export default function EventCard({
         <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
-              to='/restaurang/:id'
+              to={`/restaurang/${restaurant_id}`}
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
-              Noosh
+              {restaurant_name || 'Restaurang'}
             </NavLink>{' '}
-            · Österlånggatan 35
+            · {restaurant_address || 'Adress saknas'}
           </Text>
           <Divider orientation='vertical' size='sm' />
 
