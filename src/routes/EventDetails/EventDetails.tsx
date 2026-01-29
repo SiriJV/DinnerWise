@@ -187,36 +187,36 @@ export default function EventDetails(): React.ReactNode {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 5 }} className='event-second-column'>
-          <Box component={NavLink} to='/restaurang/:id'>
+          <Box component={NavLink} to={`/restaurang/${event.restaurant_id}`}>
             <Image
-              src='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
+              src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
               className='restaurant-image'
               height={140}
             />
             <Box p='md' className='restaurant-information'>
-              <Text td='none' tt='none' size='sm' fw={600}>
-                Noosh, Österlånggatan 35, Borås
-              </Text>
               <Group
-                pt='sm'
+                // pt='sm'
                 wrap='nowrap'
-                className='restaurant-image-information'>
-                <Text
+                className='restaurant-image-information'
+                justify='space-between'>
+                <Text td='none' tt='none' size='sm' fw={600}>
+                  {event.restaurant_name || 'Restaurang'}
+                  {event.restaurant_address && `, ${event.restaurant_address}`}
+                </Text>
+                {/* <Text
                   component={NavLink}
-                  to='/restaurang/:id'
+                  to={`/restaurang/${event.restaurant_id}`}
                   td='none'
                   c='dark'
                   size='xs'
                   className='restaurant-text'>
-                  Välkommen in till oss på Noosh. I rådhuset på hörnet av Stora
-                  torget, får du uppleva den latinamerikanska matkulturen och
-                  gemenskapen som sker runt matbordet när du delar ett par
-                  smakrika smårätter, en drink i baren eller en helkväll
-                  tillsammans med de du tycker om.
-                </Text>
+                  Välkommen in till oss på{' '}
+                  {event.restaurant_name || 'restaurangen'}. En fantastisk plats
+                  med härlig atmosfär och god mat.
+                </Text> */}
 
                 <NavLink
-                  to='/restaurant/:id'
+                  to={`/restaurang/${event.restaurant_id}`}
                   className='restaurant-chevron-link'>
                   <ChevronRight className='restaurant-chevron' />
                 </NavLink>
@@ -231,7 +231,7 @@ export default function EventDetails(): React.ReactNode {
             />
             <Group gap='xs'>
               <MapPin size='16px' />
-              <Text>Österlånggatan 35, 503 31 Borås</Text>
+              <Text>{event.restaurant_address || 'Adress saknas'}</Text>
             </Group>
           </Stack>
           <Group gap='xs' mt='xl' wrap='nowrap' className='join-event-group'>
