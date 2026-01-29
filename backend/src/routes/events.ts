@@ -164,4 +164,39 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.category_id,
+        e.restaurant_id,
+        e.current_participants,
+        e.price,
+        e.date,
+        e.start_time,
+        e.end_time
+      FROM events e
+      WHERE e.id = ?
+      `,
+      [id],
+    );
+
+    const events = rows as any[];
+    if (events.length === 0) {
+      return res.status(404).json({ error: 'Event hittades inte' });
+    }
+
+    res.json(events[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Kunde inte hämta event' });
+  }
+});
+
 export default router;
