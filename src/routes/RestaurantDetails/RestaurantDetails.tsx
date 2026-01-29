@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Stack, Text, Image, Group, Anchor } from '@mantine/core';
+import {
+  Box,
+  Stack,
+  Text,
+  Image,
+  Group,
+  Anchor,
+  SimpleGrid,
+  Divider,
+} from '@mantine/core';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { NavLink } from 'react-router-dom';
 import {
@@ -13,6 +22,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import EventCard from '../../components/EventCard/EventCard';
+import type { EventType } from '../../types/EventType';
 
 type Restaurant = {
   id: number;
@@ -26,16 +37,26 @@ type Restaurant = {
 export default function RestaurangDetails(): React.ReactNode {
   const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadRestaurant() {
       try {
-        const res = await fetch(`http://localhost:3001/restaurants/${id}`);
-        if (!res.ok) throw new Error('Kunde inte hämta restaurang');
-        const data: Restaurant = await res.json();
-        setRestaurant(data);
+        const [restaurantRes, eventsRes] = await Promise.all([
+          fetch(`http://localhost:3001/restaurants/${id}`),
+          fetch(`http://localhost:3001/restaurants/${id}/events`),
+        ]);
+
+        if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
+        const restaurantData: Restaurant = await restaurantRes.json();
+        setRestaurant(restaurantData);
+
+        if (eventsRes.ok) {
+          const eventsData: EventType[] = await eventsRes.json();
+          setEvents(eventsData);
+        }
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -127,6 +148,34 @@ export default function RestaurangDetails(): React.ReactNode {
             </Group>
           </Stack>
         </Group>
+
+        <Divider />
+
+        {events.length > 0 && (
+          <Stack gap='md'>
+            <Text size='lg' fw={600}>
+              Kommande event på {restaurant.name}
+            </Text>
+            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+              {events.map((event) => (
+                <EventCard
+                  key={event.id}
+                  id={event.id}
+                  title={event.title}
+                  description={event.description}
+                  current_participants={event.current_participants}
+                  price={event.price}
+                  date={new Date(event.date)}
+                  start_time={event.start_time}
+                  end_time={event.end_time}
+                  restaurant_id={event.restaurant_id}
+                  restaurant_name={event.restaurant_name}
+                  restaurant_address={event.restaurant_address}
+                />
+              ))}
+            </SimpleGrid>
+          </Stack>
+        )}
       </Stack>
     </>
   );
