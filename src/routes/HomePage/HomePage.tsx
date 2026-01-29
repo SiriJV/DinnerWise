@@ -10,75 +10,64 @@ import {
   CreditCard,
   MapPin,
 } from 'lucide-react';
+import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
+import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
+// import DateFilterDropdown from '../../components/Filters/DatePickerFilter/DatePickerFilter';
+import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import Sort from '../../components/Sort/Sort';
+import type { SortValue } from '../../components/Sort/Sort';
+import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
+import FloatingActionButton from '../../components/FAB/FAB';
 
 export default function HomePage(): React.ReactNode {
+  const handleSortChange = (sortBy: SortValue) => {
+    console.log('Sortera efter:', sortBy);
+  };
+
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-
+      <FloatingActionButton to="/skapa-event" />
       <Stack p='md'>
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />
+        <Group justify="space-between">
         <Group>
-          <Badge
-            pt='md'
-            pb='md'
-            fz='sm'
-            tt='none'
-            fw='500'
-            c='rgba(116, 39, 62, 1)'
-            bg='rgba(255, 204, 199, 1)'>
-            <Group gap='xs' pb='sm' pt='sm'>
-              <MapPin size='18px' />
-              Borås
-              <ChevronDown size='18px' />
-            </Group>
-          </Badge>
-          <Badge
-            pt='md'
-            pb='md'
-            fz='sm'
-            tt='none'
-            fw='500'
-            c='rgba(116, 39, 62, 1)'
-            bg='rgba(255, 204, 199, 1)'>
-            <Group gap='xs' pb='sm' pt='sm'>
-              <BookOpenText size='18px' />
-              Ämne
-              <ChevronDown size='18px' />
-            </Group>
-          </Badge>
-          <Badge
-            pt='md'
-            pb='md'
-            fz='sm'
-            tt='none'
-            fw='500'
-            c='rgba(116, 39, 62, 1)'
-            bg='rgba(255, 204, 199, 1)'>
-            <Group gap='xs' pb='sm' pt='sm'>
-              <CreditCard size='18px' />
-              Pris
-              <ChevronDown size='18px' />
-            </Group>
-          </Badge>
-          <Badge
-            pt='md'
-            pb='md'
-            fz='sm'
-            tt='none'
-            fw='500'
-            c='rgba(116, 39, 62, 1)'
-            bg='rgba(255, 204, 199, 1)'>
-            <Group gap='xs' pb='sm' pt='sm'>
-              <Calendar size='18px' />
-              Datum
-              <ChevronDown size='18px' />
-            </Group>
-          </Badge>
+        <FilterDropdown
+          fetchUrl="http://localhost:3001/categories"
+          label="Kategori"
+          onApply={(selected) => {
+            console.log('Kategorifilter:', selected);
+          }}
+        />
+        <SearchableFilterDropdown
+          label="Stad"
+          fetchUrl="http://localhost:3001/cities"
+          onApply={(selected) => {
+            console.log('Stadfilter:', selected);
+          }}
+        />
+        <SearchableFilterDropdown
+          label="Ämne"
+          fetchUrl="http://localhost:3001/tags"
+          onApply={(selected) => {
+            console.log('Ämnefilter:', selected);
+          }}
+        />
+        <PriceDropdown label="Pris" onApply={(selected) => {
+            console.log('Prisfilter:', selected);
+          }} 
+        />
+        {/* <DateFilterDropdown
+          label="Datum" onApply={(selected) => {
+            console.log('Datumfilter:', selected);
+          }}
+        /> */}
         </Group>
+        <Sort onSortChange={handleSortChange} />
+      </Group>
+
         <Stack mt='xs'>
-          <Text>Sortera</Text>
           <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
             <EventCard
               id={1}
