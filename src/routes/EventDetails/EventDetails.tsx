@@ -187,7 +187,10 @@ export default function EventDetails(): React.ReactNode {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 5 }} className='event-second-column'>
-          <Box component={NavLink} to={`/restaurang/${event.restaurant_id}`}>
+          <Box
+            component={NavLink}
+            to={`/restaurang/${event.restaurant_id}`}
+            className='restaurant-image-box'>
             <Image
               src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
               className='restaurant-image'
@@ -228,6 +231,7 @@ export default function EventDetails(): React.ReactNode {
               src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
               h={200}
               bdrs='md'
+              className='map-image'
             />
             <Group gap='xs'>
               <MapPin size='16px' />
