@@ -150,6 +150,23 @@
   }
 }
 
+.sticky-action-buttons {
+  position: fixed;
+  bottom: var(--mantine-spacing-xl);
+  right: var(--mantine-spacing-xl);
+  z-index: 100;
+  border-radius: var(--mantine-radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 360px;
+
+  @media (max-width: 768px) {
+    position: static;
+    width: 100%;
+    min-width: unset;
+    margin-top: var(--mantine-spacing-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
 .action-icon-button {
   background-color: var.$gray3;
   border-radius: var(--mantine-radius-sm);

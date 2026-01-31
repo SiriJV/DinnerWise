@@ -180,26 +180,6 @@ export default function EventDetails(): React.ReactNode {
                   </NavLink>
                 </Group>
               </Group>
-
-              <Group
-                maw={450}
-                gap='xs'
-                mt='xl'
-                justify='flex-end'
-                className='join-event-group'>
-                <BaseButton
-                  size='md'
-                  className='join-event-button'
-                  style={{ width: 'auto' }}>
-                  Anmäl dig här
-                </BaseButton>
-                <Flex px='md' py='sm' className='action-icon-button'>
-                  <BookmarkIcon size={22} />
-                </Flex>
-                <Flex px='md' py='sm' className='action-icon-button'>
-                  <Share size={22} />
-                </Flex>
-              </Group>
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
@@ -247,6 +227,24 @@ export default function EventDetails(): React.ReactNode {
             </Stack>
           </Grid.Col>
         </Grid>
+
+        <Box bg='white' p='md' className='sticky-action-buttons'>
+          <Group gap='xs' className='join-event-group'>
+            <BaseButton
+              size='md'
+              className='join-event-button'
+              style={{ width: 'auto' }}>
+              Anmäl dig här
+            </BaseButton>
+            <Flex px='md' py='sm' className='action-icon-button'>
+              <BookmarkIcon size={22} />
+            </Flex>
+            <Flex px='md' py='sm' className='action-icon-button'>
+              <Share size={22} />
+            </Flex>
+          </Group>
+        </Box>
+
         <Group gap='xs' mt='lg'>
           <FlagIcon className='report-event-icon' />
           <Text className='report-event-text'>Rapportera event</Text>
