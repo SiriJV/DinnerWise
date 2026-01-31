@@ -11,7 +11,9 @@
 }
 
 .restaurant-information,
-.host-image-information {
+.restaurant-image,
+.host-image-information,
+.map-image {
   background-color: var.$gray2;
   border: 1px solid var.$gray5;
 }
@@ -34,7 +36,11 @@
 .restaurant-image {
   border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
 }
-
+.restaurant-image-box {
+  .restaurant-image {
+    border-bottom: 0;
+  }
+}
 .host-row {
   height: 90px;
   align-items: stretch;
