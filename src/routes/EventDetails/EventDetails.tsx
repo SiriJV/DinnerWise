@@ -29,6 +29,7 @@ export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNearFooter, setIsNearFooter] = useState(false);
 
   useEffect(() => {
     async function loadEvent() {
@@ -46,6 +47,31 @@ export default function EventDetails(): React.ReactNode {
 
     if (id) loadEvent();
   }, [id]);
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer) {
+          const footerRect = footer.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          // Add buffer zone to make transition smoother
+          setIsNearFooter(footerRect.top < windowHeight + 80);
+        }
+      }, 16);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -224,26 +250,30 @@ export default function EventDetails(): React.ReactNode {
                   <Text>{event.restaurant_address || 'Adress saknas'}</Text>
                 </Group>
               </Stack>
+
+              {/* Action Buttons */}
+              <Box
+                bg='white'
+                p='md'
+                className={`sticky-action-buttons ${isNearFooter ? 'near-footer' : ''}`}>
+                <Group gap='xs' className='join-event-group'>
+                  <BaseButton
+                    size='md'
+                    className='join-event-button'
+                    style={{ width: 'auto' }}>
+                    Anmäl dig här
+                  </BaseButton>
+                  <Flex px='md' py='sm' className='action-icon-button'>
+                    <BookmarkIcon size={22} />
+                  </Flex>
+                  <Flex px='md' py='sm' className='action-icon-button'>
+                    <Share size={22} />
+                  </Flex>
+                </Group>
+              </Box>
             </Stack>
           </Grid.Col>
         </Grid>
-
-        <Box bg='white' p='md' className='sticky-action-buttons'>
-          <Group gap='xs' className='join-event-group'>
-            <BaseButton
-              size='md'
-              className='join-event-button'
-              style={{ width: 'auto' }}>
-              Anmäl dig här
-            </BaseButton>
-            <Flex px='md' py='sm' className='action-icon-button'>
-              <BookmarkIcon size={22} />
-            </Flex>
-            <Flex px='md' py='sm' className='action-icon-button'>
-              <Share size={22} />
-            </Flex>
-          </Group>
-        </Box>
 
         <Group gap='xs' mt='lg'>
           <FlagIcon className='report-event-icon' />
