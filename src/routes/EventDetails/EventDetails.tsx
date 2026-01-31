@@ -211,7 +211,7 @@ export default function EventDetails(): React.ReactNode {
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack gap='lg'>
               <Stack gap='xs'>
-                <Text fw={600}>Plats</Text>
+                <Text fw={600}>Om platsen</Text>
                 <Box
                   component={NavLink}
                   to={`/restaurang/${event.restaurant_id}`}
