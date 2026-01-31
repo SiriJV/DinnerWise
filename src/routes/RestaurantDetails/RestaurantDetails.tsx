@@ -139,6 +139,7 @@ export default function RestaurangDetails(): React.ReactNode {
               src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
               h={250}
               bdrs='md'
+              className='map-image'
             />
             <Group gap='xs'>
               <MapPin size='16px' />
