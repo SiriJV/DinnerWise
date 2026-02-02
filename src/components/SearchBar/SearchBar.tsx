@@ -2,18 +2,14 @@ import { Autocomplete } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
 import './SearchBar.scss';
 
-type SearchBarProps = {
-  onHomePage?: boolean;
-};
-
-export default function SearchBar({ onHomePage = false }: SearchBarProps) {
+export default function SearchBar() {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
   return (
     <Autocomplete
-      className={`searchBar ${onHomePage ? 'searchBar-home-page' : ''}`}
+      className='searchBar'
       placeholder='Sök...'
       rightSection={
         <SearchIcon
