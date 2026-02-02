@@ -2,6 +2,7 @@ import { ActionIcon, Burger, Group, UnstyledButton } from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
 import { BellIcon, SearchIcon, UserRound } from 'lucide-react';
+import SearchBar from '../SearchBar/SearchBar';
 
 interface HeaderProps {
   opened: boolean;
@@ -21,14 +22,15 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
       </Group>
 
       <Group gap='md'>
-        <ActionIcon
+        <SearchBar />
+        {/* <ActionIcon
           component={NavLink}
           to='/sokresultat'
           variant='subtle'
           color='white'
           size='md'>
           <SearchIcon size={20} />
-        </ActionIcon>
+        </ActionIcon> */}
         <ActionIcon
           component={NavLink}
           to='/'
