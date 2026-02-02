@@ -105,7 +105,9 @@ export default function EventDetails(): React.ReactNode {
     <>
       <Breadcrumb />
 
-      <Box m='md'>
+      <Box
+        p={{ base: 'sm', md: 'md' }}
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         {/* Title and Badge - Outside Grid */}
         <Stack gap={0} mb='lg'>
           <Group justify='space-between'>
@@ -182,7 +184,7 @@ export default function EventDetails(): React.ReactNode {
               <Group gap='0' wrap='nowrap' className='host-row'>
                 <Image
                   src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
-                  w={80}
+                  w={{ base: 80, md: 100 }}
                   className='host-image'
                 />
 
