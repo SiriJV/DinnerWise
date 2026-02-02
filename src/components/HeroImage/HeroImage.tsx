@@ -1,5 +1,6 @@
-import { Paper, Stack, Text } from '@mantine/core';
+import { Box, Paper, Stack, Text } from '@mantine/core';
 import './HeroImage.scss';
+import SearchBar from '../SearchBar/SearchBar';
 
 type HeroImageProps = {
   src: string;
@@ -31,6 +32,10 @@ export default function HeroImage({
           </Text>
         </Stack>
       </Paper>
+
+      <Box className='heroSearchBar'>
+        <SearchBar />
+      </Box>
     </div>
   );
 }
