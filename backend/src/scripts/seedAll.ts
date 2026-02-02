@@ -1,10 +1,10 @@
-import { seedCategories } from './seedCategories';
-import { seedTags } from './seedTags';
-import { seedRestaurants } from './seedRestaurants';
-import { seedEvents } from './seedEvents';
-import { seedUsers } from './seedUsers';
-import { seedCities } from './seedCities';
-import { db } from '../db';
+import { seedCategories } from './seedCategories.js';
+import { seedTags } from './seedTags.js';
+import { seedRestaurants } from './seedRestaurants.js';
+import { seedEvents } from './seedEvents.js';
+import { seedUsers } from './seedUsers.js';
+import { seedCities } from './seedCities.js';
+import { db } from '../db.js';
 
 async function dropTables() {
   await db.query(`DROP TABLE IF EXISTS users;`);
