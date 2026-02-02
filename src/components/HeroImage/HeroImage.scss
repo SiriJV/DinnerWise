@@ -59,4 +59,8 @@
   padding-left: var(--mantine-spacing-lg);
   padding-right: var(--mantine-spacing-lg);
   z-index: 100;
+
+  .searchBar {
+    width: 50%;
+  }
 }
