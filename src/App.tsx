@@ -14,6 +14,7 @@ import SearchPage from './routes/SearchPage';
 import ProfilePage from './routes/ProfilePage/ProfilePage';
 import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
 import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
+import CategoryPage from './routes/CategoryPage/CategoryPage';
 
 const router = createBrowserRouter([
   {
@@ -62,14 +63,17 @@ const router = createBrowserRouter([
         element: <RestaurangDetails />,
       },
       {
-  path: '/skapa-event',
-  element: <CreateEventPage />,
-},
-{
-  path: '/valj-restaurang',
-  element: <SelectRestaurantPage />,
-},
-
+        path: '/skapa-event',
+        element: <CreateEventPage />,
+      },
+      {
+        path: '/valj-restaurang',
+        element: <SelectRestaurantPage />,
+      },
+      {
+        path: '/kategori/:slug',
+        element: <CategoryPage />,
+      },
     ],
   },
 ]);
