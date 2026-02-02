@@ -105,10 +105,7 @@ export default function EventDetails(): React.ReactNode {
     <>
       <Breadcrumb />
 
-      <Box
-        p={{ base: 'sm', md: 'md' }}
-        style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-        {/* Title and Badge - Outside Grid */}
+      <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
           <Group justify='space-between'>
             <Text size='xl' fw={800}>
@@ -135,7 +132,7 @@ export default function EventDetails(): React.ReactNode {
                 : `${event.current_participants}/${displayMaxSpots} platser`}
             </Badge>
           </Group>
-          <Text component={NavLink} to='/profil/:id'>
+          <Text component={NavLink} to='/profil/:id' w='fit-content'>
             med Anders Blom
           </Text>
         </Stack>
@@ -144,7 +141,7 @@ export default function EventDetails(): React.ReactNode {
 
         <Group gap='md' mb='xl' grow>
           <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
+            <Stack align='center' gap='0' pt='xs' pb='xs'>
               <Text size='md'>Datum</Text>
               <Text size='md' fw={600}>
                 {eventDate.toLocaleDateString('sv-SE', {
@@ -157,7 +154,7 @@ export default function EventDetails(): React.ReactNode {
           </Box>
 
           <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
+            <Stack align='center' gap='0' pt='xs' pb='xs'>
               <Text size='md'>Tid</Text>
               <Text size='md' fw={600}>
                 {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
@@ -166,7 +163,7 @@ export default function EventDetails(): React.ReactNode {
           </Box>
 
           <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
+            <Stack align='center' gap='0' pt='xs' pb='xs'>
               <Text size='md'>Pris</Text>
               <Text size='md' fw={600}>
                 {Math.floor(event.price)} kr
@@ -181,33 +178,33 @@ export default function EventDetails(): React.ReactNode {
             <Stack gap='xs'>
               <Text fw={600}>Om värden</Text>
 
-              <Group gap='0' wrap='nowrap' className='host-row'>
-                <Image
-                  src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
-                  w={{ base: 80, md: 100 }}
-                  className='host-image'
-                />
+              <NavLink
+                to='/profil/:id'
+                style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Group gap='0' wrap='nowrap' className='host-row'>
+                  <Image
+                    src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    w={{ base: 80, md: 100 }}
+                    className='host-image'
+                  />
 
-                <Group p='md' wrap='nowrap' className='host-image-information'>
-                  <Text
-                    component={NavLink}
-                    to='/profil/:id'
-                    className='host-text'
-                    pr='md'
-                    pl='sm'>
-                    Hej! Anders heter jag. Utbildad jurist med miljöfokus och
-                    lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
-                    småbarnspappa till Ylva och Melker. På min fritid spelar jag
-                    golf, tränar på nya recept med hållbara råvaror, engagerar
-                    mig i lokala miljöprojekt och deltar i föreläsningar om
-                    hållbar utveckling. Jag hoppas vi ses på något framtida
-                    event!
-                  </Text>
-                  <NavLink to='/profil/:id' className='host-chevron-link'>
+                  <Group
+                    p='md'
+                    wrap='nowrap'
+                    className='host-image-information'>
+                    <Text className='host-text' pr='md' pl='sm'>
+                      Hej! Anders heter jag. Utbildad jurist med miljöfokus och
+                      lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
+                      småbarnspappa till Ylva och Melker. På min fritid spelar
+                      jag golf, tränar på nya recept med hållbara råvaror,
+                      engagerar mig i lokala miljöprojekt och deltar i
+                      föreläsningar om hållbar utveckling. Jag hoppas vi ses på
+                      något framtida event!
+                    </Text>
                     <ChevronRight className='host-chevron' />
-                  </NavLink>
+                  </Group>
                 </Group>
-              </Group>
+              </NavLink>
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
