@@ -1,4 +1,15 @@
-import { Box, Grid, Group, Stack, Text, Image, Flex } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  Box,
+  Stack,
+  Text,
+  Image,
+  Group,
+  Anchor,
+  SimpleGrid,
+  Divider,
+} from '@mantine/core';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { NavLink } from 'react-router-dom';
 import {
@@ -7,172 +18,166 @@ import {
   FlagIcon,
   MapPin,
   Share,
+  Globe,
+  ExternalLink,
 } from 'lucide-react';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import EventCard from '../../components/EventCard/EventCard';
+import type { EventType } from '../../types/EventType';
+
+type Restaurant = {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  phone_number?: string;
+  website_url?: string;
+};
 
 export default function RestaurangDetails(): React.ReactNode {
-  return (
-    <>
+  const { id } = useParams<{ id: string }>();
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadRestaurant() {
+      try {
+        const [restaurantRes, eventsRes] = await Promise.all([
+          fetch(`http://localhost:3001/restaurants/${id}`),
+          fetch(`http://localhost:3001/restaurants/${id}/events`),
+        ]);
+
+        if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
+        const restaurantData: Restaurant = await restaurantRes.json();
+        setRestaurant(restaurantData);
+
+        if (eventsRes.ok) {
+          const eventsData: EventType[] = await eventsRes.json();
+          setEvents(eventsData);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) loadRestaurant();
+  }, [id]);
+
+  if (loading) {
+    return (
       <>
         <Breadcrumb />
-        <Grid m='md' gutter='xl'>
-          <Grid.Col span={{ base: 12, sm: 8 }}>
-            <Stack gap={0} mb='md'>
-              <Text size='xl' fw={800}>
-                Restaurang
-              </Text>
-              <Text component={NavLink} to='/profil/:id'>
-                med Anders Blom
-              </Text>
-            </Stack>
-            <Text>
-              Den här träffen passar perfekt för dig som vill göra enkla val för
-              en bättre miljö. Vi går igenom olika tips för att bli Zero Waste i
-              vardagen och diskuterar nya trender inom hållbarhetstänk. Hoppas
-              vi ses där!
-            </Text>
-
-            <Group
-              gap='xs'
-              wrap='nowrap'
-              px='xs'
-              py='xs'
-              justify='center'
-              mt='xl'>
-              <Box px='xs' py='xs' className='event-info'>
-                <Stack align='center' gap='0'>
-                  <Text size='md'>Datum</Text>
-                  <Text size='md' fw={600}>
-                    mån 19 jan.
-                  </Text>
-                </Stack>
-              </Box>
-
-              <Box px='xs' py='xs' className='event-info'>
-                <Stack align='center' gap='0'>
-                  <Text size='md'>Tid</Text>
-                  <Text size='md' fw={600}>
-                    17:00-18:45
-                  </Text>
-                </Stack>
-              </Box>
-
-              <Box px='xs' py='xs' className='event-info'>
-                <Stack align='center' gap='0'>
-                  <Text size='md'>Pris</Text>
-                  <Text size='md' fw={600}>
-                    150 kr
-                  </Text>
-                </Stack>
-              </Box>
-            </Group>
-
-            <Stack gap='xs' mt='xl'>
-              <Text fw={600}>Om värden</Text>
-
-              <Group gap='0' wrap='nowrap' className='host-row'>
-                <Image
-                  src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
-                  w={80}
-                  className='host-image'
-                />
-
-                <Group p='md' wrap='nowrap' className='host-image-information'>
-                  <Text
-                    component={NavLink}
-                    to='/profil/:id'
-                    className='host-text'
-                    pr='md'
-                    pl='sm'>
-                    Hej! Anders heter jag. Utbildad jurist med miljöfokus och
-                    lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
-                    småbarnspappa till Ylva och Melker. På min fritid spelar jag
-                    golf, tränar på nya recept med hållbara råvaror, engagerar
-                    mig i lokala miljöprojekt och deltar i föreläsningar om
-                    hållbar utveckling. Jag hoppas vi ses på något framtida
-                    event!
-                  </Text>
-                  <NavLink to='/profil/:id' className='host-chevron-link'>
-                    <ChevronRight className='host-chevron' />
-                  </NavLink>
-                </Group>
-              </Group>
-              <Group gap='xs' mt='xl'>
-                <FlagIcon className='report-event-icon' />
-                <Text className='report-event-text'>Rapportera event</Text>
-              </Group>
-            </Stack>
-          </Grid.Col>
-
-          <Grid.Col span={{ base: 12, sm: 4 }} className='event-second-column'>
-            <Box component={NavLink} to='/restaurang/:id'>
-              <Image
-                src='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
-                className='restaurant-image'
-                height={180}
-              />
-              <Box p='md' className='restaurant-information'>
-                <Text td='none' tt='none' size='md' fw={600}>
-                  Noosh, Österlånggatan 35, Borås
-                </Text>
-                <Group
-                  pt='sm'
-                  wrap='nowrap'
-                  className='restaurant-image-information'>
-                  <Text
-                    component={NavLink}
-                    to='/restaurang/:id'
-                    td='none'
-                    c='dark'
-                    size='sm'
-                    className='restaurant-text'>
-                    Välkommen in till oss på Noosh. I rådhuset på hörnet av
-                    Stora torget, får du uppleva den latinamerikanska
-                    matkulturen och gemenskapen som sker runt matbordet när du
-                    delar ett par smakrika smårätter, en drink i baren eller en
-                    helkväll tillsammans med de du tycker om.
-                  </Text>
-
-                  <NavLink
-                    to='/restaurant/:id'
-                    className='restaurant-chevron-link'>
-                    <ChevronRight className='restaurant-chevron' />
-                  </NavLink>
-                </Group>
-              </Box>
-            </Box>
-            <Stack gap='xs' mt='lg'>
-              <Image
-                src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
-                h={250}
-                bdrs='md'
-              />
-              <Group gap='xs'>
-                <MapPin size='16px' />
-                <Text>Österlånggatan 35, 503 31 Borås</Text>
-              </Group>
-            </Stack>
-            <Group
-              align='center'
-              bdrs='sm'
-              className='join-event-group'
-              px='8px'
-              pt='8px'
-              pb='8px'
-              w='fit-content'>
-              <Flex px='xs' py='xs' className='event-info'>
-                <BookmarkIcon />
-              </Flex>
-              <Flex px='xs' py='xs' className='event-info'>
-                <Share />
-              </Flex>
-              <BaseButton size='lg' className='join-event-button'>
-                Anmäl dig här
-              </BaseButton>
-            </Group>
-          </Grid.Col>
-        </Grid>{' '}
+        <Text p='xl' ta='center' c='dimmed'>
+          Laddar restaurang...
+        </Text>
       </>
+    );
+  }
+
+  if (error || !restaurant) {
+    return (
+      <>
+        <Breadcrumb />
+        <Text p='xl' ta='center' c='red'>
+          {error || 'Restaurang hittades inte'}
+        </Text>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Breadcrumb />
+      <Stack m='md' gap='xl'>
+        <Stack gap={0}>
+          <Text size='xl' fw={800}>
+            {restaurant.name}
+          </Text>
+          <Text c='dimmed'>
+            {restaurant.address}, {restaurant.city}
+          </Text>
+          {restaurant.website_url && (
+            <Anchor
+              href={restaurant.website_url}
+              target='_blank'
+              style={{ textDecoration: 'none' }}>
+              <Group gap='xs' mt='xs'>
+                <ExternalLink size={16} color='black' />
+                <Text size='sm' c='dark'>
+                  {restaurant.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+                </Text>
+              </Group>
+            </Anchor>
+          )}
+        </Stack>
+
+        {restaurant.phone_number && (
+          <Box>
+            <Text fw={600} mb='xs'>
+              Kontakt
+            </Text>
+            <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
+          </Box>
+        )}
+
+        <Group align='flex-start' gap='md' wrap='wrap'>
+          <Box style={{ flex: 1, minWidth: '300px' }}>
+            <Image
+              src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+              className='restaurant-image'
+              height={250}
+              bdrs='md'
+            />
+          </Box>
+
+          <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
+            <Image
+              src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
+              h={250}
+              bdrs='md'
+              className='map-image'
+            />
+            <Group gap='xs'>
+              <MapPin size='16px' />
+              <Text>
+                {restaurant.address}, {restaurant.city}
+              </Text>
+            </Group>
+          </Stack>
+        </Group>
+
+        <Divider />
+
+        {events.length > 0 && (
+          <Stack gap='md'>
+            <Text size='lg' fw={600}>
+              Kommande event på {restaurant.name}
+            </Text>
+            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+              {events.map((event) => (
+                <EventCard
+                  key={event.id}
+                  id={event.id}
+                  title={event.title}
+                  description={event.description}
+                  current_participants={event.current_participants}
+                  price={event.price}
+                  date={new Date(event.date)}
+                  start_time={event.start_time}
+                  end_time={event.end_time}
+                  restaurant_id={event.restaurant_id}
+                  restaurant_name={event.restaurant_name}
+                  restaurant_address={event.restaurant_address}
+                />
+              ))}
+            </SimpleGrid>
+          </Stack>
+        )}
+      </Stack>
     </>
   );
 }

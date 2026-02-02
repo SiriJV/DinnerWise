@@ -11,7 +11,9 @@
 }
 
 .restaurant-information,
-.host-image-information {
+.restaurant-image,
+.host-image-information,
+.map-image {
   background-color: var.$gray2;
   border: 1px solid var.$gray5;
 }
@@ -34,10 +36,18 @@
 .restaurant-image {
   border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
 }
-
+.restaurant-image-box {
+  .restaurant-image {
+    border-bottom: 0;
+  }
+}
 .host-row {
-  height: 90px;
+  height: 140px;
   align-items: stretch;
+
+  @media (max-width: 768px) {
+    height: 120px;
+  }
 }
 
 .host-image {
@@ -45,6 +55,7 @@
   object-fit: cover;
   object-position: top;
   border-radius: var(--mantine-radius-md) 0 0 var(--mantine-radius-md);
+  flex-shrink: 0;
 }
 
 .host-image-information {
@@ -52,6 +63,8 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .host-text {
@@ -59,15 +72,15 @@
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
 
   display: box;
   box-orient: vertical;
 
-  line-clamp: 3;
+  line-clamp: 4;
 
   line-height: 1.4;
-  max-height: calc(1.4em * 3);
+  max-height: calc(1.4em * 4);
 }
 
 .restaurant-text {
@@ -144,6 +157,42 @@
   }
 }
 
+.sticky-action-buttons {
+  position: fixed;
+  bottom: var(--mantine-spacing-xl);
+  right: var(--mantine-spacing-xl);
+  z-index: 100;
+  border-radius: var(--mantine-radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition:
+    opacity 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out;
+  opacity: 1;
+
+  @media (min-width: 769px) {
+    min-width: 360px;
+  }
+
+  &.near-footer {
+    position: static;
+    margin-top: var(--mantine-spacing-md);
+    box-shadow: none;
+    opacity: 0.98;
+    transform: none;
+  }
+
+  @media (max-width: 768px) {
+    position: static;
+    width: 100%;
+    min-width: unset;
+    margin-top: var(--mantine-spacing-md);
+    box-shadow: none;
+    transform: none;
+  }
+}
 .action-icon-button {
   background-color: var.$gray3;
   border-radius: var(--mantine-radius-sm);

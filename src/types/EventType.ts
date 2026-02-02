@@ -9,4 +9,7 @@ export type EventType = {
   date: string;
   start_time: string;
   end_time: string;
+  restaurant_name?: string;
+  restaurant_address?: string;
+  restaurant_city?: string;
 };

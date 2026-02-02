@@ -38,55 +38,55 @@ export default function HomePage() {
   }, []);
 
   const handleSortChange = (sortBy: SortValue) => {
-  console.log('Sortera efter:', sortBy);
+    console.log('Sortera efter:', sortBy);
   };
 
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-      <FloatingActionButton to="/skapa-event" />
+      <FloatingActionButton to='/skapa-event' />
       <Stack p='md'>
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />
-        <Group justify="space-between">
-        <Group>
-        <FilterDropdown
-          fetchUrl="http://localhost:3001/categories"
-          label="Kategori"
-          onApply={(selected) => {
-            console.log('Kategorifilter:', selected);
-          }}
-        />
-        <SearchableFilterDropdown
-          label="Stad"
-          fetchUrl="http://localhost:3001/cities"
-          onApply={(selected) => {
-            console.log('Stadfilter:', selected);
-          }}
-        />
-        <SearchableFilterDropdown
-          label="Ämne"
-          fetchUrl="http://localhost:3001/tags"
-          onApply={(selected) => {
-            console.log('Ämnefilter:', selected);
-          }}
-        />
-        <PriceDropdown label="Pris" onApply={(selected) => {
-            console.log('Prisfilter:', selected);
-          }} 
-        />
-        {/* <DateFilterDropdown
+        <Group justify='space-between'>
+          <Group>
+            <FilterDropdown
+              fetchUrl='http://localhost:3001/categories'
+              label='Kategori'
+              onApply={(selected) => {
+                console.log('Kategorifilter:', selected);
+              }}
+            />
+            <SearchableFilterDropdown
+              label='Stad'
+              fetchUrl='http://localhost:3001/cities'
+              onApply={(selected) => {
+                console.log('Stadfilter:', selected);
+              }}
+            />
+            <SearchableFilterDropdown
+              label='Ämne'
+              fetchUrl='http://localhost:3001/tags'
+              onApply={(selected) => {
+                console.log('Ämnefilter:', selected);
+              }}
+            />
+            <PriceDropdown
+              label='Pris'
+              onApply={(selected) => {
+                console.log('Prisfilter:', selected);
+              }}
+            />
+            {/* <DateFilterDropdown
           label="Datum" onApply={(selected) => {
             console.log('Datumfilter:', selected);
           }}
         /> */}
+          </Group>
+          <Sort onSortChange={handleSortChange} />
         </Group>
-        <Sort onSortChange={handleSortChange} />
-      </Group>
 
         <Stack mt='xs'>
-          <Text fw={600}>Sortera</Text>
-
           {loading ? (
             <Text p='md' ta='center' c='dimmed'>
               Laddar events…
@@ -108,6 +108,9 @@ export default function HomePage() {
                   date={new Date(event.date)}
                   start_time={event.start_time}
                   end_time={event.end_time}
+                  restaurant_id={event.restaurant_id}
+                  restaurant_name={event.restaurant_name}
+                  restaurant_address={event.restaurant_address}
                 />
               ))}
             </SimpleGrid>

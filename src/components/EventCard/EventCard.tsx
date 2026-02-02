@@ -179,7 +179,16 @@
 //   );
 // }
 
-import { Card, Image, Text, Badge, Group, Box } from '@mantine/core';
+import {
+  Card,
+  Image,
+  Text,
+  Badge,
+  Group,
+  Avatar,
+  Box,
+  Divider,
+} from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
 import './EventCard.scss';
@@ -194,6 +203,9 @@ type EventCardProps = {
   date: Date;
   start_time: string;
   end_time: string;
+  restaurant_id: number;
+  restaurant_name?: string;
+  restaurant_address?: string;
   maxDescriptionLength?: number;
 };
 
@@ -206,6 +218,9 @@ export default function EventCard({
   date,
   start_time,
   end_time,
+  restaurant_id,
+  restaurant_name,
+  restaurant_address,
   maxDescriptionLength = 120,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -268,23 +283,42 @@ export default function EventCard({
             fill={isBookmarked ? 'black' : 'none'}
           />
         </Box>
+
+        <Avatar
+          src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+          alt='Host'
+          radius='xl'
+          size={56}
+          className='hostAvatar'
+        />
       </Card.Section>
 
-      <Box mt='sm' px='0' pb='xs'>
+      <Box mt='xl' px='0' pb='xs'>
         <Group justify='space-between'>
           <Text fw={800}>{title}</Text>
-          <Text fw={600} c='black'>
+          <Text fw={600} c='black' className='price'>
             {Math.floor(displayPrice)} kr
           </Text>
         </Group>
 
-        <Text size='sm' mb='xs' c='dimmed'>
-          {displayCurrentParticipants} deltagare av {displayMaxSpots}
+        <Text size='sm' mb='xs'>
+          med Anders Blom
         </Text>
 
         <Box className='eventInfo' mb='xs'>
+          <Text size='xs' c='dimmed' fw={600}>
+            <NavLink
+              to={`/restaurang/${restaurant_id}`}
+              className='unstyledNavLink'
+              onClick={(e) => e.stopPropagation()}>
+              {restaurant_name || 'Restaurang'}
+            </NavLink>{' '}
+            · {restaurant_address || 'Adress saknas'}
+          </Text>
+          <Divider orientation='vertical' size='sm' />
+
           <Text size='xs' c='dimmed'>
-            {formattedDate} · {timeRange}
+            {formattedDate} {timeRange}
           </Text>
         </Box>
 

@@ -9,6 +9,7 @@ import {
   Group,
   Badge,
   Flex,
+  Divider,
 } from '@mantine/core';
 import './EventDetails.scss';
 import {
@@ -28,6 +29,7 @@ export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNearFooter, setIsNearFooter] = useState(false);
 
   useEffect(() => {
     async function loadEvent() {
@@ -45,6 +47,31 @@ export default function EventDetails(): React.ReactNode {
 
     if (id) loadEvent();
   }, [id]);
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer) {
+          const footerRect = footer.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          // Add buffer zone to make transition smoother
+          setIsNearFooter(footerRect.top < windowHeight + 80);
+        }
+      }, 16);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -77,176 +104,184 @@ export default function EventDetails(): React.ReactNode {
   return (
     <>
       <Breadcrumb />
-      <Grid m='md' gutter='xl' mx='md'>
-        <Grid.Col span={{ base: 12, md: 7 }}>
-          <Stack gap={0} mb='lg'>
-            <Group justify='space-between'>
-              <Text size='xl' fw={800}>
-                {event.title}
-              </Text>
-              <Badge
-                bg={
-                  isFull
-                    ? 'rgba(255, 204, 199, 1)'
-                    : isAlmostFull
-                      ? 'rgba(255, 238, 186, 1)'
-                      : 'rgba(216, 227, 222, 1)'
-                }
-                c={
-                  isFull
-                    ? 'rgba(116, 39, 62, 1)'
-                    : isAlmostFull
-                      ? 'rgba(120, 90, 10, 1)'
-                      : 'rgba(36, 56, 33, 1)'
-                }
-                size='lg'>
-                {isFull
-                  ? 'Fullt'
-                  : `${event.current_participants}/${displayMaxSpots} platser`}
-              </Badge>
-            </Group>
-            <Text component={NavLink} to='/profil/:id'>
-              med Anders Blom
+
+      <Box
+        p={{ base: 'sm', md: 'md' }}
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+        {/* Title and Badge - Outside Grid */}
+        <Stack gap={0} mb='lg'>
+          <Group justify='space-between'>
+            <Text size='xl' fw={800}>
+              {event.title}
             </Text>
-          </Stack>
-          <Text>{event.description}</Text>
-
-          <Group
-            gap='xs'
-            wrap='nowrap'
-            px='xs'
-            py='xs'
-            justify='center'
-            mt='xl'>
-            <Box px='xs' py='xs' className='event-info'>
-              <Stack align='center' gap='0'>
-                <Text size='md'>Datum</Text>
-                <Text size='md' fw={600}>
-                  {eventDate.toLocaleDateString('sv-SE', {
-                    weekday: 'short',
-                    day: 'numeric',
-                    month: 'short',
-                  })}
-                </Text>
-              </Stack>
-            </Box>
-
-            <Box px='xs' py='xs' className='event-info'>
-              <Stack align='center' gap='0'>
-                <Text size='md'>Tid</Text>
-                <Text size='md' fw={600}>
-                  {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
-                </Text>
-              </Stack>
-            </Box>
-
-            <Box px='xs' py='xs' className='event-info'>
-              <Stack align='center' gap='0'>
-                <Text size='md'>Pris</Text>
-                <Text size='md' fw={600}>
-                  {Math.floor(event.price)} kr
-                </Text>
-              </Stack>
-            </Box>
+            <Badge
+              bg={
+                isFull
+                  ? 'rgba(255, 204, 199, 1)'
+                  : isAlmostFull
+                    ? 'rgba(255, 238, 186, 1)'
+                    : 'rgba(216, 227, 222, 1)'
+              }
+              c={
+                isFull
+                  ? 'rgba(116, 39, 62, 1)'
+                  : isAlmostFull
+                    ? 'rgba(120, 90, 10, 1)'
+                    : 'rgba(36, 56, 33, 1)'
+              }
+              size='lg'>
+              {isFull
+                ? 'Fullt'
+                : `${event.current_participants}/${displayMaxSpots} platser`}
+            </Badge>
           </Group>
+          <Text component={NavLink} to='/profil/:id'>
+            med Anders Blom
+          </Text>
+        </Stack>
 
-          <Stack gap='xs' mt='xl'>
-            <Text fw={600}>Om värden</Text>
+        <Text mb='xl'>{event.description}</Text>
 
-            <Group gap='0' wrap='nowrap' className='host-row'>
-              <Image
-                src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
-                w={80}
-                className='host-image'
-              />
-
-              <Group p='md' wrap='nowrap' className='host-image-information'>
-                <Text
-                  component={NavLink}
-                  to='/profil/:id'
-                  className='host-text'
-                  pr='md'
-                  pl='sm'>
-                  Hej! Anders heter jag. Utbildad jurist med miljöfokus och lång
-                  erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa
-                  till Ylva och Melker. På min fritid spelar jag golf, tränar på
-                  nya recept med hållbara råvaror, engagerar mig i lokala
-                  miljöprojekt och deltar i föreläsningar om hållbar utveckling.
-                  Jag hoppas vi ses på något framtida event!
-                </Text>
-                <NavLink to='/profil/:id' className='host-chevron-link'>
-                  <ChevronRight className='host-chevron' />
-                </NavLink>
-              </Group>
-            </Group>
-            <Group gap='xs' mt='xl'>
-              <FlagIcon className='report-event-icon' />
-              <Text className='report-event-text'>Rapportera event</Text>
-            </Group>
-          </Stack>
-        </Grid.Col>
-
-        <Grid.Col span={{ base: 12, sm: 5 }} className='event-second-column'>
-          <Box component={NavLink} to='/restaurang/:id'>
-            <Image
-              src='https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/13/32/caption.jpg?w=1400&h=-1&s=1'
-              className='restaurant-image'
-              height={140}
-            />
-            <Box p='md' className='restaurant-information'>
-              <Text td='none' tt='none' size='sm' fw={600}>
-                Noosh, Österlånggatan 35, Borås
+        <Group gap='md' mb='xl' grow>
+          <Box px='xs' py='xs' className='event-info'>
+            <Stack align='center' gap='0'>
+              <Text size='md'>Datum</Text>
+              <Text size='md' fw={600}>
+                {eventDate.toLocaleDateString('sv-SE', {
+                  weekday: 'short',
+                  day: 'numeric',
+                  month: 'short',
+                })}
               </Text>
-              <Group
-                pt='sm'
-                wrap='nowrap'
-                className='restaurant-image-information'>
-                <Text
-                  component={NavLink}
-                  to='/restaurang/:id'
-                  td='none'
-                  c='dark'
-                  size='xs'
-                  className='restaurant-text'>
-                  Välkommen in till oss på Noosh. I rådhuset på hörnet av Stora
-                  torget, får du uppleva den latinamerikanska matkulturen och
-                  gemenskapen som sker runt matbordet när du delar ett par
-                  smakrika smårätter, en drink i baren eller en helkväll
-                  tillsammans med de du tycker om.
-                </Text>
-
-                <NavLink
-                  to='/restaurant/:id'
-                  className='restaurant-chevron-link'>
-                  <ChevronRight className='restaurant-chevron' />
-                </NavLink>
-              </Group>
-            </Box>
+            </Stack>
           </Box>
-          <Stack gap='xs' mt='lg'>
-            <Image
-              src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
-              h={200}
-              bdrs='md'
-            />
-            <Group gap='xs'>
-              <MapPin size='16px' />
-              <Text>Österlånggatan 35, 503 31 Borås</Text>
-            </Group>
-          </Stack>
-          <Group gap='xs' mt='xl' wrap='nowrap' className='join-event-group'>
-            <BaseButton size='lg' className='join-event-button'>
-              Anmäl dig här
-            </BaseButton>
-            <Flex px='md' py='sm' className='action-icon-button'>
-              <BookmarkIcon size={22} />
-            </Flex>
-            <Flex px='md' py='sm' className='action-icon-button'>
-              <Share size={22} />
-            </Flex>
-          </Group>
-        </Grid.Col>
-      </Grid>
+
+          <Box px='xs' py='xs' className='event-info'>
+            <Stack align='center' gap='0'>
+              <Text size='md'>Tid</Text>
+              <Text size='md' fw={600}>
+                {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
+              </Text>
+            </Stack>
+          </Box>
+
+          <Box px='xs' py='xs' className='event-info'>
+            <Stack align='center' gap='0'>
+              <Text size='md'>Pris</Text>
+              <Text size='md' fw={600}>
+                {Math.floor(event.price)} kr
+              </Text>
+            </Stack>
+          </Box>
+        </Group>
+
+        <Divider mb='md' />
+        <Grid gutter='xl'>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Stack gap='xs'>
+              <Text fw={600}>Om värden</Text>
+
+              <Group gap='0' wrap='nowrap' className='host-row'>
+                <Image
+                  src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                  w={{ base: 80, md: 100 }}
+                  className='host-image'
+                />
+
+                <Group p='md' wrap='nowrap' className='host-image-information'>
+                  <Text
+                    component={NavLink}
+                    to='/profil/:id'
+                    className='host-text'
+                    pr='md'
+                    pl='sm'>
+                    Hej! Anders heter jag. Utbildad jurist med miljöfokus och
+                    lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
+                    småbarnspappa till Ylva och Melker. På min fritid spelar jag
+                    golf, tränar på nya recept med hållbara råvaror, engagerar
+                    mig i lokala miljöprojekt och deltar i föreläsningar om
+                    hållbar utveckling. Jag hoppas vi ses på något framtida
+                    event!
+                  </Text>
+                  <NavLink to='/profil/:id' className='host-chevron-link'>
+                    <ChevronRight className='host-chevron' />
+                  </NavLink>
+                </Group>
+              </Group>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Stack gap='lg'>
+              <Stack gap='xs'>
+                <Text fw={600}>Om platsen</Text>
+                <Box
+                  component={NavLink}
+                  to={`/restaurang/${event.restaurant_id}`}
+                  className='restaurant-image-box'
+                  style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Image
+                    src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+                    className='restaurant-image'
+                    height={140}
+                  />
+                  <Box p='md' className='restaurant-information'>
+                    <Group
+                      wrap='nowrap'
+                      className='restaurant-image-information'
+                      justify='space-between'>
+                      <Text td='none' tt='none' size='sm' fw={600}>
+                        {event.restaurant_name || 'Restaurang'}
+                        {event.restaurant_city && `, ${event.restaurant_city}`}
+                      </Text>
+
+                      <ChevronRight className='restaurant-chevron' />
+                    </Group>
+                  </Box>
+                </Box>
+              </Stack>
+
+              <Stack gap='xs'>
+                <Image
+                  src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
+                  h={200}
+                  bdrs='md'
+                  className='map-image'
+                />
+                <Group gap='xs'>
+                  <MapPin size='16px' />
+                  <Text>{event.restaurant_address || 'Adress saknas'}</Text>
+                </Group>
+              </Stack>
+
+              {/* Action Buttons */}
+              <Box
+                bg='white'
+                p='md'
+                className={`sticky-action-buttons ${isNearFooter ? 'near-footer' : ''}`}>
+                <Group gap='xs' className='join-event-group'>
+                  <BaseButton
+                    size='md'
+                    className='join-event-button'
+                    style={{ width: 'auto' }}>
+                    Anmäl dig här
+                  </BaseButton>
+                  <Flex px='md' py='sm' className='action-icon-button'>
+                    <BookmarkIcon size={22} />
+                  </Flex>
+                  <Flex px='md' py='sm' className='action-icon-button'>
+                    <Share size={22} />
+                  </Flex>
+                </Group>
+              </Box>
+            </Stack>
+          </Grid.Col>
+        </Grid>
+
+        <Group gap='xs' mt='lg'>
+          <FlagIcon className='report-event-icon' />
+          <Text className='report-event-text'>Rapportera event</Text>
+        </Group>
+      </Box>
     </>
   );
 }
