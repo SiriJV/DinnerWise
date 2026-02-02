@@ -1,13 +1,6 @@
 import type { ReactNode } from 'react';
 import AboutPage from '../routes/info pages/AboutPage';
 import CreateAccountPage from '../routes/info pages/CreateAccountPage';
-import LiteraturePage from '../routes/category pages/LiteraturePage';
-import MusicPage from '../routes/category pages/MusicPage';
-import SportPage from '../routes/category pages/SportPage';
-import ArtsPage from '../routes/category pages/ArtsPage';
-import NaturePage from '../routes/category pages/NaturePage';
-import ITPage from '../routes/category pages/ITPage';
-import LanguagePage from '../routes/category pages/LanguagePage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
 import FAQPage from '../routes/info pages/FAQPage';
 import TermsPage from '../routes/info pages/TermsPage';
@@ -17,6 +10,7 @@ import SupportPage from '../routes/info pages/SupportPage';
 import LoginPage from '../routes/info pages/LoginPage';
 import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
+import CategoryPage from '../routes/CategoryPage/CategoryPage';
 
 type NavLinkItem = {
   label: string;
@@ -29,43 +23,43 @@ export const navLinks: NavLinkItem[] = [
   {
     label: 'Litteratur och skrivande',
     path: 'litteratur-och-skrivande',
-    element: LiteraturePage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1517971071642-34a2d3ecc9cd',
   },
   {
     label: 'Musik',
     path: 'musik',
-    element: MusicPage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1543062058-de8a92799761',
   },
   {
     label: 'Natur och friluftsliv',
     path: 'natur-och-friluftsliv',
-    element: NaturePage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1534049971341-c6bc3215ed2a',
   },
   {
     label: 'IT och teknik',
     path: 'it-och-teknik',
-    element: ITPage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1573495804683-641191e042ea',
   },
   {
     label: 'Språk',
     path: 'sprak',
-    element: LanguagePage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1592431913827-893545d23718',
   },
   {
     label: 'Konst och kultur',
     path: 'konst-och-kultur',
-    element: ArtsPage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1714508862788-44e45c4315d0',
   },
   {
     label: 'Sport och träning',
     path: 'sport-och-träning',
-    element: SportPage(),
+    element: <CategoryPage />,
     image: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5',
   },
 ];
