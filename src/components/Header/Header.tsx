@@ -1,4 +1,4 @@
-import { ActionIcon, Burger, Group, UnstyledButton } from '@mantine/core';
+import { ActionIcon, Box, Burger, Group, UnstyledButton } from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
 import { BellIcon, SearchIcon, UserRound } from 'lucide-react';
@@ -22,15 +22,19 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
       </Group>
 
       <Group gap='md'>
-        <SearchBar />
-        {/* <ActionIcon
-          component={NavLink}
-          to='/sokresultat'
-          variant='subtle'
-          color='white'
-          size='md'>
-          <SearchIcon size={20} />
-        </ActionIcon> */}
+        <Box visibleFrom='sm'>
+          <SearchBar />
+        </Box>
+        <Box hiddenFrom='sm'>
+          <ActionIcon
+            component={NavLink}
+            to='/sokresultat'
+            variant='subtle'
+            color='white'
+            size='md'>
+            <SearchIcon size={20} />
+          </ActionIcon>
+        </Box>
         <ActionIcon
           component={NavLink}
           to='/'
