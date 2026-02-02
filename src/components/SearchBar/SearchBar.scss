@@ -4,10 +4,8 @@
   max-width: 400px;
 
   & input {
-    border-color: var.$darkred;
-    border: 0;
+    border: 1px solid var.$gray5;
     border-radius: var(--mantine-radius-xl);
-    border: 1px solid white;
 
     height: 40px;
     font-size: 14px;
