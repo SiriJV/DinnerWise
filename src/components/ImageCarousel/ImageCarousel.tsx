@@ -21,8 +21,8 @@ export default function NavCarousel() {
           md: '33.3333%',
           lg: '20%',
         }}
-        nextControlIcon={<ChevronRight size={32} />}
-        previousControlIcon={<ChevronLeft size={32} />}>
+        nextControlIcon={<ChevronRight size={28} />}
+        previousControlIcon={<ChevronLeft size={28} />}>
         {navLinks.map((link) => (
           <Carousel.Slide key={link.path}>
             <NavLink to={`/${link.path}`} className='navCarousel-link'>
