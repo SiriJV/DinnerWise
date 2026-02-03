@@ -1,4 +1,4 @@
-import { AppShell as MantineAppShell } from '@mantine/core';
+import { AppShell as MantineAppShell, Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Header from '../Header/Header';
 import './AppShell.scss';
@@ -6,6 +6,7 @@ import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop';
+import SearchBar from '../SearchBar/SearchBar';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
@@ -23,6 +24,9 @@ export default function AppShell() {
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>
+          <Box hiddenFrom='sm' px='md' pt='xs' pb='xs'>
+            <SearchBar />
+          </Box>
           <ScrollToTop />
           <Outlet />
           <Footer />
