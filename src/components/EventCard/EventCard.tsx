@@ -188,6 +188,7 @@ import {
   Avatar,
   Box,
   Divider,
+  Tooltip,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -321,10 +322,37 @@ export default function EventCard({
             {formattedDate} {timeRange}
           </Text>
         </Box>
+        <Group justify='space-between'>
+          <Text size='sm' c='dimmed' className='eventDescription'>
+            {shortDescription}
+          </Text>
 
-        <Text size='sm' c='dimmed' className='eventDescription'>
-          {shortDescription}
-        </Text>
+          <Tooltip.Group openDelay={300} closeDelay={100}>
+            <Avatar.Group spacing='xs'>
+              <Tooltip label='Person 1' withArrow>
+                <Avatar src='image.png' radius='xl' size='sm' />
+              </Tooltip>
+              <Tooltip label='Person 2' withArrow>
+                <Avatar src='image.png' radius='xl' size='sm' />
+              </Tooltip>
+              <Tooltip label='Person 3' withArrow>
+                <Avatar src='image.png' radius='xl' size='sm' />
+              </Tooltip>
+              <Tooltip
+                withArrow
+                label={
+                  <>
+                    <div>Person 4</div>
+                    <div>Person 5</div>
+                  </>
+                }>
+                <Avatar radius='xl' size='sm'>
+                  +2
+                </Avatar>
+              </Tooltip>
+            </Avatar.Group>
+          </Tooltip.Group>
+        </Group>
 
         <Badge
           className='spotsBadge'
