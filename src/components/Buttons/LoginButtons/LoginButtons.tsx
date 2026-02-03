@@ -8,9 +8,10 @@ type LoginButtonsProps = {
 export default function LoginButtons({ onClose }: LoginButtonsProps) {
   return (
     <Stack gap='xs' align='stretch' p='md'>
-      <Text fw={600} ta='left'>
+      <Text fw={800} size='lg' ta='left'>
         Välkommen till DinnerWise
       </Text>
+
       <Stack gap='xs'>
         <BaseButton
           variantType='primary'
