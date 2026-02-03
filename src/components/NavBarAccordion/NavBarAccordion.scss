@@ -1,6 +1,10 @@
 @use '../../styles/variables.scss' as var;
 @use '../../styles/mixins.scss' as *;
 
+.accordion {
+  font-size: smaller;
+}
+
 .lastPanel {
   padding-bottom: var(--mantine-spacing-md);
 }
