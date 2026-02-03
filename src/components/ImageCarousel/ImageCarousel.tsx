@@ -27,10 +27,8 @@ export default function NavCarousel() {
           <Carousel.Slide key={link.path}>
             <NavLink to={`/${link.path}`} className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
-                <Image src={link.image} h={110} fit='cover' radius='md' />
-                <Text fw='600' className='navCarousel-label'>
-                  {link.label}
-                </Text>
+                <Image src={link.image} h={110} fit='cover' />
+                <Text className='navCarousel-label'>{link.label}</Text>
               </Card>
             </NavLink>
           </Carousel.Slide>
