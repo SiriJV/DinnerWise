@@ -18,7 +18,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
 
   useEffect(() => {
     const match = accordionItems.find((item) =>
-      item.panels.some((panel) => panel.path === location.pathname)
+      item.panels.some((panel) => panel.path === location.pathname),
     );
 
     if (match) {
@@ -32,11 +32,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
       value={opened}
       onChange={setOpened}
       chevronPosition='left'
-      className='myAccordion'
-      styles={{
-        content: { padding: '4px 12px' },
-        panel: { margin: 0 },
-      }}>
+      className='myAccordion'>
       {accordionItems.map((item) => (
         <Accordion.Item key={item.value} value={item.value}>
           <AccordionControl>{item.label}</AccordionControl>

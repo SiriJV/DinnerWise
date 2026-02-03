@@ -2,7 +2,7 @@
 @use '../../styles/mixins.scss' as *;
 
 .lastPanel {
-  padding-bottom: 16px; /* extra padding på sista panelen */
+  padding-bottom: var(--mantine-spacing-md);
 }
 
 .accordionLink {
@@ -15,6 +15,7 @@
   }
 
   &:hover {
-    @include hover-color;
+    // @include hover-color;
+    text-decoration: underline;
   }
 }
