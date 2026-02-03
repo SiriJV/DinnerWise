@@ -42,11 +42,11 @@
   }
 }
 .host-row {
-  height: 140px;
+  height: 120px;
   align-items: stretch;
 
   @media (max-width: 768px) {
-    height: 120px;
+    height: 100px;
   }
 }
 
@@ -81,6 +81,11 @@
 
   line-height: 1.4;
   max-height: calc(1.4em * 4);
+
+  @media (max-width: 768px) {
+    font-size: smaller;
+    padding: 0;
+  }
 }
 
 .restaurant-text {
