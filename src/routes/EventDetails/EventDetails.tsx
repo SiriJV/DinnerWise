@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
-import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
@@ -76,7 +75,6 @@ export default function EventDetails(): React.ReactNode {
   if (loading) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='dimmed'>
           Laddar event...
         </Text>
@@ -87,7 +85,6 @@ export default function EventDetails(): React.ReactNode {
   if (error || !event) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='red'>
           {error || 'Event hittades inte'}
         </Text>
@@ -103,8 +100,6 @@ export default function EventDetails(): React.ReactNode {
 
   return (
     <>
-      <Breadcrumb />
-
       <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
           <Group justify='space-between'>
@@ -126,7 +121,7 @@ export default function EventDetails(): React.ReactNode {
                     ? 'rgba(120, 90, 10, 1)'
                     : 'rgba(36, 56, 33, 1)'
               }
-              size='lg'>
+              size='xl'>
               {isFull
                 ? 'Fullt'
                 : `${event.current_participants}/${displayMaxSpots} platser`}
@@ -139,42 +134,44 @@ export default function EventDetails(): React.ReactNode {
 
         <Text mb='xl'>{event.description}</Text>
 
-        <Group gap='md' mb='xl' grow>
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0' pt='xs' pb='xs'>
-              <Text size='md'>Datum</Text>
-              <Text size='md' fw={600}>
-                {eventDate.toLocaleDateString('sv-SE', {
-                  weekday: 'short',
-                  day: 'numeric',
-                  month: 'short',
-                })}
-              </Text>
-            </Stack>
-          </Box>
-
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0' pt='xs' pb='xs'>
-              <Text size='md'>Tid</Text>
-              <Text size='md' fw={600}>
-                {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
-              </Text>
-            </Stack>
-          </Box>
-
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0' pt='xs' pb='xs'>
-              <Text size='md'>Pris</Text>
-              <Text size='md' fw={600}>
-                {Math.floor(event.price)} kr
-              </Text>
-            </Stack>
-          </Box>
-        </Group>
-
-        <Divider mb='md' />
         <Grid gutter='xl'>
           <Grid.Col span={{ base: 12, md: 6 }}>
+            <Stack>
+              <Text fw={600}>Information</Text>
+              <Group gap='md' mb='xl' grow>
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Datum</Text>
+                    <Text size='md' fw={600}>
+                      {eventDate.toLocaleDateString('sv-SE', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                      })}
+                    </Text>
+                  </Stack>
+                </Box>
+
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Tid</Text>
+                    <Text size='md' fw={600}>
+                      {event.start_time.slice(0, 5)}-
+                      {event.end_time.slice(0, 5)}
+                    </Text>
+                  </Stack>
+                </Box>
+
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Pris</Text>
+                    <Text size='md' fw={600}>
+                      {Math.floor(event.price)} kr
+                    </Text>
+                  </Stack>
+                </Box>
+              </Group>
+            </Stack>
             <Stack gap='xs'>
               <Text fw={600}>Om värden</Text>
 
@@ -207,7 +204,8 @@ export default function EventDetails(): React.ReactNode {
               </NavLink>
             </Stack>
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
+
+          <Grid.Col span={{ base: 12, md: 6 }} className='event-second-column'>
             <Stack gap='lg'>
               <Stack gap='xs'>
                 <Text fw={600}>Om platsen</Text>
