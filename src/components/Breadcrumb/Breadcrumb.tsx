@@ -31,6 +31,11 @@ export default function Breadcrumb() {
     }
   }, [pathnames]);
 
+  // Hide breadcrumb on profile pages
+  if (pathnames[0] === 'profil') {
+    return null;
+  }
+
   const breadcrumbMap: { [key: string]: string } = {
     event: 'Event',
     restaurang: 'Restaurang',
