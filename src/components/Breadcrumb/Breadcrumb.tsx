@@ -45,7 +45,7 @@ export default function Breadcrumb() {
     // Check if this is an event ID
     if (pathnames[index - 1] === 'event' && eventName) {
       return (
-        <Anchor component={Link} to={href} key={href}>
+        <Anchor component={Link} to={href} key={href} size='sm'>
           {eventName}
         </Anchor>
       );
@@ -54,7 +54,7 @@ export default function Breadcrumb() {
     // Check if this is a restaurant ID
     if (pathnames[index - 1] === 'restaurang' && restaurantName) {
       return (
-        <Anchor component={Link} to={href} key={href}>
+        <Anchor component={Link} to={href} key={href} size='sm'>
           {restaurantName}
         </Anchor>
       );
@@ -75,7 +75,7 @@ export default function Breadcrumb() {
       breadcrumbMap[value] || value.charAt(0).toUpperCase() + value.slice(1);
 
     return (
-      <Anchor component={Link} to={href} key={href}>
+      <Anchor component={Link} to={href} key={href} size='sm'>
         {label}
       </Anchor>
     );
