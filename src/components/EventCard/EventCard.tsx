@@ -222,7 +222,7 @@ export default function EventCard({
   restaurant_id,
   restaurant_name,
   restaurant_address,
-  maxDescriptionLength = 120,
+  maxDescriptionLength = 100,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -306,7 +306,7 @@ export default function EventCard({
           med Anders Blom
         </Text>
 
-        <Box className='eventInfo' mb='xs' w='100%'>
+        <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
               to={`/restaurang/${restaurant_id}`}
@@ -316,9 +316,10 @@ export default function EventCard({
             </NavLink>{' '}
             · {restaurant_address || 'Adress saknas'}
           </Text>
+
           <Divider orientation='vertical' size='sm' />
 
-          <Group justify='space-between' w='100%' wrap='nowrap'>
+          <Group justify='space-between' wrap='nowrap' style={{ flex: 1 }}>
             <Text size='xs' c='dimmed'>
               {formattedDate} {timeRange}
             </Text>
@@ -363,26 +364,26 @@ export default function EventCard({
                 <Tooltip label='Person 1' withArrow>
                   <Avatar src='image.png' radius='xl' size='sm' />
                 </Tooltip>
-              <Tooltip label='Person 2' withArrow>
-                <Avatar src='image.png' radius='xl' size='sm' />
-              </Tooltip>
-              <Tooltip label='Person 3' withArrow>
-                <Avatar src='image.png' radius='xl' size='sm' />
-              </Tooltip>
-              <Tooltip
-                withArrow
-                label={
-                  <>
-                    <div>Person 4</div>
-                    <div>Person 5</div>
-                  </>
-                }>
-                <Avatar radius='xl' size='sm'>
-                  +2
-                </Avatar>
-              </Tooltip>
-            </Avatar.Group>
-          </Tooltip.Group>
+                <Tooltip label='Person 2' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
+                <Tooltip label='Person 3' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
+                <Tooltip
+                  withArrow
+                  label={
+                    <>
+                      <div>Person 4</div>
+                      <div>Person 5</div>
+                    </>
+                  }>
+                  <Avatar radius='xl' size='sm'>
+                    +2
+                  </Avatar>
+                </Tooltip>
+              </Avatar.Group>
+            </Tooltip.Group>
           </Box>
         </Group>
 
