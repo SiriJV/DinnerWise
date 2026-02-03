@@ -102,6 +102,7 @@
   color: inherit;
 
   &:hover {
-    color: var.$gray5;
+    // color: var.$gray5;
+    text-decoration: underline;
   }
 }
