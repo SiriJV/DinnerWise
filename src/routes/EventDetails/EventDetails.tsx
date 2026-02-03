@@ -204,9 +204,11 @@ export default function EventDetails(): React.ReactNode {
                 </Group>
               </NavLink>
 
-              <Box visibleFrom='sm'>
+              <Box visibleFrom='sm' pt='xl' pb='xl'>
+                <Text fw={600}>Deltagare</Text>
+
                 <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing='sm' pt='xl' pb='xl'>
+                  <Avatar.Group spacing='sm'>
                     <Tooltip label='Person 1' withArrow>
                       <Avatar src='image.png' radius='xl' size='lg' />
                     </Tooltip>
