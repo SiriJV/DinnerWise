@@ -32,7 +32,13 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
       value={opened}
       onChange={setOpened}
       chevronPosition='left'
-      className='myAccordion'>
+      className='accordion'
+      styles={{
+        content: {
+          paddingTop: 'var(--mantine-spacing-xs)',
+          paddingBottom: 0,
+        },
+      }}>
       {accordionItems.map((item) => (
         <Accordion.Item key={item.value} value={item.value}>
           <AccordionControl>{item.label}</AccordionControl>
