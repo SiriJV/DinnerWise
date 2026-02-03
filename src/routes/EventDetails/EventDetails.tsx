@@ -9,7 +9,6 @@ import {
   Group,
   Badge,
   Flex,
-  Divider,
 } from '@mantine/core';
 import './EventDetails.scss';
 import {
