@@ -20,7 +20,6 @@ export default function SearchBar() {
         />
       }
       data={[]}
-      visibleFrom='xs'
       maxDropdownHeight={200}
     />
   );

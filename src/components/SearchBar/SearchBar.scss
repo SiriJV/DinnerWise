@@ -2,10 +2,12 @@
 
 .searchBar {
   max-width: 400px;
+  width: 100%;
 
   & input {
     border: 1px solid var.$gray5;
     border-radius: var(--mantine-radius-xl);
+    background-color: white;
 
     height: 40px;
     font-size: 14px;
