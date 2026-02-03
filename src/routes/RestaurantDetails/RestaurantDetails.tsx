@@ -11,17 +11,7 @@ import {
   Divider,
 } from '@mantine/core';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-import { NavLink } from 'react-router-dom';
-import {
-  BookmarkIcon,
-  ChevronRight,
-  FlagIcon,
-  MapPin,
-  Share,
-  Globe,
-  ExternalLink,
-} from 'lucide-react';
-import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 
