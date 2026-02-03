@@ -306,7 +306,7 @@ export default function EventCard({
           med Anders Blom
         </Text>
 
-        <Box className='eventInfo' mb='xs'>
+        <Box className='eventInfo' mb='xs' w='100%'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
               to={`/restaurang/${restaurant_id}`}
@@ -318,20 +318,51 @@ export default function EventCard({
           </Text>
           <Divider orientation='vertical' size='sm' />
 
-          <Text size='xs' c='dimmed'>
-            {formattedDate} {timeRange}
-          </Text>
+          <Group justify='space-between' w='100%' wrap='nowrap'>
+            <Text size='xs' c='dimmed'>
+              {formattedDate} {timeRange}
+            </Text>
+            <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
+              <Tooltip.Group openDelay={300} closeDelay={100}>
+                <Avatar.Group spacing='xs'>
+                  <Tooltip label='Person 1' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip label='Person 2' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip label='Person 3' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip
+                    withArrow
+                    label={
+                      <>
+                        <div>Person 4</div>
+                        <div>Person 5</div>
+                      </>
+                    }>
+                    <Avatar radius='xl' size='sm'>
+                      +2
+                    </Avatar>
+                  </Tooltip>
+                </Avatar.Group>
+              </Tooltip.Group>
+            </Box>
+          </Group>
         </Box>
-        <Group justify='space-between'>
+
+        <Group justify='space-between' visibleFrom='sm' w='100%' wrap='nowrap'>
           <Text size='sm' c='dimmed' className='eventDescription'>
             {shortDescription}
           </Text>
 
-          <Tooltip.Group openDelay={300} closeDelay={100}>
-            <Avatar.Group spacing='xs'>
-              <Tooltip label='Person 1' withArrow>
-                <Avatar src='image.png' radius='xl' size='sm' />
-              </Tooltip>
+          <Box style={{ flexShrink: 0 }}>
+            <Tooltip.Group openDelay={300} closeDelay={100}>
+              <Avatar.Group spacing='xs'>
+                <Tooltip label='Person 1' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
               <Tooltip label='Person 2' withArrow>
                 <Avatar src='image.png' radius='xl' size='sm' />
               </Tooltip>
@@ -352,6 +383,7 @@ export default function EventCard({
               </Tooltip>
             </Avatar.Group>
           </Tooltip.Group>
+          </Box>
         </Group>
 
         <Badge

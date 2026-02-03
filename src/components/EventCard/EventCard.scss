@@ -16,11 +16,9 @@
 
 .eventDescription {
   display: block;
-  flex: 1;
-  max-width: 75%;
-  @media (max-width: 768px) {
-    display: none;
-  }
+  // @media (max-width: 768px) {
+  //   display: none;
+  // }
 }
 
 .eventInfo {
