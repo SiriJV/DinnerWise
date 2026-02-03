@@ -33,7 +33,7 @@ export default function HeroImage({
         </Stack>
       </Paper>
 
-      <Box className='heroSearchBar'>
+      <Box className='heroSearchBar' visibleFrom='sm'>
         <SearchBar />
       </Box>
     </div>
