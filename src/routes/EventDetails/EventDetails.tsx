@@ -9,6 +9,8 @@ import {
   Group,
   Badge,
   Flex,
+  Avatar,
+  Tooltip,
 } from '@mantine/core';
 import './EventDetails.scss';
 import {
@@ -171,9 +173,9 @@ export default function EventDetails(): React.ReactNode {
                 </Box>
               </Group>
             </Stack>
+
             <Stack gap='xs'>
               <Text fw={600}>Om värden</Text>
-
               <NavLink
                 to='/profil/:id'
                 style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -188,7 +190,7 @@ export default function EventDetails(): React.ReactNode {
                     p='md'
                     wrap='nowrap'
                     className='host-image-information'>
-                    <Text className='host-text' pr='md' pl='sm'>
+                    <Text className='host-text'>
                       Hej! Anders heter jag. Utbildad jurist med miljöfokus och
                       lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
                       småbarnspappa till Ylva och Melker. På min fritid spelar
@@ -201,6 +203,34 @@ export default function EventDetails(): React.ReactNode {
                   </Group>
                 </Group>
               </NavLink>
+
+              <Box visibleFrom='sm'>
+                <Tooltip.Group openDelay={300} closeDelay={100}>
+                  <Avatar.Group spacing='sm' pt='xl' pb='xl'>
+                    <Tooltip label='Person 1' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip label='Person 2' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip label='Person 3' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip
+                      withArrow
+                      label={
+                        <>
+                          <div>Person 4</div>
+                          <div>Person 5</div>
+                        </>
+                      }>
+                      <Avatar radius='xl' size='lg'>
+                        +2
+                      </Avatar>
+                    </Tooltip>
+                  </Avatar.Group>
+                </Tooltip.Group>
+              </Box>
             </Stack>
           </Grid.Col>
 
