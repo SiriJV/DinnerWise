@@ -40,12 +40,14 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
           </Stack>
 
           {/* <Divider my='sm' /> */}
-          <Space h='md' />
+          <Space h='xs' />
 
+          {/* <Text fw={800} size='lg' px='md' pt='md'>
+            Om DinnerWise
+            </Text> */}
           <NavBarAccordion onClose={onClose} />
 
           <Space h='xs' />
-
           <LoginButtons onClose={onClose} />
         </Stack>
       </nav>
