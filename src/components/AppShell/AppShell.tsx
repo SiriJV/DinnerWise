@@ -7,6 +7,7 @@ import { Outlet } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop';
 import SearchBar from '../SearchBar/SearchBar';
+import Breadcrumb from '../Breadcrumb/Breadcrumb';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
@@ -24,6 +25,8 @@ export default function AppShell() {
         </MantineAppShell.Header>
 
         <MantineAppShell.Main>
+          <Breadcrumb />
+
           <Box hiddenFrom='sm' px='md' pt='xs' pb='xs'>
             <SearchBar />
           </Box>
