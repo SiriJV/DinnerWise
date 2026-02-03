@@ -4,7 +4,9 @@
   text-decoration: none;
   color: inherit;
   display: block;
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
 
   &:hover {
     transform: translateY(-4px);
@@ -43,6 +45,7 @@
   top: var(--mantine-radius-md);
   left: var(--mantine-radius-md);
   z-index: 2;
+  height: 32px;
 }
 
 .bookmarkButton {
@@ -66,7 +69,10 @@
 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 
-  transition: transform 120ms ease, box-shadow 120ms ease, color 150ms ease;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    color 150ms ease;
 
   &:hover {
     transform: scale(1.05);
