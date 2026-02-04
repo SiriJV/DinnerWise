@@ -128,12 +128,11 @@ export default function EventDetails(): React.ReactNode {
                 : `${event.current_participants}/${displayMaxSpots} platser`}
             </Badge>
           </Group>
-          <Text
-            component={NavLink}
-            to='/profil/:id'
-            w='fit-content'
-            className='host-name-text'>
-            med Anders Blom
+          <Text component={NavLink} to='/profil/:id' w='fit-content'>
+            med{' '}
+            <Text span className='host-name-text'>
+              Anders Blom
+            </Text>
           </Text>
         </Stack>
 
