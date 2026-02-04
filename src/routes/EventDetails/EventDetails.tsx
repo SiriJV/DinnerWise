@@ -23,7 +23,9 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
-import RegisteringModal from '../../components/RegisteringModal/RegisteringModal';
+import RegisteringModal from '../../components/Modals/RegisteringModal/RegisteringModal';
+import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
@@ -32,6 +34,14 @@ export default function EventDetails(): React.ReactNode {
   const [loading, setLoading] = useState(true);
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
+  const [
+    paymentModalOpened,
+    { open: openPaymentModal, close: closePaymentModal },
+  ] = useDisclosure(false);
+  const [
+    confirmationModalOpened,
+    { open: openConfirmationModal, close: closeConfirmationModal },
+  ] = useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
@@ -317,7 +327,22 @@ export default function EventDetails(): React.ReactNode {
         </Group>
       </Box>
 
-      <RegisteringModal opened={modalOpened} onClose={closeModal} />
+      <RegisteringModal
+        opened={modalOpened}
+        onClose={closeModal}
+        onOpenPayment={openPaymentModal}
+      />
+      <PaymentModal
+        opened={paymentModalOpened}
+        onClose={closePaymentModal}
+        onOpenConfirmation={openConfirmationModal}
+        onOpenRegistration={openModal}
+      />
+      <ConfirmationModal
+        opened={confirmationModalOpened}
+        onClose={closeConfirmationModal}
+        onOpenPayment={openPaymentModal}
+      />
     </>
   );
 }
