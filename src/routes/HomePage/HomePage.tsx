@@ -19,7 +19,13 @@ export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
+
+  const [categoryFilters, setCategoryFilters] = useState<number[]>([]);
+  const [cityFilters, setCityFilters] = useState<number[]>([]);
+  const [tagFilters, setTagFilters] = useState<number[]>([]);
+  const [priceFilters, setPriceFilters] = useState<number[]>([]);
 
   useEffect(() => {
     async function loadEvents() {
@@ -27,9 +33,15 @@ export default function HomePage() {
         setLoading(true);
 
         const url = new URL('http://localhost:3001/events');
-        if (sortBy) {
-          url.searchParams.append('order', sortBy);
-        }
+
+        if (sortBy) { url.searchParams.append('order', sortBy); }
+
+        categoryFilters.forEach(id => url.searchParams.append('category_ids', id.toString()));
+        cityFilters.forEach(id => url.searchParams.append('city_ids', id.toString()));
+        tagFilters.forEach(id => url.searchParams.append('tag_ids', id.toString()));
+        priceFilters.forEach(id => url.searchParams.append('price_ids', id.toString()));
+
+        console.log('Fetching events with URL:', url.toString());
 
         const res = await fetch(url.toString());
 
@@ -44,7 +56,7 @@ export default function HomePage() {
     }
 
     loadEvents();
-  }, [sortBy]);
+  }, [categoryFilters, cityFilters, tagFilters, priceFilters, sortBy]);
 
   const handleSortChange = (value: SortValue) => {
     setSortBy(value);
@@ -62,35 +74,31 @@ export default function HomePage() {
             <FilterDropdown
               fetchUrl='http://localhost:3001/categories'
               label='Kategori'
-              onApply={(selected) => {
-                console.log('Kategorifilter:', selected);
-              }}
+              onApply={(selected) => setCategoryFilters(selected.map(item => item.id))}
             />
+
             <SearchableFilterDropdown
               label='Stad'
               fetchUrl='http://localhost:3001/cities'
-              onApply={(selected) => {
-                console.log('Stadfilter:', selected);
-              }}
+              onApply={(selected) => setCityFilters(selected.map(item => item.id))}
             />
+
             <SearchableFilterDropdown
               label='Ämne'
               fetchUrl='http://localhost:3001/tags'
-              onApply={(selected) => {
-                console.log('Ämnefilter:', selected);
-              }}
+              onApply={(selected) => setTagFilters(selected.map(item => item.id))}
             />
+
             <PriceDropdown
               label='Pris'
-              onApply={(selected) => {
-                console.log('Prisfilter:', selected);
-              }}
+              onApply={(selected) => setPriceFilters(selected.map(item => item.id))}
             />
+
             {/* <DateFilterDropdown
-          label="Datum" onApply={(selected) => {
-            console.log('Datumfilter:', selected);
-          }}
-        /> */}
+                  label="Datum" onApply={(selected) => {
+                    console.log('Datumfilter:', selected);
+                  }}
+                /> */}
           </Group>
           <Sort onSortChange={handleSortChange} />
         </Group>
