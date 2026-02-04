@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Menu, Button } from '@mantine/core';
 import { ChevronDown } from 'lucide-react';
 
-export type SortValue = 'pris' | 'narmast_i_tid' | 'platser_kvar';
+export type SortValue = 'price' | 'availability' | 'date';
+
 
 interface SortProps {
   onSortChange?: (value: SortValue) => void;
@@ -12,10 +13,11 @@ const Sort = ({ onSortChange }: SortProps) => {
   const [selected, setSelected] = useState<SortValue | null>(null);
 
   const sortOptions: { value: SortValue; label: string }[] = [
-    { value: 'pris', label: 'Pris' },
-    { value: 'narmast_i_tid', label: 'Närmast i tid' },
-    { value: 'platser_kvar', label: 'Platser kvar' },
+  { value: 'date', label: 'Närmast i tid' },
+  { value: 'price', label: 'Pris' },
+  { value: 'availability', label: 'Platser kvar' },
   ];
+
 
   const handleSelect = (value: SortValue) => {
     setSelected(value);
