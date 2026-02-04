@@ -2,12 +2,7 @@ import {
   Box,
   Text,
   Modal,
-  Container,
-  Title,
-  Anchor,
-  Paper,
   TextInput,
-  PasswordInput,
   Group,
   Checkbox,
   ActionIcon,
@@ -16,17 +11,19 @@ import {
   Stack,
 } from '@mantine/core';
 import { CircleHelp } from 'lucide-react';
-import BaseButton from '../Buttons/BaseButton/BaseButton';
+import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import './RegisteringModal.scss';
 
 interface RegisteringModalProps {
   opened: boolean;
   onClose: () => void;
+  onOpenPayment: () => void;
 }
 
 export default function RegisteringModal({
   opened,
   onClose,
+  onOpenPayment,
 }: RegisteringModalProps) {
   return (
     <Modal
@@ -125,7 +122,14 @@ export default function RegisteringModal({
           checked={true}
         />
       </Stack>
-      <BaseButton variantType='primary' fullWidth to='/' mt='lg'>
+      <BaseButton
+        variantType='primary'
+        fullWidth
+        mt='lg'
+        onClick={() => {
+          onClose();
+          onOpenPayment();
+        }}>
         Till betalning
       </BaseButton>
       {/* </Paper> */}
