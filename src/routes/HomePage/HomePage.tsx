@@ -19,11 +19,20 @@ export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortValue | null>(null);
 
   useEffect(() => {
     async function loadEvents() {
       try {
-        const res = await fetch('http://localhost:3001/events');
+        setLoading(true);
+
+        const url = new URL('http://localhost:3001/events');
+        if (sortBy) {
+          url.searchParams.append('order', sortBy);
+        }
+
+        const res = await fetch(url.toString());
+
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
         setEvents(data);
@@ -35,10 +44,10 @@ export default function HomePage() {
     }
 
     loadEvents();
-  }, []);
+  }, [sortBy]);
 
-  const handleSortChange = (sortBy: SortValue) => {
-    console.log('Sortera efter:', sortBy);
+  const handleSortChange = (value: SortValue) => {
+    setSortBy(value);
   };
 
   return (
