@@ -1,4 +1,13 @@
-import { Stack, Text, UnstyledButton, Divider, Space } from '@mantine/core';
+import {
+  Stack,
+  Text,
+  UnstyledButton,
+  Divider,
+  Space,
+  Container,
+  Group,
+  Anchor,
+} from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { navLinks } from '../../data/NavLinks';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
@@ -49,6 +58,48 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
 
           <Space h='xs' />
           <LoginButtons onClose={onClose} />
+
+          <Container size='lg'>
+            <Group
+              justify='space-between'
+              align='center'
+              py='md'
+              className='footer-bottom'
+              wrap='wrap'>
+              <Text size='sm' c='dimmed'>
+                © 2026 DinnerWise. All rights reserved.
+              </Text>
+
+              <Group gap='md'>
+                <Anchor
+                  component={NavLink}
+                  to='/kopvillkor'
+                  size='sm'
+                  c='dimmed'
+                  underline='hover'>
+                  Köpvillkor
+                </Anchor>
+
+                <Anchor
+                  component={NavLink}
+                  to='/integritetspolicy'
+                  size='sm'
+                  c='dimmed'
+                  underline='hover'>
+                  Integritetspolicy
+                </Anchor>
+
+                <Anchor
+                  component={NavLink}
+                  to='/cookies'
+                  size='sm'
+                  c='dimmed'
+                  underline='hover'>
+                  Cookies
+                </Anchor>
+              </Group>
+            </Group>
+          </Container>
         </Stack>
       </nav>
     </>
