@@ -9,7 +9,8 @@ import {
   Group,
   Badge,
   Flex,
-  Divider,
+  Avatar,
+  Tooltip,
 } from '@mantine/core';
 import './EventDetails.scss';
 import {
@@ -21,7 +22,6 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
-import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
@@ -76,7 +76,6 @@ export default function EventDetails(): React.ReactNode {
   if (loading) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='dimmed'>
           Laddar event...
         </Text>
@@ -87,7 +86,6 @@ export default function EventDetails(): React.ReactNode {
   if (error || !event) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='red'>
           {error || 'Event hittades inte'}
         </Text>
@@ -103,12 +101,7 @@ export default function EventDetails(): React.ReactNode {
 
   return (
     <>
-      <Breadcrumb />
-
-      <Box
-        p={{ base: 'sm', md: 'md' }}
-        style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-        {/* Title and Badge - Outside Grid */}
+      <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
           <Group justify='space-between'>
             <Text size='xl' fw={800}>
@@ -129,88 +122,125 @@ export default function EventDetails(): React.ReactNode {
                     ? 'rgba(120, 90, 10, 1)'
                     : 'rgba(36, 56, 33, 1)'
               }
-              size='lg'>
+              size='xl'>
               {isFull
                 ? 'Fullt'
                 : `${event.current_participants}/${displayMaxSpots} platser`}
             </Badge>
           </Group>
-          <Text component={NavLink} to='/profil/:id'>
+          <Text
+            component={NavLink}
+            to='/profil/:id'
+            w='fit-content'
+            className='host-name-text'>
             med Anders Blom
           </Text>
         </Stack>
 
         <Text mb='xl'>{event.description}</Text>
 
-        <Group gap='md' mb='xl' grow>
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
-              <Text size='md'>Datum</Text>
-              <Text size='md' fw={600}>
-                {eventDate.toLocaleDateString('sv-SE', {
-                  weekday: 'short',
-                  day: 'numeric',
-                  month: 'short',
-                })}
-              </Text>
-            </Stack>
-          </Box>
-
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
-              <Text size='md'>Tid</Text>
-              <Text size='md' fw={600}>
-                {event.start_time.slice(0, 5)}-{event.end_time.slice(0, 5)}
-              </Text>
-            </Stack>
-          </Box>
-
-          <Box px='xs' py='xs' className='event-info'>
-            <Stack align='center' gap='0'>
-              <Text size='md'>Pris</Text>
-              <Text size='md' fw={600}>
-                {Math.floor(event.price)} kr
-              </Text>
-            </Stack>
-          </Box>
-        </Group>
-
-        <Divider mb='md' />
         <Grid gutter='xl'>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack gap='xs'>
-              <Text fw={600}>Om värden</Text>
+            <Stack>
+              <Text fw={600}>Information</Text>
+              <Group gap='md' mb='xl' grow>
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Datum</Text>
+                    <Text size='md' fw={600}>
+                      {eventDate.toLocaleDateString('sv-SE', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                      })}
+                    </Text>
+                  </Stack>
+                </Box>
 
-              <Group gap='0' wrap='nowrap' className='host-row'>
-                <Image
-                  src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
-                  w={{ base: 80, md: 100 }}
-                  className='host-image'
-                />
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Tid</Text>
+                    <Text size='md' fw={600}>
+                      {event.start_time.slice(0, 5)}-
+                      {event.end_time.slice(0, 5)}
+                    </Text>
+                  </Stack>
+                </Box>
 
-                <Group p='md' wrap='nowrap' className='host-image-information'>
-                  <Text
-                    component={NavLink}
-                    to='/profil/:id'
-                    className='host-text'
-                    pr='md'
-                    pl='sm'>
-                    Hej! Anders heter jag. Utbildad jurist med miljöfokus och
-                    lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
-                    småbarnspappa till Ylva och Melker. På min fritid spelar jag
-                    golf, tränar på nya recept med hållbara råvaror, engagerar
-                    mig i lokala miljöprojekt och deltar i föreläsningar om
-                    hållbar utveckling. Jag hoppas vi ses på något framtida
-                    event!
-                  </Text>
-                  <NavLink to='/profil/:id' className='host-chevron-link'>
-                    <ChevronRight className='host-chevron' />
-                  </NavLink>
-                </Group>
+                <Box px='xs' py='xs' className='event-info'>
+                  <Stack align='center' gap='0' pt='xs' pb='xs'>
+                    <Text size='md'>Pris</Text>
+                    <Text size='md' fw={600}>
+                      {Math.floor(event.price)} kr
+                    </Text>
+                  </Stack>
+                </Box>
               </Group>
             </Stack>
+
+            <Stack gap='xs'>
+              <Text fw={600}>Om värden</Text>
+              <NavLink
+                to='/profil/:id'
+                style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Group gap='0' wrap='nowrap' className='host-row'>
+                  <Image
+                    src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    w={{ base: 80, md: 100 }}
+                    className='host-image'
+                  />
+
+                  <Group
+                    p='md'
+                    wrap='nowrap'
+                    className='host-image-information'>
+                    <Text className='host-text' lineClamp={4}>
+                      Hej! Anders heter jag. Utbildad jurist med miljöfokus och
+                      lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
+                      småbarnspappa till Ylva och Melker. På min fritid spelar
+                      jag golf, tränar på nya recept med hållbara råvaror,
+                      engagerar mig i lokala miljöprojekt och deltar i
+                      föreläsningar om hållbar utveckling. Jag hoppas vi ses på
+                      något framtida event!
+                    </Text>
+                    <ChevronRight className='host-chevron' />
+                  </Group>
+                </Group>
+              </NavLink>
+
+              <Box visibleFrom='sm' pt='xl' pb='xl'>
+                <Text fw={600}>Deltagare</Text>
+
+                <Tooltip.Group openDelay={300} closeDelay={100}>
+                  <Avatar.Group spacing='sm'>
+                    <Tooltip label='Person 1' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip label='Person 2' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip label='Person 3' withArrow>
+                      <Avatar src='image.png' radius='xl' size='lg' />
+                    </Tooltip>
+                    <Tooltip
+                      withArrow
+                      label={
+                        <>
+                          <div>Person 4</div>
+                          <div>Person 5</div>
+                        </>
+                      }>
+                      <Avatar radius='xl' size='lg'>
+                        +2
+                      </Avatar>
+                    </Tooltip>
+                  </Avatar.Group>
+                </Tooltip.Group>
+              </Box>
+            </Stack>
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
+
+          <Grid.Col span={{ base: 12, md: 6 }} className='event-second-column'>
             <Stack gap='lg'>
               <Stack gap='xs'>
                 <Text fw={600}>Om platsen</Text>

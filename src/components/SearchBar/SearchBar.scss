@@ -2,11 +2,12 @@
 
 .searchBar {
   max-width: 400px;
+  width: 100%;
 
   & input {
-    border: 0;
+    border: 1px solid var.$gray5;
     border-radius: var(--mantine-radius-xl);
-    border: 1px solid white;
+    background-color: white;
 
     height: 40px;
     font-size: 14px;
@@ -20,11 +21,4 @@
 
 .searchBar-icon {
   color: var.$darkred;
-}
-
-.searchBar-home-page {
-  position: absolute;
-  bottom: 0;
-  left: 1rem;
-  right: 1rem;
 }

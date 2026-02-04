@@ -19,18 +19,16 @@ export default function NavCarousel() {
           base: '100%',
           sm: '50%',
           md: '33.3333%',
-          lg: '16.6667%',
+          lg: '20%',
         }}
-        nextControlIcon={<ChevronRight size={32} />}
-        previousControlIcon={<ChevronLeft size={32} />}>
+        nextControlIcon={<ChevronRight size={28} />}
+        previousControlIcon={<ChevronLeft size={28} />}>
         {navLinks.map((link) => (
           <Carousel.Slide key={link.path}>
             <NavLink to={`/${link.path}`} className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
-                <Image src={link.image} h={160} fit='cover' radius='md' />
-                <Text fw='600' className='navCarousel-label'>
-                  {link.label}
-                </Text>
+                <Image src={link.image} h={110} fit='cover' />
+                <Text className='navCarousel-label'>{link.label}</Text>
               </Card>
             </NavLink>
           </Carousel.Slide>

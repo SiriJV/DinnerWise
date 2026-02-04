@@ -188,6 +188,7 @@ import {
   Avatar,
   Box,
   Divider,
+  Tooltip,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -221,7 +222,7 @@ export default function EventCard({
   restaurant_id,
   restaurant_name,
   restaurant_address,
-  maxDescriptionLength = 120,
+  maxDescriptionLength = 100,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -315,16 +316,76 @@ export default function EventCard({
             </NavLink>{' '}
             · {restaurant_address || 'Adress saknas'}
           </Text>
+
           <Divider orientation='vertical' size='sm' />
 
-          <Text size='xs' c='dimmed'>
-            {formattedDate} {timeRange}
-          </Text>
+          <Group justify='space-between' wrap='nowrap' style={{ flex: 1 }}>
+            <Text size='xs' c='dimmed'>
+              {formattedDate} {timeRange}
+            </Text>
+            <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
+              <Tooltip.Group openDelay={300} closeDelay={100}>
+                <Avatar.Group spacing='xs'>
+                  <Tooltip label='Person 1' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip label='Person 2' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip label='Person 3' withArrow>
+                    <Avatar src='image.png' radius='xl' size='sm' />
+                  </Tooltip>
+                  <Tooltip
+                    withArrow
+                    label={
+                      <>
+                        <div>Person 4</div>
+                        <div>Person 5</div>
+                      </>
+                    }>
+                    <Avatar radius='xl' size='sm'>
+                      +2
+                    </Avatar>
+                  </Tooltip>
+                </Avatar.Group>
+              </Tooltip.Group>
+            </Box>
+          </Group>
         </Box>
 
-        <Text size='sm' c='dimmed' className='eventDescription'>
-          {shortDescription}
-        </Text>
+        <Group justify='space-between' visibleFrom='sm' w='100%' wrap='nowrap'>
+          <Text size='sm' c='dimmed' className='eventDescription'>
+            {shortDescription}
+          </Text>
+
+          <Box style={{ flexShrink: 0 }}>
+            <Tooltip.Group openDelay={300} closeDelay={100}>
+              <Avatar.Group spacing='xs'>
+                <Tooltip label='Person 1' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
+                <Tooltip label='Person 2' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
+                <Tooltip label='Person 3' withArrow>
+                  <Avatar src='image.png' radius='xl' size='sm' />
+                </Tooltip>
+                <Tooltip
+                  withArrow
+                  label={
+                    <>
+                      <div>Person 4</div>
+                      <div>Person 5</div>
+                    </>
+                  }>
+                  <Avatar radius='xl' size='sm'>
+                    +2
+                  </Avatar>
+                </Tooltip>
+              </Avatar.Group>
+            </Tooltip.Group>
+          </Box>
+        </Group>
 
         <Badge
           className='spotsBadge'

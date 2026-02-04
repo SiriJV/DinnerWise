@@ -1,8 +1,12 @@
 @use '../../styles/variables.scss' as var;
 @use '../../styles/mixins.scss' as *;
 
+.accordion {
+  font-size: smaller;
+}
+
 .lastPanel {
-  padding-bottom: 16px; /* extra padding på sista panelen */
+  padding-bottom: var(--mantine-spacing-md);
 }
 
 .accordionLink {
@@ -15,6 +19,7 @@
   }
 
   &:hover {
-    @include hover-color;
+    // @include hover-color;
+    text-decoration: underline;
   }
 }

@@ -1,4 +1,4 @@
-import { Stack, Text, UnstyledButton, Divider } from '@mantine/core';
+import { Stack, Text, UnstyledButton, Divider, Space } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { navLinks } from '../../data/NavLinks';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
@@ -18,12 +18,12 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
       <div className='navOverlay' onClick={onClose} />
 
       <nav className='sideNav'>
-        <Stack className='sideNavInner' gap='md'>
+        <Stack className='sideNavInner'>
           <Text fw={800} size='lg' px='md' pt='md'>
             Utforska efter kategori
           </Text>
 
-          <Stack gap={4} px='md'>
+          <Stack gap={15} px='md'>
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
@@ -39,10 +39,15 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
             ))}
           </Stack>
 
-          <Divider my='sm' />
+          {/* <Divider my='sm' /> */}
+          <Space h='xs' />
 
+          {/* <Text fw={800} size='lg' px='md' pt='md'>
+            Om DinnerWise
+            </Text> */}
           <NavBarAccordion onClose={onClose} />
 
+          <Space h='xs' />
           <LoginButtons onClose={onClose} />
         </Stack>
       </nav>
