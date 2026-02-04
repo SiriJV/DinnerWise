@@ -50,6 +50,12 @@
   }
 }
 
+.host-name-text {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .host-image {
   height: 100%;
   object-fit: cover;
@@ -68,20 +74,6 @@
 }
 
 .host-text {
-  overflow: hidden;
-
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-
-  display: box;
-  box-orient: vertical;
-
-  line-clamp: 4;
-
-  line-height: 1.4;
-  max-height: calc(1.4em * 4);
-
   @media (max-width: 768px) {
     font-size: smaller;
     padding: 0;

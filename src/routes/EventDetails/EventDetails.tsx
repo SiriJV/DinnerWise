@@ -128,7 +128,11 @@ export default function EventDetails(): React.ReactNode {
                 : `${event.current_participants}/${displayMaxSpots} platser`}
             </Badge>
           </Group>
-          <Text component={NavLink} to='/profil/:id' w='fit-content'>
+          <Text
+            component={NavLink}
+            to='/profil/:id'
+            w='fit-content'
+            className='host-name-text'>
             med Anders Blom
           </Text>
         </Stack>
@@ -190,7 +194,7 @@ export default function EventDetails(): React.ReactNode {
                     p='md'
                     wrap='nowrap'
                     className='host-image-information'>
-                    <Text className='host-text'>
+                    <Text className='host-text' lineClamp={4}>
                       Hej! Anders heter jag. Utbildad jurist med miljöfokus och
                       lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
                       småbarnspappa till Ylva och Melker. På min fritid spelar
