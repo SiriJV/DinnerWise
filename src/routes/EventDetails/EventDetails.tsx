@@ -12,6 +12,7 @@ import {
   Avatar,
   Tooltip,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
 import {
   BookmarkIcon,
@@ -22,12 +23,15 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import RegisteringModal from '../../components/RegisteringModal/RegisteringModal';
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
@@ -291,7 +295,8 @@ export default function EventDetails(): React.ReactNode {
                   <BaseButton
                     size='md'
                     className='join-event-button'
-                    style={{ width: 'auto' }}>
+                    style={{ width: 'auto' }}
+                    onClick={openModal}>
                     Anmäl dig här
                   </BaseButton>
                   <Flex px='md' py='sm' className='action-icon-button'>
@@ -311,6 +316,8 @@ export default function EventDetails(): React.ReactNode {
           <Text className='report-event-text'>Rapportera event</Text>
         </Group>
       </Box>
+
+      <RegisteringModal opened={modalOpened} onClose={closeModal} />
     </>
   );
 }
