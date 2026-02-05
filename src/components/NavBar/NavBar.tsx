@@ -9,7 +9,7 @@ import {
   Anchor,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-import { navLinks } from '../../data/NavLinks';
+import { categoryLinks } from '../../data/NavLinks';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
@@ -33,10 +33,10 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
           </Text>
 
           <Stack gap={15} px='md'>
-            {navLinks.map((link) => (
+            {categoryLinks.map((link) => (
               <NavLink
                 key={link.path}
-                to={`/${link.path}`}
+                to={link.path}
                 className={({ isActive }) =>
                   `sideNavLink ${isActive ? 'active' : ''}`
                 }
