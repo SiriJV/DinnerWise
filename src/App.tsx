@@ -58,7 +58,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/restaurang/:id',
+        path: '/restaurang/:slug',
         element: <RestaurangDetails />,
       },
       {
