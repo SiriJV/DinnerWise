@@ -1,6 +1,6 @@
 import ProfilePageImage from './ProfilePageImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Group, Stack, Text } from '@mantine/core';
+import { Box, Group, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { PenIcon, SettingsIcon } from 'lucide-react';
@@ -15,7 +15,9 @@ export default function ProfilePage() {
       </Box>
       <Stack m='md' gap='xs'>
         <Group justify='space-between'>
-          <Text fw='600'>Linda Larsson 💗</Text>
+          <Title order={2} size='lg' fw='600'>
+            Linda Larsson 💗
+          </Title>
           <Group gap='xs'>
             <PenIcon size='20px' />
             <SettingsIcon size='20px' />
