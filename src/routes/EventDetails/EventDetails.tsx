@@ -60,7 +60,7 @@ export default function EventDetails(): React.ReactNode {
         const res = await fetch(`http://localhost:3001/events/${id}`);
         if (!res.ok) throw new Error('Kunde inte hämta event');
         const data: EventType = await res.json();
-        
+
         // Validate that slug matches event data
         const expectedSlug = generateEventSlug(data.title, data.id);
         if (slug !== expectedSlug) {
@@ -68,7 +68,7 @@ export default function EventDetails(): React.ReactNode {
           setLoading(false);
           return;
         }
-        
+
         setEvent(data);
       } catch (err: any) {
         setError(err.message);
