@@ -228,9 +228,8 @@ export default function EventCard({
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   // Placeholder values - max_spots finns inte i API än
-  const displayMaxSpots = 8;
-  const displayCurrentParticipants =
-    current_participants || Math.floor(Math.random() * 4) + 5;
+  const displayMaxSpots = 6;
+  const displayCurrentParticipants = current_participants || 0;
   const displayPrice = typeof price === 'string' ? parseFloat(price) : price;
 
   const remainingSpots = displayMaxSpots - displayCurrentParticipants;
@@ -410,9 +409,7 @@ export default function EventCard({
           }}>
           {isFull
             ? 'Fullt'
-            : isAlmostFull
-              ? `${remainingSpots} av ${displayMaxSpots} platser kvar`
-              : `${remainingSpots} av ${displayMaxSpots} platser kvar`}
+            : `${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
         </Badge>
       </Box>
     </Card>

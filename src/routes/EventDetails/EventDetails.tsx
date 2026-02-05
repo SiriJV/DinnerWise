@@ -132,7 +132,7 @@ export default function EventDetails(): React.ReactNode {
   }
 
   const eventDate = new Date(event.date);
-  const displayMaxSpots = 8;
+  const displayMaxSpots = 6;
   const remainingSpots = displayMaxSpots - event.current_participants;
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
@@ -161,7 +161,7 @@ export default function EventDetails(): React.ReactNode {
               size='xl'>
               {isFull
                 ? 'Fullt'
-                : `${event.current_participants}/${displayMaxSpots} platser`}
+                : `${event.current_participants} anmälda, ${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
             </Badge>
           </Group>
           <Text component={NavLink} to='/profil/:id' w='fit-content'>
