@@ -312,7 +312,7 @@ export default function EventDetails(): React.ReactNode {
               {/* Action Buttons */}
               <Box
                 bg='white'
-                p='md'
+                p={isNearFooter ? 0 : 'md'}
                 className={`sticky-action-buttons ${isNearFooter ? 'near-footer' : ''}`}>
                 <Group gap='xs' className='join-event-group'>
                   <BaseButton
