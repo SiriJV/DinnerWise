@@ -1,6 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Container, Title, Text, Group, SimpleGrid, Stack, Divider, Pill, } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Group,
+  SimpleGrid,
+  Stack,
+  Divider,
+  Pill,
+} from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 
@@ -114,61 +123,61 @@ export default function CategoryPage() {
 
   if (loading)
     return (
-      <Container py="xl" px={5}>
+      <Container py='xl' px={5}>
         <Text>Laddar kategorier...</Text>
       </Container>
     );
   if (error)
     return (
-      <Container py="xl" px={5}>
-        <Text color="red">{error}</Text>
+      <Container py='xl' px={5}>
+        <Text color='red'>{error}</Text>
       </Container>
     );
   if (!category)
     return (
-      <Container py="xl" px={5}>
+      <Container py='xl' px={5}>
         <Text>Kategori hittades inte</Text>
       </Container>
     );
 
   return (
-    <Container size="responsive">
-    <Breadcrumb />
-      <Stack gap="md">
+    <Container size='responsive'>
+      <Stack gap='md'>
         <Title order={1}>{category.name}</Title>
-        <Text size="lg" c="dimmed">
+        <Text size='lg' c='dimmed'>
           {category.description}
         </Text>
 
-        <Group gap="xs" mb="md" align="center" wrap="wrap">
+        <Group gap='xs' mb='md' align='center' wrap='wrap'>
           {loadingTags && <Text>Laddar taggar...</Text>}
-          {!loadingTags && tags.length === 0 && <Text>Inga taggar för denna kategori.</Text>}
-          {!loadingTags &&
-            tags.map((tag) => (
-              <Pill>{tag.name}</Pill>
-            ))}
+          {!loadingTags && tags.length === 0 && (
+            <Text>Inga taggar för denna kategori.</Text>
+          )}
+          {!loadingTags && tags.map((tag) => <Pill>{tag.name}</Pill>)}
         </Group>
 
-        <Divider my="sm" />
+        <Divider my='sm' />
 
         <Title order={3}>Event</Title>
         {loadingEvents && <Text>Laddar event...</Text>}
-        {!loadingEvents && events.length === 0 && <Text>Inga event för denna kategori.</Text>}
+        {!loadingEvents && events.length === 0 && (
+          <Text>Inga event för denna kategori.</Text>
+        )}
 
-        <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing="md">
-        {events.map((event) => (
+        <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+          {events.map((event) => (
             <EventCard
-            key={event.id}
-            id={event.id}
-            title={event.title}
-            description={event.description}
-            current_participants={event.current_participants}
-            price={event.price}
-            date={new Date(event.date)}
-            start_time={event.start_time}
-            end_time={event.end_time}
+              key={event.id}
+              id={event.id}
+              title={event.title}
+              description={event.description}
+              current_participants={event.current_participants}
+              price={event.price}
+              date={new Date(event.date)}
+              start_time={event.start_time}
+              end_time={event.end_time}
             />
-        ))}
+          ))}
         </SimpleGrid>
       </Stack>
     </Container>
