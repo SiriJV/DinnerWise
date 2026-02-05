@@ -93,7 +93,7 @@ export default function RegisteringModal({
         </Text>
 
         <Grid gutter='md' pt='md'>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='Förnamn'
               placeholder='Förnamn'
@@ -104,7 +104,7 @@ export default function RegisteringModal({
               onChange={(e) => setFirstName(e.currentTarget.value)}
             />
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='Efternamn'
               placeholder='Efternamn'
@@ -118,14 +118,14 @@ export default function RegisteringModal({
         </Grid>
 
         <Grid gutter='md' pt='md'>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='Telefon'
               placeholder='+46 70 123 45 67'
               required
               radius='xs'
               type='tel'
-              maxLength={11}
+              maxLength={12}
               value={phone}
               onChange={(e) => {
                 const value = e.currentTarget.value;
@@ -137,7 +137,7 @@ export default function RegisteringModal({
               }
             />
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='E-post'
               placeholder='exempel@email.com'
