@@ -16,6 +16,7 @@ import {
   Flex,
   Avatar,
   Tooltip,
+  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
@@ -141,9 +142,9 @@ export default function EventDetails(): React.ReactNode {
       <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
           <Group justify='space-between' align='flex-start' wrap='wrap-reverse'>
-            <Text size='xl' fw={800}>
+            <Title order={2} fw={800}>
               {event.title}
-            </Text>
+            </Title>
             <Badge
               bg={
                 isFull
