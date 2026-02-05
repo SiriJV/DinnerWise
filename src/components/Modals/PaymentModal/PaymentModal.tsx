@@ -14,6 +14,7 @@ import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import BaseModal from '../BaseModal/BaseModal';
 import swishLogo from '../../../assets/swish-logo.png';
 import klarnaLogo from '../../../assets/klarna-logo.webp';
+import type { EventType } from '../../../types/EventType';
 import './PaymentModal.scss';
 
 interface PaymentModalProps {
@@ -21,6 +22,7 @@ interface PaymentModalProps {
   onClose: () => void;
   onOpenConfirmation: () => void;
   onOpenRegistration: () => void;
+  event?: EventType | null;
 }
 
 export default function PaymentModal({
@@ -28,8 +30,16 @@ export default function PaymentModal({
   onClose,
   onOpenConfirmation,
   onOpenRegistration,
+  event,
 }: PaymentModalProps) {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+
+  const eventDate = event?.date ? new Date(event.date) : null;
+  const formattedDate = eventDate?.toLocaleDateString('sv-SE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
 
   return (
     <BaseModal
@@ -41,49 +51,52 @@ export default function PaymentModal({
         onOpenRegistration();
       }}>
       {/* Eventinformation */}
-      <Box bg='gray.2' p='md' bdrs='sm' mb='md'>
-        <Text size='lg' fw={600} pb='xs'>
-          Zero waste i vardagen
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Datum:{' '}
+      {event && (
+        <Box bg='gray.2' p='md' bdrs='sm' mb='md'>
+          <Text size='lg' fw={600} pb='xs'>
+            {event.title}
           </Text>
-          2026-01-06
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Värd:{' '}
+          <Text>
+            <Text span fw={600}>
+              Datum:{' '}
+            </Text>
+            {formattedDate}
           </Text>
-          Anders Blom
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Plats:{' '}
+          <Text>
+            <Text span fw={600}>
+              Värd:{' '}
+            </Text>
+            Anders Blom
           </Text>
-          Noosh, Österlånggatan 35, Borås
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Tid:{' '}
+          <Text>
+            <Text span fw={600}>
+              Plats:{' '}
+            </Text>
+            {event.restaurant_name}
+            {event.restaurant_address && `, ${event.restaurant_address}`}
+            {event.restaurant_city && `, ${event.restaurant_city}`}
           </Text>
-          17:00 - 18:45
-        </Text>
-      </Box>
+          <Text>
+            <Text span fw={600}>
+              Tid:{' '}
+            </Text>
+            {event.start_time?.slice(0, 5)} - {event.end_time?.slice(0, 5)}
+          </Text>
+        </Box>
+      )}
       <Box>
         <Text size='lg' fw={600} mb='xs'>
           Att betala
         </Text>
         <TextInput
-          // label='Att betala'
-          value='Zero waste i vardagen'
+          value={event?.title || ''}
           variant='filled'
           readOnly
           radius='xs'
           mb='md'
           rightSection={
             <Text fw={600} c='black'>
-              150 kr
+              {event ? Math.floor(event.price) : 0} kr
             </Text>
           }
           rightSectionWidth={80}
