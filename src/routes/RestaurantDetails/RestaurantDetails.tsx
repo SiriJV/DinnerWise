@@ -10,6 +10,7 @@ import {
   Anchor,
   SimpleGrid,
   Divider,
+  Title,
 } from '@mantine/core';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { MapPin, ExternalLink } from 'lucide-react';
@@ -89,7 +90,6 @@ export default function RestaurangDetails(): React.ReactNode {
   if (error || !restaurant) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='red'>
           {error || 'Restaurang hittades inte'}
         </Text>
@@ -99,12 +99,11 @@ export default function RestaurangDetails(): React.ReactNode {
 
   return (
     <>
-      <Breadcrumb />
       <Stack m='md' gap='xl'>
         <Stack gap={0}>
-          <Text size='xl' fw={800}>
+          <Title order={2} fw={800}>
             {restaurant.name}
-          </Text>
+          </Title>
           <Text c='dimmed'>
             {restaurant.address}, {restaurant.city}
           </Text>
@@ -162,9 +161,9 @@ export default function RestaurangDetails(): React.ReactNode {
 
         {events.length > 0 && (
           <Stack gap='md'>
-            <Text size='lg' fw={600}>
+            <Title order={3} fw={600}>
               Kommande event på {restaurant.name}
-            </Text>
+            </Title>
             <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
               {events.map((event) => (
                 <EventCard
