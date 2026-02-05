@@ -10,7 +10,6 @@ import SupportPage from '../routes/info pages/SupportPage';
 import LoginPage from '../routes/info pages/LoginPage';
 import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
-import CategoryPage from '../routes/CategoryPage/CategoryPage';
 
 type NavLinkItem = {
   label: string;
@@ -19,50 +18,51 @@ type NavLinkItem = {
   image: string;
 };
 
-export const navLinks: NavLinkItem[] = [
+type CategoryLinkItem = {
+  label: string;
+  path: string;
+  image: string;
+};
+
+export const categoryLinks: CategoryLinkItem[] = [
   {
     label: 'Litteratur och skrivande',
-    path: 'litteratur-och-skrivande',
-    element: <CategoryPage />,
+    path: '/kategori/litteratur-och-skrivande',
     image: 'https://images.unsplash.com/photo-1517971071642-34a2d3ecc9cd',
   },
   {
     label: 'Musik',
-    path: 'musik',
-    element: <CategoryPage />,
+    path: '/kategori/musik',
     image: 'https://images.unsplash.com/photo-1543062058-de8a92799761',
   },
   {
     label: 'Natur och friluftsliv',
-    path: 'natur-och-friluftsliv',
-    element: <CategoryPage />,
+    path: '/kategori/natur-och-friluftsliv',
     image: 'https://images.unsplash.com/photo-1534049971341-c6bc3215ed2a',
   },
   {
     label: 'IT och teknik',
-    path: 'it-och-teknik',
-    element: <CategoryPage />,
+    path: '/kategori/it-och-teknik',
     image: 'https://images.unsplash.com/photo-1573495804683-641191e042ea',
   },
   {
     label: 'Språk',
-    path: 'sprak',
-    element: <CategoryPage />,
+    path: '/kategori/sprak',
     image: 'https://images.unsplash.com/photo-1592431913827-893545d23718',
   },
   {
     label: 'Konst och kultur',
-    path: 'konst-och-kultur',
-    element: <CategoryPage />,
+    path: '/kategori/konst-och-kultur',
     image: 'https://images.unsplash.com/photo-1714508862788-44e45c4315d0',
   },
   {
     label: 'Sport och träning',
-    path: 'sport-och-träning',
-    element: <CategoryPage />,
+    path: '/kategori/sport-och-träning',
     image: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5',
   },
 ];
+
+export const navLinks: NavLinkItem[] = [];
 
 type AccordionPanelItem = {
   label: string;
