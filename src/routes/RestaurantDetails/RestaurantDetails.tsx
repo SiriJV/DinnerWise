@@ -43,15 +43,18 @@ export default function RestaurangDetails(): React.ReactNode {
 
         if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
         const restaurantData: Restaurant = await restaurantRes.json();
-        
+
         // Validate that slug matches restaurant data
-        const expectedSlug = generateRestaurantSlug(restaurantData.name, restaurantData.id);
+        const expectedSlug = generateRestaurantSlug(
+          restaurantData.name,
+          restaurantData.id,
+        );
         if (slug !== expectedSlug) {
           setError('Restaurang hittades inte');
           setLoading(false);
           return;
         }
-        
+
         setRestaurant(restaurantData);
 
         if (eventsRes.ok) {
