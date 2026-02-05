@@ -79,4 +79,15 @@
     width: 100%;
     min-width: 0;
   }
+
+  /* ===== DISABLED STATE ===== */
+  &:disabled {
+    background-color: var.$gray4;
+    color: var.$gray6;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: var.$gray4;
+    }
+  }
 }
