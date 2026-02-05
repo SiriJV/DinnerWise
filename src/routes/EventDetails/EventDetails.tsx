@@ -142,9 +142,7 @@ export default function EventDetails(): React.ReactNode {
       <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
           <Group justify='space-between' align='flex-start' wrap='wrap-reverse'>
-            <Title order={2} fw={800}>
-              {event.title}
-            </Title>
+            <Title order={2}>{event.title}</Title>
             <Badge
               bg={
                 isFull
