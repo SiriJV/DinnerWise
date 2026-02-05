@@ -56,7 +56,12 @@ export default function RestaurangDetails(): React.ReactNode {
       }
     }
 
-    if (id) loadRestaurant();
+    if (id) {
+      loadRestaurant();
+    } else {
+      setError('Ogiltigt restaurang-ID');
+      setLoading(false);
+    }
   }, [id]);
 
   if (loading) {
