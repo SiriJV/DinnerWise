@@ -1,14 +1,4 @@
-import {
-  Box,
-  Text,
-  TextInput,
-  Checkbox,
-  Textarea,
-  Grid,
-  Stack,
-  Flex,
-  Group,
-} from '@mantine/core';
+import { Box, Text, TextInput, Grid, Flex, Group } from '@mantine/core';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import BaseModal from '../BaseModal/BaseModal';
 import { Share } from 'lucide-react';
@@ -41,7 +31,7 @@ export default function ConfirmationModal({
           </Text>{' '}
           med Anders Blom!
         </Text>
-        <Text>
+        <Text size='sm'>
           Hej och välkommen! Jag heter Anders och är din värd. Under kvällen går
           vi tillsammans igenom enkla sätt att leva mer Zero Waste i vardagen, i
           en avslappnad miljö på Noosh. Jag ser fram emot att träffa dig och
@@ -88,14 +78,14 @@ export default function ConfirmationModal({
         </Text>
 
         <Grid gutter='md'>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='Telefonnummer'
               value='+46703123456'
               variant='filled'
               readOnly
               radius='xs'
-              mb='md'
+              mb={{ base: 0, sm: 'md' }}
               styles={{
                 input: {
                   backgroundColor: 'var(--mantine-color-gray-0)',
@@ -105,7 +95,7 @@ export default function ConfirmationModal({
               }}
             />
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label='E-post'
               value='anders.blom@email.se'
