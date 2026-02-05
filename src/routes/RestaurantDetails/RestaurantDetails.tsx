@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { extractIdFromSlug } from '../../utils/slugify';
+import { extractIdFromSlug, generateRestaurantSlug } from '../../utils/slugify';
 import {
   Box,
   Stack,
@@ -43,6 +43,15 @@ export default function RestaurangDetails(): React.ReactNode {
 
         if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
         const restaurantData: Restaurant = await restaurantRes.json();
+        
+        // Validate that slug matches restaurant data
+        const expectedSlug = generateRestaurantSlug(restaurantData.name, restaurantData.id);
+        if (slug !== expectedSlug) {
+          setError('Restaurang hittades inte');
+          setLoading(false);
+          return;
+        }
+        
         setRestaurant(restaurantData);
 
         if (eventsRes.ok) {
@@ -62,7 +71,7 @@ export default function RestaurangDetails(): React.ReactNode {
       setError('Ogiltigt restaurang-ID');
       setLoading(false);
     }
-  }, [id]);
+  }, [id, slug]);
 
   if (loading) {
     return (
