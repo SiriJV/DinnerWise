@@ -59,7 +59,7 @@ export default function ConfirmationModal({
       </Group>
 
       {event && (
-        <Box bg='gray.2' p='md' bdrs='sm' mb='md'>
+        <Box bg='gray.2' p='md' bdrs='sm' mb='lg' mt='lg'>
           <Text size='lg' fw={600} pb='xs'>
             {event.title}
           </Text>
