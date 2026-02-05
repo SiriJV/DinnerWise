@@ -141,9 +141,9 @@ export default function CategoryPage() {
     );
 
   return (
-    <Container size='responsive'>
+    <Container size='responsive' p='md'>
       <Stack gap='md'>
-        <Title order={1}>{category.name}</Title>
+        <Title order={2}>{category.name}</Title>
         <Text size='lg' c='dimmed'>
           {category.description}
         </Text>
