@@ -60,6 +60,15 @@ export default function EventDetails(): React.ReactNode {
         const res = await fetch(`http://localhost:3001/events/${id}`);
         if (!res.ok) throw new Error('Kunde inte hämta event');
         const data: EventType = await res.json();
+        
+        // Validate that slug matches event data
+        const expectedSlug = generateEventSlug(data.title, data.id);
+        if (slug !== expectedSlug) {
+          setError('Event hittades inte');
+          setLoading(false);
+          return;
+        }
+        
         setEvent(data);
       } catch (err: any) {
         setError(err.message);
@@ -74,7 +83,7 @@ export default function EventDetails(): React.ReactNode {
       setError('Ogiltigt event-ID');
       setLoading(false);
     }
-  }, [id]);
+  }, [id, slug]);
 
   useEffect(() => {
     let timeoutId: number;
@@ -131,7 +140,7 @@ export default function EventDetails(): React.ReactNode {
     <>
       <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
-          <Group justify='space-between'>
+          <Group justify='space-between' align='flex-start' wrap='wrap-reverse'>
             <Text size='xl' fw={800}>
               {event.title}
             </Text>
