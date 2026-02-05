@@ -29,11 +29,24 @@ export default function RegisteringModal({
   const [message, setMessage] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPhone = (phone: string) => {
+    const digitsOnly = phone.replace(/\D/g, '');
+    if (phone.startsWith('+46') || phone.startsWith('46')) {
+      return digitsOnly.length === 11;
+    }
+    return digitsOnly.length === 10 && phone.startsWith('0');
+  };
+
   const isFormValid =
     firstName.trim() !== '' &&
     lastName.trim() !== '' &&
-    phone.trim() !== '' &&
-    email.trim() !== '' &&
+    isValidPhone(phone) &&
+    isValidEmail(email) &&
     termsAccepted;
 
   return (
@@ -86,6 +99,7 @@ export default function RegisteringModal({
               placeholder='Förnamn'
               required
               radius='xs'
+              maxLength={40}
               value={firstName}
               onChange={(e) => setFirstName(e.currentTarget.value)}
             />
@@ -96,6 +110,7 @@ export default function RegisteringModal({
               placeholder='Efternamn'
               required
               radius='xs'
+              maxLength={40}
               value={lastName}
               onChange={(e) => setLastName(e.currentTarget.value)}
             />
@@ -110,12 +125,16 @@ export default function RegisteringModal({
               required
               radius='xs'
               type='tel'
+              maxLength={12}
               value={phone}
               onChange={(e) => {
                 const value = e.currentTarget.value;
-                const formatted = value.replace(/[^\d\s+]/g, '');
+                const formatted = value.replace(/[^\d+]/g, '');
                 setPhone(formatted);
               }}
+              error={
+                phone && !isValidPhone(phone) ? 'Ogiltigt telefonnummer' : ''
+              }
             />
           </Grid.Col>
           <Grid.Col span={6}>
@@ -124,19 +143,25 @@ export default function RegisteringModal({
               placeholder='exempel@email.com'
               required
               radius='xs'
+              type='email'
+              maxLength={40}
               value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
+              error={
+                email && !isValidEmail(email) ? 'Ogiltig e-postadress' : ''
+              }
             />
           </Grid.Col>
         </Grid>
 
         <Textarea
-          label='Meddelande (frivilligt)'
+          label='Meddelande (valfritt)'
+          description='Max 300 tecken'
           placeholder='...'
           autosize
           minRows={2}
           maxRows={4}
-          maxLength={500}
+          maxLength={300}
           radius='xs'
           pt='md'
           value={message}
