@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
+  extractIdFromSlug,
+  generateEventSlug,
+  generateRestaurantSlug,
+} from '../../utils/slugify';
+import {
   Text,
   Image,
   Grid,
@@ -26,10 +31,12 @@ import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import RegisteringModal from '../../components/Modals/RegisteringModal/RegisteringModal';
 import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
+import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  const id = slug ? extractIdFromSlug(slug) : null;
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpened, { open: openModal, close: closeModal }] =
@@ -42,6 +49,8 @@ export default function EventDetails(): React.ReactNode {
     confirmationModalOpened,
     { open: openConfirmationModal, close: closeConfirmationModal },
   ] = useDisclosure(false);
+  const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
+    useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
@@ -259,7 +268,11 @@ export default function EventDetails(): React.ReactNode {
                 <Text fw={600}>Om platsen</Text>
                 <Box
                   component={NavLink}
-                  to={`/restaurang/${event.restaurant_id}`}
+                  to={
+                    event.restaurant_name
+                      ? `/restaurang/${generateRestaurantSlug(event.restaurant_name, event.restaurant_id)}`
+                      : `/restaurang/${event.restaurant_id}`
+                  }
                   className='restaurant-image-box'
                   style={{ textDecoration: 'none', color: 'inherit' }}>
                   <Image
@@ -312,7 +325,12 @@ export default function EventDetails(): React.ReactNode {
                   <Flex px='md' py='sm' className='action-icon-button'>
                     <BookmarkIcon size={22} />
                   </Flex>
-                  <Flex px='md' py='sm' className='action-icon-button'>
+                  <Flex
+                    px='md'
+                    py='sm'
+                    className='action-icon-button'
+                    onClick={openShareModal}
+                    style={{ cursor: 'pointer' }}>
                     <Share size={22} />
                   </Flex>
                 </Group>
@@ -342,6 +360,15 @@ export default function EventDetails(): React.ReactNode {
         opened={confirmationModalOpened}
         onClose={closeConfirmationModal}
         onOpenPayment={openPaymentModal}
+      />
+      <ShareModal
+        opened={shareModalOpened}
+        onClose={closeShareModal}
+        eventUrl={
+          event
+            ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
+            : undefined
+        }
       />
     </>
   );

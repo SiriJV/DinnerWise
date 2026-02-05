@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { extractIdFromSlug } from '../../utils/slugify';
 import {
   Box,
   Stack,
@@ -25,7 +26,8 @@ type Restaurant = {
 };
 
 export default function RestaurangDetails(): React.ReactNode {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  const id = slug ? extractIdFromSlug(slug) : null;
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,6 @@ export default function RestaurangDetails(): React.ReactNode {
   if (loading) {
     return (
       <>
-        <Breadcrumb />
         <Text p='xl' ta='center' c='dimmed'>
           Laddar restaurang...
         </Text>
