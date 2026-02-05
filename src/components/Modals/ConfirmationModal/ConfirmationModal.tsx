@@ -1,19 +1,35 @@
 import { Box, Text, TextInput, Grid, Flex, Group } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import BaseModal from '../BaseModal/BaseModal';
+import ShareModal from '../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
+import type { EventType } from '../../../types/EventType';
+import { generateEventSlug } from '../../../utils/slugify';
 
 interface ConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenPayment: () => void;
+  event?: EventType | null;
 }
 
 export default function ConfirmationModal({
   opened,
   onClose,
   onOpenPayment,
+  event,
 }: ConfirmationModalProps) {
+  const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
+    useDisclosure(false);
+
+  const eventDate = event?.date ? new Date(event.date) : null;
+  const formattedDate = eventDate?.toLocaleDateString('sv-SE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
   return (
     <BaseModal
       opened={opened}
@@ -27,7 +43,7 @@ export default function ConfirmationModal({
         <Text size='lg'>
           Du är anmäld till{' '}
           <Text span fw={600}>
-            Zero waste i vardagen
+            {event?.title || ''}
           </Text>{' '}
           med Anders Blom!
         </Text>
@@ -42,35 +58,39 @@ export default function ConfirmationModal({
         </Text>
       </Group>
 
-      <Box bg='gray.2' p='md' bdrs='sm' mb='md'>
-        <Text size='lg' fw={600} pb='xs'>
-          Zero waste i vardagen
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Datum:{' '}
+      {event && (
+        <Box bg='gray.2' p='md' bdrs='sm' mb='md'>
+          <Text size='lg' fw={600} pb='xs'>
+            {event.title}
           </Text>
-          2026-01-06
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Värd:{' '}
+          <Text>
+            <Text span fw={600}>
+              Datum:{' '}
+            </Text>
+            {formattedDate}
           </Text>
-          Anders Blom
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Plats:{' '}
+          <Text>
+            <Text span fw={600}>
+              Värd:{' '}
+            </Text>
+            Anders Blom
           </Text>
-          Noosh, Österlånggatan 35, Borås
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Tid:{' '}
+          <Text>
+            <Text span fw={600}>
+              Plats:{' '}
+            </Text>
+            {event.restaurant_name}
+            {event.restaurant_address && `, ${event.restaurant_address}`}
+            {event.restaurant_city && `, ${event.restaurant_city}`}
           </Text>
-          17:00 - 18:45
-        </Text>
-      </Box>
+          <Text>
+            <Text span fw={600}>
+              Tid:{' '}
+            </Text>
+            {event.start_time?.slice(0, 5)} - {event.end_time?.slice(0, 5)}
+          </Text>
+        </Box>
+      )}
 
       <Box>
         <Text size='lg' fw={600} mb='xs'>
@@ -119,7 +139,9 @@ export default function ConfirmationModal({
           px='md'
           className='action-icon-button'
           align='center'
-          justify='center'>
+          justify='center'
+          onClick={openShareModal}
+          style={{ cursor: 'pointer' }}>
           <Share size={22} />
         </Flex>
         <BaseButton
@@ -131,6 +153,15 @@ export default function ConfirmationModal({
           Gå tillbaka till event{' '}
         </BaseButton>
       </Group>
+      <ShareModal
+        opened={shareModalOpened}
+        onClose={closeShareModal}
+        eventUrl={
+          event
+            ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
+            : undefined
+        }
+      />
     </BaseModal>
   );
 }
