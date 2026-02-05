@@ -68,7 +68,12 @@ export default function EventDetails(): React.ReactNode {
       }
     }
 
-    if (id) loadEvent();
+    if (id) {
+      loadEvent();
+    } else {
+      setError('Ogiltigt event-ID');
+      setLoading(false);
+    }
   }, [id]);
 
   useEffect(() => {
