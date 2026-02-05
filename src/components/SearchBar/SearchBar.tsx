@@ -1,4 +1,4 @@
-import { Autocomplete } from '@mantine/core';
+import { Autocomplete, ActionIcon } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import './SearchBar.scss';
@@ -51,11 +51,13 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
       ref={containerRef}
       className={`searchBar-container ${isOpen ? 'open' : ''}`}>
       {!isOpen && (
-        <SearchIcon
-          size={20}
-          className='searchBar-toggle-icon'
-          onClick={handleToggle}
-        />
+        <ActionIcon
+          variant='subtle'
+          color='white'
+          size='md'
+          onClick={handleToggle}>
+          <SearchIcon size={20} />
+        </ActionIcon>
       )}
       {isOpen && (
         <Autocomplete

@@ -19,16 +19,6 @@
   }
 }
 
-.searchBar-toggle-icon {
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
 .searchBar {
   width: 100%;
   animation: slideIn 0.3s ease;
