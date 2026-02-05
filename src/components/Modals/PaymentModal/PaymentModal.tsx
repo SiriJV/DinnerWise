@@ -150,7 +150,7 @@ export default function PaymentModal({
               selectedPayment === 'swish' ? 'active' : ''
             }`}
             onClick={() => setSelectedPayment('swish')}>
-            <Group>
+            <Group wrap='nowrap'>
               <Image
                 src={swishLogo}
                 alt='Swish'
@@ -172,7 +172,7 @@ export default function PaymentModal({
               selectedPayment === 'card' ? 'active' : ''
             }`}
             onClick={() => setSelectedPayment('card')}>
-            <Group>
+            <Group wrap='nowrap'>
               <Box
                 w={50}
                 h={50}
@@ -194,7 +194,7 @@ export default function PaymentModal({
               selectedPayment === 'klarna' ? 'active' : ''
             }`}
             onClick={() => setSelectedPayment('klarna')}>
-            <Group>
+            <Group wrap='nowrap'>
               <Image
                 src={klarnaLogo}
                 alt='Klarna'
