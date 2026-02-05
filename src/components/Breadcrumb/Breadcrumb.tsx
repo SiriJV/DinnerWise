@@ -1,6 +1,7 @@
 import { Breadcrumbs, Anchor, Text } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { extractIdFromSlug } from '../../utils/slugify';
 import './Breadcrumb.scss';
 
 export default function Breadcrumb() {
@@ -15,19 +16,25 @@ export default function Breadcrumb() {
     const restaurantIndex = pathnames.indexOf('restaurang');
 
     if (eventIndex !== -1 && pathnames[eventIndex + 1]) {
-      const eventId = pathnames[eventIndex + 1];
-      fetch(`http://localhost:3001/events/${eventId}`)
-        .then((res) => res.json())
-        .then((data) => setEventName(data.title))
-        .catch(() => setEventName(`Event ${eventId}`));
+      const eventSlug = pathnames[eventIndex + 1];
+      const eventId = extractIdFromSlug(eventSlug);
+      if (eventId) {
+        fetch(`http://localhost:3001/events/${eventId}`)
+          .then((res) => res.json())
+          .then((data) => setEventName(data.title))
+          .catch(() => setEventName(`Event ${eventId}`));
+      }
     }
 
     if (restaurantIndex !== -1 && pathnames[restaurantIndex + 1]) {
-      const restaurantId = pathnames[restaurantIndex + 1];
-      fetch(`http://localhost:3001/restaurants/${restaurantId}`)
-        .then((res) => res.json())
-        .then((data) => setRestaurantName(data.name))
-        .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
+      const restaurantSlug = pathnames[restaurantIndex + 1];
+      const restaurantId = extractIdFromSlug(restaurantSlug);
+      if (restaurantId) {
+        fetch(`http://localhost:3001/restaurants/${restaurantId}`)
+          .then((res) => res.json())
+          .then((data) => setRestaurantName(data.name))
+          .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
+      }
     }
   }, [pathnames]);
 
