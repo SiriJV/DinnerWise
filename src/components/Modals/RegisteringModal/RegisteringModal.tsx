@@ -1,18 +1,15 @@
 import {
   Box,
   Text,
-  Modal,
   TextInput,
-  Group,
   Checkbox,
-  ActionIcon,
   Textarea,
   Grid,
   Stack,
 } from '@mantine/core';
-import { CircleHelp } from 'lucide-react';
+import { useState } from 'react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
-import './RegisteringModal.scss';
+import BaseModal from '../BaseModal/BaseModal';
 
 interface RegisteringModalProps {
   opened: boolean;
@@ -25,115 +22,161 @@ export default function RegisteringModal({
   onClose,
   onOpenPayment,
 }: RegisteringModalProps) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const isFormValid =
+    firstName.trim() !== '' &&
+    lastName.trim() !== '' &&
+    phone.trim() !== '' &&
+    email.trim() !== '' &&
+    termsAccepted;
+
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={
-        <Group gap='md' wrap='nowrap' className='modal-title-group'>
-          <Text fw={600}>Anmälan</Text>
-          <ActionIcon
-            variant='subtle'
-            color='red'
-            size='md'
-            radius='sm'
-            className='modal-help-icon'>
-            <CircleHelp size={20} />
-          </ActionIcon>
-        </Group>
-      }
-      centered
-      styles={{
-        header: {
-          display: 'flex',
-          alignItems: 'center',
-        },
-        title: {
-          flex: 1,
-          display: 'flex',
-        },
-      }}>
-      <Box bg='gray'>
-        <Text>Zero waste i vardagen</Text>
-        <Text>Datum: 2026-01-06</Text>
-        <Text>Ledare: Anders Blom</Text>
-        <Text>Plats: Noosh, Österlånggatan 35, Borås</Text>
-        <Text>Tid: 17:00 - 18:45</Text>
-        <Text>Kostnad: 150 kr</Text>
+    <BaseModal opened={opened} onClose={onClose} title='Anmälan'>
+      <Box bg='gray.2' p='md' bdrs='sm'>
+        <Text size='lg' fw={600} pb='xs'>
+          Zero waste i vardagen
+        </Text>
+        <Text>
+          <Text span fw={600}>
+            Datum:{' '}
+          </Text>
+          2026-01-06
+        </Text>
+        <Text>
+          <Text span fw={600}>
+            Värd:{' '}
+          </Text>
+          Anders Blom
+        </Text>
+        <Text>
+          <Text span fw={600}>
+            Plats:{' '}
+          </Text>
+          Noosh, Österlånggatan 35, Borås
+        </Text>
+        <Text>
+          <Text span fw={600}>
+            Tid:{' '}
+          </Text>
+          17:00 - 18:45
+        </Text>
+        <Text pt='lg'>
+          <Text span fw={600}>
+            Kostnad:{' '}
+          </Text>
+          150 kr
+        </Text>
       </Box>
-      {/* <Container size={420} my={40}> */}
-      <Text>Deltagare</Text>
 
-      {/* <Paper withBorder shadow='sm' p={22} mt={30} radius='xs'> */}
-      <Grid gutter='md' pt='md'>
-        <Grid.Col span={6}>
-          <TextInput
-            label='Förnamn'
-            placeholder='Förnamn'
-            required
-            radius='xs'
-          />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <TextInput
-            label='Efternamn'
-            placeholder='Efternamn'
-            required
-            radius='xs'
-          />
-        </Grid.Col>
-      </Grid>
+      <Box pt='md'>
+        <Text size='lg' fw={600}>
+          Deltagare
+        </Text>
 
-      <Grid gutter='md' pt='md'>
-        <Grid.Col span={6}>
-          <TextInput
-            label='Telefon'
-            placeholder='+46703123456'
-            required
-            radius='xs'
-          />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <TextInput
-            label='E-post'
-            placeholder='Efternamn'
-            required
-            radius='xs'
-          />
-        </Grid.Col>
-      </Grid>
+        <Grid gutter='md' pt='md'>
+          <Grid.Col span={6}>
+            <TextInput
+              label='Förnamn'
+              placeholder='Förnamn'
+              required
+              radius='xs'
+              value={firstName}
+              onChange={(e) => setFirstName(e.currentTarget.value)}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <TextInput
+              label='Efternamn'
+              placeholder='Efternamn'
+              required
+              radius='xs'
+              value={lastName}
+              onChange={(e) => setLastName(e.currentTarget.value)}
+            />
+          </Grid.Col>
+        </Grid>
 
-      <Textarea
-        label='Meddelande (frivilligt)'
-        placeholder='...'
-        required
-        radius='xs'
-        pt='md'
-      />
+        <Grid gutter='md' pt='md'>
+          <Grid.Col span={6}>
+            <TextInput
+              label='Telefon'
+              placeholder='+46 70 123 45 67'
+              required
+              radius='xs'
+              type='tel'
+              value={phone}
+              onChange={(e) => {
+                const value = e.currentTarget.value;
+                const formatted = value.replace(/[^\d\s+]/g, '');
+                setPhone(formatted);
+              }}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <TextInput
+              label='E-post'
+              placeholder='exempel@email.com'
+              required
+              radius='xs'
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+          </Grid.Col>
+        </Grid>
 
-      <Stack mt='lg'>
-        <Checkbox
-          size='xs'
-          label='Jag har läst och godkänner anmälningsvillkoren.'
+        <Textarea
+          label='Meddelande (frivilligt)'
+          placeholder='...'
+          autosize
+          minRows={2}
+          maxRows={4}
+          maxLength={500}
+          radius='xs'
+          pt='md'
+          value={message}
+          onChange={(e) => setMessage(e.currentTarget.value)}
         />
-        <Checkbox
-          size='xs'
-          label='Jag vill gärna få nyhetsbrev och andra uppdateringar.'
-          checked={true}
-        />
-      </Stack>
+
+        <Stack mt='lg'>
+          <Checkbox
+            size='xs'
+            checked={termsAccepted}
+            required
+            onChange={(e) => setTermsAccepted(e.currentTarget.checked)}
+            styles={{
+              label: { display: 'flex', alignItems: 'center' },
+            }}
+            label={
+              <>
+                Jag har läst och godkänner anmälningsvillkoren.
+                <span style={{ color: 'red' }}>*</span>
+              </>
+            }
+          />
+          <Checkbox
+            size='xs'
+            label='Jag vill gärna få nyhetsbrev och andra uppdateringar.'
+            defaultChecked={true}
+          />
+        </Stack>
+      </Box>
       <BaseButton
         variantType='primary'
         fullWidth
         mt='lg'
+        disabled={!isFormValid}
         onClick={() => {
           onClose();
           onOpenPayment();
         }}>
         Till betalning
       </BaseButton>
-      {/* </Paper> */}
-      {/* </Container> */}
-    </Modal>
+    </BaseModal>
   );
 }
