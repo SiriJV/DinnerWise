@@ -1,5 +1,5 @@
 import { Carousel } from '@mantine/carousel';
-import { Box, Card, Image, Text } from '@mantine/core';
+import { Box, Card, Image, Text, Title } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
@@ -9,9 +9,9 @@ import './ImageCarousel.scss';
 export default function NavCarousel() {
   return (
     <Box>
-      <Text fw={700} pb='xs'>
+      <Title order={2} pb='xs'>
         Populära kategorier
-      </Text>
+      </Title>
       <Carousel
         slideGap='md'
         emblaOptions={{ align: 'start', loop: true }}
