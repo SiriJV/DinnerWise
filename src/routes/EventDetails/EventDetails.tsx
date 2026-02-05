@@ -349,17 +349,20 @@ export default function EventDetails(): React.ReactNode {
         opened={modalOpened}
         onClose={closeModal}
         onOpenPayment={openPaymentModal}
+        event={event}
       />
       <PaymentModal
         opened={paymentModalOpened}
         onClose={closePaymentModal}
         onOpenConfirmation={openConfirmationModal}
         onOpenRegistration={openModal}
+        event={event}
       />
       <ConfirmationModal
         opened={confirmationModalOpened}
         onClose={closeConfirmationModal}
         onOpenPayment={openPaymentModal}
+        event={event}
       />
       <ShareModal
         opened={shareModalOpened}
