@@ -10,17 +10,20 @@ import {
 import { useState } from 'react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import BaseModal from '../BaseModal/BaseModal';
+import type { EventType } from '../../../types/EventType';
 
 interface RegisteringModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenPayment: () => void;
+  event?: EventType | null;
 }
 
 export default function RegisteringModal({
   opened,
   onClose,
   onOpenPayment,
+  event,
 }: RegisteringModalProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -49,43 +52,54 @@ export default function RegisteringModal({
     isValidEmail(email) &&
     termsAccepted;
 
+  const eventDate = event?.date ? new Date(event.date) : null;
+  const formattedDate = eventDate?.toLocaleDateString('sv-SE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
   return (
     <BaseModal opened={opened} onClose={onClose} title='Anmälan'>
-      <Box bg='gray.2' p='md' bdrs='sm'>
-        <Text size='lg' fw={600} pb='xs'>
-          Zero waste i vardagen
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Datum:{' '}
+      {event && (
+        <Box bg='gray.2' p='md' bdrs='sm'>
+          <Text size='lg' fw={600} pb='xs'>
+            {event.title}
           </Text>
-          2026-01-06
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Värd:{' '}
+          <Text>
+            <Text span fw={600}>
+              Datum:{' '}
+            </Text>
+            {formattedDate}
           </Text>
-          Anders Blom
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Plats:{' '}
+          <Text>
+            <Text span fw={600}>
+              Värd:{' '}
+            </Text>
+            Anders Blom
           </Text>
-          Noosh, Österlånggatan 35, Borås
-        </Text>
-        <Text>
-          <Text span fw={600}>
-            Tid:{' '}
+          <Text>
+            <Text span fw={600}>
+              Plats:{' '}
+            </Text>
+            {event.restaurant_name}
+            {event.restaurant_address && `, ${event.restaurant_address}`}
+            {event.restaurant_city && `, ${event.restaurant_city}`}
           </Text>
-          17:00 - 18:45
-        </Text>
-        <Text pt='lg'>
-          <Text span fw={600}>
-            Kostnad:{' '}
+          <Text>
+            <Text span fw={600}>
+              Tid:{' '}
+            </Text>
+            {event.start_time?.slice(0, 5)} - {event.end_time?.slice(0, 5)}
           </Text>
-          150 kr
-        </Text>
-      </Box>
+          <Text pt='lg'>
+            <Text span fw={600}>
+              Kostnad:{' '}
+            </Text>
+            {Math.floor(event.price)} kr
+          </Text>
+        </Box>
+      )}
 
       <Box pt='md'>
         <Text size='lg' fw={600}>
