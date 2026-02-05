@@ -40,7 +40,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
       </Group>
       <Group gap='md'>
         <Box visibleFrom='sm'>
-          <SearchBar />
+          <SearchBar variant='expandable' />
         </Box>
         <ActionIcon
           component={NavLink}

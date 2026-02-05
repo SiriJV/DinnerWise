@@ -17,7 +17,10 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -44,7 +47,9 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
   }
 
   return (
-    <div ref={containerRef} className={`searchBar-container ${isOpen ? 'open' : ''}`}>
+    <div
+      ref={containerRef}
+      className={`searchBar-container ${isOpen ? 'open' : ''}`}>
       {!isOpen && (
         <SearchIcon
           size={20}
