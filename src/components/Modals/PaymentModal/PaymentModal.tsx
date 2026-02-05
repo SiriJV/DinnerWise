@@ -215,7 +215,7 @@ export default function PaymentModal({
         <Text size='lg' fw={600} mt='md'>
           Totalbelopp: 150 kr
         </Text>
-        <Text mt='md' size='sm'>
+        <Text mt='xs' size='xs'>
           Genom att slutföra köpet godkänner du våra köpvillkor och bekräftar
           att du tagit del av informationen om betalning, leverans och
           ångerrätt.
