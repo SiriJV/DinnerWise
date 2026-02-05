@@ -101,9 +101,7 @@ export default function RestaurangDetails(): React.ReactNode {
     <>
       <Stack m='md' gap='xl'>
         <Stack gap={0}>
-          <Title order={2} fw={800}>
-            {restaurant.name}
-          </Title>
+          <Title order={2}>{restaurant.name}</Title>
           <Text c='dimmed'>
             {restaurant.address}, {restaurant.city}
           </Text>
@@ -161,9 +159,7 @@ export default function RestaurangDetails(): React.ReactNode {
 
         {events.length > 0 && (
           <Stack gap='md'>
-            <Title order={3} fw={600}>
-              Kommande event på {restaurant.name}
-            </Title>
+            <Title order={3}>Kommande event på {restaurant.name}</Title>
             <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
               {events.map((event) => (
                 <EventCard
