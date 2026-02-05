@@ -3,13 +3,31 @@ import { db } from '../db.js';
 
 const router = Router();
 
+function parseIds(param: any): number[] {
+  if (!param) return [];
+  if (Array.isArray(param)) return param.map(Number).filter(Boolean);
+  return [Number(param)].filter(Boolean);
+}
+
 router.get('/', async (req, res) => {
-  const { category_id, restaurant_id, city_id, price_lte, date, order } =
-    req.query;
+  const {
+    category_ids,
+    restaurant_id,
+    city_ids,
+    price_ids,
+    date,
+    order,
+    tag_ids,
+  } = req.query;
+
+  const categories = parseIds(category_ids);
+  const cities = parseIds(city_ids);
+  const tags = parseIds(tag_ids);
+  const prices = parseIds(price_ids);
 
   let sql = `
     SELECT 
-      e.id,
+      DISTINCT e.id,
       e.title,
       e.description,
       e.category_id,
@@ -24,19 +42,26 @@ router.get('/', async (req, res) => {
       r.city AS restaurant_city
     FROM events e
     JOIN restaurants r ON e.restaurant_id = r.id
-    WHERE e.date >= CURDATE()
   `;
+
+  if (tags.length > 0) {
+    sql += `
+      JOIN event_tags et ON e.id = et.event_id
+    `;
+  }
+
+  sql += ` WHERE e.date >= CURDATE() `;
 
   const params: any[] = [];
 
-  if (city_id) {
-    sql += ` AND r.city = ? `;
-    params.push(city_id);
+  if (cities.length > 0) {
+    sql += ` AND r.city IN (${cities.map(() => '?').join(',')}) `;
+    params.push(...cities);
   }
 
-  if (category_id) {
-    sql += ` AND e.category_id = ? `;
-    params.push(category_id);
+  if (categories.length > 0) {
+    sql += ` AND e.category_id IN (${categories.map(() => '?').join(',')}) `;
+    params.push(...categories);
   }
 
   if (restaurant_id) {
@@ -44,14 +69,26 @@ router.get('/', async (req, res) => {
     params.push(restaurant_id);
   }
 
-  if (price_lte) {
-    sql += ` AND e.price <= ? `;
-    params.push(price_lte);
+  if (prices.length > 0) {
+    const priceConditions: string[] = [];
+    prices.forEach((priceId) => {
+      if (priceId === 1) priceConditions.push('e.price < 50');
+      else if (priceId === 2) priceConditions.push('e.price BETWEEN 50 AND 100');
+      else if (priceId === 3) priceConditions.push('e.price > 100');
+    });
+    if (priceConditions.length > 0) {
+      sql += ` AND (${priceConditions.join(' OR ')}) `;
+    }
   }
 
   if (date) {
     sql += ` AND e.date = ? `;
     params.push(date);
+  }
+
+  if (tags.length > 0) {
+    sql += ` AND et.tag_id IN (${tags.map(() => '?').join(',')}) `;
+    params.push(...tags);
   }
 
   if (order === 'price') {
