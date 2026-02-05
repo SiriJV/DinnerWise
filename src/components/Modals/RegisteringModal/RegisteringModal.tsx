@@ -125,7 +125,7 @@ export default function RegisteringModal({
               required
               radius='xs'
               type='tel'
-              maxLength={12}
+              maxLength={11}
               value={phone}
               onChange={(e) => {
                 const value = e.currentTarget.value;
