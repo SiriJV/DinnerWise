@@ -35,11 +35,22 @@ import ConfirmationModal from '../../components/Modals/ConfirmationModal/Confirm
 import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
 
+type User = {
+  id: number;
+  name: string;
+  alias: string;
+  bio: string;
+  profile_picture_url?: string;
+};
+
 export default function EventDetails(): React.ReactNode {
   const { slug } = useParams<{ slug: string }>();
   const id = slug ? extractIdFromSlug(slug) : null;
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [host, setHost] = useState<User | null>(null);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
   const [
@@ -54,6 +65,31 @@ export default function EventDetails(): React.ReactNode {
     useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
+
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        const res = await fetch('http://localhost:3001/users');
+        const data: User[] = await res.json();
+        setUsers(data);
+
+        // Random host
+        const randomHost = data[Math.floor(Math.random() * data.length)];
+        setHost(randomHost);
+
+        // Random participants (3-5 users)
+        const numParticipants = Math.min(
+          Math.floor(Math.random() * 3) + 3,
+          data.length,
+        );
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        setParticipants(shuffled.slice(0, numParticipants));
+      } catch (err) {
+        console.error('Failed to load users:', err);
+      }
+    }
+    loadUsers();
+  }, []);
 
   useEffect(() => {
     async function loadEvent() {
@@ -164,10 +200,13 @@ export default function EventDetails(): React.ReactNode {
                 : `${event.current_participants} anmälda, ${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
             </Badge>
           </Group>
-          <Text component={NavLink} to='/profil/:id' w='fit-content'>
+          <Text
+            component={NavLink}
+            to={host ? `/profil/${host.alias}` : '/profil/'}
+            w='fit-content'>
             med{' '}
             <Text span className='host-name-text'>
-              Anders Blom
+              {host?.name || 'Anders Blom'}
             </Text>
           </Text>
         </Stack>
@@ -216,11 +255,14 @@ export default function EventDetails(): React.ReactNode {
             <Stack gap='xs'>
               <Text fw={600}>Om värden</Text>
               <NavLink
-                to='/profil/:id'
+                to={host ? `/profil/${host.alias}` : '/profil/'}
                 style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Group gap='0' wrap='nowrap' className='host-row'>
                   <Image
-                    src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    src={
+                      host?.profile_picture_url ||
+                      'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    }
                     w={{ base: 80, md: 100 }}
                     className='host-image'
                   />
@@ -230,13 +272,8 @@ export default function EventDetails(): React.ReactNode {
                     wrap='nowrap'
                     className='host-image-information'>
                     <Text className='host-text' lineClamp={4}>
-                      Hej! Anders heter jag. Utbildad jurist med miljöfokus och
-                      lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
-                      småbarnspappa till Ylva och Melker. På min fritid spelar
-                      jag golf, tränar på nya recept med hållbara råvaror,
-                      engagerar mig i lokala miljöprojekt och deltar i
-                      föreläsningar om hållbar utveckling. Jag hoppas vi ses på
-                      något framtida event!
+                      {host?.bio ||
+                        `Hej! ${host?.name || 'Anders'} heter jag. Utbildad jurist med miljöfokus och lång erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa till Ylva och Melker. På min fritid spelar jag golf, tränar på nya recept med hållbara råvaror, engagerar mig i lokala miljöprojekt och deltar i föreläsningar om hållbar utveckling. Jag hoppas vi ses på något framtida event!`}
                     </Text>
                     <ChevronRight className='host-chevron' />
                   </Group>
@@ -248,27 +285,30 @@ export default function EventDetails(): React.ReactNode {
 
                 <Tooltip.Group openDelay={300} closeDelay={100}>
                   <Avatar.Group spacing='sm'>
-                    <Tooltip label='Person 1' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip label='Person 2' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip label='Person 3' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip
-                      withArrow
-                      label={
-                        <>
-                          <div>Person 4</div>
-                          <div>Person 5</div>
-                        </>
-                      }>
-                      <Avatar radius='xl' size='lg'>
-                        +2
-                      </Avatar>
-                    </Tooltip>
+                    {participants.slice(0, 3).map((user) => (
+                      <Tooltip key={user.id} label={user.name} withArrow>
+                        <Avatar
+                          src={user.profile_picture_url}
+                          radius='xl'
+                          size='lg'
+                        />
+                      </Tooltip>
+                    ))}
+                    {participants.length > 3 && (
+                      <Tooltip
+                        withArrow
+                        label={
+                          <>
+                            {participants.slice(3).map((user) => (
+                              <div key={user.id}>{user.name}</div>
+                            ))}
+                          </>
+                        }>
+                        <Avatar radius='xl' size='lg'>
+                          +{participants.length - 3}
+                        </Avatar>
+                      </Tooltip>
+                    )}
                   </Avatar.Group>
                 </Tooltip.Group>
               </Box>

@@ -195,6 +195,14 @@ import { useState } from 'react';
 import './EventCard.scss';
 import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
+import { useEffect } from 'react';
+
+type User = {
+  id: number;
+  name: string;
+  alias: string;
+  profile_picture_url?: string;
+};
 
 type EventCardProps = {
   id: number;
@@ -226,6 +234,34 @@ export default function EventCard({
   maxDescriptionLength = 100,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [host, setHost] = useState<User | null>(null);
+  const [participants, setParticipants] = useState<User[]>([]);
+
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        const res = await fetch('http://localhost:3001/users');
+        const data: User[] = await res.json();
+        setUsers(data);
+
+        // Random host
+        const randomHost = data[Math.floor(Math.random() * data.length)];
+        setHost(randomHost);
+
+        // Random participants (3-5 users)
+        const numParticipants = Math.min(
+          Math.floor(Math.random() * 3) + 3,
+          data.length,
+        );
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        setParticipants(shuffled.slice(0, numParticipants));
+      } catch (err) {
+        console.error('Failed to load users:', err);
+      }
+    }
+    loadUsers();
+  }, []);
 
   // Placeholder values - max_spots finns inte i API än
   const displayMaxSpots = 6;
@@ -286,7 +322,10 @@ export default function EventCard({
         </Box>
 
         <Avatar
-          src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+          src={
+            host?.profile_picture_url ||
+            'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+          }
           alt='Host'
           radius='xl'
           size={56}
@@ -303,7 +342,7 @@ export default function EventCard({
         </Group>
 
         <Text size='sm' mb='xs'>
-          med Anders Blom
+          med {host?.name || 'Anders Blom'}
         </Text>
 
         <Box className='eventInfo' mb='xs'>
@@ -330,27 +369,30 @@ export default function EventCard({
             <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
               <Tooltip.Group openDelay={300} closeDelay={100}>
                 <Avatar.Group spacing='xs'>
-                  <Tooltip label='Person 1' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip label='Person 2' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip label='Person 3' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip
-                    withArrow
-                    label={
-                      <>
-                        <div>Person 4</div>
-                        <div>Person 5</div>
-                      </>
-                    }>
-                    <Avatar radius='xl' size='sm'>
-                      +2
-                    </Avatar>
-                  </Tooltip>
+                  {participants.slice(0, 3).map((user, idx) => (
+                    <Tooltip key={user.id} label={user.name} withArrow>
+                      <Avatar
+                        src={user.profile_picture_url}
+                        radius='xl'
+                        size='sm'
+                      />
+                    </Tooltip>
+                  ))}
+                  {participants.length > 3 && (
+                    <Tooltip
+                      withArrow
+                      label={
+                        <>
+                          {participants.slice(3).map((user) => (
+                            <div key={user.id}>{user.name}</div>
+                          ))}
+                        </>
+                      }>
+                      <Avatar radius='xl' size='sm'>
+                        +{participants.length - 3}
+                      </Avatar>
+                    </Tooltip>
+                  )}
                 </Avatar.Group>
               </Tooltip.Group>
             </Box>
@@ -365,27 +407,30 @@ export default function EventCard({
           <Box style={{ flexShrink: 0 }}>
             <Tooltip.Group openDelay={300} closeDelay={100}>
               <Avatar.Group spacing='xs'>
-                <Tooltip label='Person 1' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip label='Person 2' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip label='Person 3' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip
-                  withArrow
-                  label={
-                    <>
-                      <div>Person 4</div>
-                      <div>Person 5</div>
-                    </>
-                  }>
-                  <Avatar radius='xl' size='sm'>
-                    +2
-                  </Avatar>
-                </Tooltip>
+                {participants.slice(0, 3).map((user, idx) => (
+                  <Tooltip key={user.id} label={user.name} withArrow>
+                    <Avatar
+                      src={user.profile_picture_url}
+                      radius='xl'
+                      size='sm'
+                    />
+                  </Tooltip>
+                ))}
+                {participants.length > 3 && (
+                  <Tooltip
+                    withArrow
+                    label={
+                      <>
+                        {participants.slice(3).map((user) => (
+                          <div key={user.id}>{user.name}</div>
+                        ))}
+                      </>
+                    }>
+                    <Avatar radius='xl' size='sm'>
+                      +{participants.length - 3}
+                    </Avatar>
+                  </Tooltip>
+                )}
               </Avatar.Group>
             </Tooltip.Group>
           </Box>
