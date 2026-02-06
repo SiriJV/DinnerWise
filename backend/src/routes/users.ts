@@ -36,7 +36,7 @@ router.get('/search', async (req, res) => {
          OR LOWER(alias) LIKE ?
       ORDER BY name ASC
       `,
-      [term, `% ${term}`, term]
+      [term, `% ${term}`, term],
     );
 
     res.json(rows);
@@ -46,13 +46,33 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.get('/alias/:alias', async (req, res) => {
+  const alias = req.params.alias;
+
+  try {
+    const [[user]]: any = await db.query(
+      'SELECT id, name, alias, bio, profile_picture_url FROM users WHERE alias = ?',
+      [alias],
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User hittades inte' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Kunde inte hämta user' });
+  }
+});
+
 router.get('/:id', async (req, res) => {
   const userId = Number(req.params.id);
 
   try {
     const [[user]]: any = await db.query(
       'SELECT id, name, alias, bio, profile_picture_url FROM users WHERE id = ?',
-      [userId]
+      [userId],
     );
 
     if (!user) {
