@@ -261,7 +261,8 @@ export default function EventDetails(): React.ReactNode {
                   <Image
                     src={
                       host?.profile_picture_url ||
-                      'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                      'https://placehold.co/200x200/png?text=Profilbild'
+                      // 'https://images.unsplash.com/photo-1560250097-0b93528c311a'
                     }
                     w={{ base: 80, md: 100 }}
                     className='host-image'

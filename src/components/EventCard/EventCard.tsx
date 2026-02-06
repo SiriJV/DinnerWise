@@ -323,8 +323,9 @@ export default function EventCard({
 
         <Avatar
           src={
-            host?.profile_picture_url ||
-            'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+            host?.profile_picture_url || ''
+
+            // 'https://images.unsplash.com/photo-1560250097-0b93528c311a'
           }
           alt='Host'
           radius='xl'
