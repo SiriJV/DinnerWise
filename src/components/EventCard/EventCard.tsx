@@ -348,7 +348,13 @@ export default function EventCard({
         </Group>
 
         <Text size='sm' mb='xs'>
-          med {host?.name || 'Anders Blom'}
+          med{' '}
+          <NavLink
+            to={host ? `/profil/${host.alias}` : '/profil/'}
+            className='unstyledNavLink'
+            onClick={(e) => e.stopPropagation()}>
+            {host?.name || 'Anders Blom'}
+          </NavLink>
         </Text>
 
         <Box className='eventInfo' mb='xs'>
