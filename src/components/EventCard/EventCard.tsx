@@ -245,23 +245,28 @@ export default function EventCard({
         const data: User[] = await res.json();
         setUsers(data);
 
-        // Random host
-        const randomHost = data[Math.floor(Math.random() * data.length)];
-        setHost(randomHost);
+        // Deterministic host based on event ID
+        const hostIndex = id % data.length;
+        setHost(data[hostIndex]);
 
-        // Random participants (3-5 users)
-        const numParticipants = Math.min(
-          Math.floor(Math.random() * 3) + 3,
-          data.length,
-        );
-        const shuffled = [...data].sort(() => 0.5 - Math.random());
-        setParticipants(shuffled.slice(0, numParticipants));
+        // Deterministic participants based on event ID
+        const numParticipants = Math.min(3 + (id % 3), data.length);
+        const participantsList: User[] = [];
+        for (let i = 0; i < numParticipants; i++) {
+          const participantIndex = (id * 7 + i * 13) % data.length;
+          if (
+            !participantsList.find((p) => p.id === data[participantIndex].id)
+          ) {
+            participantsList.push(data[participantIndex]);
+          }
+        }
+        setParticipants(participantsList);
       } catch (err) {
         console.error('Failed to load users:', err);
       }
     }
     loadUsers();
-  }, []);
+  }, [id]);
 
   // Placeholder values - max_spots finns inte i API än
   const displayMaxSpots = 6;
