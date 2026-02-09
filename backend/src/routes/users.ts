@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', async (_req, res) => {
   try {
     const [users] = await db.query(`
-      SELECT id, name, alias, bio, profile_picture_url
+      SELECT id, name, alias, bio, profile_picture_url, banner_picture_url
       FROM users
       ORDER BY id
     `);
@@ -51,7 +51,7 @@ router.get('/alias/:alias', async (req, res) => {
 
   try {
     const [[user]]: any = await db.query(
-      'SELECT id, name, alias, bio, profile_picture_url FROM users WHERE alias = ?',
+      'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE alias = ?',
       [alias],
     );
 
@@ -71,7 +71,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     const [[user]]: any = await db.query(
-      'SELECT id, name, alias, bio, profile_picture_url FROM users WHERE id = ?',
+      'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE id = ?',
       [userId],
     );
 
