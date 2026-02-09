@@ -1,6 +1,6 @@
 import { Image, Box } from '@mantine/core';
 
-type ProfilePageImageProps = {
+type ProfilePageBannerImageProps = {
   src?: string;
   alt?: string;
   userId?: number;
@@ -17,11 +17,11 @@ const gradients = [
   'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
 ];
 
-export default function ProfilePageImage({
+export default function ProfilePageBannerImage({
   src,
-  alt = 'Profile image',
+  alt = 'Banner image',
   userId = 0,
-}: ProfilePageImageProps) {
+}: ProfilePageBannerImageProps) {
   if (!src) {
     const gradientIndex = userId % gradients.length;
     return (
@@ -41,7 +41,7 @@ export default function ProfilePageImage({
       src={src}
       alt={alt}
       fit='cover'
-      fallbackSrc='https://images.unsplash.com/photo-1557683311-eac922347aa1'
+      // fallbackSrc='https://images.unsplash.com/photo-1557683311-eac922347aa1'
     />
   );
 }
