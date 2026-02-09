@@ -1,4 +1,4 @@
-import ProfilePageImage from './ProfilePageImage';
+import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
 import { Box, Group, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
@@ -13,6 +13,7 @@ interface User {
   alias: string;
   bio?: string;
   profile_picture_url?: string;
+  profile_banner_url?: string;
 }
 
 export default function ProfilePage() {
@@ -62,11 +63,7 @@ export default function ProfilePage() {
   return (
     <>
       <Box pos='relative'>
-        <ProfilePageImage
-          src=''
-          // {user.profile_banner_url}
-          userId={user.id}
-        />
+        <ProfilePageImage src={user.profile_banner_url} userId={user.id} />
         <ProfilePageAvatar src={user.profile_picture_url} />
         <ProfilePageStats followers={22} following={12} events={13} />
       </Box>
