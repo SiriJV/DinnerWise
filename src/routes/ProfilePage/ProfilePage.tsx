@@ -13,7 +13,7 @@ interface User {
   alias: string;
   bio?: string;
   profile_picture_url?: string;
-  profile_banner_url?: string;
+  banner_picture_url?: string;
 }
 
 export default function ProfilePage() {
@@ -63,7 +63,7 @@ export default function ProfilePage() {
   return (
     <>
       <Box pos='relative'>
-        <ProfilePageImage src={user.profile_banner_url} userId={user.id} />
+        <ProfilePageImage src={user.banner_picture_url} userId={user.id} />
         <ProfilePageAvatar src={user.profile_picture_url} />
         <ProfilePageStats followers={22} following={12} events={13} />
       </Box>
