@@ -81,11 +81,11 @@ export const accordionItems: AccordionItem[] = [
     value: 'dinnerwise',
     label: 'DinnerWise',
     panels: [
-      { label: 'Om oss', path: '/om-oss', element: AboutPage() },
+      { label: 'Om oss', path: '/om-oss', element: <AboutPage /> },
       {
         label: 'Nyhetsbrev',
         path: '/nyhetsbrev',
-        element: NewsletterPage(),
+        element: <NewsletterPage />,
       },
     ],
   },
@@ -96,27 +96,27 @@ export const accordionItems: AccordionItem[] = [
       {
         label: 'Skapa konto',
         path: '/skapa-konto',
-        element: CreateAccountPage(),
+        element: <CreateAccountPage />,
       },
-      { label: 'Logga in', path: '/logga-in', element: LoginPage() },
-      { label: 'Hjälp', path: '/hjalp', element: HelpPage() },
+      { label: 'Logga in', path: '/logga-in', element: <LoginPage /> },
+      { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
     ],
   },
   {
     value: 'help',
     label: 'Hjälp',
     panels: [
-      { label: 'Betalning', path: '/betalning', element: PaymentInfoPage() },
-      { label: 'FAQ', path: '/faq', element: FAQPage() },
+      { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
+      { label: 'FAQ', path: '/faq', element: <FAQPage /> },
       {
         label: 'Köpvillkor',
         path: '/kopvillkor',
-        element: TermsPage(),
+        element: <TermsPage />,
       },
       {
         label: 'Integritetspolicy',
         path: '/integritetspolicy',
-        element: PrivacyPage(),
+        element: <PrivacyPage />,
       },
     ],
   },
@@ -127,9 +127,9 @@ export const accordionItems: AccordionItem[] = [
       {
         label: 'Kundservice',
         path: '/kundservice',
-        element: SupportPage(),
+        element: <SupportPage />,
       },
-      { label: 'Kontakt', path: '/kontakt', element: ContactPage() },
+      { label: 'Kontakt', path: '/kontakt', element: <ContactPage /> },
     ],
   },
   {
