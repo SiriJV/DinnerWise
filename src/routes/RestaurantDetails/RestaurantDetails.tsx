@@ -16,6 +16,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
+import { fetchRestaurantById, fetchRestaurantEvents } from '../../api/restaurants';
 
 type Restaurant = {
   id: number;
@@ -36,14 +37,19 @@ export default function RestaurangDetails(): React.ReactNode {
 
   useEffect(() => {
     async function loadRestaurant() {
+      if (!id) return;
+
       try {
-        const [restaurantRes, eventsRes] = await Promise.all([
-          fetch(`http://localhost:3001/restaurants/${id}`),
-          fetch(`http://localhost:3001/restaurants/${id}/events`),
+        const [restaurantData, eventsData] = await Promise.all([
+          fetchRestaurantById(id),
+          fetchRestaurantEvents(id),
         ]);
 
-        if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
-        const restaurantData: Restaurant = await restaurantRes.json();
+        if (!restaurantData) {
+          setError('Restaurang hittades inte');
+          setLoading(false);
+          return;
+        }
 
         // Validate that slug matches restaurant data
         const expectedSlug = generateRestaurantSlug(
@@ -57,11 +63,7 @@ export default function RestaurangDetails(): React.ReactNode {
         }
 
         setRestaurant(restaurantData);
-
-        if (eventsRes.ok) {
-          const eventsData: EventType[] = await eventsRes.json();
-          setEvents(eventsData);
-        }
+        setEvents(eventsData);
       } catch (err: any) {
         setError(err.message);
       } finally {

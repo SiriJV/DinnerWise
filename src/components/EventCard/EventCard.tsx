@@ -188,7 +188,6 @@ import {
   Avatar,
   Box,
   Divider,
-  Tooltip,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -197,13 +196,7 @@ import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
-
-type User = {
-  id: number;
-  name: string;
-  alias: string;
-  profile_picture_url?: string;
-};
+import { fetchUsers, type User } from '../../api/users';
 
 type EventCardProps = {
   id: number;
@@ -243,33 +236,23 @@ export default function EventCard({
 
   useEffect(() => {
     async function loadUsers() {
-      try {
-        const res = await fetch('http://localhost:3001/users');
-        const data: User[] = await res.json();
-        setUsers(data);
+      const data = await fetchUsers();
+      setUsers(data);
 
-        // Deterministic host based on event ID
-        const hostIndex = id % data.length;
-        setHost(data[hostIndex]);
+      // Deterministic host based on event ID
+      const hostIndex = id % data.length;
+      setHost(data[hostIndex]);
 
-        // Deterministic participants based on event ID and current_participants
-        const numParticipants = Math.min(
-          current_participants || 0,
-          data.length,
-        );
-        const participantsList: User[] = [];
-        for (let i = 0; i < numParticipants; i++) {
-          const participantIndex = (id * 7 + i * 13) % data.length;
-          if (
-            !participantsList.find((p) => p.id === data[participantIndex].id)
-          ) {
-            participantsList.push(data[participantIndex]);
-          }
+      // Deterministic participants based on event ID and current_participants
+      const numParticipants = Math.min(current_participants || 0, data.length);
+      const participantsList: User[] = [];
+      for (let i = 0; i < numParticipants; i++) {
+        const participantIndex = (id * 7 + i * 13) % data.length;
+        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
+          participantsList.push(data[participantIndex]);
         }
-        setParticipants(participantsList);
-      } catch (err) {
-        console.error('Failed to load users:', err);
       }
+      setParticipants(participantsList);
     }
     loadUsers();
   }, [id, current_participants]);

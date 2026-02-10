@@ -3,6 +3,8 @@ import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { extractIdFromSlug } from '../../utils/slugify';
 import './Breadcrumb.scss';
+import { fetchEventById } from '../../api/events';
+import { fetchRestaurantById } from '../../api/restaurants';
 
 export default function Breadcrumb() {
   const location = useLocation();
@@ -19,9 +21,8 @@ export default function Breadcrumb() {
       const eventSlug = pathnames[eventIndex + 1];
       const eventId = extractIdFromSlug(eventSlug);
       if (eventId) {
-        fetch(`http://localhost:3001/events/${eventId}`)
-          .then((res) => res.json())
-          .then((data) => setEventName(data.title))
+        fetchEventById(eventId)
+          .then((data) => setEventName(data?.title || `Event ${eventId}`))
           .catch(() => setEventName(`Event ${eventId}`));
       }
     }
@@ -30,9 +31,8 @@ export default function Breadcrumb() {
       const restaurantSlug = pathnames[restaurantIndex + 1];
       const restaurantId = extractIdFromSlug(restaurantSlug);
       if (restaurantId) {
-        fetch(`http://localhost:3001/restaurants/${restaurantId}`)
-          .then((res) => res.json())
-          .then((data) => setRestaurantName(data.name))
+        fetchRestaurantById(restaurantId)
+          .then((data) => setRestaurantName(data?.name || `Restaurang ${restaurantId}`))
           .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
       }
     }
