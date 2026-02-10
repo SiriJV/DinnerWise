@@ -6,15 +6,26 @@ import '@mantine/carousel/styles.css';
 import './ImageCarousel.scss';
 import { useEffect, useState } from 'react';
 import { generateCategorySlug } from '../../utils/slugify';
-import { fetchCategories, type Category } from '../../api/categories';
+
+type Category = {
+  id: number;
+  name: string;
+  description?: string;
+  cover_picture_url?: string;
+};
 
 export default function NavCarousel() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function loadCategories() {
-      const data = await fetchCategories();
-      setCategories(data);
+      try {
+        const res = await fetch('http://localhost:3001/categories');
+        const data: Category[] = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
     }
     loadCategories();
   }, []);
