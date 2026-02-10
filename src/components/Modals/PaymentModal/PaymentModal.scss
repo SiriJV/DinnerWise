@@ -1,3 +1,5 @@
+@use '../../../styles/variables.scss' as var;
+
 .modal-title-group {
   flex: 1;
 }
@@ -30,5 +32,6 @@
   &.active {
     outline: 1px solid var(--mantine-color-red-6);
     outline-offset: -1px;
+    background-color: var.$gray1;
   }
 }
