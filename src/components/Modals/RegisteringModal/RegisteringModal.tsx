@@ -54,13 +54,6 @@ export default function RegisteringModal({
     isValidEmail(email) &&
     termsAccepted;
 
-  const eventDate = event?.date ? new Date(event.date) : null;
-  const formattedDate = eventDate?.toLocaleDateString('sv-SE', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-
   return (
     <BaseModal opened={opened} onClose={onClose} title='Anmälan'>
       {event && <ModalEventInfo event={event} showPrice />}
