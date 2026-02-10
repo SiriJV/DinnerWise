@@ -15,23 +15,26 @@ export default function AppShell() {
 
   return (
     <>
-      <MantineAppShell
-        header={{ height: 60 }}
-        padding='0'
-        style={{ height: '100vh' }}
-        withBorder={false}>
+      <MantineAppShell header={{ height: 60 }} padding='0' withBorder={false}>
         <MantineAppShell.Header className='appHeader'>
           <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
 
-        <MantineAppShell.Main>
-          <Breadcrumb />
+        <MantineAppShell.Main
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+          <Box style={{ flex: 1 }}>
+            <Breadcrumb />
 
-          <Box hiddenFrom='sm' px='md' pt='xs' pb='xs'>
-            <SearchBar />
+            <Box hiddenFrom='sm' px='md' pt='xs' pb='xs'>
+              <SearchBar />
+            </Box>
+            <ScrollToTop />
+            <Outlet />
           </Box>
-          <ScrollToTop />
-          <Outlet />
           <Footer />
         </MantineAppShell.Main>
       </MantineAppShell>
