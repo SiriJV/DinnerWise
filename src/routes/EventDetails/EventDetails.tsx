@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Text,
   Image,
@@ -27,7 +27,6 @@ import RegisteringModal from '../../components/RegisteringModal/RegisteringModal
 import type { EventType } from '../../types/EventType';
 
 export default function EventDetails(): React.ReactNode {
-  const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpened, { open: openModal, close: closeModal }] =
@@ -35,22 +34,34 @@ export default function EventDetails(): React.ReactNode {
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
-  useEffect(() => {
-    async function loadEvent() {
-      try {
-        const res = await fetch(`http://localhost:3001/events/${id}`);
-        if (!res.ok) throw new Error('Kunde inte hämta event');
-        const data: EventType = await res.json();
-        setEvent(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const location = useLocation();
+  const state = location.state as { id?: string } | undefined;
+  // const { slug } = useParams<{ slug: string }>();
 
-    if (id) loadEvent();
-  }, [id]);
+useEffect(() => {
+  async function loadEvent() {
+    try {
+      setLoading(true);
+
+      if (!state?.id) {
+        throw new Error('Event ID saknas');
+      }
+
+      const res = await fetch(`http://localhost:3001/events/${state.id}`);
+      if (!res.ok) throw new Error('Kunde inte hämta event');
+      const eventData = await res.json();
+
+      setEvent(eventData);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadEvent();
+}, [state]);
+
 
   useEffect(() => {
     let timeoutId: number;

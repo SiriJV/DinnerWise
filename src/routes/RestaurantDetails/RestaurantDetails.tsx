@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import {
   Box,
   Stack,
@@ -14,6 +14,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
+import { slugify } from '../../utils/slugify';
 
 type Restaurant = {
   id: number;
@@ -25,26 +26,39 @@ type Restaurant = {
 };
 
 export default function RestaurangDetails(): React.ReactNode {
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const location = useLocation();
+  const state = location.state as { id?: string } | undefined;
+  const { slug } = useParams<{ slug: string }>();
+
   useEffect(() => {
     async function loadRestaurant() {
       try {
-        const [restaurantRes, eventsRes] = await Promise.all([
-          fetch(`http://localhost:3001/restaurants/${id}`),
-          fetch(`http://localhost:3001/restaurants/${id}/events`),
-        ]);
+        setLoading(true);
+        let restaurantData;
 
-        if (!restaurantRes.ok) throw new Error('Kunde inte hämta restaurang');
-        const restaurantData: Restaurant = await restaurantRes.json();
+        if (state?.id) {
+          const res = await fetch(`http://localhost:3001/restaurants/${state.id}`);
+          if (!res.ok) throw new Error('Kunde inte hämta restaurang');
+          restaurantData = await res.json();
+        } else {
+          const res = await fetch(`http://localhost:3001/restaurants`);
+          if (!res.ok) throw new Error('Kunde inte hämta restauranger');
+          const restaurants = await res.json();
+          restaurantData = restaurants.find((r: Restaurant) => slugify(r.name) === slug);
+          if (!restaurantData) throw new Error('Restaurang hittades inte');
+        }
+
         setRestaurant(restaurantData);
 
+        const eventsRes = await fetch(`http://localhost:3001/restaurants/${restaurantData.id}/events`);
         if (eventsRes.ok) {
-          const eventsData: EventType[] = await eventsRes.json();
+          const eventsData = await eventsRes.json();
           setEvents(eventsData);
         }
       } catch (err: any) {
@@ -54,8 +68,8 @@ export default function RestaurangDetails(): React.ReactNode {
       }
     }
 
-    if (id) loadRestaurant();
-  }, [id]);
+    if (slug) loadRestaurant();
+  }, [slug, state]);
 
   if (loading) {
     return (

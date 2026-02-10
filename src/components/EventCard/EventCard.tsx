@@ -194,6 +194,7 @@ import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
 import './EventCard.scss';
 import { NavLink } from 'react-router-dom';
+import { slugify } from '../../utils/slugify';
 
 type EventCardProps = {
   id: number;
@@ -262,11 +263,13 @@ export default function EventCard({
     <Card
       className='eventCard'
       component={NavLink}
-      to={`/event/${id}`}
+      to={`/event/${slugify(title)}`}
+      state={{ id }}
       shadow='sm'
       radius='md'
       pb='0'
-      withBorder>
+      withBorder
+    >
       <Card.Section pos='relative'>
         <Image
           src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
@@ -309,7 +312,7 @@ export default function EventCard({
         <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
-              to={`/restaurang/${restaurant_id}`}
+              to={`/restaurang/${slugify(restaurant_name)}`}
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
               {restaurant_name || 'Restaurang'}
