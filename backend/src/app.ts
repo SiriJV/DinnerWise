@@ -3,6 +3,7 @@ import restaurantRoutes from './routes/restaurants.js';
 import eventsRouter from './routes/events.js';
 import categoriesRouter from './routes/categories.js';
 import tagsRouter from './routes/tags.js';
+import searchRouter from './routes/search.js';
 import usersRouter from './routes/users.js';
 import citiesRouter from './routes/cities.js';
 import cors from 'cors';
@@ -27,6 +28,7 @@ app.use('/restaurants', restaurantRoutes);
 app.use('/events', eventsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/tags', tagsRouter);
+app.use('/search', searchRouter);
 app.use('/users', usersRouter);
 app.use('/cities', citiesRouter);
 
