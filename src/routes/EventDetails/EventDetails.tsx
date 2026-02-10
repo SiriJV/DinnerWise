@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import ParticipantAvatars from '../../components/ParticipantAvatars/ParticipantAvatars';
 import RegisteringModal from '../../components/Modals/RegisteringModal/RegisteringModal';
 import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
@@ -68,7 +69,7 @@ export default function EventDetails(): React.ReactNode {
 
   useEffect(() => {
     async function loadUsers() {
-      if (!id) return;
+      if (!id || !event) return;
 
       try {
         const res = await fetch('http://localhost:3001/users');
@@ -79,8 +80,8 @@ export default function EventDetails(): React.ReactNode {
         const hostIndex = id % data.length;
         setHost(data[hostIndex]);
 
-        // Deterministic participants based on event ID
-        const numParticipants = Math.min(3 + (id % 3), data.length);
+        // Deterministic participants based on event ID and current_participants
+        const numParticipants = Math.min(event.current_participants || 0, data.length);
         const participantsList: User[] = [];
         for (let i = 0; i < numParticipants; i++) {
           const participantIndex = (id * 7 + i * 13) % data.length;
@@ -96,7 +97,7 @@ export default function EventDetails(): React.ReactNode {
       }
     }
     loadUsers();
-  }, [id]);
+  }, [id, event]);
 
   useEffect(() => {
     async function loadEvent() {
@@ -175,7 +176,7 @@ export default function EventDetails(): React.ReactNode {
   }
 
   const eventDate = new Date(event.date);
-  const displayMaxSpots = 6;
+  const displayMaxSpots = event.max_participants;
   const remainingSpots = displayMaxSpots - event.current_participants;
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
@@ -290,35 +291,13 @@ export default function EventDetails(): React.ReactNode {
 
               <Box visibleFrom='sm' pt='xl' pb='xl'>
                 <Text fw={600}>Deltagare</Text>
-
-                <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing='sm'>
-                    {participants.slice(0, 3).map((user) => (
-                      <Tooltip key={user.id} label={user.name} withArrow>
-                        <Avatar
-                          src={user.profile_picture_url}
-                          radius='xl'
-                          size='lg'
-                        />
-                      </Tooltip>
-                    ))}
-                    {participants.length > 3 && (
-                      <Tooltip
-                        withArrow
-                        label={
-                          <>
-                            {participants.slice(3).map((user) => (
-                              <div key={user.id}>{user.name}</div>
-                            ))}
-                          </>
-                        }>
-                        <Avatar radius='xl' size='lg'>
-                          +{participants.length - 3}
-                        </Avatar>
-                      </Tooltip>
-                    )}
-                  </Avatar.Group>
-                </Tooltip.Group>
+                <ParticipantAvatars
+                  participants={participants}
+                  maxVisible={100}
+                  size='lg'
+                  currentParticipants={event.current_participants}
+                  maxParticipants={displayMaxSpots}
+                />
               </Box>
             </Stack>
           </Grid.Col>

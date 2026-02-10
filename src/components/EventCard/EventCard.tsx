@@ -252,8 +252,8 @@ export default function EventCard({
         const hostIndex = id % data.length;
         setHost(data[hostIndex]);
 
-        // Deterministic participants based on event ID
-        const numParticipants = Math.min(3 + (id % 3), data.length);
+        // Deterministic participants based on event ID and current_participants
+        const numParticipants = Math.min(current_participants || 0, data.length);
         const participantsList: User[] = [];
         for (let i = 0; i < numParticipants; i++) {
           const participantIndex = (id * 7 + i * 13) % data.length;
@@ -269,7 +269,7 @@ export default function EventCard({
       }
     }
     loadUsers();
-  }, [id]);
+  }, [id, current_participants]);
 
   const displayMaxSpots = max_participants;
   const displayCurrentParticipants = current_participants || 0;
