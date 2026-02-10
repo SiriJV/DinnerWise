@@ -32,7 +32,9 @@ export default function Breadcrumb() {
       const restaurantId = extractIdFromSlug(restaurantSlug);
       if (restaurantId) {
         fetchRestaurantById(restaurantId)
-          .then((data) => setRestaurantName(data?.name || `Restaurang ${restaurantId}`))
+          .then((data) =>
+            setRestaurantName(data?.name || `Restaurang ${restaurantId}`),
+          )
           .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
       }
     }
@@ -72,8 +74,8 @@ export default function Breadcrumb() {
       );
     }
 
-    // Don't link "Event" or "Restaurang" labels
-    if (value === 'event' || value === 'restaurang') {
+    // Don't link "Event", "Restaurang", or "Kategori" labels
+    if (value === 'event' || value === 'restaurang' || value === 'kategori') {
       const label = breadcrumbMap[value];
       return (
         <Text key={href} size='sm'>
@@ -101,6 +103,9 @@ export default function Breadcrumb() {
 
   return (
     <Breadcrumbs mt='md' ml='md' className='breadcrumb'>
+      <Anchor component={Link} to='/' size='sm'>
+        Startsida
+      </Anchor>
       {items}
     </Breadcrumbs>
   );
