@@ -9,8 +9,7 @@ import {
   Group,
   Badge,
   Flex,
-  Avatar,
-  Tooltip,
+  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
@@ -23,16 +22,63 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
-import RegisteringModal from '../../components/RegisteringModal/RegisteringModal';
+import ParticipantAvatars from '../../components/ParticipantAvatars/ParticipantAvatars';
+import RegisteringModal from '../../components/Modals/RegisteringModal/RegisteringModal';
+import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
+import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
+import { fetchUsers, type User } from '../../api/users';
+import { fetchEventById } from '../../api/events';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [host, setHost] = useState<User | null>(null);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
+  const [
+    paymentModalOpened,
+    { open: openPaymentModal, close: closePaymentModal },
+  ] = useDisclosure(false);
+  const [
+    confirmationModalOpened,
+    { open: openConfirmationModal, close: closeConfirmationModal },
+  ] = useDisclosure(false);
+  const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
     useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
+
+  useEffect(() => {
+    async function loadUsers() {
+      if (!id || !event) return;
+
+      const data = await fetchUsers();
+      setUsers(data);
+
+      // Deterministic host based on event ID
+      const hostIndex = id % data.length;
+      setHost(data[hostIndex]);
+
+      // Deterministic participants based on event ID and current_participants
+      const numParticipants = Math.min(
+        event.current_participants || 0,
+        data.length,
+      );
+      const participantsList: User[] = [];
+      for (let i = 0; i < numParticipants; i++) {
+        const participantIndex = (id * 7 + i * 13) % data.length;
+        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
+          participantsList.push(data[participantIndex]);
+        }
+      }
+      setParticipants(participantsList);
+    }
+    loadUsers();
+  }, [id, event]);
 
   const location = useLocation();
   const state = location.state as { id?: string } | undefined;
@@ -109,7 +155,7 @@ useEffect(() => {
   }
 
   const eventDate = new Date(event.date);
-  const displayMaxSpots = 8;
+  const displayMaxSpots = event.max_participants;
   const remainingSpots = displayMaxSpots - event.current_participants;
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
@@ -118,10 +164,8 @@ useEffect(() => {
     <>
       <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
         <Stack gap={0} mb='lg'>
-          <Group justify='space-between'>
-            <Text size='xl' fw={800}>
-              {event.title}
-            </Text>
+          <Group justify='space-between' align='flex-start' wrap='wrap-reverse'>
+            <Title order={2}>{event.title}</Title>
             <Badge
               bg={
                 isFull
@@ -140,13 +184,16 @@ useEffect(() => {
               size='xl'>
               {isFull
                 ? 'Fullt'
-                : `${event.current_participants}/${displayMaxSpots} platser`}
+                : `${event.current_participants} anmälda, ${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
             </Badge>
           </Group>
-          <Text component={NavLink} to='/profil/:id' w='fit-content'>
+          <Text
+            component={NavLink}
+            to={host ? `/profil/${host.alias}` : '/profil/'}
+            w='fit-content'>
             med{' '}
             <Text span className='host-name-text'>
-              Anders Blom
+              {host?.name || 'Anders Blom'}
             </Text>
           </Text>
         </Stack>
@@ -195,11 +242,15 @@ useEffect(() => {
             <Stack gap='xs'>
               <Text fw={600}>Om värden</Text>
               <NavLink
-                to='/profil/:id'
+                to={host ? `/profil/${host.alias}` : '/profil/'}
                 style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Group gap='0' wrap='nowrap' className='host-row'>
                   <Image
-                    src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    src={
+                      host?.profile_picture_url ||
+                      'https://placehold.co/200x200/png?text=Profilbild'
+                      // 'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                    }
                     w={{ base: 80, md: 100 }}
                     className='host-image'
                   />
@@ -209,13 +260,8 @@ useEffect(() => {
                     wrap='nowrap'
                     className='host-image-information'>
                     <Text className='host-text' lineClamp={4}>
-                      Hej! Anders heter jag. Utbildad jurist med miljöfokus och
-                      lång erfarenhet av hållbarhetsfrågor. Bor i Kinna,
-                      småbarnspappa till Ylva och Melker. På min fritid spelar
-                      jag golf, tränar på nya recept med hållbara råvaror,
-                      engagerar mig i lokala miljöprojekt och deltar i
-                      föreläsningar om hållbar utveckling. Jag hoppas vi ses på
-                      något framtida event!
+                      {host?.bio ||
+                        `Hej! ${host?.name || 'Anders'} heter jag. Utbildad jurist med miljöfokus och lång erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa till Ylva och Melker. På min fritid spelar jag golf, tränar på nya recept med hållbara råvaror, engagerar mig i lokala miljöprojekt och deltar i föreläsningar om hållbar utveckling. Jag hoppas vi ses på något framtida event!`}
                     </Text>
                     <ChevronRight className='host-chevron' />
                   </Group>
@@ -224,32 +270,13 @@ useEffect(() => {
 
               <Box visibleFrom='sm' pt='xl' pb='xl'>
                 <Text fw={600}>Deltagare</Text>
-
-                <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing='sm'>
-                    <Tooltip label='Person 1' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip label='Person 2' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip label='Person 3' withArrow>
-                      <Avatar src='image.png' radius='xl' size='lg' />
-                    </Tooltip>
-                    <Tooltip
-                      withArrow
-                      label={
-                        <>
-                          <div>Person 4</div>
-                          <div>Person 5</div>
-                        </>
-                      }>
-                      <Avatar radius='xl' size='lg'>
-                        +2
-                      </Avatar>
-                    </Tooltip>
-                  </Avatar.Group>
-                </Tooltip.Group>
+                <ParticipantAvatars
+                  participants={participants}
+                  maxVisible={100}
+                  size='lg'
+                  currentParticipants={event.current_participants}
+                  maxParticipants={displayMaxSpots}
+                />
               </Box>
             </Stack>
           </Grid.Col>
@@ -260,7 +287,11 @@ useEffect(() => {
                 <Text fw={600}>Om platsen</Text>
                 <Box
                   component={NavLink}
-                  to={`/restaurang/${event.restaurant_id}`}
+                  to={
+                    event.restaurant_name
+                      ? `/restaurang/${generateRestaurantSlug(event.restaurant_name, event.restaurant_id)}`
+                      : `/restaurang/${event.restaurant_id}`
+                  }
                   className='restaurant-image-box'
                   style={{ textDecoration: 'none', color: 'inherit' }}>
                   <Image
@@ -300,7 +331,7 @@ useEffect(() => {
               {/* Action Buttons */}
               <Box
                 bg='white'
-                p='md'
+                p={isNearFooter ? 0 : 'md'}
                 className={`sticky-action-buttons ${isNearFooter ? 'near-footer' : ''}`}>
                 <Group gap='xs' className='join-event-group'>
                   <BaseButton
@@ -313,7 +344,12 @@ useEffect(() => {
                   <Flex px='md' py='sm' className='action-icon-button'>
                     <BookmarkIcon size={22} />
                   </Flex>
-                  <Flex px='md' py='sm' className='action-icon-button'>
+                  <Flex
+                    px='md'
+                    py='sm'
+                    className='action-icon-button'
+                    onClick={openShareModal}
+                    style={{ cursor: 'pointer' }}>
                     <Share size={22} />
                   </Flex>
                 </Group>
@@ -328,7 +364,34 @@ useEffect(() => {
         </Group>
       </Box>
 
-      <RegisteringModal opened={modalOpened} onClose={closeModal} />
+      <RegisteringModal
+        opened={modalOpened}
+        onClose={closeModal}
+        onOpenPayment={openPaymentModal}
+        event={event}
+      />
+      <PaymentModal
+        opened={paymentModalOpened}
+        onClose={closePaymentModal}
+        onOpenConfirmation={openConfirmationModal}
+        onOpenRegistration={openModal}
+        event={event}
+      />
+      <ConfirmationModal
+        opened={confirmationModalOpened}
+        onClose={closeConfirmationModal}
+        onOpenPayment={openPaymentModal}
+        event={event}
+      />
+      <ShareModal
+        opened={shareModalOpened}
+        onClose={closeShareModal}
+        eventUrl={
+          event
+            ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
+            : undefined
+        }
+      />
     </>
   );
 }

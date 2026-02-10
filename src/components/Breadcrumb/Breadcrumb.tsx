@@ -1,7 +1,10 @@
 import { Breadcrumbs, Anchor, Text } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { extractIdFromSlug } from '../../utils/slugify';
 import './Breadcrumb.scss';
+import { fetchEventById } from '../../api/events';
+import { fetchRestaurantById } from '../../api/restaurants';
 
 export default function Breadcrumb() {
   const location = useLocation();
@@ -15,19 +18,25 @@ export default function Breadcrumb() {
     const restaurantIndex = pathnames.indexOf('restaurang');
 
     if (eventIndex !== -1 && pathnames[eventIndex + 1]) {
-      const eventId = pathnames[eventIndex + 1];
-      fetch(`http://localhost:3001/events/${eventId}`)
-        .then((res) => res.json())
-        .then((data) => setEventName(data.title))
-        .catch(() => setEventName(`Event ${eventId}`));
+      const eventSlug = pathnames[eventIndex + 1];
+      const eventId = extractIdFromSlug(eventSlug);
+      if (eventId) {
+        fetchEventById(eventId)
+          .then((data) => setEventName(data?.title || `Event ${eventId}`))
+          .catch(() => setEventName(`Event ${eventId}`));
+      }
     }
 
     if (restaurantIndex !== -1 && pathnames[restaurantIndex + 1]) {
-      const restaurantId = pathnames[restaurantIndex + 1];
-      fetch(`http://localhost:3001/restaurants/${restaurantId}`)
-        .then((res) => res.json())
-        .then((data) => setRestaurantName(data.name))
-        .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
+      const restaurantSlug = pathnames[restaurantIndex + 1];
+      const restaurantId = extractIdFromSlug(restaurantSlug);
+      if (restaurantId) {
+        fetchRestaurantById(restaurantId)
+          .then((data) =>
+            setRestaurantName(data?.name || `Restaurang ${restaurantId}`),
+          )
+          .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
+      }
     }
   }, [pathnames]);
 
@@ -65,8 +74,8 @@ export default function Breadcrumb() {
       );
     }
 
-    // Don't link "Event" or "Restaurang" labels
-    if (value === 'event' || value === 'restaurang') {
+    // Don't link "Event", "Restaurang", or "Kategori" labels
+    if (value === 'event' || value === 'restaurang' || value === 'kategori') {
       const label = breadcrumbMap[value];
       return (
         <Text key={href} size='sm'>
@@ -77,13 +86,13 @@ export default function Breadcrumb() {
 
     // Default behavior for route labels
     const decodedValue = decodeURIComponent(value);
-    const label =
-      breadcrumbMap[value] ||
-      decodedValue.charAt(0).toUpperCase() + decodedValue.slice(1);
+    const labelWithDashes = breadcrumbMap[value] || decodedValue;
+    const label = labelWithDashes.replace(/-/g, ' ');
+    const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
 
     return (
       <Anchor component={Link} to={href} key={href} size='sm'>
-        {label}
+        {capitalizedLabel}
       </Anchor>
     );
   });
@@ -94,6 +103,9 @@ export default function Breadcrumb() {
 
   return (
     <Breadcrumbs mt='md' ml='md' className='breadcrumb'>
+      <Anchor component={Link} to='/' size='sm'>
+        Startsida
+      </Anchor>
       {items}
     </Breadcrumbs>
   );

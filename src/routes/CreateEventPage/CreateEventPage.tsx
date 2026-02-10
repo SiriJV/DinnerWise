@@ -3,6 +3,8 @@ import { Container, TextInput, Textarea, MultiSelect, Select, Button, Text, Box,
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { fetchCategories } from '../../api/categories';
+import { fetchTags } from '../../api/tags';
 
 interface Option {
   value: string;
@@ -22,40 +24,26 @@ export default function SkapaEventSida() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch('http://localhost:3001/categories');
-        if (!res.ok) throw new Error('Failed to fetch categories');
-        const data: { id: number; name: string }[] = await res.json();
+    async function loadData() {
+      const [categoriesData, tagsData] = await Promise.all([
+        fetchCategories(),
+        fetchTags(),
+      ]);
 
-        const mappedCategories = data.map(cat => ({
-          value: cat.id.toString(),
-          label: cat.name,
-        }));
-        setCategories(mappedCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
+      const mappedCategories = categoriesData.map(cat => ({
+        value: cat.id.toString(),
+        label: cat.name,
+      }));
+      setCategories(mappedCategories);
+
+      const mappedTags = tagsData.map(tag => ({
+        value: tag.id.toString(),
+        label: tag.name,
+      }));
+      setTags(mappedTags);
     }
 
-    async function fetchTags() {
-      try {
-        const res = await fetch('http://localhost:3001/tags');
-        if (!res.ok) throw new Error('Failed to fetch tags');
-        const data: { id: number; name: string }[] = await res.json();
-
-        const mappedTags = data.map(tag => ({
-          value: tag.id.toString(),
-          label: tag.name,
-        }));
-        setTags(mappedTags);
-      } catch (error) {
-        console.error('Error fetching tags:', error);
-      }
-    }
-
-    fetchCategories();
-    fetchTags();
+    loadData();
   }, []);
 
   const handleSubmit = () => {

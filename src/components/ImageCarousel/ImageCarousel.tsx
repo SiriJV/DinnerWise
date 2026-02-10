@@ -1,17 +1,40 @@
 import { Carousel } from '@mantine/carousel';
-import { Box, Card, Image, Text } from '@mantine/core';
+import { Box, Card, Image, Text, Title } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
-import { navLinks } from '../../data/NavLinks';
 import './ImageCarousel.scss';
+import { useEffect, useState } from 'react';
+import { generateCategorySlug } from '../../utils/slugify';
+
+type Category = {
+  id: number;
+  name: string;
+  description?: string;
+  cover_picture_url?: string;
+};
 
 export default function NavCarousel() {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch('http://localhost:3001/categories');
+        const data: Category[] = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
+    }
+    loadCategories();
+  }, []);
+
   return (
     <Box>
-      <Text fw={700} pb='xs'>
+      <Title order={2} pb='xs'>
         Populära kategorier
-      </Text>
+      </Title>
       <Carousel
         slideGap='md'
         emblaOptions={{ align: 'start', loop: true }}
@@ -23,12 +46,14 @@ export default function NavCarousel() {
         }}
         nextControlIcon={<ChevronRight size={28} />}
         previousControlIcon={<ChevronLeft size={28} />}>
-        {navLinks.map((link) => (
-          <Carousel.Slide key={link.path}>
-            <NavLink to={`/${link.path}`} className='navCarousel-link'>
+        {categories.map((category) => (
+          <Carousel.Slide key={category.id}>
+            <NavLink
+              to={`/kategori/${generateCategorySlug(category.name)}`}
+              className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
-                <Image src={link.image} h={110} fit='cover' />
-                <Text className='navCarousel-label'>{link.label}</Text>
+                <Image src={category.cover_picture_url} h={110} fit='cover' />
+                <Text className='navCarousel-label'>{category.name}</Text>
               </Card>
             </NavLink>
           </Carousel.Slide>

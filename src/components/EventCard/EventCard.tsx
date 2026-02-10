@@ -188,19 +188,23 @@ import {
   Avatar,
   Box,
   Divider,
-  Tooltip,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
 import './EventCard.scss';
+import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
+import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
+import { useEffect } from 'react';
+import { fetchUsers, type User } from '../../api/users';
 
 type EventCardProps = {
   id: number;
   title: string;
   description: string;
   current_participants: number;
+  max_participants: number;
   price: number;
   date: Date;
   start_time: string;
@@ -216,6 +220,7 @@ export default function EventCard({
   title,
   description,
   current_participants,
+  max_participants,
   price,
   date,
   start_time,
@@ -226,11 +231,35 @@ export default function EventCard({
   maxDescriptionLength = 100,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [host, setHost] = useState<User | null>(null);
+  const [participants, setParticipants] = useState<User[]>([]);
 
-  // Placeholder values - max_spots finns inte i API än
-  const displayMaxSpots = 8;
-  const displayCurrentParticipants =
-    current_participants || Math.floor(Math.random() * 4) + 5;
+  useEffect(() => {
+    async function loadUsers() {
+      const data = await fetchUsers();
+      setUsers(data);
+
+      // Deterministic host based on event ID
+      const hostIndex = id % data.length;
+      setHost(data[hostIndex]);
+
+      // Deterministic participants based on event ID and current_participants
+      const numParticipants = Math.min(current_participants || 0, data.length);
+      const participantsList: User[] = [];
+      for (let i = 0; i < numParticipants; i++) {
+        const participantIndex = (id * 7 + i * 13) % data.length;
+        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
+          participantsList.push(data[participantIndex]);
+        }
+      }
+      setParticipants(participantsList);
+    }
+    loadUsers();
+  }, [id, current_participants]);
+
+  const displayMaxSpots = max_participants;
+  const displayCurrentParticipants = current_participants || 0;
   const displayPrice = typeof price === 'string' ? parseFloat(price) : price;
 
   const remainingSpots = displayMaxSpots - displayCurrentParticipants;
@@ -289,7 +318,11 @@ export default function EventCard({
         </Box>
 
         <Avatar
-          src='https://images.unsplash.com/photo-1560250097-0b93528c311a'
+          src={
+            host?.profile_picture_url || ''
+
+            // 'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+          }
           alt='Host'
           radius='xl'
           size={56}
@@ -306,7 +339,13 @@ export default function EventCard({
         </Group>
 
         <Text size='sm' mb='xs'>
-          med Anders Blom
+          med{' '}
+          <NavLink
+            to={host ? `/profil/${host.alias}` : '/profil/'}
+            className='unstyledNavLink'
+            onClick={(e) => e.stopPropagation()}>
+            {host?.name || 'Anders Blom'}
+          </NavLink>
         </Text>
 
         <Box className='eventInfo' mb='xs'>
@@ -327,31 +366,13 @@ export default function EventCard({
               {formattedDate} {timeRange}
             </Text>
             <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
-              <Tooltip.Group openDelay={300} closeDelay={100}>
-                <Avatar.Group spacing='xs'>
-                  <Tooltip label='Person 1' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip label='Person 2' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip label='Person 3' withArrow>
-                    <Avatar src='image.png' radius='xl' size='sm' />
-                  </Tooltip>
-                  <Tooltip
-                    withArrow
-                    label={
-                      <>
-                        <div>Person 4</div>
-                        <div>Person 5</div>
-                      </>
-                    }>
-                    <Avatar radius='xl' size='sm'>
-                      +2
-                    </Avatar>
-                  </Tooltip>
-                </Avatar.Group>
-              </Tooltip.Group>
+              <ParticipantAvatars
+                participants={participants}
+                maxVisible={3}
+                size='sm'
+                currentParticipants={displayCurrentParticipants}
+                maxParticipants={displayMaxSpots}
+              />
             </Box>
           </Group>
         </Box>
@@ -362,31 +383,13 @@ export default function EventCard({
           </Text>
 
           <Box style={{ flexShrink: 0 }}>
-            <Tooltip.Group openDelay={300} closeDelay={100}>
-              <Avatar.Group spacing='xs'>
-                <Tooltip label='Person 1' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip label='Person 2' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip label='Person 3' withArrow>
-                  <Avatar src='image.png' radius='xl' size='sm' />
-                </Tooltip>
-                <Tooltip
-                  withArrow
-                  label={
-                    <>
-                      <div>Person 4</div>
-                      <div>Person 5</div>
-                    </>
-                  }>
-                  <Avatar radius='xl' size='sm'>
-                    +2
-                  </Avatar>
-                </Tooltip>
-              </Avatar.Group>
-            </Tooltip.Group>
+            <ParticipantAvatars
+              participants={participants}
+              maxVisible={3}
+              size='sm'
+              currentParticipants={displayCurrentParticipants}
+              maxParticipants={displayMaxSpots}
+            />
           </Box>
         </Group>
 
@@ -408,9 +411,7 @@ export default function EventCard({
           }}>
           {isFull
             ? 'Fullt'
-            : isAlmostFull
-              ? `${remainingSpots} av ${displayMaxSpots} platser kvar`
-              : `${remainingSpots} av ${displayMaxSpots} platser kvar`}
+            : `${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
         </Badge>
       </Box>
     </Card>

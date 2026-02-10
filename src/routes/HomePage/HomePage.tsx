@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Divider, Group, SimpleGrid, Stack, Text } from '@mantine/core';
+import { Divider, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 // import DateFilterDropdown from '../../components/Filters/DatePickerFilter/DatePickerFilter';
@@ -34,12 +34,22 @@ export default function HomePage() {
 
         const url = new URL('http://localhost:3001/events');
 
-        if (sortBy) { url.searchParams.append('order', sortBy); }
+        if (sortBy) {
+          url.searchParams.append('order', sortBy);
+        }
 
-        categoryFilters.forEach(id => url.searchParams.append('category_ids', id.toString()));
-        cityFilters.forEach(id => url.searchParams.append('city_ids', id.toString()));
-        tagFilters.forEach(id => url.searchParams.append('tag_ids', id.toString()));
-        priceFilters.forEach(id => url.searchParams.append('price_ids', id.toString()));
+        categoryFilters.forEach((id) =>
+          url.searchParams.append('category_ids', id.toString()),
+        );
+        cityFilters.forEach((id) =>
+          url.searchParams.append('city_ids', id.toString()),
+        );
+        tagFilters.forEach((id) =>
+          url.searchParams.append('tag_ids', id.toString()),
+        );
+        priceFilters.forEach((id) =>
+          url.searchParams.append('price_ids', id.toString()),
+        );
 
         console.log('Fetching events with URL:', url.toString());
 
@@ -69,41 +79,50 @@ export default function HomePage() {
       <Stack p='md'>
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />
-        <Group justify='space-between'>
-          <Group>
-            <FilterDropdown
-              fetchUrl='http://localhost:3001/categories'
-              label='Kategori'
-              onApply={(selected) => setCategoryFilters(selected.map(item => item.id))}
-            />
+        <Stack mt='xs'>
+          <Title order={2}>Event</Title>
+          <Group justify='space-between'>
+            <Group>
+              <FilterDropdown
+                fetchUrl='http://localhost:3001/categories'
+                label='Kategori'
+                onApply={(selected) =>
+                  setCategoryFilters(selected.map((item) => item.id))
+                }
+              />
 
-            <SearchableFilterDropdown
-              label='Stad'
-              fetchUrl='http://localhost:3001/cities'
-              onApply={(selected) => setCityFilters(selected.map(item => item.id))}
-            />
+              <SearchableFilterDropdown
+                label='Stad'
+                fetchUrl='http://localhost:3001/cities'
+                onApply={(selected) =>
+                  setCityFilters(selected.map((item) => item.id))
+                }
+              />
 
-            <SearchableFilterDropdown
-              label='Ämne'
-              fetchUrl='http://localhost:3001/tags'
-              onApply={(selected) => setTagFilters(selected.map(item => item.id))}
-            />
+              <SearchableFilterDropdown
+                label='Ämne'
+                fetchUrl='http://localhost:3001/tags'
+                onApply={(selected) =>
+                  setTagFilters(selected.map((item) => item.id))
+                }
+              />
 
-            <PriceDropdown
-              label='Pris'
-              onApply={(selected) => setPriceFilters(selected.map(item => item.id))}
-            />
+              <PriceDropdown
+                label='Pris'
+                onApply={(selected) =>
+                  setPriceFilters(selected.map((item) => item.id))
+                }
+              />
 
-            {/* <DateFilterDropdown
+              {/* <DateFilterDropdown
                   label="Datum" onApply={(selected) => {
                     console.log('Datumfilter:', selected);
                   }}
                 /> */}
+            </Group>
+            <Sort onSortChange={handleSortChange} />
           </Group>
-          <Sort onSortChange={handleSortChange} />
-        </Group>
 
-        <Stack mt='xs'>
           {loading ? (
             <Text p='md' ta='center' c='dimmed'>
               Laddar events…
@@ -121,6 +140,7 @@ export default function HomePage() {
                   title={event.title}
                   description={event.description}
                   current_participants={event.current_participants}
+                  max_participants={event.max_participants}
                   price={event.price}
                   date={new Date(event.date)}
                   start_time={event.start_time}

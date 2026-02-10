@@ -1,0 +1,13 @@
+.modal-title-group {
+  flex: 1;
+}
+
+.modal-icons-group {
+  margin-left: auto;
+}
+
+.modal-scrollable-body {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

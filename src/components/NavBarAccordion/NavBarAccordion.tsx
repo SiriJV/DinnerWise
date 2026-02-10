@@ -1,6 +1,6 @@
 import { Accordion, type AccordionControlProps } from '@mantine/core';
 import { NavLink, useLocation } from 'react-router-dom';
-import { accordionItems } from '../../data/NavLinks';
+import { accordionItems } from '../../data/AccordionItems';
 import { useEffect, useState } from 'react';
 import './NavBarAccordion.scss';
 

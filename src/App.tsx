@@ -4,7 +4,7 @@ import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
-import { navLinks, accordionItems } from './data/NavLinks';
+import { accordionItems } from './data/AccordionItems';
 import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
@@ -28,11 +28,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
 
-      ...navLinks.map((link) => ({
-        path: link.path,
-        element: link.element,
-      })),
-
       ...accordionItems.flatMap((item) =>
         item.panels.map((panel) => ({
           path: panel.path,
@@ -49,7 +44,7 @@ const router = createBrowserRouter([
         element: <CookiesPage />,
       },
       {
-        path: '/profil/:id',
+        path: '/profil/:alias',
         element: <ProfilePage />,
       },
       {

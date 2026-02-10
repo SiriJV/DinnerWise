@@ -1,4 +1,11 @@
-import { ActionIcon, Box, Burger, Group, UnstyledButton } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Burger,
+  Group,
+  Title,
+  UnstyledButton,
+} from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
 import { BellIcon, UserRound } from 'lucide-react';
@@ -24,12 +31,16 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
         />
 
         <NavLink to='/' onClick={onClose}>
-          <UnstyledButton className='logo'>DinnerWise</UnstyledButton>
+          <UnstyledButton className='logo'>
+            <Title order={1} size='lg'>
+              DinnerWise
+            </Title>
+          </UnstyledButton>
         </NavLink>
       </Group>
       <Group gap='md'>
         <Box visibleFrom='sm'>
-          <SearchBar />
+          <SearchBar variant='expandable' />
         </Box>
         <ActionIcon
           component={NavLink}
