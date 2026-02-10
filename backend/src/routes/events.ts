@@ -33,6 +33,7 @@ router.get('/', async (req, res) => {
       e.category_id,
       e.restaurant_id,
       e.current_participants,
+      e.max_participants,
       e.price,
       e.date,
       e.start_time,
@@ -73,7 +74,8 @@ router.get('/', async (req, res) => {
     const priceConditions: string[] = [];
     prices.forEach((priceId) => {
       if (priceId === 1) priceConditions.push('e.price < 50');
-      else if (priceId === 2) priceConditions.push('e.price BETWEEN 50 AND 100');
+      else if (priceId === 2)
+        priceConditions.push('e.price BETWEEN 50 AND 100');
       else if (priceId === 3) priceConditions.push('e.price > 100');
     });
     if (priceConditions.length > 0) {
@@ -121,6 +123,7 @@ router.get('/:id', async (req, res) => {
         e.category_id,
         e.restaurant_id,
         e.current_participants,
+        e.max_participants,
         e.price,
         e.date,
         e.start_time,
