@@ -73,6 +73,11 @@ export default function RegisteringModal({
               maxLength={40}
               value={firstName}
               onChange={(e) => setFirstName(e.currentTarget.value)}
+              error={
+                firstName === '' && (lastName || phone || email)
+                  ? 'Förnamn krävs'
+                  : ''
+              }
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -84,6 +89,11 @@ export default function RegisteringModal({
               maxLength={40}
               value={lastName}
               onChange={(e) => setLastName(e.currentTarget.value)}
+              error={
+                lastName === '' && (firstName || phone || email)
+                  ? 'Efternamn krävs'
+                  : ''
+              }
             />
           </Grid.Col>
         </Grid>
@@ -155,6 +165,15 @@ export default function RegisteringModal({
               </>
             }
           />
+          {!termsAccepted &&
+            firstName &&
+            lastName &&
+            isValidPhone(phone) &&
+            isValidEmail(email) && (
+              <Text size='xs' c='red'>
+                Du måste godkänna anmälningsvillkoren för att fortsätta
+              </Text>
+            )}
           <Checkbox
             size='xs'
             label='Jag vill gärna få nyhetsbrev och andra uppdateringar.'
