@@ -9,10 +9,12 @@ import {
   Anchor,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-import { categoryLinks } from '../../data/NavLinks';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
+import { useEffect, useState } from 'react';
+import { generateCategorySlug } from '../../utils/slugify';
+import { fetchCategories, type Category } from '../../api/categories';
 
 interface NavBarProps {
   opened: boolean;
@@ -20,6 +22,16 @@ interface NavBarProps {
 }
 
 export default function NavBar({ opened, onClose }: NavBarProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      const data = await fetchCategories();
+      setCategories(data);
+    }
+    loadCategories();
+  }, []);
+
   if (!opened) return null;
 
   return (
@@ -33,16 +45,16 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
           </Text>
 
           <Stack gap={15} px='md'>
-            {categoryLinks.map((link) => (
+            {categories.map((category) => (
               <NavLink
-                key={link.path}
-                to={link.path}
+                key={category.id}
+                to={`/kategori/${generateCategorySlug(category.name)}`}
                 className={({ isActive }) =>
                   `sideNavLink ${isActive ? 'active' : ''}`
                 }
                 onClick={onClose}>
                 <UnstyledButton className='sideNavButton'>
-                  {link.label}
+                  {category.name}
                 </UnstyledButton>
               </NavLink>
             ))}

@@ -3,10 +3,22 @@ import { Box, Card, Image, Text, Title } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
-import { categoryLinks } from '../../data/NavLinks';
 import './ImageCarousel.scss';
+import { useEffect, useState } from 'react';
+import { generateCategorySlug } from '../../utils/slugify';
+import { fetchCategories, type Category } from '../../api/categories';
 
 export default function NavCarousel() {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      const data = await fetchCategories();
+      setCategories(data);
+    }
+    loadCategories();
+  }, []);
+
   return (
     <Box>
       <Title order={2} pb='xs'>
@@ -23,12 +35,14 @@ export default function NavCarousel() {
         }}
         nextControlIcon={<ChevronRight size={28} />}
         previousControlIcon={<ChevronLeft size={28} />}>
-        {categoryLinks.map((link) => (
-          <Carousel.Slide key={link.path}>
-            <NavLink to={link.path} className='navCarousel-link'>
+        {categories.map((category) => (
+          <Carousel.Slide key={category.id}>
+            <NavLink
+              to={`/kategori/${generateCategorySlug(category.name)}`}
+              className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
-                <Image src={link.image} h={110} fit='cover' />
-                <Text className='navCarousel-label'>{link.label}</Text>
+                <Image src={category.cover_picture_url} h={110} fit='cover' />
+                <Text className='navCarousel-label'>{category.name}</Text>
               </Card>
             </NavLink>
           </Carousel.Slide>
