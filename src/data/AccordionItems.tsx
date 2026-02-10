@@ -11,28 +11,19 @@ import LoginPage from '../routes/info pages/LoginPage';
 import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 
-type NavLinkItem = {
-  label: string;
-  path: string;
-  element: ReactNode;
-  image: string;
-};
-
-export const navLinks: NavLinkItem[] = [];
-
 type AccordionPanelItem = {
   label: string;
   path: string;
   element: ReactNode;
 };
 
-type AccordionItem = {
+type AccordionItems = {
   value: string;
   label: string;
   panels: AccordionPanelItem[];
 };
 
-export const accordionItems: AccordionItem[] = [
+export const accordionItems: AccordionItems[] = [
   {
     value: 'dinnerwise',
     label: 'DinnerWise',
@@ -55,15 +46,26 @@ export const accordionItems: AccordionItem[] = [
         element: <CreateAccountPage />,
       },
       { label: 'Logga in', path: '/logga-in', element: <LoginPage /> },
-      { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
     ],
   },
   {
     value: 'help',
-    label: 'Hjälp',
+    label: 'Hjälp & support',
     panels: [
-      { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
+      { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
       { label: 'FAQ', path: '/faq', element: <FAQPage /> },
+      { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
+      {
+        label: 'Kundservice',
+        path: '/kundservice',
+        element: <SupportPage />,
+      },
+    ],
+  },
+  {
+    value: 'legal',
+    label: 'Villkor & Integritet',
+    panels: [
       {
         label: 'Köpvillkor',
         path: '/kopvillkor',
@@ -80,18 +82,7 @@ export const accordionItems: AccordionItem[] = [
     value: 'contact',
     label: 'Kontakt',
     panels: [
-      {
-        label: 'Kundservice',
-        path: '/kundservice',
-        element: <SupportPage />,
-      },
-      { label: 'Kontakt', path: '/kontakt', element: <ContactPage /> },
-    ],
-  },
-  {
-    value: 'social',
-    label: 'Följ oss',
-    panels: [
+      { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
       { label: 'Instagram', path: '/instagram', element: <div>Instagram</div> },
       { label: 'Facebook', path: '/facebook', element: <div>Facebook</div> },
       { label: 'X', path: '/x', element: <div>X</div> },
