@@ -91,7 +91,6 @@ export default function CategoryPage() {
       setLoadingEvents(false);
     }
     loadEvents();
-      });
   }, [category]);
 
   if (loading)
