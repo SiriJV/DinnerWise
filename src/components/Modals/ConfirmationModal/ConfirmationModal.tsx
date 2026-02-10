@@ -2,6 +2,7 @@ import { Box, Text, TextInput, Grid, Flex, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import BaseModal from '../BaseModal/BaseModal';
+import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import ShareModal from '../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
 import type { EventType } from '../../../types/EventType';
@@ -59,36 +60,8 @@ export default function ConfirmationModal({
       </Group>
 
       {event && (
-        <Box bg='gray.2' p='md' bdrs='sm' mb='lg' mt='lg'>
-          <Text size='lg' fw={600} pb='xs'>
-            {event.title}
-          </Text>
-          <Text>
-            <Text span fw={600}>
-              Datum:{' '}
-            </Text>
-            {formattedDate}
-          </Text>
-          <Text>
-            <Text span fw={600}>
-              Värd:{' '}
-            </Text>
-            Anders Blom
-          </Text>
-          <Text>
-            <Text span fw={600}>
-              Plats:{' '}
-            </Text>
-            {event.restaurant_name}
-            {event.restaurant_address && `, ${event.restaurant_address}`}
-            {event.restaurant_city && `, ${event.restaurant_city}`}
-          </Text>
-          <Text>
-            <Text span fw={600}>
-              Tid:{' '}
-            </Text>
-            {event.start_time?.slice(0, 5)} - {event.end_time?.slice(0, 5)}
-          </Text>
+        <Box mb='lg' mt='lg'>
+          <ModalEventInfo event={event} showPrice={false} />
         </Box>
       )}
 
