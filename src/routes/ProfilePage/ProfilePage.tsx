@@ -6,15 +6,7 @@ import ProfilePageEvents from './ProfilePageEvents';
 import { PenIcon, SettingsIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
-interface User {
-  id: number;
-  name: string;
-  alias: string;
-  bio?: string;
-  profile_picture_url?: string;
-  banner_picture_url?: string;
-}
+import { fetchUserByAlias, type User } from '../../api/users';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -24,24 +16,22 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function loadUser() {
-      try {
-        const res = await fetch(`http://localhost:3001/users/alias/${alias}`);
-        if (!res.ok) throw new Error('Kunde inte hämta användare');
-        const data: User = await res.json();
-        setUser(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
+      if (!alias) {
+        setError('Ogiltigt alias');
         setLoading(false);
+        return;
       }
-    }
 
-    if (alias) {
-      loadUser();
-    } else {
-      setError('Ogiltigt alias');
+      const data = await fetchUserByAlias(alias);
+      if (!data) {
+        setError('Användare hittades inte');
+      } else {
+        setUser(data);
+      }
       setLoading(false);
     }
+
+    loadUser();
   }, [alias]);
 
   if (loading) {

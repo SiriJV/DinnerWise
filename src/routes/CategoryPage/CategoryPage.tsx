@@ -12,18 +12,9 @@ import {
 } from '@mantine/core';
 import EventCard from '../../components/EventCard/EventCard';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface Tag {
-  id: number;
-  name: string;
-  category_id: number;
-}
+import { fetchCategories, type Category } from '../../api/categories';
+import { fetchTagsByCategory, type Tag } from '../../api/tags';
+import { fetchEvents } from '../../api/events';
 
 interface Event {
   id: number;
@@ -63,17 +54,12 @@ export default function CategoryPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/categories')
-      .then((res) => res.json())
-      .then((data: Category[]) => {
-        setCategories(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Fetch error:', err);
-        setError('Kunde inte hämta kategorier');
-        setLoading(false);
-      });
+    async function loadCategories() {
+      const data = await fetchCategories();
+      setCategories(data);
+      setLoading(false);
+    }
+    loadCategories();
   }, []);
 
   useEffect(() => {
@@ -86,38 +72,25 @@ export default function CategoryPage() {
   useEffect(() => {
     if (!category) return;
 
-    setLoadingTags(true);
-    fetch(`http://localhost:3001/tags/category/${category.id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Kunde inte hämta taggar');
-        return res.json();
-      })
-      .then((data: Tag[]) => {
-        setTags(data);
-        setLoadingTags(false);
-      })
-      .catch((err) => {
-        console.error('Fetch tags error:', err);
-        setLoadingTags(false);
-      });
+    async function loadTags() {
+      setLoadingTags(true);
+      const data = await fetchTagsByCategory(category.id);
+      setTags(data);
+      setLoadingTags(false);
+    }
+    loadTags();
   }, [category]);
 
   useEffect(() => {
     if (!category) return;
 
-    setLoadingEvents(true);
-    fetch(`http://localhost:3001/events?category_id=${category.id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Kunde inte hämta event');
-        return res.json();
-      })
-      .then((data: Event[]) => {
-        setEvents(data);
-        setLoadingEvents(false);
-      })
-      .catch((err) => {
-        console.error('Fetch events error:', err);
-        setLoadingEvents(false);
+    async function loadEvents() {
+      setLoadingEvents(true);
+      const data = await fetchEvents({ category_id: category.id });
+      setEvents(data);
+      setLoadingEvents(false);
+    }
+    loadEvents();
       });
   }, [category]);
 

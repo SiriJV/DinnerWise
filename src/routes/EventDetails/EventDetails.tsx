@@ -34,14 +34,8 @@ import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
 import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
-
-type User = {
-  id: number;
-  name: string;
-  alias: string;
-  bio: string;
-  profile_picture_url?: string;
-};
+import { fetchUsers, type User } from '../../api/users';
+import { fetchEventById } from '../../api/events';
 
 export default function EventDetails(): React.ReactNode {
   const { slug } = useParams<{ slug: string }>();
@@ -70,40 +64,40 @@ export default function EventDetails(): React.ReactNode {
     async function loadUsers() {
       if (!id) return;
 
-      try {
-        const res = await fetch('http://localhost:3001/users');
-        const data: User[] = await res.json();
-        setUsers(data);
+      const data = await fetchUsers();
+      setUsers(data);
 
-        // Deterministic host based on event ID
-        const hostIndex = id % data.length;
-        setHost(data[hostIndex]);
+      // Deterministic host based on event ID
+      const hostIndex = id % data.length;
+      setHost(data[hostIndex]);
 
-        // Deterministic participants based on event ID
-        const numParticipants = Math.min(3 + (id % 3), data.length);
-        const participantsList: User[] = [];
-        for (let i = 0; i < numParticipants; i++) {
-          const participantIndex = (id * 7 + i * 13) % data.length;
-          if (
-            !participantsList.find((p) => p.id === data[participantIndex].id)
-          ) {
-            participantsList.push(data[participantIndex]);
-          }
+      // Deterministic participants based on event ID
+      const numParticipants = Math.min(3 + (id % 3), data.length);
+      const participantsList: User[] = [];
+      for (let i = 0; i < numParticipants; i++) {
+        const participantIndex = (id * 7 + i * 13) % data.length;
+        if (
+          !participantsList.find((p) => p.id === data[participantIndex].id)
+        ) {
+          participantsList.push(data[participantIndex]);
         }
-        setParticipants(participantsList);
-      } catch (err) {
-        console.error('Failed to load users:', err);
       }
+      setParticipants(participantsList);
     }
     loadUsers();
   }, [id]);
 
   useEffect(() => {
     async function loadEvent() {
+      if (!id) return;
+      
       try {
-        const res = await fetch(`http://localhost:3001/events/${id}`);
-        if (!res.ok) throw new Error('Kunde inte hämta event');
-        const data: EventType = await res.json();
+        const data = await fetchEventById(id);
+        if (!data) {
+          setError('Event hittades inte');
+          setLoading(false);
+          return;
+        }
 
         // Validate that slug matches event data
         const expectedSlug = generateEventSlug(data.title, data.id);

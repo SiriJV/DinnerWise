@@ -189,6 +189,7 @@ import {
   Box,
   Divider,
   Tooltip,
+  Popover,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -196,13 +197,7 @@ import './EventCard.scss';
 import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
-
-type User = {
-  id: number;
-  name: string;
-  alias: string;
-  profile_picture_url?: string;
-};
+import { fetchUsers, type User } from '../../api/users';
 
 type EventCardProps = {
   id: number;
@@ -237,33 +232,28 @@ export default function EventCard({
   const [users, setUsers] = useState<User[]>([]);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
+  const [mobilePopoverOpened, setMobilePopoverOpened] = useState(false);
+  const [desktopPopoverOpened, setDesktopPopoverOpened] = useState(false);
 
   useEffect(() => {
     async function loadUsers() {
-      try {
-        const res = await fetch('http://localhost:3001/users');
-        const data: User[] = await res.json();
-        setUsers(data);
+      const data = await fetchUsers();
+      setUsers(data);
 
-        // Deterministic host based on event ID
-        const hostIndex = id % data.length;
-        setHost(data[hostIndex]);
+      // Deterministic host based on event ID
+      const hostIndex = id % data.length;
+      setHost(data[hostIndex]);
 
-        // Deterministic participants based on event ID
-        const numParticipants = Math.min(3 + (id % 3), data.length);
-        const participantsList: User[] = [];
-        for (let i = 0; i < numParticipants; i++) {
-          const participantIndex = (id * 7 + i * 13) % data.length;
-          if (
-            !participantsList.find((p) => p.id === data[participantIndex].id)
-          ) {
-            participantsList.push(data[participantIndex]);
-          }
+      // Deterministic participants based on event ID
+      const numParticipants = Math.min(3 + (id % 3), data.length);
+      const participantsList: User[] = [];
+      for (let i = 0; i < numParticipants; i++) {
+        const participantIndex = (id * 7 + i * 13) % data.length;
+        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
+          participantsList.push(data[participantIndex]);
         }
-        setParticipants(participantsList);
-      } catch (err) {
-        console.error('Failed to load users:', err);
       }
+      setParticipants(participantsList);
     }
     loadUsers();
   }, [id]);
@@ -383,27 +373,50 @@ export default function EventCard({
                 <Avatar.Group spacing='xs'>
                   {participants.slice(0, 3).map((user, idx) => (
                     <Tooltip key={user.id} label={user.name} withArrow>
-                      <Avatar
-                        src={user.profile_picture_url}
-                        radius='xl'
-                        size='sm'
-                      />
+                      <NavLink
+                        to={host ? `/profil/${user.alias}` : '/profil/'}
+                        className='unstyledNavLink'
+                        onClick={(e) => e.stopPropagation()}>
+                        <Avatar
+                          src={user.profile_picture_url}
+                          radius='xl'
+                          size='sm'
+                        />
+                      </NavLink>
                     </Tooltip>
                   ))}
                   {participants.length > 3 && (
-                    <Tooltip
-                      withArrow
-                      label={
-                        <>
-                          {participants.slice(3).map((user) => (
-                            <div key={user.id}>{user.name}</div>
-                          ))}
-                        </>
-                      }>
-                      <Avatar radius='xl' size='sm'>
-                        +{participants.length - 3}
-                      </Avatar>
-                    </Tooltip>
+                    <Popover 
+                      width={200} 
+                      position='bottom' 
+                      withArrow 
+                      shadow='md'
+                      opened={mobilePopoverOpened}
+                      onChange={setMobilePopoverOpened}>
+                      <Popover.Target>
+                        <Avatar 
+                          radius='xl' 
+                          size='sm' 
+                          style={{ cursor: 'pointer' }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMobilePopoverOpened((o) => !o);
+                          }}>
+                          +{participants.length - 3}
+                        </Avatar>
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        {participants.slice(3).map((user) => (
+                          <NavLink
+                            key={user.id}
+                            to={`/profil/${user.alias}`}
+                            className='unstyledNavLink'
+                            style={{ display: 'block', padding: '4px 0', color: 'inherit' }}>
+                            {user.name}
+                          </NavLink>
+                        ))}
+                      </Popover.Dropdown>
+                    </Popover>
                   )}
                 </Avatar.Group>
               </Tooltip.Group>
@@ -421,27 +434,50 @@ export default function EventCard({
               <Avatar.Group spacing='xs'>
                 {participants.slice(0, 3).map((user, idx) => (
                   <Tooltip key={user.id} label={user.name} withArrow>
-                    <Avatar
-                      src={user.profile_picture_url}
-                      radius='xl'
-                      size='sm'
-                    />
+                    <NavLink
+                      to={`/profil/${user.alias}`}
+                      className='unstyledNavLink'
+                      onClick={(e) => e.stopPropagation()}>
+                      <Avatar
+                        src={user.profile_picture_url}
+                        radius='xl'
+                        size='sm'
+                      />
+                    </NavLink>
                   </Tooltip>
                 ))}
                 {participants.length > 3 && (
-                  <Tooltip
-                    withArrow
-                    label={
-                      <>
-                        {participants.slice(3).map((user) => (
-                          <div key={user.id}>{user.name}</div>
-                        ))}
-                      </>
-                    }>
-                    <Avatar radius='xl' size='sm'>
-                      +{participants.length - 3}
-                    </Avatar>
-                  </Tooltip>
+                  <Popover 
+                    width={200} 
+                    position='bottom' 
+                    withArrow 
+                    shadow='md'
+                    opened={desktopPopoverOpened}
+                    onChange={setDesktopPopoverOpened}>
+                    <Popover.Target>
+                      <Avatar 
+                        radius='xl' 
+                        size='sm' 
+                        style={{ cursor: 'pointer' }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDesktopPopoverOpened((o) => !o);
+                        }}>
+                        +{participants.length - 3}
+                      </Avatar>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                      {participants.slice(3).map((user) => (
+                        <NavLink
+                          key={user.id}
+                          to={`/profil/${user.alias}`}
+                          className='unstyledNavLink'
+                          style={{ display: 'block', padding: '4px 0', color: 'inherit' }}>
+                          {user.name}
+                        </NavLink>
+                      ))}
+                    </Popover.Dropdown>
+                  </Popover>
                 )}
               </Avatar.Group>
             </Tooltip.Group>
