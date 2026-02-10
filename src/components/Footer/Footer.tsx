@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import './Footer.scss';
-import { accordionItems } from '../../data/NavLinks';
+import { accordionItems } from '../../data/AccordionItems';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import { useMediaQuery } from '@mantine/hooks';
 
