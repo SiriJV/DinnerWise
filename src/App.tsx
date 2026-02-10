@@ -14,6 +14,8 @@ import ProfilePage from './routes/ProfilePage/ProfilePage';
 import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
 import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
 import CategoryPage from './routes/CategoryPage/CategoryPage';
+import TagPage from './routes/TagPage/TagPage';
+import CityPage from './routes/CityPage/CityPage';
 
 const router = createBrowserRouter([
   {
@@ -42,23 +44,20 @@ const router = createBrowserRouter([
         path: '/sokresultat',
         element: <SearchPage />,
       },
-
       {
         path: '/cookies',
         element: <CookiesPage />,
       },
-
       {
         path: '/profil/:id',
         element: <ProfilePage />,
       },
       {
-        path: '/event/:id',
+        path: '/event/:slug',
         element: <EventDetails />,
       },
-
       {
-        path: '/restaurang/:id',
+        path: '/restaurang/:slug',
         element: <RestaurangDetails />,
       },
       {
@@ -72,6 +71,14 @@ const router = createBrowserRouter([
       {
         path: '/kategori/:slug',
         element: <CategoryPage />,
+      },
+      {
+        path: '/stad/:slug',
+        element: <CityPage />,
+      },
+      {
+        path: '/tagg/:slug',
+        element: <TagPage />,
       },
     ],
   },
