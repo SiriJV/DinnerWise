@@ -386,32 +386,50 @@ export default function EventCard({
                     </Tooltip>
                   ))}
                   {participants.length > 3 && (
-                    <Popover 
-                      width={200} 
-                      position='bottom' 
-                      withArrow 
+                    <Popover
+                      width={200}
+                      position='bottom'
+                      withArrow
                       shadow='md'
                       opened={mobilePopoverOpened}
                       onChange={setMobilePopoverOpened}>
                       <Popover.Target>
-                        <Avatar 
-                          radius='xl' 
-                          size='sm' 
-                          style={{ cursor: 'pointer' }}
+                        <Box
+                          onMouseEnter={() => setMobilePopoverOpened(true)}
+                          onMouseLeave={() => setMobilePopoverOpened(false)}
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
-                            setMobilePopoverOpened((o) => !o);
                           }}>
-                          +{participants.length - 3}
-                        </Avatar>
+                          <Avatar
+                            radius='xl'
+                            size='sm'
+                            style={{ cursor: 'pointer' }}>
+                            +{participants.length - 3}
+                          </Avatar>
+                        </Box>
                       </Popover.Target>
-                      <Popover.Dropdown>
+                      <Popover.Dropdown
+                        onMouseEnter={() => setMobilePopoverOpened(true)}
+                        onMouseLeave={() => setMobilePopoverOpened(false)}
+                        style={{
+                          backgroundColor: 'var(--mantine-color-dark-6)',
+                          color: 'var(--mantine-color-white)',
+                          padding: '0.25rem 0.5rem',
+                          fontSize: 'var(--mantine-font-size-sm)',
+                          border: 'none',
+                        }}>
                         {participants.slice(3).map((user) => (
                           <NavLink
                             key={user.id}
                             to={`/profil/${user.alias}`}
                             className='unstyledNavLink'
-                            style={{ display: 'block', padding: '4px 0', color: 'inherit' }}>
+                            style={{
+                              display: 'block',
+                              padding: '2px 0',
+                              color: 'var(--mantine-color-white)',
+                              textDecoration: 'none',
+                            }}>
                             {user.name}
                           </NavLink>
                         ))}
@@ -447,32 +465,50 @@ export default function EventCard({
                   </Tooltip>
                 ))}
                 {participants.length > 3 && (
-                  <Popover 
-                    width={200} 
-                    position='bottom' 
-                    withArrow 
+                  <Popover
+                    width={200}
+                    position='top'
+                    withArrow
                     shadow='md'
                     opened={desktopPopoverOpened}
                     onChange={setDesktopPopoverOpened}>
                     <Popover.Target>
-                      <Avatar 
-                        radius='xl' 
-                        size='sm' 
-                        style={{ cursor: 'pointer' }}
+                      <Box
+                        onMouseEnter={() => setDesktopPopoverOpened(true)}
+                        onMouseLeave={() => setDesktopPopoverOpened(false)}
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
-                          setDesktopPopoverOpened((o) => !o);
                         }}>
-                        +{participants.length - 3}
-                      </Avatar>
+                        <Avatar
+                          radius='xl'
+                          size='sm'
+                          style={{ cursor: 'pointer' }}>
+                          +{participants.length - 3}
+                        </Avatar>
+                      </Box>
                     </Popover.Target>
-                    <Popover.Dropdown>
+                    <Popover.Dropdown
+                      onMouseEnter={() => setDesktopPopoverOpened(true)}
+                      onMouseLeave={() => setDesktopPopoverOpened(false)}
+                      style={{
+                        backgroundColor: 'var(--mantine-color-dark-6)',
+                        color: 'var(--mantine-color-white)',
+                        padding: '0.25rem 0.5rem',
+                        fontSize: 'var(--mantine-font-size-sm)',
+                        border: 'none',
+                      }}>
                       {participants.slice(3).map((user) => (
                         <NavLink
                           key={user.id}
                           to={`/profil/${user.alias}`}
                           className='unstyledNavLink'
-                          style={{ display: 'block', padding: '4px 0', color: 'inherit' }}>
+                          style={{
+                            display: 'block',
+                            padding: '2px 0',
+                            color: 'var(--mantine-color-white)',
+                            textDecoration: 'none',
+                          }}>
                           {user.name}
                         </NavLink>
                       ))}
