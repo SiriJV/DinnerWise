@@ -50,7 +50,7 @@ export const accordionItems: AccordionItems[] = [
   },
   {
     value: 'help',
-    label: 'Hjälp & support',
+    label: 'Hjälp & Support',
     panels: [
       { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
       { label: 'FAQ', path: '/faq', element: <FAQPage /> },
