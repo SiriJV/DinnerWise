@@ -56,7 +56,6 @@ export default function EventDetails(): React.ReactNode {
       if (!event) return;
 
       const data = await fetchUsers();
-      setUsers(data);
 
       // Deterministic host based on event ID
       const hostIndex = event.id % data.length;

@@ -234,7 +234,6 @@ export default function EventCard({
   useEffect(() => {
     async function loadUsers() {
       const data = await fetchUsers();
-      setUsers(data);
 
       // Deterministic host based on event ID
       const hostIndex = id % data.length;
