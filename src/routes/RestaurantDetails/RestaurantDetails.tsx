@@ -11,7 +11,6 @@ import {
   Divider,
   Title,
 } from '@mantine/core';
-import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
@@ -39,27 +38,33 @@ export default function RestaurangDetails(): React.ReactNode {
 
   useEffect(() => {
     async function loadRestaurant() {
-      if (!id) return;
+      if (!state?.id && !slug) return;
 
       try {
         setLoading(true);
         let restaurantData;
 
         if (state?.id) {
-          const res = await fetch(`http://localhost:3001/restaurants/${state.id}`);
+          const res = await fetch(
+            `http://localhost:3001/restaurants/${state.id}`,
+          );
           if (!res.ok) throw new Error('Kunde inte hämta restaurang');
           restaurantData = await res.json();
         } else {
           const res = await fetch(`http://localhost:3001/restaurants`);
           if (!res.ok) throw new Error('Kunde inte hämta restauranger');
           const restaurants = await res.json();
-          restaurantData = restaurants.find((r: Restaurant) => slugify(r.name) === slug);
+          restaurantData = restaurants.find(
+            (r: Restaurant) => slugify(r.name) === slug,
+          );
           if (!restaurantData) throw new Error('Restaurang hittades inte');
         }
 
         setRestaurant(restaurantData);
 
-        const eventsRes = await fetch(`http://localhost:3001/restaurants/${restaurantData.id}/events`);
+        const eventsRes = await fetch(
+          `http://localhost:3001/restaurants/${restaurantData.id}/events`,
+        );
         if (eventsRes.ok) {
           const eventsData = await eventsRes.json();
           setEvents(eventsData);

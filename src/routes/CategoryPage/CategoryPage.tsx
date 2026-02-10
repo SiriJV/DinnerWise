@@ -6,7 +6,6 @@ import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown'
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import {
-  Container,
   Title,
   Text,
   Group,
@@ -18,32 +17,6 @@ import {
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
-
-interface Event {
-  id: number;
-  title: string;
-  description: string;
-  category_id: number;
-  restaurant_id: number;
-  current_participants: number;
-  price: number;
-  date: string;
-  start_time: string;
-  end_time: string;
-}
-
-const slugify = (text?: string) => {
-  if (!text) return '';
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/å/g, 'a')
-    .replace(/ä/g, 'a')
-    .replace(/ö/g, 'o')
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '');
-};
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -201,6 +174,7 @@ export default function CategoryPage() {
                   title={event.title}
                   description={event.description}
                   current_participants={event.current_participants}
+                  max_participants={event.max_participants}
                   price={event.price}
                   date={new Date(event.date)}
                   start_time={event.start_time}

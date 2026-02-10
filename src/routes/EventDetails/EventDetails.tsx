@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { generateRestaurantSlug, generateEventSlug } from '../../utils/slugify';
 import {
   Text,
   Image,
@@ -29,12 +30,10 @@ import ConfirmationModal from '../../components/Modals/ConfirmationModal/Confirm
 import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
 import { fetchUsers, type User } from '../../api/users';
-import { fetchEventById } from '../../api/events';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
   const [modalOpened, { open: openModal, close: closeModal }] =
@@ -54,13 +53,13 @@ export default function EventDetails(): React.ReactNode {
 
   useEffect(() => {
     async function loadUsers() {
-      if (!id || !event) return;
+      if (!event) return;
 
       const data = await fetchUsers();
       setUsers(data);
 
       // Deterministic host based on event ID
-      const hostIndex = id % data.length;
+      const hostIndex = event.id % data.length;
       setHost(data[hostIndex]);
 
       // Deterministic participants based on event ID and current_participants
@@ -70,7 +69,7 @@ export default function EventDetails(): React.ReactNode {
       );
       const participantsList: User[] = [];
       for (let i = 0; i < numParticipants; i++) {
-        const participantIndex = (id * 7 + i * 13) % data.length;
+        const participantIndex = (event.id * 7 + i * 13) % data.length;
         if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
           participantsList.push(data[participantIndex]);
         }
@@ -78,7 +77,7 @@ export default function EventDetails(): React.ReactNode {
       setParticipants(participantsList);
     }
     loadUsers();
-  }, [id, event]);
+  }, [event]);
 
   const location = useLocation();
   const state = location.state as { id?: string } | undefined;

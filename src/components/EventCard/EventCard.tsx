@@ -190,14 +190,12 @@ import {
   Divider,
 } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './EventCard.scss';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
-import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
-import { slugify } from '../../utils/slugify';
-import { useEffect } from 'react';
 import { fetchUsers, type User } from '../../api/users';
+import { slugify } from '../../utils/slugify';
 
 type EventCardProps = {
   id: number;
@@ -225,13 +223,11 @@ export default function EventCard({
   date,
   start_time,
   end_time,
-  restaurant_id,
   restaurant_name,
   restaurant_address,
   maxDescriptionLength = 100,
 }: EventCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
 
@@ -297,8 +293,7 @@ export default function EventCard({
       shadow='sm'
       radius='md'
       pb='0'
-      withBorder
-    >
+      withBorder>
       <Card.Section pos='relative'>
         <Image
           src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'

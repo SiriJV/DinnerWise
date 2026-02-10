@@ -2,7 +2,6 @@ import { Autocomplete, ActionIcon } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import './SearchBar.scss';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
 
@@ -11,11 +10,21 @@ type Suggestion = {
   label: string;
 };
 
-export default function SearchBar() {
+interface SearchBarProps {
+  variant?: 'expandable' | 'static';
+}
+
+export default function SearchBar({ variant = 'static' }: SearchBarProps) {
   const [value, setValue] = useState('');
   const [data, setData] = useState<Suggestion[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  
+
+  const handleToggle = () => {
+    setIsOpen(true);
+  };
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -30,9 +39,7 @@ export default function SearchBar() {
     async function fetchSuggestions() {
       try {
         const res = await fetch(
-          `http://localhost:3001/search?q=${encodeURIComponent(
-            value
-          )}&type=all&limit=5`
+          `http://localhost:3001/search?q=${encodeURIComponent(value)}&type=all&limit=5`,
         );
 
         if (!res.ok) throw new Error('Något gick fel');
@@ -73,6 +80,25 @@ export default function SearchBar() {
     fetchSuggestions();
   }, [value]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen && variant === 'expandable') {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, variant]);
+
   const handleNavigate = (rawValue: string) => {
     const [type, ...rest] = rawValue.split('-');
     const slug = rest.join('-');
@@ -94,7 +120,7 @@ export default function SearchBar() {
 
       case 'event': {
         const [_, ...rest] = rawValue.split('-');
-        const id = rest.pop();                    
+        const id = rest.pop();
         const slug = rest.join('-');
         navigate(`/event/${slug}`, { state: { id } });
         break;
@@ -111,70 +137,31 @@ export default function SearchBar() {
     }
   };
 
-  return (
-    <Autocomplete
-      className="searchBar"
-      placeholder="Sök..."
-      onOptionSubmit={(val) => {
-        handleNavigate(val);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          handleNavigate(value);
-        }
-      }}
-      rightSection={
-        <SearchIcon
-          size={18}
-          className="searchBar-icon"
-          onClick={handleClick}
-          cursor="pointer"
-        />
-      }
-      data={data}
-      value={value}
-      onChange={setValue}
-      maxDropdownHeight={200}
-    />
-interface SearchBarProps {
-  variant?: 'expandable' | 'static';
-}
-
-export default function SearchBar({ variant = 'static' }: SearchBarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleToggle = () => {
-    setIsOpen(true);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen && variant === 'expandable') {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, variant]);
-
   if (variant === 'static') {
     return (
       <Autocomplete
         className='searchBar'
         placeholder='Sök...'
-        rightSection={<SearchIcon size={18} className='searchBar-icon' />}
-        data={[]}
+        onOptionSubmit={(val) => {
+          handleNavigate(val);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleNavigate(value);
+          }
+        }}
+        rightSection={
+          <SearchIcon
+            size={18}
+            className='searchBar-icon'
+            onClick={handleClick}
+            cursor='pointer'
+          />
+        }
+        data={data}
+        value={value}
+        onChange={setValue}
         maxDropdownHeight={200}
       />
     );
@@ -198,8 +185,26 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
           className='searchBar'
           placeholder='Sök...'
           autoFocus
-          rightSection={<SearchIcon size={18} className='searchBar-icon' />}
-          data={[]}
+          onOptionSubmit={(val) => {
+            handleNavigate(val);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleNavigate(value);
+            }
+          }}
+          rightSection={
+            <SearchIcon
+              size={18}
+              className='searchBar-icon'
+              onClick={handleClick}
+              cursor='pointer'
+            />
+          }
+          data={data}
+          value={value}
+          onChange={setValue}
           maxDropdownHeight={200}
         />
       )}
