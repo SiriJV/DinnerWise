@@ -1,6 +1,13 @@
 import { Box, Text } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
 import './ModalEventInfo.scss';
+
+type User = {
+  id: number;
+  name: string;
+  alias: string;
+};
 
 interface ModalEventInfoProps {
   event: EventType;
@@ -11,6 +18,24 @@ export default function ModalEventInfo({
   event,
   showPrice = true,
 }: ModalEventInfoProps) {
+  const [host, setHost] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function loadHost() {
+      try {
+        const res = await fetch('http://localhost:3001/users');
+        const data: User[] = await res.json();
+
+        // Deterministic host based on event ID (same as EventCard/EventDetails)
+        const hostIndex = event.id % data.length;
+        setHost(data[hostIndex]);
+      } catch (err) {
+        console.error('Failed to load host:', err);
+      }
+    }
+    loadHost();
+  }, [event.id]);
+
   const eventDate = new Date(event.date);
   const formattedDate = eventDate.toLocaleDateString('sv-SE', {
     year: 'numeric',
@@ -33,7 +58,7 @@ export default function ModalEventInfo({
         <Text span fw={600}>
           Värd:{' '}
         </Text>
-        Anders Blom
+        {host?.name || 'Laddar...'}
       </Text>
       <Text>
         <Text span fw={600}>
