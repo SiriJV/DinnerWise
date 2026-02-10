@@ -111,7 +111,7 @@ export default function Footer() {
           py='md'
           className='footer-bottom'
           wrap='wrap'>
-          <Text size='sm' c='dimmed'>
+          <Text size='xs' c='dimmed'>
             © 2026 DinnerWise. All rights reserved.
           </Text>
 
@@ -119,7 +119,7 @@ export default function Footer() {
             <Anchor
               component={NavLink}
               to='/kopvillkor'
-              size='sm'
+              size='xs'
               c='dimmed'
               underline='hover'>
               Köpvillkor
@@ -128,7 +128,7 @@ export default function Footer() {
             <Anchor
               component={NavLink}
               to='/integritetspolicy'
-              size='sm'
+              size='xs'
               c='dimmed'
               underline='hover'>
               Integritetspolicy
@@ -137,7 +137,7 @@ export default function Footer() {
             <Anchor
               component={NavLink}
               to='/cookies'
-              size='sm'
+              size='xs'
               c='dimmed'
               underline='hover'>
               Cookies
