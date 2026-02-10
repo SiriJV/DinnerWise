@@ -81,7 +81,10 @@ export default function EventDetails(): React.ReactNode {
         setHost(data[hostIndex]);
 
         // Deterministic participants based on event ID and current_participants
-        const numParticipants = Math.min(event.current_participants || 0, data.length);
+        const numParticipants = Math.min(
+          event.current_participants || 0,
+          data.length,
+        );
         const participantsList: User[] = [];
         for (let i = 0; i < numParticipants; i++) {
           const participantIndex = (id * 7 + i * 13) % data.length;
