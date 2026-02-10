@@ -140,6 +140,7 @@ export default function HomePage() {
                   title={event.title}
                   description={event.description}
                   current_participants={event.current_participants}
+                  max_participants={event.max_participants}
                   price={event.price}
                   date={new Date(event.date)}
                   start_time={event.start_time}
