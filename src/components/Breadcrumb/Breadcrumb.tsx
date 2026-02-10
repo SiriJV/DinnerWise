@@ -84,13 +84,13 @@ export default function Breadcrumb() {
 
     // Default behavior for route labels
     const decodedValue = decodeURIComponent(value);
-    const label =
-      breadcrumbMap[value] ||
-      decodedValue.charAt(0).toUpperCase() + decodedValue.slice(1);
+    const labelWithDashes = breadcrumbMap[value] || decodedValue;
+    const label = labelWithDashes.replace(/-/g, ' ');
+    const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
 
     return (
       <Anchor component={Link} to={href} key={href} size='sm'>
-        {label}
+        {capitalizedLabel}
       </Anchor>
     );
   });
