@@ -4,7 +4,9 @@ export default function AboutPage(): React.ReactNode {
   return (
     <>
       <Container size='lg'>
-        <Title order={2}>Om oss</Title>
+        <Title order={2} mb='md'>
+          Om oss
+        </Title>
         <Text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
           dapibus nisi molestie vehicula. Aenean viverra mauris id diam
