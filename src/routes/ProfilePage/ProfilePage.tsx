@@ -78,7 +78,7 @@ export default function ProfilePage() {
           </Group>
         </Group>
         <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
-        <ProfilePageEvents />
+        <ProfilePageEvents userId={user.id} />
       </Stack>
     </>
   );
