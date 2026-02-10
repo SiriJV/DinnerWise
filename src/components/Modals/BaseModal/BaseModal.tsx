@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Text,
-  Group,
-  ActionIcon,
-  Popover,
-  Space,
-  Stack,
-} from '@mantine/core';
+import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
 import { CircleHelp, ChevronLeft } from 'lucide-react';
 import './BaseModal.scss';
 
@@ -51,9 +43,9 @@ export default function BaseModal({
                 </Text>
                 <Stack gap='xs'>
                   <Text size='sm'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    sed nulla dapibus nisi molestie vehicula. Aenean viverra
-                    mauris id diam convallis, et elementum quam aliquet.
+                    Fyll i alla uppgifter och godkänn anmälningsvillkoren innan
+                    du går vidare. Välj en betalningsmetod och klicka dig
+                    vidare. Nu är du anmäld!
                   </Text>
                   <Text size='sm'>
                     Behöver du mer hjälp? Kontakta oss på{' '}
