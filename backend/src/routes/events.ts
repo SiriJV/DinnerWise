@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
       r.city AS restaurant_city
     FROM events e
     JOIN restaurants r ON e.restaurant_id = r.id
+    JOIN cities c ON r.city = c.name
   `;
 
   if (tags.length > 0) {
@@ -55,7 +56,7 @@ router.get('/', async (req, res) => {
   const params: any[] = [];
 
   if (cities.length > 0) {
-    sql += ` AND r.city IN (${cities.map(() => '?').join(',')}) `;
+    sql += ` AND c.id IN (${cities.map(() => '?').join(',')}) `;
     params.push(...cities);
   }
 
