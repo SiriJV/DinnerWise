@@ -83,30 +83,29 @@ export default function EventDetails(): React.ReactNode {
   const state = location.state as { id?: string } | undefined;
   // const { slug } = useParams<{ slug: string }>();
 
-useEffect(() => {
-  async function loadEvent() {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    async function loadEvent() {
+      try {
+        setLoading(true);
 
-      if (!state?.id) {
-        throw new Error('Event ID saknas');
+        if (!state?.id) {
+          throw new Error('Event ID saknas');
+        }
+
+        const res = await fetch(`http://localhost:3001/events/${state.id}`);
+        if (!res.ok) throw new Error('Kunde inte hämta event');
+        const eventData = await res.json();
+
+        setEvent(eventData);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-
-      const res = await fetch(`http://localhost:3001/events/${state.id}`);
-      if (!res.ok) throw new Error('Kunde inte hämta event');
-      const eventData = await res.json();
-
-      setEvent(eventData);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
     }
-  }
 
-  loadEvent();
-}, [state]);
-
+    loadEvent();
+  }, [state]);
 
   useEffect(() => {
     let timeoutId: number;

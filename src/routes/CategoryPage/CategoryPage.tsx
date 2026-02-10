@@ -20,7 +20,11 @@ import { slugify } from '../../utils/slugify';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [category, setCategory] = useState<{ id: number; name: string; description: string } | null>(null);
+  const [category, setCategory] = useState<{
+    id: number;
+    name: string;
+    description: string;
+  } | null>(null);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
 
   const [events, setEvents] = useState<EventType[]>([]);
@@ -38,7 +42,8 @@ export default function CategoryPage() {
     async function loadCategory() {
       try {
         const res = await fetch(`http://localhost:3001/categories`);
-        const data: { id: number; name: string; description: string }[] = await res.json();
+        const data: { id: number; name: string; description: string }[] =
+          await res.json();
         const found = data.find((c) => slugify(c.name) === slug);
         setCategory(found || null);
       } catch (err) {
@@ -56,18 +61,20 @@ export default function CategoryPage() {
     const currentCategory = category;
 
     async function loadTags() {
-        try {
-        const res = await fetch(`http://localhost:3001/tags/category/${currentCategory.id}`);
+      try {
+        const res = await fetch(
+          `http://localhost:3001/tags/category/${currentCategory.id}`,
+        );
         if (!res.ok) throw new Error('Kunde inte hämta taggar');
         const data: { id: number; name: string }[] = await res.json();
         setTags(data);
-        } catch (err) {
+      } catch (err) {
         console.error(err);
-        }
+      }
     }
 
     loadTags();
-    }, [category]);
+  }, [category]);
 
   useEffect(() => {
     if (!category) return;
@@ -82,9 +89,15 @@ export default function CategoryPage() {
 
         url.searchParams.append('category_ids', currentCategory.id.toString());
 
-        cityFilters.forEach((id) => url.searchParams.append('city_ids', id.toString()));
-        tagFilters.forEach((id) => url.searchParams.append('tag_ids', id.toString()));
-        priceFilters.forEach((id) => url.searchParams.append('price_ids', id.toString()));
+        cityFilters.forEach((id) =>
+          url.searchParams.append('city_ids', id.toString()),
+        );
+        tagFilters.forEach((id) =>
+          url.searchParams.append('tag_ids', id.toString()),
+        );
+        priceFilters.forEach((id) =>
+          url.searchParams.append('price_ids', id.toString()),
+        );
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
@@ -105,49 +118,50 @@ export default function CategoryPage() {
     loadEvents();
   }, [category, cityFilters, tagFilters, priceFilters, sortBy]);
 
-  if (error) return <Text c="red">{error}</Text>;
+  if (error) return <Text c='red'>{error}</Text>;
   if (!category) return <Text>Kategori hittades inte</Text>;
 
   return (
     <>
-      <Stack p="md">
+      <Stack p='md'>
         <Title order={1}>{category.name}</Title>
-          {category.description && (
-            <Text size="lg" c="dimmed" mb="sm">{category.description}</Text>
-          )}
+        {category.description && (
+          <Text size='lg' c='dimmed' mb='sm'>
+            {category.description}
+          </Text>
+        )}
 
-          {tags.length > 0 && (
-            <Group gap="xs" mb="md" wrap="wrap">
-              {tags.map((tag) => (
-                <NavLink
+        {tags.length > 0 && (
+          <Group gap='xs' mb='md' wrap='wrap'>
+            {tags.map((tag) => (
+              <NavLink
                 key={tag.id}
                 to={`/tagg/${slugify(tag.name)}`}
-                style={{ textDecoration: 'none' }}
-                >
+                style={{ textDecoration: 'none' }}>
                 <Pill style={{ cursor: 'pointer' }}>{tag.name}</Pill>
-                </NavLink>
-              ))}
-            </Group>
-          )}
+              </NavLink>
+            ))}
+          </Group>
+        )}
 
-        <Divider mt="sm" mb="lg" />
+        <Divider mt='sm' mb='lg' />
 
-        <Group justify="space-between">
+        <Group justify='space-between'>
           <Group>
             <SearchableFilterDropdown
-              label="Stad"
-              fetchUrl="http://localhost:3001/cities"
+              label='Stad'
+              fetchUrl='http://localhost:3001/cities'
               onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
             />
 
             <SearchableFilterDropdown
-              label="Ämne"
-              fetchUrl="http://localhost:3001/tags"
+              label='Ämne'
+              fetchUrl='http://localhost:3001/tags'
               onApply={(selected) => setTagFilters(selected.map((s) => s.id))}
             />
 
             <PriceDropdown
-              label="Pris"
+              label='Pris'
               onApply={(selected) => setPriceFilters(selected.map((s) => s.id))}
             />
           </Group>
@@ -155,18 +169,17 @@ export default function CategoryPage() {
           <Sort onSortChange={(value) => setSortBy(value)} />
         </Group>
 
-
-        <Stack mt="xs">
+        <Stack mt='xs'>
           {loading ? (
-            <Text p="md" ta="center" c="dimmed">
+            <Text p='md' ta='center' c='dimmed'>
               Laddar events…
             </Text>
           ) : events.length === 0 ? (
-            <Text p="md" ta="center">
+            <Text p='md' ta='center'>
               Inga events för denna kategori.
             </Text>
           ) : (
-            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing="md">
+            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
               {events.map((event) => (
                 <EventCard
                   key={event.id}
