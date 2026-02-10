@@ -140,12 +140,16 @@ export default function RestaurangDetails(): React.ReactNode {
           </Box>
 
           <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
-            <Image
-              src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
-              h={250}
-              bdrs='md'
-              className='map-image'
-            />
+            <Box bdrs='md' style={{ overflow: 'hidden' }}>
+              <iframe
+                src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2076.3658!2d12.53667!3d57.92968!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x464ff2a8f0c5b7e7%3A0x5c8c5b8c5b8c5b8c!2sVed%20House%20Alings%C3%A5s!5e0!3m2!1ssv!2sse!4v1644262070010!5m2!1ssv!2sse'
+                title='Google map'
+                width='100%'
+                height={250}
+                style={{ border: 0, display: 'block' }}
+                loading='lazy'
+              />
+            </Box>
             <Group gap='xs'>
               <MapPin size='16px' />
               <Text>
@@ -168,6 +172,7 @@ export default function RestaurangDetails(): React.ReactNode {
                   title={event.title}
                   description={event.description}
                   current_participants={event.current_participants}
+                  max_participants={event.max_participants}
                   price={event.price}
                   date={new Date(event.date)}
                   start_time={event.start_time}
