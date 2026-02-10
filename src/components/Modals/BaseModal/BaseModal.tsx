@@ -1,4 +1,12 @@
-import { Modal, Text, Group, ActionIcon } from '@mantine/core';
+import {
+  Modal,
+  Text,
+  Group,
+  ActionIcon,
+  Popover,
+  Space,
+  Stack,
+} from '@mantine/core';
 import { CircleHelp, ChevronLeft } from 'lucide-react';
 import './BaseModal.scss';
 
@@ -26,14 +34,41 @@ export default function BaseModal({
         <Group gap='md' wrap='nowrap' className='modal-title-group'>
           <Text fw={600}>{title}</Text>
           <Group gap={0} className='modal-icons-group'>
-            <ActionIcon
-              variant='subtle'
-              color='red'
-              size='md'
-              radius='sm'
-              className='modal-help-icon'>
-              <CircleHelp size={20} />
-            </ActionIcon>
+            <Popover width={300} position='bottom' withArrow shadow='md'>
+              <Popover.Target>
+                <ActionIcon
+                  variant='subtle'
+                  color='red'
+                  size='md'
+                  radius='sm'
+                  className='modal-help-icon'>
+                  <CircleHelp size={20} />
+                </ActionIcon>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text size='sm' fw={600} mb='xs'>
+                  Hjälp{' '}
+                </Text>
+                <Stack gap='xs'>
+                  <Text size='sm'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    sed nulla dapibus nisi molestie vehicula. Aenean viverra
+                    mauris id diam convallis, et elementum quam aliquet.
+                  </Text>
+                  <Text size='sm'>
+                    Behöver du mer hjälp? Kontakta oss på{' '}
+                    <Text span fw={500}>
+                      support@dinnerwise.se
+                    </Text>{' '}
+                    eller ring oss på{' '}
+                    <Text span fw={500}>
+                      08-123 456 78
+                    </Text>
+                    .
+                  </Text>
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
             {onBack && (
               <ActionIcon
                 variant='subtle'
