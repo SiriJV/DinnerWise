@@ -193,6 +193,7 @@ import {
 import { BookmarkIcon } from 'lucide-react';
 import { useState } from 'react';
 import './EventCard.scss';
+import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { generateEventSlug, generateRestaurantSlug } from '../../utils/slugify';
 import { NavLink } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -209,6 +210,7 @@ type EventCardProps = {
   title: string;
   description: string;
   current_participants: number;
+  max_participants: number;
   price: number;
   date: Date;
   start_time: string;
@@ -224,6 +226,7 @@ export default function EventCard({
   title,
   description,
   current_participants,
+  max_participants,
   price,
   date,
   start_time,
@@ -268,8 +271,7 @@ export default function EventCard({
     loadUsers();
   }, [id]);
 
-  // Placeholder values - max_spots finns inte i API än
-  const displayMaxSpots = 6;
+  const displayMaxSpots = max_participants;
   const displayCurrentParticipants = current_participants || 0;
   const displayPrice = typeof price === 'string' ? parseFloat(price) : price;
 
@@ -304,6 +306,11 @@ export default function EventCard({
       className='eventCard'
       component={NavLink}
       to={`/event/${generateEventSlug(title, id)}`}
+      onClick={() => {
+        // Save scroll position before navigating
+        sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+        sessionStorage.setItem('shouldRestoreScroll', 'true');
+      }}
       shadow='sm'
       radius='md'
       pb='0'
@@ -379,34 +386,13 @@ export default function EventCard({
               {formattedDate} {timeRange}
             </Text>
             <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
-              <Tooltip.Group openDelay={300} closeDelay={100}>
-                <Avatar.Group spacing='xs'>
-                  {participants.slice(0, 3).map((user, idx) => (
-                    <Tooltip key={user.id} label={user.name} withArrow>
-                      <Avatar
-                        src={user.profile_picture_url}
-                        radius='xl'
-                        size='sm'
-                      />
-                    </Tooltip>
-                  ))}
-                  {participants.length > 3 && (
-                    <Tooltip
-                      withArrow
-                      label={
-                        <>
-                          {participants.slice(3).map((user) => (
-                            <div key={user.id}>{user.name}</div>
-                          ))}
-                        </>
-                      }>
-                      <Avatar radius='xl' size='sm'>
-                        +{participants.length - 3}
-                      </Avatar>
-                    </Tooltip>
-                  )}
-                </Avatar.Group>
-              </Tooltip.Group>
+              <ParticipantAvatars
+                participants={participants}
+                maxVisible={3}
+                size='sm'
+                currentParticipants={displayCurrentParticipants}
+                maxParticipants={displayMaxSpots}
+              />
             </Box>
           </Group>
         </Box>
@@ -417,34 +403,13 @@ export default function EventCard({
           </Text>
 
           <Box style={{ flexShrink: 0 }}>
-            <Tooltip.Group openDelay={300} closeDelay={100}>
-              <Avatar.Group spacing='xs'>
-                {participants.slice(0, 3).map((user, idx) => (
-                  <Tooltip key={user.id} label={user.name} withArrow>
-                    <Avatar
-                      src={user.profile_picture_url}
-                      radius='xl'
-                      size='sm'
-                    />
-                  </Tooltip>
-                ))}
-                {participants.length > 3 && (
-                  <Tooltip
-                    withArrow
-                    label={
-                      <>
-                        {participants.slice(3).map((user) => (
-                          <div key={user.id}>{user.name}</div>
-                        ))}
-                      </>
-                    }>
-                    <Avatar radius='xl' size='sm'>
-                      +{participants.length - 3}
-                    </Avatar>
-                  </Tooltip>
-                )}
-              </Avatar.Group>
-            </Tooltip.Group>
+            <ParticipantAvatars
+              participants={participants}
+              maxVisible={3}
+              size='sm'
+              currentParticipants={displayCurrentParticipants}
+              maxParticipants={displayMaxSpots}
+            />
           </Box>
         </Group>
 
