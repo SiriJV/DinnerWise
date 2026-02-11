@@ -27,7 +27,7 @@ export async function seedEvents() {
       ('Poesikväll', 'Diskutera poesi och skriv egna dikter.', 1, 1, 5, 4, 100, '2026-03-05', '18:00:00', '20:00:00'),
       ('Berättarteknik för nybörjare', 'Lär dig grunderna i berättarteknik.', 1, 1, 4, 2, 150, '2026-03-10', '16:00:00', '18:00:00'),
       ('Novellskrivar-cirkel', 'Skriv och diskutera noveller i grupp.', 1, 2, 5, 4, 180, '2026-03-15', '17:30:00', '19:30:00'),
-      ('Literaturhistoria föreläsning', 'En resa genom litteraturens historia.', 1, 2, 6, 6, 220, '2026-03-20', '18:00:00', '20:00:00'),
+      ('Litteraturhistoria föreläsning', 'En resa genom litteraturens historia.', 1, 2, 6, 6, 220, '2026-03-20', '18:00:00', '20:00:00'),
 
       ('Grundläggande musikteori', 'Lär dig grunderna i musikteori.', 2, 2, 4, 3, 250, '2026-04-01', '17:00:00', '19:00:00'),
       ('Jazzimprovisation', 'Improvisera med jazzskalan.', 2, 2, 6, 5, 300, '2026-04-05', '18:00:00', '20:00:00'),
