@@ -1,16 +1,9 @@
-import {
-  ActionIcon,
-  Box,
-  Burger,
-  Group,
-  Title,
-  UnstyledButton,
-} from '@mantine/core';
+import { Box, Burger, Group, Title, UnstyledButton } from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
-import { UserRound } from 'lucide-react';
 import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
+import LoginButton from './LoginButton';
 
 interface HeaderProps {
   opened: boolean;
@@ -44,14 +37,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
           <SearchBar variant='expandable' />
         </Box>
         <NotificationsPopup />
-        <ActionIcon
-          component={NavLink}
-          to='/profil/anna_s'
-          variant='subtle'
-          color='white'
-          size='md'>
-          <UserRound size={20} />
-        </ActionIcon>
+        <LoginButton loggedIn={true} />
       </Group>
     </Group>
   );
