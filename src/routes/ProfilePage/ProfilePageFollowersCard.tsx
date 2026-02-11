@@ -1,4 +1,4 @@
-import { Text, Group, Stack, Avatar, Badge } from '@mantine/core';
+import { Text, Group, Stack, Avatar } from '@mantine/core';
 import FollowBadge from './FollowBadge';
 
 interface ProfilePageFollowersCardProps {

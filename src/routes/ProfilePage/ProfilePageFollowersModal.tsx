@@ -1,4 +1,4 @@
-import { Modal, Text, Group, Stack, Avatar, Badge } from '@mantine/core';
+import { Modal, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ProfilePageFollowersCard from './ProfilePageFollowersCard';
 
