@@ -46,7 +46,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
         <NotificationsPopup />
         <ActionIcon
           component={NavLink}
-          to='/profil/:id'
+          to='/profil/anna_s'
           variant='subtle'
           color='white'
           size='md'>
