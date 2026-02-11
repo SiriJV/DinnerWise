@@ -17,7 +17,7 @@ export async function seedTags() {
       ('Poesi', 1),
       ('Biografi', 1),
       ('Berättarteknik', 1),
-      ('Literaturhistoria', 1),
+      ('Litteraturhistoria', 1),
       ('Textanalys', 1),
       ('Novellskrivande', 1),
       ('Bokcirkel', 1),
