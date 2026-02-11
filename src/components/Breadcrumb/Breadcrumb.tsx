@@ -1,7 +1,7 @@
 import { Breadcrumbs, Anchor, Text } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { extractIdFromSlug } from '../../utils/slugify';
+import { extractIdFromSlug, generateCategorySlug } from '../../utils/slugify';
 import './Breadcrumb.scss';
 import { fetchEventById } from '../../api/events';
 import { fetchRestaurantById } from '../../api/restaurants';
@@ -15,6 +15,7 @@ export default function Breadcrumb() {
   const [restaurantName, setRestaurantName] = useState<string | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [tagName, setTagName] = useState<string | null>(null);
+  const [tagCategoryName, setTagCategoryName] = useState<string | null>(null);
 
   // Fetch event/restaurant/category/tag data if needed
   useEffect(() => {
@@ -70,8 +71,8 @@ export default function Breadcrumb() {
 
     if (tagIndex !== -1 && pathnames[tagIndex + 1]) {
       const tagSlug = pathnames[tagIndex + 1];
-      fetchTags()
-        .then((tags) => {
+      Promise.all([fetchTags(), fetchCategories()])
+        .then(([tags, categories]) => {
           const tag = tags.find(
             (t) =>
               t.name.toLowerCase().replace(/\s+/g, '-') === tagSlug ||
@@ -86,9 +87,19 @@ export default function Breadcrumb() {
           );
           if (tag) {
             setTagName(tag.name);
+            // Find the category for this tag
+            if (tag.category_id) {
+              const category = categories.find((c) => c.id === tag.category_id);
+              if (category) {
+                setTagCategoryName(category.name);
+              }
+            }
           }
         })
-        .catch(() => setTagName(null));
+        .catch(() => {
+          setTagName(null);
+          setTagCategoryName(null);
+        });
     }
   }, [pathnames]);
 
@@ -126,13 +137,27 @@ export default function Breadcrumb() {
         );
       }
 
-      // Check if this is a tag slug (show name, not clickable)
+      // Check if this is a tag slug (show category and tag name, not clickable)
       if (pathnames[index - 1] === 'tagg' && tagName) {
-        return (
+        const elements = [];
+        if (tagCategoryName) {
+          const categorySlug = generateCategorySlug(tagCategoryName);
+          elements.push(
+            <Anchor
+              key={`tag-category-${index}`}
+              component={Link}
+              to={`/kategori/${categorySlug}`}
+              size='sm'>
+              {tagCategoryName}
+            </Anchor>,
+          );
+        }
+        elements.push(
           <Text key={`tag-${index}`} size='sm'>
             {tagName}
-          </Text>
+          </Text>,
         );
+        return elements;
       }
 
       // Skip "event", "restaurang", "kategori", "tagg" labels
@@ -156,6 +181,7 @@ export default function Breadcrumb() {
         </Text>
       );
     })
+    .flat()
     .filter(Boolean);
 
   if (items.length === 0) {
