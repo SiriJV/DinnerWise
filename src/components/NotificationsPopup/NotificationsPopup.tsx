@@ -65,7 +65,7 @@ export default function NotificationsPopup() {
             <NotificationsContent
               icon={AlarmClock}
               title='Glöm inte dagens event!'
-              text='"Studiecirkel - förstå EU-valet" startar 16:30.'
+              text='Du är anmäld till "Studiecirkel - förstå EU-valet" som startar 16:30.'
               date='27 jan'
             />
             <NotificationsContent
