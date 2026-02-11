@@ -5,17 +5,23 @@ import { extractIdFromSlug } from '../../utils/slugify';
 import './Breadcrumb.scss';
 import { fetchEventById } from '../../api/events';
 import { fetchRestaurantById } from '../../api/restaurants';
+import { fetchCategories } from '../../api/categories';
+import { fetchTags } from '../../api/tags';
 
 export default function Breadcrumb() {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
   const [eventName, setEventName] = useState<string | null>(null);
   const [restaurantName, setRestaurantName] = useState<string | null>(null);
+  const [categoryName, setCategoryName] = useState<string | null>(null);
+  const [tagName, setTagName] = useState<string | null>(null);
 
-  // Fetch event/restaurant data if needed
+  // Fetch event/restaurant/category/tag data if needed
   useEffect(() => {
     const eventIndex = pathnames.indexOf('event');
     const restaurantIndex = pathnames.indexOf('restaurang');
+    const categoryIndex = pathnames.indexOf('kategori');
+    const tagIndex = pathnames.indexOf('tagg');
 
     if (eventIndex !== -1 && pathnames[eventIndex + 1]) {
       const eventSlug = pathnames[eventIndex + 1];
@@ -38,6 +44,52 @@ export default function Breadcrumb() {
           .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
       }
     }
+
+    if (categoryIndex !== -1 && pathnames[categoryIndex + 1]) {
+      const categorySlug = pathnames[categoryIndex + 1];
+      fetchCategories()
+        .then((categories) => {
+          const category = categories.find(
+            (c) =>
+              c.name.toLowerCase().replace(/\s+/g, '-') === categorySlug ||
+              c.name
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/å/g, 'a')
+                .replace(/ä/g, 'a')
+                .replace(/ö/g, 'o')
+                .replace(/\s+/g, '-') === categorySlug,
+          );
+          if (category) {
+            setCategoryName(category.name);
+          }
+        })
+        .catch(() => setCategoryName(null));
+    }
+
+    if (tagIndex !== -1 && pathnames[tagIndex + 1]) {
+      const tagSlug = pathnames[tagIndex + 1];
+      fetchTags()
+        .then((tags) => {
+          const tag = tags.find(
+            (t) =>
+              t.name.toLowerCase().replace(/\s+/g, '-') === tagSlug ||
+              t.name
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/å/g, 'a')
+                .replace(/ä/g, 'a')
+                .replace(/ö/g, 'o')
+                .replace(/\s+/g, '-') === tagSlug,
+          );
+          if (tag) {
+            setTagName(tag.name);
+          }
+        })
+        .catch(() => setTagName(null));
+    }
   }, [pathnames]);
 
   // Hide breadcrumb on profile pages
@@ -45,57 +97,66 @@ export default function Breadcrumb() {
     return null;
   }
 
-  const breadcrumbMap: { [key: string]: string } = {
-    event: 'Event',
-    restaurang: 'Restaurang',
-    kategori: 'Kategori',
-    profil: 'Profil',
-    search: 'Sök',
-  };
+  const items = pathnames
+    .map((value, index) => {
+      // Check if this is an event ID (show name, not clickable)
+      if (pathnames[index - 1] === 'event' && eventName) {
+        return (
+          <Text key={`event-${index}`} size='sm'>
+            {eventName}
+          </Text>
+        );
+      }
 
-  const items = pathnames.map((value, index) => {
-    const href = `/${pathnames.slice(0, index + 1).join('/')}`;
+      // Check if this is a restaurant ID (show name, not clickable)
+      if (pathnames[index - 1] === 'restaurang' && restaurantName) {
+        return (
+          <Text key={`restaurant-${index}`} size='sm'>
+            {restaurantName}
+          </Text>
+        );
+      }
 
-    // Check if this is an event ID
-    if (pathnames[index - 1] === 'event' && eventName) {
+      // Check if this is a category slug (show name, not clickable)
+      if (pathnames[index - 1] === 'kategori' && categoryName) {
+        return (
+          <Text key={`category-${index}`} size='sm'>
+            {categoryName}
+          </Text>
+        );
+      }
+
+      // Check if this is a tag slug (show name, not clickable)
+      if (pathnames[index - 1] === 'tagg' && tagName) {
+        return (
+          <Text key={`tag-${index}`} size='sm'>
+            {tagName}
+          </Text>
+        );
+      }
+
+      // Skip "event", "restaurang", "kategori", "tagg" labels
+      if (
+        value === 'event' ||
+        value === 'restaurang' ||
+        value === 'kategori' ||
+        value === 'tagg'
+      ) {
+        return null;
+      }
+
+      // For other paths, show them as text (not clickable)
+      const decodedValue = decodeURIComponent(value);
+      const label = decodedValue.replace(/-/g, ' ');
+      const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+
       return (
-        <Anchor component={Link} to={href} key={href} size='sm'>
-          {eventName}
-        </Anchor>
-      );
-    }
-
-    // Check if this is a restaurant ID
-    if (pathnames[index - 1] === 'restaurang' && restaurantName) {
-      return (
-        <Anchor component={Link} to={href} key={href} size='sm'>
-          {restaurantName}
-        </Anchor>
-      );
-    }
-
-    // Don't link "Event", "Restaurang", or "Kategori" labels
-    if (value === 'event' || value === 'restaurang' || value === 'kategori') {
-      const label = breadcrumbMap[value];
-      return (
-        <Text key={href} size='sm'>
-          {label}
+        <Text key={`text-${index}`} size='sm'>
+          {capitalizedLabel}
         </Text>
       );
-    }
-
-    // Default behavior for route labels
-    const decodedValue = decodeURIComponent(value);
-    const labelWithDashes = breadcrumbMap[value] || decodedValue;
-    const label = labelWithDashes.replace(/-/g, ' ');
-    const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
-
-    return (
-      <Anchor component={Link} to={href} key={href} size='sm'>
-        {capitalizedLabel}
-      </Anchor>
-    );
-  });
+    })
+    .filter(Boolean);
 
   if (items.length === 0) {
     return null;
