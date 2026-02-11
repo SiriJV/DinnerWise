@@ -21,18 +21,18 @@ export async function seedEvents() {
 
   await db.query(`
     INSERT INTO events 
-      (title, description, category_id, restaurant_id, max_participants, current_participants, price, date, start_time, end_time)
+      (title, description, category_id, restaurant_id, current_participants, price, date, start_time, end_time)
     VALUES
-      ('Kreativt skrivande workshop', 'Lär dig skriva kreativt med övningar.', 1, 1, 5, 3, 200, '2026-03-01', '17:00:00', '19:00:00'),
-      ('Poesikväll', 'Diskutera poesi och skriv egna dikter.', 1, 1, 5, 4, 100, '2026-03-05', '18:00:00', '20:00:00'),
-      ('Berättarteknik för nybörjare', 'Lär dig grunderna i berättarteknik.', 1, 1, 4, 2, 150, '2026-03-10', '16:00:00', '18:00:00'),
-      ('Novellskrivar-cirkel', 'Skriv och diskutera noveller i grupp.', 1, 2, 5, 4, 180, '2026-03-15', '17:30:00', '19:30:00'),
-      ('Litteraturhistoria föreläsning', 'En resa genom litteraturens historia.', 1, 2, 6, 6, 220, '2026-03-20', '18:00:00', '20:00:00'),
+      ('Kreativt skrivande workshop', 'Lär dig skriva kreativt med övningar.', 1, 1, 3, 200, '2026-03-01', '17:00:00', '19:00:00'),
+      ('Poesikväll', 'Diskutera poesi och skriv egna dikter.', 1, 1, 4, 100, '2026-03-05', '18:00:00', '20:00:00'),
+      ('Berättarteknik för nybörjare', 'Lär dig grunderna i berättarteknik.', 1, 1, 2, 150, '2026-03-10', '16:00:00', '18:00:00'),
+      ('Novellskrivar-cirkel', 'Skriv och diskutera noveller i grupp.', 1, 2, 4, 180, '2026-03-15', '17:30:00', '19:30:00'),
+      ('Litteraturhistoria föreläsning', 'En resa genom litteraturens historia.', 1, 2, 6, 220, '2026-03-20', '18:00:00', '20:00:00'),
 
-      ('Grundläggande musikteori', 'Lär dig grunderna i musikteori.', 2, 2, 4, 3, 250, '2026-04-01', '17:00:00', '19:00:00'),
-      ('Jazzimprovisation', 'Improvisera med jazzskalan.', 2, 2, 6, 5, 300, '2026-04-05', '18:00:00', '20:00:00'),
-      ('Sångteknik workshop', 'Utveckla din sångröst.', 2, 3, 4, 4, 350, '2026-04-10', '16:00:00', '18:00:00'),
-      ('Kompositionskurs', 'Lär dig komponera musik.', 2, 3, 6, 6, 400, '2026-04-15', '17:30:00', '19:30:00'),
+      ('Grundläggande musikteori', 'Lär dig grunderna i musikteori.', 2, 2, 3, 250, '2026-04-01', '17:00:00', '19:00:00'),
+      ('Jazzimprovisation', 'Improvisera med jazzskalan.', 2, 2, 5, 300, '2026-04-05', '18:00:00', '20:00:00'),
+      ('Sångteknik workshop', 'Utveckla din sångröst.', 2, 3, 4, 350, '2026-04-10', '16:00:00', '18:00:00'),
+      ('Kompositionskurs', 'Lär dig komponera musik.', 2, 3, 6, 400, '2026-04-15', '17:30:00', '19:30:00'),
       ('Musikanalys seminarie', 'Analysera olika musikstycken.', 2, 3, 7, 7, 280, '2026-04-20', '18:00:00', '20:00:00'),
 
       ('Vandring i skogen', 'Utforska skogen och lär dig om naturen.', 3, 4, 6, 5, 100, '2026-05-01', '09:00:00', '12:00:00'),
