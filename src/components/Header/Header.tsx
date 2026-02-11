@@ -8,8 +8,9 @@ import {
 } from '@mantine/core';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
-import { BellIcon, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import SearchBar from '../SearchBar/SearchBar';
+import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 
 interface HeaderProps {
   opened: boolean;
@@ -42,14 +43,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
         <Box visibleFrom='sm'>
           <SearchBar variant='expandable' />
         </Box>
-        <ActionIcon
-          component={NavLink}
-          to='/'
-          variant='subtle'
-          color='white'
-          size='md'>
-          <BellIcon size={20} />
-        </ActionIcon>
+        <NotificationsPopup />
         <ActionIcon
           component={NavLink}
           to='/profil/:id'
