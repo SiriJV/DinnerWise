@@ -1,7 +1,6 @@
 import { db } from '../db.js';
 
 export async function seedTags() {
-
   await db.query(`
     CREATE TABLE tags (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,7 +53,7 @@ export async function seedTags() {
       ('Dataanalys', 4),
       ('UX', 4),
       ('UI', 4),
-      ('Robitik', 4),
+      ('Robotik', 4),
       ('Artificiell intelligens', 4),
       ('Databashantering', 4),
 
