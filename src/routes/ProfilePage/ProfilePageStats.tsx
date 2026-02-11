@@ -1,5 +1,6 @@
 import { Text, Stack, Box, Group } from '@mantine/core';
 import './ProfilePage.scss';
+import ProfilePageFollowersModal from './ProfilePageFollowersModal';
 
 type ProfilePageStatsProps = {
   followers: number;
@@ -12,6 +13,8 @@ export default function ProfilePageStats({
   following,
   events,
 }: ProfilePageStatsProps) {
+  const followersModal = ProfilePageFollowersModal({});
+
   return (
     <Group
       gap='xs'
@@ -23,8 +26,13 @@ export default function ProfilePageStats({
       px='xs'
       py='xs'
       className='stats-wrapper'>
+      {followersModal.modal}
       <Box px='xs' py='xs' className='stats'>
-        <Stack align='center' gap='xs'>
+        <Stack
+          align='center'
+          gap='xs'
+          style={{ cursor: 'pointer' }}
+          onClick={followersModal.open}>
           <Text fw={700} size='md'>
             {followers}
           </Text>
