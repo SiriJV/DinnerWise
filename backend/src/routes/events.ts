@@ -151,4 +151,25 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/tags', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT t.id, t.name, t.category_id
+      FROM tags t
+      JOIN event_tags et ON t.id = et.tag_id
+      WHERE et.event_id = ?
+      `,
+      [id],
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Kunde inte hämta taggar för eventet' });
+  }
+});
+
 export default router;
