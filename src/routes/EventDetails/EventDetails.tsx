@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { generateRestaurantSlug, generateEventSlug } from '../../utils/slugify';
+import {
+  generateRestaurantSlug,
+  generateEventSlug,
+  slugify,
+} from '../../utils/slugify';
 import {
   Text,
   Image,
@@ -11,6 +15,7 @@ import {
   Badge,
   Flex,
   Title,
+  Pill,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
@@ -36,6 +41,7 @@ export default function EventDetails(): React.ReactNode {
   const [loading, setLoading] = useState(true);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
   const [
@@ -96,6 +102,15 @@ export default function EventDetails(): React.ReactNode {
         const eventData = await res.json();
 
         setEvent(eventData);
+
+        // Fetch tags for this event
+        const tagsRes = await fetch(
+          `http://localhost:3001/events/${state.id}/tags`,
+        );
+        if (tagsRes.ok) {
+          const tagsData = await tagsRes.json();
+          setTags(tagsData);
+        }
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -196,6 +211,19 @@ export default function EventDetails(): React.ReactNode {
         </Stack>
 
         <Text mb='xl'>{event.description}</Text>
+
+        {tags.length > 0 && (
+          <Group gap='xs' mb='xl' wrap='wrap'>
+            {tags.map((tag) => (
+              <NavLink
+                key={tag.id}
+                to={`/tagg/${slugify(tag.name)}`}
+                style={{ textDecoration: 'none' }}>
+                <Pill style={{ cursor: 'pointer' }}>{tag.name}</Pill>
+              </NavLink>
+            ))}
+          </Group>
+        )}
 
         <Grid gutter='xl'>
           <Grid.Col span={{ base: 12, md: 6 }}>
