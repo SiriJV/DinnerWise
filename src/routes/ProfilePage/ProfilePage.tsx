@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import { fetchEvents } from '../../api/events';
+import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 
 // Helper function to determine if a user is host or participant in an event
 function isUserInEvent(
@@ -141,6 +142,7 @@ export default function ProfilePage() {
           <Group gap='xs'>
             <PenIcon size='20px' />
             <SettingsIcon size='20px' />
+            <BaseButton variantType='ghost'>Logga ut</BaseButton>
           </Group>
         </Group>
         <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
