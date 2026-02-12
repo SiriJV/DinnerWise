@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import AboutPage from '../routes/info pages/AboutPage';
-import CreateAccountPage from '../routes/info pages/CreateAccountPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
 import FAQPage from '../routes/info pages/FAQPage';
 import TermsPage from '../routes/info pages/TermsPage';
