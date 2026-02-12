@@ -1,8 +1,8 @@
 import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
 import { CircleHelp, ChevronLeft } from 'lucide-react';
-import './BaseModal.scss';
+import './RegisteringBaseModal.scss';
 
-interface BaseModalProps {
+interface RegisteringBaseModalProps {
   opened: boolean;
   onClose: () => void;
   title: string;
@@ -10,13 +10,13 @@ interface BaseModalProps {
   onBack?: () => void;
 }
 
-export default function BaseModal({
+export default function RegisteringBaseModal({
   opened,
   onClose,
   title,
   children,
   onBack,
-}: BaseModalProps) {
+}: RegisteringBaseModalProps) {
   return (
     <Modal
       size='lg'

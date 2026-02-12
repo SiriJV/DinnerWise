@@ -2,13 +2,13 @@ import { Box, Text, TextInput, Grid, Flex, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
-import BaseModal from '../BaseModal/BaseModal';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import ShareModal from '../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
 import type { EventType } from '../../../types/EventType';
 import { generateEventSlug } from '../../../utils/slugify';
 import { fetchUsers, type User } from '../../../api/users';
+import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
 
 interface ConfirmationModalProps {
   opened: boolean;
@@ -45,7 +45,7 @@ export default function ConfirmationModal({
   const hostFirstName = host?.name.split(' ')[0] || 'värden';
 
   return (
-    <BaseModal
+    <RegisteringBaseModal
       opened={opened}
       onClose={onClose}
       title='Bekräftelse'
@@ -154,6 +154,6 @@ export default function ConfirmationModal({
             : undefined
         }
       />
-    </BaseModal>
+    </RegisteringBaseModal>
   );
 }

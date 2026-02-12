@@ -11,12 +11,12 @@ import {
 } from '@mantine/core';
 import { CreditCard } from 'lucide-react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
-import BaseModal from '../BaseModal/BaseModal';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import swishLogo from '../../../assets/swish-logo.png';
 import klarnaLogo from '../../../assets/klarna-logo.webp';
 import type { EventType } from '../../../types/EventType';
 import './PaymentModal.scss';
+import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
 
 interface PaymentModalProps {
   opened: boolean;
@@ -36,7 +36,7 @@ export default function PaymentModal({
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
 
   return (
-    <BaseModal
+    <RegisteringBaseModal
       opened={opened}
       onClose={onClose}
       title='Betalning'
@@ -212,6 +212,6 @@ export default function PaymentModal({
         }}>
         Slutför betalning
       </BaseButton>
-    </BaseModal>
+    </RegisteringBaseModal>
   );
 }

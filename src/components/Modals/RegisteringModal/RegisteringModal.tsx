@@ -9,10 +9,10 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
-import BaseModal from '../BaseModal/BaseModal';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
+import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
 
 interface RegisteringModalProps {
   opened: boolean;
@@ -55,7 +55,7 @@ export default function RegisteringModal({
     termsAccepted;
 
   return (
-    <BaseModal opened={opened} onClose={onClose} title='Anmälan'>
+    <RegisteringBaseModal opened={opened} onClose={onClose} title='Anmälan'>
       {event && <ModalEventInfo event={event} showPrice />}
 
       <Box pt='md'>
@@ -192,6 +192,6 @@ export default function RegisteringModal({
         }}>
         Till betalning
       </BaseButton>
-    </BaseModal>
+    </RegisteringBaseModal>
   );
 }
