@@ -12,7 +12,7 @@ import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
-import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
+import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
 interface RegisteringModalProps {
   opened: boolean;

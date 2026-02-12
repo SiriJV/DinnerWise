@@ -16,7 +16,7 @@ import swishLogo from '../../../assets/swish-logo.png';
 import klarnaLogo from '../../../assets/klarna-logo.webp';
 import type { EventType } from '../../../types/EventType';
 import './PaymentModal.scss';
-import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
+import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
 interface PaymentModalProps {
   opened: boolean;

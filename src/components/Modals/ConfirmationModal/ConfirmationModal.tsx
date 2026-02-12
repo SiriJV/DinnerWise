@@ -8,7 +8,7 @@ import { Share } from 'lucide-react';
 import type { EventType } from '../../../types/EventType';
 import { generateEventSlug } from '../../../utils/slugify';
 import { fetchUsers, type User } from '../../../api/users';
-import RegisteringBaseModal from '../BaseModal/RegisteringBaseModal';
+import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
 interface ConfirmationModalProps {
   opened: boolean;
