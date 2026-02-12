@@ -3,7 +3,7 @@ import './Header.scss';
 import { NavLink } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
-import LoginButton from './LoginButton';
+import HeaderLoginButton from './HeaderLoginButton';
 
 interface HeaderProps {
   opened: boolean;
@@ -37,7 +37,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
           <SearchBar variant='expandable' />
         </Box>
         <NotificationsPopup />
-        <LoginButton loggedIn={true} />
+        <HeaderLoginButton loggedIn={false} />
       </Group>
     </Group>
   );
