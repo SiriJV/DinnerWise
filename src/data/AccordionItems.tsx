@@ -6,15 +6,15 @@ import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
 import SupportPage from '../routes/info pages/SupportPage';
-import LoginPage from '../routes/info pages/LoginPage';
 import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
+import ProfilePage from '../routes/ProfilePage/ProfilePage';
 
 type AccordionPanelItem = {
   label: string;
   path: string;
   element: ReactNode;
-  modal?: 'login' | 'create';
+  modal?: 'login' | 'create' | 'logout';
 };
 
 type AccordionItems = {
@@ -44,7 +44,13 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
           {
             label: 'Din profil',
             path: '/profil/anna_s',
-            element: <LoginPage />,
+            element: <ProfilePage />,
+          },
+          {
+            label: 'Logga ut',
+            path: '',
+            element: null,
+            modal: 'logout',
           },
         ]
       : [
