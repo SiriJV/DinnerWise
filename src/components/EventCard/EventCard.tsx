@@ -196,6 +196,7 @@ import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { NavLink } from 'react-router-dom';
 import { fetchUsers, type User } from '../../api/users';
 import { slugify } from '../../utils/slugify';
+import { useAuth } from '../../contexts/AuthContext';
 
 type EventCardProps = {
   id: number;
@@ -230,6 +231,7 @@ export default function EventCard({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function loadUsers() {
@@ -301,15 +303,17 @@ export default function EventCard({
           fit='cover'
         />
 
-        <Box
-          className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
-          onClick={handleBookmarkClick}>
-          <BookmarkIcon
-            size={18}
-            color='black'
-            fill={isBookmarked ? 'black' : 'none'}
-          />
-        </Box>
+        {isLoggedIn && (
+          <Box
+            className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
+            onClick={handleBookmarkClick}>
+            <BookmarkIcon
+              size={18}
+              color='black'
+              fill={isBookmarked ? 'black' : 'none'}
+            />
+          </Box>
+        )}
 
         <Avatar
           src={
