@@ -35,6 +35,7 @@ import ConfirmationModal from '../../components/Modals/ConfirmationModal/Confirm
 import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import type { EventType } from '../../types/EventType';
 import { fetchUsers, type User } from '../../api/users';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
@@ -56,6 +57,7 @@ export default function EventDetails(): React.ReactNode {
     useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function loadUsers() {
@@ -366,9 +368,11 @@ export default function EventDetails(): React.ReactNode {
                     onClick={openModal}>
                     Anmäl dig här
                   </BaseButton>
-                  <Flex px='md' py='sm' className='action-icon-button'>
-                    <BookmarkIcon size={22} />
-                  </Flex>
+                  {isLoggedIn && (
+                    <Flex px='md' py='sm' className='action-icon-button'>
+                      <BookmarkIcon size={22} />
+                    </Flex>
+                  )}
                   <Flex
                     px='md'
                     py='sm'
