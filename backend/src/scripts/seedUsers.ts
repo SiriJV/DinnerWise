@@ -15,7 +15,7 @@ export async function seedUsers() {
 
   await db.query(`
     INSERT INTO users (name, alias, bio, profile_picture_url, banner_picture_url) VALUES
-      ('Anna Svensson', 'anna_s', 'Älskar språk och god mat', 'https://images.unsplash.com/photo-1630898673656-778afcbc66ea?w=200&h=200&fit=crop', NULL),
+      ('Anna Svensson', 'anna_s', 'Älskar språk och god mat', 'https://images.unsplash.com/photo-1630898673656-778afcbc66ea?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1603437873662-dc1f44901825?w=1920&h=400&fit=crop'),
       ('Erik Karlsson', 'erik_k', 'Vin, ost och trevliga samtal', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1533537124921-db3248c9fa93?w=1920&h=400&fit=crop'),
       ('Sara Lind', 'saral', 'Pluggar spanska och älskar tapas', 'https://images.unsplash.com/photo-1627054294189-4abd72021135?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1691603136890-af95b6ba3eef?w=1920&h=400&fit=crop'),
       ('Johan Berg', 'johanb', 'Matnörd och hobbykock', 'https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1577308856961-8e9ec50d0c67?w=1920&h=400&fit=crop'),
