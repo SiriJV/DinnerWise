@@ -150,6 +150,11 @@ export default function ProfilePage() {
               </BaseButton>
             </Group>
           )}
+          {isLoggedIn && user.id !== 1 && (
+            <BaseButton variantType='primary' onClick={logout}>
+              Följ
+            </BaseButton>
+          )}
         </Group>
         <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
         <ProfilePageEvents userId={user.id} />
