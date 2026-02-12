@@ -4,6 +4,7 @@ import { getAccordionItems } from '../../data/AccordionItems';
 import { useEffect, useState } from 'react';
 import './NavBarAccordion.scss';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 
 interface NavBarAccordionProps {
   onClose?: () => void;
@@ -16,6 +17,7 @@ function AccordionControl(props: AccordionControlProps) {
 export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
   const location = useLocation();
   const { isLoggedIn } = useAuth();
+  const { openLogin, openCreate } = useModal();
   const [opened, setOpened] = useState<string[]>([]);
 
   const accordionItems = getAccordionItems(isLoggedIn);
@@ -47,22 +49,74 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
         <Accordion.Item key={item.value} value={item.value}>
           <AccordionControl>{item.label}</AccordionControl>
 
-          {item.panels.map((panel, index) => (
-            <NavLink
-              key={panel.path}
-              to={panel.path}
-              onClick={onClose}
-              className={({ isActive }) =>
-                `accordionLink ${isActive ? 'active' : ''}`
-              }>
-              <Accordion.Panel
-                className={
-                  index === item.panels.length - 1 ? 'lastPanel' : undefined
+          {item.panels.map((panel, index) => {
+            if (panel.modal === 'login') {
+              return (
+                <button
+                  key={panel.label}
+                  className='accordionLink'
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    width: '100%',
+                    textAlign: 'left',
+                  }}
+                  onClick={() => {
+                    openLogin();
+                    if (onClose) onClose();
+                  }}>
+                  <Accordion.Panel
+                    className={
+                      index === item.panels.length - 1 ? 'lastPanel' : undefined
+                    }>
+                    {panel.label}
+                  </Accordion.Panel>
+                </button>
+              );
+            }
+            if (panel.modal === 'create') {
+              return (
+                <button
+                  key={panel.label}
+                  className='accordionLink'
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    width: '100%',
+                    textAlign: 'left',
+                  }}
+                  onClick={() => {
+                    openCreate();
+                    if (onClose) onClose();
+                  }}>
+                  <Accordion.Panel
+                    className={
+                      index === item.panels.length - 1 ? 'lastPanel' : undefined
+                    }>
+                    {panel.label}
+                  </Accordion.Panel>
+                </button>
+              );
+            }
+            return (
+              <NavLink
+                key={panel.path}
+                to={panel.path}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `accordionLink ${isActive ? 'active' : ''}`
                 }>
-                {panel.label}
-              </Accordion.Panel>
-            </NavLink>
-          ))}
+                <Accordion.Panel
+                  className={
+                    index === item.panels.length - 1 ? 'lastPanel' : undefined
+                  }>
+                  {panel.label}
+                </Accordion.Panel>
+              </NavLink>
+            );
+          })}
         </Accordion.Item>
       ))}
     </Accordion>

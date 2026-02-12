@@ -1,6 +1,7 @@
 import { ActionIcon, Text } from '@mantine/core';
 import { UserRound } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useModal } from '../../contexts/ModalContext';
 
 interface HeaderLoginButtonProps {
   loggedIn: boolean;
@@ -9,6 +10,7 @@ interface HeaderLoginButtonProps {
 export default function HeaderLoginButton({
   loggedIn,
 }: HeaderLoginButtonProps) {
+  const { openLogin } = useModal();
   if (loggedIn) {
     return (
       <ActionIcon
@@ -22,8 +24,15 @@ export default function HeaderLoginButton({
     );
   }
   return (
-    <NavLink to='/logga-in' color='white' style={{ textDecoration: 'none' }}>
+    <button
+      style={{
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        cursor: 'pointer',
+      }}
+      onClick={openLogin}>
       <Text c='white'>Logga in</Text>
-    </NavLink>
+    </button>
   );
 }

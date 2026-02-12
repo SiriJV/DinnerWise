@@ -5,7 +5,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
 import { AuthProvider } from './contexts/AuthContext';
-import { accordionItems } from './data/AccordionItems';
+import { ModalProvider } from './contexts/ModalContext';
+import LoginModal from './components/Modals/LoginModal/LoginModal';
+import CreateAccountModal from './components/Modals/CreateAccountModal/CreateAccountModal';
+import { useModal } from './contexts/ModalContext';
 import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
@@ -23,21 +26,16 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <AuthProvider>
-        <MantineProvider theme={theme}>
-          <AppShell />
-        </MantineProvider>
+        <ModalProvider>
+          <MantineProvider theme={theme}>
+            <AppShell />
+            <GlobalModals />
+          </MantineProvider>
+        </ModalProvider>
       </AuthProvider>
     ),
     children: [
       { index: true, element: <HomePage /> },
-
-      ...accordionItems.flatMap((item) =>
-        item.panels.map((panel) => ({
-          path: panel.path,
-          element: panel.element,
-        })),
-      ),
-
       {
         path: '/sokresultat',
         element: <SearchPage />,
@@ -81,6 +79,16 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+function GlobalModals() {
+  const { loginOpen, createOpen, closeModals } = useModal();
+  return (
+    <>
+      <LoginModal opened={loginOpen} onClose={closeModals} />
+      <CreateAccountModal opened={createOpen} onClose={closeModals} />
+    </>
+  );
+}
 
 export default function App() {
   return <RouterProvider router={router} />;

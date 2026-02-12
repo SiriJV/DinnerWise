@@ -13,10 +13,12 @@ import { getAccordionItems } from '../../data/AccordionItems';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import { useMediaQuery } from '@mantine/hooks';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 
 export default function Footer() {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { isLoggedIn } = useAuth();
+  const { openLogin, openCreate } = useModal();
   const accordionItems = getAccordionItems(isLoggedIn);
 
   return (
@@ -92,14 +94,50 @@ export default function Footer() {
                     {group.label}
                   </Text>
 
-                  {group.panels.map((link) => (
-                    <NavLink
-                      key={link.path}
-                      to={link.path}
-                      className='footer-link'>
-                      {link.label}
-                    </NavLink>
-                  ))}
+                  {group.panels.map((link) => {
+                    if (link.modal === 'login') {
+                      return (
+                        <button
+                          key={link.label}
+                          className='footer-link'
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                          onClick={openLogin}>
+                          {link.label}
+                        </button>
+                      );
+                    }
+                    if (link.modal === 'create') {
+                      return (
+                        <button
+                          key={link.label}
+                          className='footer-link'
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                          onClick={openCreate}>
+                          {link.label}
+                        </button>
+                      );
+                    }
+                    return (
+                      <NavLink
+                        key={link.path}
+                        to={link.path}
+                        className='footer-link'>
+                        {link.label}
+                      </NavLink>
+                    );
+                  })}
                 </Stack>
               ))}
             </Group>

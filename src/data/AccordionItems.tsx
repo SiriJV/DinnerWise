@@ -15,6 +15,7 @@ type AccordionPanelItem = {
   label: string;
   path: string;
   element: ReactNode;
+  modal?: 'login' | 'create';
 };
 
 type AccordionItems = {
@@ -50,10 +51,11 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
       : [
           {
             label: 'Skapa konto',
-            path: '/skapa-konto',
-            element: <CreateAccountPage />,
+            path: '',
+            element: null,
+            modal: 'create',
           },
-          { label: 'Logga in', path: '/logga-in', element: <LoginPage /> },
+          { label: 'Logga in', path: '', element: null, modal: 'login' },
         ],
   },
   {
