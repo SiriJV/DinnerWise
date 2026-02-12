@@ -20,6 +20,7 @@ import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurant
 import CategoryPage from './routes/CategoryPage/CategoryPage';
 import TagPage from './routes/TagPage/TagPage';
 import CityPage from './routes/CityPage/CityPage';
+import { infoPages } from './data/infoPages';
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
         path: '/tagg/:slug',
         element: <TagPage />,
       },
+      ...infoPages.map(({ path, component: Comp }) => ({
+        path,
+        element: <Comp />,
+      })),
     ],
   },
 ]);
