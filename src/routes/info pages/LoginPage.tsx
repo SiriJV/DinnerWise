@@ -10,8 +10,20 @@ import {
   Title,
 } from '@mantine/core';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
+  const { isLoggedIn, login } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <Container size={420} my={40}>
       <Title ta='center'>Välkommen tillbaka</Title>
@@ -40,7 +52,12 @@ export default function LoginPage() {
             Glömt lösenord?
           </Anchor>
         </Group>
-        <BaseButton variantType='primary' fullWidth to='/' mt='lg'>
+        <BaseButton
+          variantType='primary'
+          fullWidth
+          onClick={login}
+          to='/'
+          mt='lg'>
           Logga in
         </BaseButton>
       </Paper>

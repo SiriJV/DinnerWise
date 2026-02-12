@@ -4,6 +4,7 @@ import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
+import { AuthProvider } from './contexts/AuthContext';
 import { accordionItems } from './data/AccordionItems';
 import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
@@ -21,9 +22,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <MantineProvider theme={theme}>
-        <AppShell />
-      </MantineProvider>
+      <AuthProvider>
+        <MantineProvider theme={theme}>
+          <AppShell />
+        </MantineProvider>
+      </AuthProvider>
     ),
     children: [
       { index: true, element: <HomePage /> },

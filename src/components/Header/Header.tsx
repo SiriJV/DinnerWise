@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 import HeaderLoginButton from './HeaderLoginButton';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   opened: boolean;
@@ -12,6 +13,8 @@ interface HeaderProps {
 }
 
 export default function Header({ opened, onToggle, onClose }: HeaderProps) {
+  const { isLoggedIn } = useAuth();
+
   return (
     <Group className='header' h='100%' w='100%' px='md' justify='space-between'>
       <Group gap='sm'>
@@ -37,7 +40,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
           <SearchBar variant='expandable' />
         </Box>
         <NotificationsPopup />
-        <HeaderLoginButton loggedIn={false} />
+        <HeaderLoginButton loggedIn={isLoggedIn} />
       </Group>
     </Group>
   );
