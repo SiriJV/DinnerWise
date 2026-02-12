@@ -1,4 +1,37 @@
-import { Container, Title, Text } from '@mantine/core';
+import { Container, Title, Text, Accordion } from '@mantine/core';
+
+const FAQdata = [
+  {
+    title: 'Hur fungerar DinnerWise?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+  {
+    title: 'Hur skapar jag ett konto?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+  {
+    title: 'Är det gratis att använda DinnerWise?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+  {
+    title: 'Hur anmäler jag mig till ett event?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+  {
+    title: 'Hur betalar jag för att gå med i event?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+  {
+    title: 'Hur skapar jag ett event?',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
+  },
+];
 
 export default function FAQPage(): React.ReactNode {
   return (
@@ -8,19 +41,14 @@ export default function FAQPage(): React.ReactNode {
           FAQ{' '}
         </Title>
         <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
+          <Accordion variant='separated' defaultValue={FAQdata[0].title}>
+            {FAQdata.map((faq) => (
+              <Accordion.Item value={faq.title} key={faq.title}>
+                <Accordion.Control>{faq.title}</Accordion.Control>
+                <Accordion.Panel>{faq.content}</Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion>
         </Text>
       </Container>
     </>
