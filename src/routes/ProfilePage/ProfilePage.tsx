@@ -38,7 +38,7 @@ function isUserInEvent(
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
-  const { logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -141,13 +141,15 @@ export default function ProfilePage() {
           <Title order={2} size='lg' fw='600'>
             {user.name}
           </Title>
-          <Group gap='xs'>
-            <PenIcon size='20px' />
-            <SettingsIcon size='20px' />
-            <BaseButton variantType='ghost' onClick={logout}>
-              Logga ut
-            </BaseButton>
-          </Group>
+          {isLoggedIn && user.id === 1 && (
+            <Group gap='xs'>
+              <PenIcon size='20px' />
+              <SettingsIcon size='20px' />
+              <BaseButton variantType='ghost' onClick={logout}>
+                Logga ut
+              </BaseButton>
+            </Group>
+          )}
         </Group>
         <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
         <ProfilePageEvents userId={user.id} />

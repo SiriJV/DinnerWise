@@ -1,8 +1,9 @@
 import { Accordion, type AccordionControlProps } from '@mantine/core';
 import { NavLink, useLocation } from 'react-router-dom';
-import { accordionItems } from '../../data/AccordionItems';
+import { getAccordionItems } from '../../data/AccordionItems';
 import { useEffect, useState } from 'react';
 import './NavBarAccordion.scss';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NavBarAccordionProps {
   onClose?: () => void;
@@ -14,7 +15,10 @@ function AccordionControl(props: AccordionControlProps) {
 
 export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
   const location = useLocation();
+  const { isLoggedIn } = useAuth();
   const [opened, setOpened] = useState<string[]>([]);
+
+  const accordionItems = getAccordionItems(isLoggedIn);
 
   useEffect(() => {
     const match = accordionItems.find((item) =>
@@ -24,7 +28,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
     if (match) {
       setOpened([match.value]);
     }
-  }, [location.pathname]);
+  }, [location.pathname, accordionItems]);
 
   return (
     <Accordion

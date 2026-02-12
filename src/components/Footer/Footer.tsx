@@ -9,12 +9,15 @@ import {
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import './Footer.scss';
-import { accordionItems } from '../../data/AccordionItems';
+import { getAccordionItems } from '../../data/AccordionItems';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import { useMediaQuery } from '@mantine/hooks';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Footer() {
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const { isLoggedIn } = useAuth();
+  const accordionItems = getAccordionItems(isLoggedIn);
 
   return (
     <footer className='footer'>

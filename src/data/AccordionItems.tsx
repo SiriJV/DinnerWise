@@ -23,7 +23,7 @@ type AccordionItems = {
   panels: AccordionPanelItem[];
 };
 
-export const accordionItems: AccordionItems[] = [
+export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
   {
     value: 'dinnerwise',
     label: 'DinnerWise',
@@ -39,14 +39,22 @@ export const accordionItems: AccordionItems[] = [
   {
     value: 'account',
     label: 'Ditt konto',
-    panels: [
-      {
-        label: 'Skapa konto',
-        path: '/skapa-konto',
-        element: <CreateAccountPage />,
-      },
-      { label: 'Logga in', path: '/logga-in', element: <LoginPage /> },
-    ],
+    panels: isLoggedIn
+      ? [
+          {
+            label: 'Din profil',
+            path: '/profil/anna_s',
+            element: <LoginPage />,
+          },
+        ]
+      : [
+          {
+            label: 'Skapa konto',
+            path: '/skapa-konto',
+            element: <CreateAccountPage />,
+          },
+          { label: 'Logga in', path: '/logga-in', element: <LoginPage /> },
+        ],
   },
   {
     value: 'help',
@@ -89,3 +97,6 @@ export const accordionItems: AccordionItems[] = [
     ],
   },
 ];
+
+// Keep the old export for backward compatibility
+export const accordionItems = getAccordionItems(false);
