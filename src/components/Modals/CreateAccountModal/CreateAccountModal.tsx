@@ -35,39 +35,36 @@ export default function CreateAccountModal({
           Logga in
         </Anchor>
       </Text>
-
-      <Paper withBorder shadow='sm' p={22} mt={30} radius='xs'>
-        <TextInput
-          label='E-post'
-          placeholder='e-post@dinnerwise.se'
-          required
-          radius='xs'
-        />
-        <PasswordInput
-          label='Lösenord'
-          placeholder='Välj ett lösenord'
-          required
-          mt='md'
-          radius='xs'
-        />
-        <PasswordInput
-          label='Bekräfta lösenord'
-          placeholder='Skriv lösenordet igen'
-          required
-          mt='md'
-          radius='xs'
-        />
-        <BaseButton
-          variantType='primary'
-          fullWidth
-          onClick={() => {
-            login();
-            onClose();
-          }}
-          mt='lg'>
-          Skapa konto
-        </BaseButton>{' '}
-      </Paper>
+      <TextInput
+        label='E-post'
+        placeholder='e-post@dinnerwise.se'
+        required
+        radius='xs'
+      />
+      <PasswordInput
+        label='Lösenord'
+        placeholder='Välj ett lösenord'
+        required
+        mt='md'
+        radius='xs'
+      />
+      <PasswordInput
+        label='Bekräfta lösenord'
+        placeholder='Skriv lösenordet igen'
+        required
+        mt='md'
+        radius='xs'
+      />
+      <BaseButton
+        variantType='primary'
+        fullWidth
+        onClick={() => {
+          login();
+          onClose();
+        }}
+        mt='lg'>
+        Skapa konto
+      </BaseButton>{' '}
     </Modal>
   );
 }

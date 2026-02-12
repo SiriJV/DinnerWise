@@ -23,11 +23,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
   const { openCreate } = useModal();
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={<Title ta='center'>Välkommen tillbaka</Title>}
-      centered>
+    <Modal opened={opened} onClose={onClose} title='Logga in' centered>
       <Text ta='center'>
         Har du inget konto än?{' '}
         <Anchor
@@ -39,37 +35,35 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
           Skapa konto
         </Anchor>
       </Text>
-      <Paper withBorder shadow='sm' p={22} mt={30} radius='xs'>
-        <TextInput
-          label='E-post'
-          placeholder='e-post@dinnerwise.se'
-          required
-          radius='xs'
-        />
-        <PasswordInput
-          label='Lösenord'
-          placeholder='Ditt lösenord'
-          required
-          mt='md'
-          radius='xs'
-        />
-        <Group justify='space-between' mt='lg'>
-          <Checkbox label='Kom ihåg mig' />
-          <Anchor component='button' size='sm'>
-            Glömt lösenord?
-          </Anchor>
-        </Group>
-        <BaseButton
-          variantType='primary'
-          fullWidth
-          onClick={() => {
-            login();
-            onClose();
-          }}
-          mt='lg'>
-          Logga in
-        </BaseButton>
-      </Paper>
+      <TextInput
+        label='E-post'
+        placeholder='e-post@dinnerwise.se'
+        required
+        radius='xs'
+      />
+      <PasswordInput
+        label='Lösenord'
+        placeholder='Ditt lösenord'
+        required
+        mt='md'
+        radius='xs'
+      />
+      <Group justify='space-between' mt='lg'>
+        <Checkbox label='Kom ihåg mig' />
+        <Anchor component='button' size='sm'>
+          Glömt lösenord?
+        </Anchor>
+      </Group>
+      <BaseButton
+        variantType='primary'
+        fullWidth
+        onClick={() => {
+          login();
+          onClose();
+        }}
+        mt='lg'>
+        Logga in
+      </BaseButton>
     </Modal>
   );
 }
