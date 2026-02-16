@@ -2,6 +2,7 @@ import { SimpleGrid, Tabs, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
+import { useAuth } from '../../contexts/AuthContext';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -12,6 +13,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const [allEvents, setAllEvents] = useState<EventType[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { bookmarks } = useAuth();
 
   useEffect(() => {
     async function loadData() {
@@ -63,6 +65,8 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     return false;
   });
 
+  const savedEvents = allEvents.filter((e) => bookmarks.includes(e.id));
+
   if (loading) {
     return <Text mt='md'>Laddar events...</Text>;
   }
@@ -77,7 +81,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           Deltagare i ({participatingEvents.length})
         </Tabs.Tab>
         <Tabs.Tab value='saved' color='black'>
-          Sparade
+          Sparade ({bookmarks.length})
         </Tabs.Tab>
         <Tabs.Tab value='past' color='black'>
           Tidigare
@@ -132,7 +136,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
                 title={event.title}
                 description={event.description}
                 current_participants={event.current_participants}
-                max_participants={event.max_participants}
+                max_participants={event.max_participants ?? 0}
                 price={event.price}
                 date={new Date(event.date)}
                 start_time={event.start_time}
@@ -147,9 +151,34 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
       </Tabs.Panel>
 
       <Tabs.Panel value='saved'>
-        <Text mt='md' c='dimmed'>
-          Inga sparade event ännu.
-        </Text>
+        {savedEvents.length === 0 ? (
+          <Text mt='md' c='dimmed'>
+            Inga sparade event ännu.
+          </Text>
+        ) : (
+          <SimpleGrid
+            cols={{ base: 1, sm: 1, md: 2, lg: 3 }}
+            spacing='md'
+            mt='md'>
+            {savedEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                id={event.id}
+                title={event.title}
+                description={event.description}
+                current_participants={event.current_participants}
+                max_participants={event.max_participants ?? 0}
+                price={event.price}
+                date={new Date(event.date)}
+                start_time={event.start_time}
+                end_time={event.end_time}
+                restaurant_id={event.restaurant_id}
+                restaurant_name={event.restaurant_name}
+                restaurant_address={event.restaurant_address}
+              />
+            ))}
+          </SimpleGrid>
+        )}
       </Tabs.Panel>
 
       <Tabs.Panel value='past'>

@@ -228,10 +228,9 @@ export default function EventCard({
   restaurant_address,
   maxDescriptionLength = 100,
 }: EventCardProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, bookmarks, addBookmark, removeBookmark } = useAuth();
 
   useEffect(() => {
     async function loadUsers() {
@@ -263,11 +262,16 @@ export default function EventCard({
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
 
+  const isBookmarked = bookmarks.includes(id);
+
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsBookmarked(!isBookmarked);
-    // TODO: Lägg till API-call för bookmarks senare
+    if (isBookmarked) {
+      removeBookmark(id);
+    } else {
+      addBookmark(id);
+    }
   };
 
   const formattedDate = date.toLocaleDateString('sv-SE', {
