@@ -18,6 +18,7 @@ interface RegisteringModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenPayment: () => void;
+  onOpenWaitlist: () => void;
   event?: EventType | null;
 }
 
@@ -25,14 +26,19 @@ export default function RegisteringModal({
   opened,
   onClose,
   onOpenPayment,
+  onOpenWaitlist,
   event,
 }: RegisteringModalProps) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('Anna');
+  const [lastName, setLastName] = useState('Svensson');
+  const [phone, setPhone] = useState('+46701234567');
+  const [email, setEmail] = useState('anna.svensson@email.se');
   const [message, setMessage] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const displayMaxSpots = event?.max_participants ?? 0;
+  const isFull = event
+    ? displayMaxSpots - (event.current_participants ?? 0) <= 0
+    : false;
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -188,9 +194,13 @@ export default function RegisteringModal({
         disabled={!isFormValid}
         onClick={() => {
           onClose();
-          onOpenPayment();
+          if (isFull) {
+            onOpenWaitlist();
+          } else {
+            onOpenPayment();
+          }
         }}>
-        Till betalning
+        {isFull ? 'Ställ dig på väntelista' : 'Till betalning'}
       </BaseButton>
     </RegisteringBaseModal>
   );
