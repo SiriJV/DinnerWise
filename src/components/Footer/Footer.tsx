@@ -17,7 +17,7 @@ import { useModal } from '../../contexts/ModalContext';
 
 export default function Footer() {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const { openLogin, openCreate } = useModal();
   const accordionItems = getAccordionItems(isLoggedIn);
 
@@ -125,6 +125,23 @@ export default function Footer() {
                             textAlign: 'left',
                           }}
                           onClick={openCreate}>
+                          {link.label}
+                        </button>
+                      );
+                    }
+                    if (link.modal === 'logout') {
+                      return (
+                        <button
+                          key={link.label}
+                          className='footer-link'
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                          onClick={logout}>
                           {link.label}
                         </button>
                       );
