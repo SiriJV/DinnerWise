@@ -50,23 +50,23 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
         const suggestions: Suggestion[] = [
           ...events.map((e: any) => ({
             value: `event-${slugify(e.title)}-${e.id}`,
-            label: `🌐${e.title} event`,
+            label: `🌐${e.title} (event)`,
           })),
           ...cities.map((c: any) => ({
             value: `city-${slugify(c.name)}`,
-            label: `📍${c.name} stad`,
+            label: `📍${c.name} (stad)`,
           })),
           ...tags.map((t: any) => ({
             value: `tag-${slugify(t.name)}`,
-            label: `🏷️${t.name} ämne`,
+            label: `🏷️${t.name} (ämne)`,
           })),
           ...categories.map((cat: any) => ({
             value: `category-${slugify(cat.name)}`,
-            label: `🔡${cat.name} kategori`,
+            label: `🔡${cat.name} (kategori)`,
           })),
           ...restaurants.map((r: any) => ({
             value: `restaurant-${slugify(r.name)}-${r.id}`,
-            label: `🍽️${r.name}, ${r.city} restaurang`,
+            label: `🍽️${r.name}, ${r.city} (restaurang)`,
           })),
         ];
 
