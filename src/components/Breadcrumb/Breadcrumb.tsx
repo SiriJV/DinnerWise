@@ -1,7 +1,7 @@
 import { Breadcrumbs, Anchor, Text } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { extractIdFromSlug, generateCategorySlug } from '../../utils/slugify';
+import { extractIdFromSlug, slugify } from '../../utils/slugify';
 import './Breadcrumb.scss';
 import { fetchEventById } from '../../api/events';
 import { fetchRestaurantById } from '../../api/restaurants';
@@ -141,7 +141,7 @@ export default function Breadcrumb() {
       if (pathnames[index - 1] === 'tagg' && tagName) {
         const elements = [];
         if (tagCategoryName) {
-          const categorySlug = generateCategorySlug(tagCategoryName);
+          const categorySlug = slugify(tagCategoryName);
           elements.push(
             <Anchor
               key={`tag-category-${index}`}
