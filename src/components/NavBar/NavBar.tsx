@@ -2,7 +2,6 @@ import {
   Stack,
   Text,
   UnstyledButton,
-  Divider,
   Space,
   Container,
   Group,
@@ -13,7 +12,7 @@ import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
 import { useEffect, useState } from 'react';
-import { generateCategorySlug } from '../../utils/slugify';
+import { slugify } from '../../utils/slugify';
 
 type Category = {
   id: number;
@@ -59,7 +58,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
             {categories.map((category) => (
               <NavLink
                 key={category.id}
-                to={`/kategori/${generateCategorySlug(category.name)}`}
+                to={`/kategori/${slugify(category.name)}`}
                 className={({ isActive }) =>
                   `sideNavLink ${isActive ? 'active' : ''}`
                 }
