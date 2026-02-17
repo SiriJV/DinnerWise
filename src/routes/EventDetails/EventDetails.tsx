@@ -430,7 +430,7 @@ export default function EventDetails(): React.ReactNode {
       <WaitlistConfirmationModal
         opened={waitlistModalOpened}
         onClose={closeWaitlistModal}
-        onOpenPayment={openPaymentModal}
+        onOpenWaitlist={openModal}
         event={event}
       />
     </>
