@@ -8,6 +8,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ModalProvider } from './contexts/ModalContext';
 import LoginModal from './components/Modals/LoginModal/LoginModal';
 import CreateAccountModal from './components/Modals/CreateAccountModal/CreateAccountModal';
+import DemoInfoModal from './components/Modals/DemoInfoModal/DemoInfoModal';
 import { useModal } from './contexts/ModalContext';
 import HomePage from './routes/HomePage/HomePage';
 import CookiesPage from './routes/info pages/CookiesPage';
@@ -85,10 +86,20 @@ const router = createBrowserRouter([
   },
 ]);
 
+import { useEffect, useState } from 'react';
+
 function GlobalModals() {
   const { loginOpen, createOpen, closeModals } = useModal();
+  const [demoOpen, setDemoOpen] = useState(true);
+
+  // Visa bara första gången sidan laddas
+  useEffect(() => {
+    setDemoOpen(true);
+  }, []);
+
   return (
     <>
+      <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} />
       <LoginModal opened={loginOpen} onClose={closeModals} />
       <CreateAccountModal opened={createOpen} onClose={closeModals} />
     </>
