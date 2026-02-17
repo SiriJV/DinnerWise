@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
 import './ImageCarousel.scss';
 import { useEffect, useState } from 'react';
-import { generateCategorySlug } from '../../utils/slugify';
+import { slugify } from '../../utils/slugify';
 
 type Category = {
   id: number;
@@ -49,7 +49,7 @@ export default function NavCarousel() {
         {categories.map((category) => (
           <Carousel.Slide key={category.id}>
             <NavLink
-              to={`/kategori/${generateCategorySlug(category.name)}`}
+              to={`/kategori/${slugify(category.name)}`}
               className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
                 <Image src={category.cover_picture_url} h={110} fit='cover' />

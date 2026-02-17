@@ -6,7 +6,7 @@ import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import ShareModal from '../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
 import type { EventType } from '../../../types/EventType';
-import { generateEventSlug } from '../../../utils/slugify';
+import { slugify } from '../../../utils/slugify';
 import { fetchUsers, type User } from '../../../api/users';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
@@ -150,7 +150,7 @@ export default function ConfirmationModal({
         onClose={closeShareModal}
         eventUrl={
           event
-            ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
+            ? `https://dinnerwise.se/event/${slugify(event.title)}`
             : undefined
         }
       />
