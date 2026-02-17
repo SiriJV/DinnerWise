@@ -1,11 +1,4 @@
-import {
-  Text,
-  Modal,
-  Paper,
-  PasswordInput,
-  TextInput,
-  Anchor,
-} from '@mantine/core';
+import { Text, Modal, PasswordInput, TextInput, Anchor } from '@mantine/core';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
