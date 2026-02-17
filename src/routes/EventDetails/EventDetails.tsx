@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  generateRestaurantSlug,
-  generateEventSlug,
-  slugify,
-} from '../../utils/slugify';
+import { slugify } from '../../utils/slugify';
 import {
   Text,
   Image,
@@ -321,7 +317,7 @@ export default function EventDetails(): React.ReactNode {
                   component={NavLink}
                   to={
                     event.restaurant_name
-                      ? `/restaurang/${generateRestaurantSlug(event.restaurant_name, event.restaurant_id)}`
+                      ? `/restaurang/${slugify(event.restaurant_name)}`
                       : `/restaurang/${event.restaurant_id}`
                   }
                   className='restaurant-image-box'
@@ -423,7 +419,7 @@ export default function EventDetails(): React.ReactNode {
         onClose={closeShareModal}
         eventUrl={
           event
-            ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
+            ? `https://dinnerwise.se/event/${slugify(event.title)}`
             : undefined
         }
       />
