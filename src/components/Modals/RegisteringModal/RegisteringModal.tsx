@@ -61,7 +61,11 @@ export default function RegisteringModal({
     termsAccepted;
 
   return (
-    <RegisteringBaseModal opened={opened} onClose={onClose} title='Anmälan' isFull={isFull}>
+    <RegisteringBaseModal
+      opened={opened}
+      onClose={onClose}
+      title='Anmälan'
+      isFull={isFull}>
       {event && <ModalEventInfo event={event} showPrice />}
 
       <Box pt='md'>
