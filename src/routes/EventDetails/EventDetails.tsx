@@ -33,6 +33,7 @@ import RegisteringModal from '../../components/Modals/RegisteringModal/Registeri
 import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
 import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
 import ShareModal from '../../components/Modals/ShareModal/ShareModal';
+import WaitlistConfirmationModal from '../../components/Modals/WaitlistConfirmationModal/WaitlistConfirmationModal';
 import type { EventType } from '../../types/EventType';
 import { fetchUsers, type User } from '../../api/users';
 import { useAuth } from '../../contexts/AuthContext';
@@ -55,6 +56,10 @@ export default function EventDetails(): React.ReactNode {
   ] = useDisclosure(false);
   const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
     useDisclosure(false);
+  const [
+    waitlistModalOpened,
+    { open: openWaitlistModal, close: closeWaitlistModal },
+  ] = useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const { isLoggedIn } = useAuth();
@@ -397,6 +402,7 @@ export default function EventDetails(): React.ReactNode {
         opened={modalOpened}
         onClose={closeModal}
         onOpenPayment={openPaymentModal}
+        onOpenWaitlist={openWaitlistModal}
         event={event}
       />
       <PaymentModal
@@ -420,6 +426,12 @@ export default function EventDetails(): React.ReactNode {
             ? `https://dinnerwise.se/event/${generateEventSlug(event.title, event.id)}`
             : undefined
         }
+      />
+      <WaitlistConfirmationModal
+        opened={waitlistModalOpened}
+        onClose={closeWaitlistModal}
+        onOpenPayment={openPaymentModal}
+        event={event}
       />
     </>
   );

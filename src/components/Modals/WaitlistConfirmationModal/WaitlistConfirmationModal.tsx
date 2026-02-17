@@ -14,7 +14,6 @@ interface WaitlistConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenWaitlist: () => void;
-  onOpenPayment: () => void;
   event?: EventType | null;
 }
 
@@ -22,7 +21,6 @@ export default function WaitlistConfirmationModal({
   opened,
   onClose,
   onOpenWaitlist,
-  onOpenPayment,
   event,
 }: WaitlistConfirmationModalProps) {
   const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
@@ -101,7 +99,6 @@ export default function WaitlistConfirmationModal({
           style={{ flex: 1 }}
           onClick={() => {
             onClose();
-            onOpenPayment();
           }}>
           Gå tillbaka till event{' '}
         </BaseButton>
