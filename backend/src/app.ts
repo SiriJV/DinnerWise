@@ -6,7 +6,11 @@ import tagsRouter from './routes/tags.js';
 import searchRouter from './routes/search.js';
 import usersRouter from './routes/users.js';
 import citiesRouter from './routes/cities.js';
+import tripadvisorRouter from './routes/tripadvisor.js';
 import cors from 'cors';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
@@ -23,7 +27,10 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+
+
 // Database-dependent routes
+app.use('/api', tripadvisorRouter);
 app.use('/restaurants', restaurantRoutes);
 app.use('/events', eventsRouter);
 app.use('/categories', categoriesRouter);
