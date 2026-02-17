@@ -47,6 +47,7 @@ export default function WaitlistConfirmationModal({
       opened={opened}
       onClose={onClose}
       title='Bekräftelse väntelista'
+      isFull={true}
       onBack={() => {
         onClose();
         onOpenWaitlist();

@@ -2,12 +2,14 @@ import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
 import { CircleHelp, ChevronLeft } from 'lucide-react';
 import './RegisteringBaseModal.scss';
 
+
 interface RegisteringBaseModalProps {
   opened: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
   onBack?: () => void;
+  isFull?: boolean;
 }
 
 export default function RegisteringBaseModal({
@@ -16,6 +18,7 @@ export default function RegisteringBaseModal({
   title,
   children,
   onBack,
+  isFull,
 }: RegisteringBaseModalProps) {
   return (
     <Modal
@@ -42,22 +45,31 @@ export default function RegisteringBaseModal({
                   Hjälp{' '}
                 </Text>
                 <Stack gap='xs'>
-                  <Text size='sm'>
-                    Fyll i alla uppgifter och godkänn anmälningsvillkoren innan
-                    du går vidare. Välj en betalningsmetod och klicka dig
-                    vidare. Nu är du anmäld!
-                  </Text>
-                  <Text size='sm'>
-                    Behöver du mer hjälp? Kontakta oss på{' '}
-                    <Text span fw={500}>
-                      support@dinnerwise.se
-                    </Text>{' '}
-                    eller ring oss på{' '}
-                    <Text span fw={500}>
-                      08-123 456 78
-                    </Text>
-                    .
-                  </Text>
+                  {isFull ? (
+                    <>
+                      <Text size='sm'>
+                        Eventet är fullt. Om du ställer dig på väntelistan blir du kontaktad via e-post om en plats blir ledig. Du behöver inte betala förrän du får en plats!
+                      </Text>
+                      <Text size='sm'>
+                        Behöver du mer hjälp? Kontakta oss på{' '}
+                        <Text span fw={500}>support@dinnerwise.se</Text>{' '}
+                        eller ring oss på{' '}
+                        <Text span fw={500}>08-123 456 78</Text>.
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text size='sm'>
+                        Fyll i alla uppgifter och godkänn anmälningsvillkoren innan du går vidare. Välj en betalningsmetod och klicka dig vidare. Nu är du anmäld!
+                      </Text>
+                      <Text size='sm'>
+                        Behöver du mer hjälp? Kontakta oss på{' '}
+                        <Text span fw={500}>support@dinnerwise.se</Text>{' '}
+                        eller ring oss på{' '}
+                        <Text span fw={500}>08-123 456 78</Text>.
+                      </Text>
+                    </>
+                  )}
                 </Stack>
               </Popover.Dropdown>
             </Popover>
