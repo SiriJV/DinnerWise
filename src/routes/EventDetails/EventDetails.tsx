@@ -366,7 +366,7 @@ export default function EventDetails(): React.ReactNode {
                     className='join-event-button'
                     style={{ width: 'auto' }}
                     onClick={openModal}>
-                    Anmäl dig här
+                    {isFull ? 'Skriv upp dig på väntelista' : 'Anmäl dig här'}
                   </BaseButton>
                   {isLoggedIn && (
                     <Flex px='md' py='sm' className='action-icon-button'>
