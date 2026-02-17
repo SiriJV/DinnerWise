@@ -7,10 +7,8 @@ import { PenIcon, SettingsIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
-import { fetchEvents, type Event } from '../../api/events';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../contexts/AuthContext';
-import EventCard from '../../components/EventCard/EventCard';
 
 // Helper function to determine if a user is host or participant in an event
 function isUserInEvent(
@@ -39,7 +37,7 @@ function isUserInEvent(
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
-  const { isLoggedIn, logout, bookmarks } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +46,6 @@ export default function ProfilePage() {
   const [followersList, setFollowersList] = useState<User[]>([]);
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
-  const [bookmarkedEvents, setBookmarkedEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     async function loadUser() {
@@ -91,34 +88,12 @@ export default function ProfilePage() {
         setFollowersCount(followersCount);
 
         // Calculate events count using deterministic formulas from EventCard
-        const allEvents = await fetchEvents();
-        const userEventsCount = allEvents.filter((event) =>
-          isUserInEvent(
-            event.id,
-            data.id,
-            event.current_participants,
-            allUsers,
-          ),
-        ).length;
-        setEventsCount(userEventsCount);
       }
       setLoading(false);
     }
 
     loadUser();
   }, [alias]);
-
-  useEffect(() => {
-    async function loadBookmarkedEvents() {
-      if (isLoggedIn && bookmarks.length > 0) {
-        const allEvents = await fetchEvents();
-        setBookmarkedEvents(allEvents.filter((e) => bookmarks.includes(e.id)));
-      } else {
-        setBookmarkedEvents([]);
-      }
-    }
-    loadBookmarkedEvents();
-  }, [isLoggedIn, bookmarks]);
 
   if (loading) {
     return (
@@ -172,7 +147,6 @@ export default function ProfilePage() {
         </Group>
         <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
         <ProfilePageEvents userId={user.id} />
-        {/* Sparade events tas nu om hand i ProfilePageEvents */}
       </Stack>
     </>
   );
