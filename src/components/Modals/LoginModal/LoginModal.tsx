@@ -20,8 +20,8 @@ interface LoginModalProps {
 export default function LoginModal({ opened, onClose }: LoginModalProps) {
   const { login } = useAuth();
   const { openCreate } = useModal();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('anna.svensson@email.se');
+  const [password, setPassword] = useState('lösenord123');
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -15,10 +15,10 @@ export default function CreateAccountModal({
 }: CreateAccountModalProps) {
   const { login } = useAuth();
   const { openLogin } = useModal();
-  const [email, setEmail] = useState('');
-  const [confirmEmail, setConfirmEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('anna.svensson@email.se');
+  const [confirmEmail, setConfirmEmail] = useState('anna.svensson@email.se');
+  const [password, setPassword] = useState('lösenord123');
+  const [confirmPassword, setConfirmPassword] = useState('lösenord123');
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
