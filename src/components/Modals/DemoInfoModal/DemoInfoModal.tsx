@@ -13,14 +13,16 @@ export default function DemoInfoModal({ opened, onClose }: DemoInfoModalProps) {
       onClose={onClose}
       // title='Demo DinnerWise'
       withCloseButton={false}
-      size='lg'
+      size='md'
       centered>
+      <Text ta='center' mb='md'>
+        Den här är en demoversion av DinnerWise. Ingenting du skriver in eller
+        klickar på sparas. När du laddar om webbläsaren kommer all data att
+        raderas permanent.
+      </Text>
       <Text ta='center'>
-        Den här webbsidan är en demoversion. Du kan fritt utforska och testa
-        alla funktioner utan att informationen sparas eller används på något
-        sätt utanför denna session. Du kan inte anmäla dig till något eller
-        betala. När du laddar om webbläsaren kommer all data att raderas
-        permanent.
+        Du kan fritt utforska och testa alla funktioner utan att informationen
+        används utanför denna session.
       </Text>
 
       <BaseButton
