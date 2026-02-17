@@ -12,6 +12,7 @@ import {
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
+import { useState } from 'react';
 
 interface LoginModalProps {
   opened: boolean;
@@ -21,6 +22,15 @@ interface LoginModalProps {
 export default function LoginModal({ opened, onClose }: LoginModalProps) {
   const { login } = useAuth();
   const { openCreate } = useModal();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isFormValid = password.trim() !== '' && isValidEmail(email);
 
   return (
     <Modal opened={opened} onClose={onClose} title='Logga in' centered>
@@ -37,9 +47,14 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
       </Text>
       <TextInput
         label='E-post'
-        placeholder='e-post@dinnerwise.se'
+        placeholder='exempel@email.com'
         required
         radius='xs'
+        type='email'
+        maxLength={40}
+        value={email}
+        onChange={(e) => setEmail(e.currentTarget.value)}
+        error={email && !isValidEmail(email) ? 'Ogiltig e-postadress' : ''}
       />
       <PasswordInput
         label='Lösenord'
@@ -47,6 +62,14 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         required
         mt='md'
         radius='xs'
+        maxLength={40}
+        value={password}
+        onChange={(e) => setPassword(e.currentTarget.value)}
+        error={
+          password === '' && email !== '' && password !== ''
+            ? 'Lösenord krävs'
+            : ''
+        }
       />
       <Group justify='space-between' mt='lg'>
         <Checkbox label='Kom ihåg mig' />
@@ -57,6 +80,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
       <BaseButton
         variantType='primary'
         fullWidth
+        disabled={!isFormValid}
         onClick={() => {
           login();
           onClose();
