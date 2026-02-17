@@ -98,9 +98,9 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     label: 'Kontakt',
     panels: [
       { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
-      { label: 'Instagram', path: '/instagram', element: <div>Instagram</div> },
-      { label: 'Facebook', path: '/facebook', element: <div>Facebook</div> },
-      { label: 'X', path: '/x', element: <div>X</div> },
+      { label: 'Instagram', path: '', element: <div>Instagram</div> },
+      { label: 'Facebook', path: '', element: <div>Facebook</div> },
+      { label: 'X', path: '', element: <div>X</div> },
     ],
   },
 ];
