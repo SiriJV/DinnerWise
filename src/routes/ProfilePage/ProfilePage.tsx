@@ -10,31 +10,6 @@ import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../contexts/AuthContext';
 
-// Helper function to determine if a user is host or participant in an event
-function isUserInEvent(
-  eventId: number,
-  userId: number,
-  currentParticipants: number,
-  allUsers: User[],
-): boolean {
-  // Check if user is host
-  const hostIndex = eventId % allUsers.length;
-  if (allUsers[hostIndex].id === userId) {
-    return true;
-  }
-
-  // Check if user is a participant
-  const numParticipants = Math.min(currentParticipants || 0, allUsers.length);
-  for (let i = 0; i < numParticipants; i++) {
-    const participantIndex = (eventId * 7 + i * 13) % allUsers.length;
-    if (allUsers[participantIndex].id === userId) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
   const { isLoggedIn, logout } = useAuth();
@@ -126,26 +101,28 @@ export default function ProfilePage() {
         />
       </Box>
       <Stack m='md' gap='xs'>
-        <Group justify='space-between'>
-          <Title order={2} size='lg' fw='600'>
-            {user.name}
-          </Title>
-          {isLoggedIn && user.id === 1 && (
-            <Group gap='xs'>
-              <PenIcon size='20px' />
-              <SettingsIcon size='20px' />
-              <BaseButton variantType='ghost' onClick={logout}>
-                Logga ut
+        <Stack mb='lg'>
+          <Group justify='space-between'>
+            <Title order={2} size='lg' fw='600'>
+              {user.name}
+            </Title>
+            {isLoggedIn && user.id === 1 && (
+              <Group gap='xs'>
+                <PenIcon size='20px' />
+                <SettingsIcon size='20px' />
+                <BaseButton variantType='ghost' onClick={logout}>
+                  Logga ut
+                </BaseButton>
+              </Group>
+            )}
+            {isLoggedIn && user.id !== 1 && (
+              <BaseButton variantType='primary' onClick={logout}>
+                Följ
               </BaseButton>
-            </Group>
-          )}
-          {isLoggedIn && user.id !== 1 && (
-            <BaseButton variantType='primary' onClick={logout}>
-              Följ
-            </BaseButton>
-          )}
-        </Group>
-        <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
+            )}
+          </Group>
+          <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
+        </Stack>
         <ProfilePageEvents userId={user.id} />
       </Stack>
     </>
