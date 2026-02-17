@@ -63,6 +63,7 @@ export default function EventDetails(): React.ReactNode {
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const { isLoggedIn } = useAuth();
+  const hostFirstName = host?.name.split(' ')[0] || 'värden';
 
   useEffect(() => {
     async function loadUsers() {
@@ -202,7 +203,7 @@ export default function EventDetails(): React.ReactNode {
               }
               size='xl'>
               {isFull
-                ? 'Fullt'
+                ? 'Fullt (8/8)'
                 : `${event.current_participants} anmälda, ${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
             </Badge>
           </Group>
@@ -272,7 +273,7 @@ export default function EventDetails(): React.ReactNode {
             </Stack>
 
             <Stack gap='xs'>
-              <Text fw={600}>Om värden</Text>
+              <Text fw={600}>Om värden {hostFirstName}</Text>
               <NavLink
                 to={host ? `/profil/${host.alias}` : '/profil/'}
                 style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -292,8 +293,7 @@ export default function EventDetails(): React.ReactNode {
                     wrap='nowrap'
                     className='host-image-information'>
                     <Text className='host-text' lineClamp={4}>
-                      {host?.bio ||
-                        `Hej! ${host?.name || 'Anders'} heter jag. Utbildad jurist med miljöfokus och lång erfarenhet av hållbarhetsfrågor. Bor i Kinna, småbarnspappa till Ylva och Melker. På min fritid spelar jag golf, tränar på nya recept med hållbara råvaror, engagerar mig i lokala miljöprojekt och deltar i föreläsningar om hållbar utveckling. Jag hoppas vi ses på något framtida event!`}
+                      {host?.bio || `Se mer`}
                     </Text>
                     <ChevronRight className='host-chevron' />
                   </Group>
