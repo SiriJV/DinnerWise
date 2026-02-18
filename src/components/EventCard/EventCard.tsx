@@ -30,6 +30,7 @@ type EventCardProps = {
   restaurant_id: number;
   restaurant_name?: string;
   restaurant_address?: string;
+  restaurant_city?: string;
   maxDescriptionLength?: number;
 };
 
@@ -46,6 +47,7 @@ export default function EventCard({
   restaurant_id,
   restaurant_name,
   restaurant_address,
+  restaurant_city,
   maxDescriptionLength = 100,
 }: EventCardProps) {
   const [host, setHost] = useState<User | null>(null);
@@ -107,7 +109,10 @@ export default function EventCard({
   const timeRange = `${start}–${end}`;
 
   const safeDescription = typeof description === 'string' ? description : '';
-  const safeMaxLength = typeof maxDescriptionLength === 'number' && !isNaN(maxDescriptionLength) ? maxDescriptionLength : 100;
+  const safeMaxLength =
+    typeof maxDescriptionLength === 'number' && !isNaN(maxDescriptionLength)
+      ? maxDescriptionLength
+      : 100;
   const shortDescription =
     safeDescription.length > safeMaxLength
       ? safeDescription.slice(0, safeMaxLength).trim() + '…'
@@ -182,7 +187,31 @@ export default function EventCard({
               onClick={(e) => e.stopPropagation()}>
               {restaurant_name || 'Restaurang'}
             </NavLink>{' '}
-            · {restaurant_address || 'Adress saknas'}
+            ·{' '}
+            {(() => {
+              if (!restaurant_address) return 'Adress saknas';
+              // Split by comma, take first part as street
+              const [street] = restaurant_address.split(',');
+              // Prefer explicit restaurant_city prop if available
+              let city = restaurant_city;
+              // Fallback: try to extract city from address if not provided
+              if (!city && restaurant_address) {
+                const parts = restaurant_address
+                  .split(',')
+                  .map((s) => s.trim());
+                // Find first part after street that is not just numbers or country
+                city =
+                  parts
+                    .slice(1)
+                    .find(
+                      (s) =>
+                        isNaN(Number(s)) &&
+                        s.length > 0 &&
+                        !/^SE|Sverige|Sweden$/i.test(s),
+                    ) || '';
+              }
+              return street.trim() + (city ? `, ${city}` : '');
+            })()}
           </Text>
 
           <Divider orientation='vertical' size='sm' />
