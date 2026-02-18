@@ -357,7 +357,9 @@ export default function EventDetails(): React.ReactNode {
                     loading='lazy'
                   />
                 ) : (
-                  <Text c='dimmed' p='md'>Ingen karta tillgänglig</Text>
+                  <Text c='dimmed' p='md'>
+                    Ingen karta tillgänglig
+                  </Text>
                 )}
                 <Group gap='xs'>
                   <MapPin size='16px' />
