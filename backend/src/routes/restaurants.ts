@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   const city = req.query.city as string | undefined;
 
-  let sql = `SELECT * FROM restaurants`;
+  let sql = `SELECT * FROM tripadvisor_restaurants`;
   const params: any[] = [];
 
   if (city) {
@@ -40,7 +40,7 @@ router.get('/search', async (req, res) => {
     const [rows]: any[] = await db.query(
       `
       SELECT *
-      FROM restaurants
+      FROM tripadvisor_restaurants
       WHERE LOWER(name) LIKE ?
       ORDER BY name ASC
       `,
@@ -72,9 +72,9 @@ router.get('/:id/events', async (req, res) => {
         e.start_time,
         e.end_time,
         r.name AS restaurant_name,
-        r.address AS restaurant_address
+        r.address_string AS restaurant_address
       FROM events e
-      JOIN restaurants r ON e.restaurant_id = r.id
+      JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
       WHERE e.restaurant_id = ?
         AND (e.date > CURDATE() OR (e.date = CURDATE() AND e.start_time > CURTIME()))
       ORDER BY e.date ASC, e.start_time ASC
@@ -93,7 +93,7 @@ router.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
   try {
-    const [rows] = await db.query(`SELECT * FROM restaurants WHERE id = ?`, [
+    const [rows] = await db.query(`SELECT * FROM tripadvisor_restaurants WHERE id = ?`, [
       id,
     ]);
 

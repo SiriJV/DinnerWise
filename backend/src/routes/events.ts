@@ -39,10 +39,10 @@ router.get('/', async (req, res) => {
       e.start_time,
       e.end_time,
       r.name AS restaurant_name,
-      r.address AS restaurant_address,
+      r.address_string AS restaurant_address,
       r.city AS restaurant_city
     FROM events e
-    JOIN restaurants r ON e.restaurant_id = r.id
+    JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
     JOIN cities c ON r.city = c.name
   `;
 
@@ -130,10 +130,10 @@ router.get('/:id', async (req, res) => {
         e.start_time,
         e.end_time,
         r.name AS restaurant_name,
-        r.address AS restaurant_address,
+        r.address_string AS restaurant_address,
         r.city AS restaurant_city
       FROM events e
-      JOIN restaurants r ON e.restaurant_id = r.id
+      JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
       WHERE e.id = ?
       `,
       [id],

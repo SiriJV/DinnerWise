@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 
       const [restaurants] = await db.query(
         `SELECT id, name, city
-         FROM restaurants
+         FROM tripadvisor_restaurants
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
@@ -110,7 +110,7 @@ router.get('/', async (req, res) => {
       case 'restaurants': {
         const [rows] = await db.query(
           `SELECT id, name, city
-           FROM restaurants
+           FROM tripadvisor_restaurants
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,

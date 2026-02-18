@@ -1,10 +1,18 @@
 export type Restaurant = {
   id: number;
   name: string;
-  address: string;
+  address_string: string; // Changed from 'address' to match tripadvisor_restaurants table
+  city: string;
+  location_id: string; // TripAdvisor location ID
+  postalcode?: string; // New from tripadvisor_restaurants
+  latitude?: number; // New from tripadvisor_restaurants
+  longitude?: number; // New from tripadvisor_restaurants
+  phone_number?: string;
+  website_url?: string;
+  photos?: string; // JSON array stored as text
   description?: string;
   cover_picture_url?: string;
-  city_id: number;
+  city_id?: number;
   city_name?: string;
 };
 

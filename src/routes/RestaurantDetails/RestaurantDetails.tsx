@@ -19,10 +19,15 @@ import { slugify } from '../../utils/slugify';
 type Restaurant = {
   id: number;
   name: string;
-  address: string;
+  address_string: string; // Changed from 'address' to match tripadvisor_restaurants
   city: string;
+  location_id: string; // TripAdvisor location ID
+  postalcode?: string; // New from tripadvisor_restaurants
+  latitude?: number; // New from tripadvisor_restaurants
+  longitude?: number; // New from tripadvisor_restaurants
   phone_number?: string;
   website_url?: string;
+  photos?: string; // JSON array of photos from TripAdvisor
 };
 
 export default function RestaurangDetails(): React.ReactNode {
@@ -105,7 +110,7 @@ export default function RestaurangDetails(): React.ReactNode {
         <Stack gap={0}>
           <Title order={2}>{restaurant.name}</Title>
           <Text c='dimmed'>
-            {restaurant.address}, {restaurant.city}
+            {restaurant.address_string}, {restaurant.city}
           </Text>
           {restaurant.website_url && (
             <Anchor
@@ -155,7 +160,7 @@ export default function RestaurangDetails(): React.ReactNode {
             <Group gap='xs'>
               <MapPin size='16px' />
               <Text>
-                {restaurant.address}, {restaurant.city}
+                {restaurant.address_string}, {restaurant.city}
               </Text>
             </Group>
           </Stack>

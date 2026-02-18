@@ -82,7 +82,7 @@ export default function SelectRestaurantPage() {
               >
                 <Text fw={400}>{r.name}</Text>
                 <Text size="sm" c="dimmed">{r.city}</Text>
-                <Text size="sm" c="dimmed">{r.address}</Text>
+                <Text size="sm" c="dimmed">{r.address_string}</Text>
               </Box>
             ))}
           </Stack>

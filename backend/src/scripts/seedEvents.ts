@@ -14,7 +14,7 @@ export async function seedEvents() {
       date DATE NOT NULL,
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
-      FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE,
+      FOREIGN KEY (restaurant_id) REFERENCES tripadvisor_restaurants(id) ON DELETE CASCADE,
       FOREIGN KEY (category_id) REFERENCES categories(id)
     );
   `);
