@@ -6,11 +6,6 @@ const API_KEY = process.env.TRIPADVISOR_API_KEY;
 if (!API_KEY) throw new Error('Missing TRIPADVISOR_API_KEY');
 
 const LETTERS = ['a', 'e', 'r', 's', 't'];
-const cities = [
-  { name: 'Stockholm', lat: 59.3293, long: 18.0686 },
-  { name: 'Göteborg', lat: 57.7089, long: 11.9746 },
-  { name: 'Malmö', lat: 55.6050, long: 13.0038 }
-];
 
 interface TripAdvisorAddress {
   street1?: string;
@@ -64,9 +59,19 @@ export async function seedTripadvisorBasic() {
 
   let totalInserted = 0;
 
-  for (const city of cities) {
+  let dbCities: any[] = [];
+  try {
+    const [rows]: any = await db.query(`SELECT id, name, latitude, longitude FROM new_cities`);
+    dbCities = rows;
+    console.log(`✅ Loaded ${dbCities.length} cities from new_cities table`);
+  } catch (err) {
+    console.error('❌ Failed to load cities from database:', err);
+    throw new Error('Cannot fetch cities from new_cities table. Make sure seedNewCities() was run first.');
+  }
+
+  for (const city of dbCities) {
     console.log(`\n🌆 Fetching restaurants for city: ${city.name}`);
-    const coords = `${city.lat},${city.long}`;
+    const coords = `${city.latitude},${city.longitude}`;
     const uniqueRestaurants = new Map<string, TripAdvisorRestaurant>();
 
     for (const letter of LETTERS) {
@@ -127,5 +132,3 @@ export async function seedTripadvisorBasic() {
   console.log(`\n✅ Basic seed complete. Total inserted: ${totalInserted}`);
   return { message: 'Basic seed complete', totalInserted };
 }
-
-seedTripadvisorBasic().catch(console.error);

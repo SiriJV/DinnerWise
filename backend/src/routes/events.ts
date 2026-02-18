@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
       r.city AS restaurant_city
     FROM events e
     JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
-    JOIN cities c ON r.city = c.name
+    JOIN new_cities c ON r.city = c.name
   `;
 
   if (tags.length > 0) {

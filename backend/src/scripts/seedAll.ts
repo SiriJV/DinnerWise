@@ -1,9 +1,9 @@
 import { seedCategories } from './seedCategories.js';
 import { seedTags } from './seedTags.js';
-// import { seedRestaurants } from './seedRestaurants.js'; // Replaced with tripadvisor_restaurants
+import { seedTripadvisorBasic } from './seedTripadvisor.js';
 import { seedEvents } from './seedEvents.js';
 import { seedUsers } from './seedUsers.js';
-import { seedCities } from './seedCities.js';
+import { seedNewCities } from './seedNewCities.js';
 import { db } from '../db.js';
 
 async function dropTables() {
@@ -14,11 +14,12 @@ async function dropTables() {
   await db.query('DROP TABLE IF EXISTS event_tags');
   await db.query('DROP TABLE IF EXISTS events');
   await db.query('DROP TABLE IF EXISTS tags');
-  await db.query(`DROP TABLE IF EXISTS cities;`);
+  await db.query('DROP TABLE IF EXISTS new_cities');
   await db.query('DROP TABLE IF EXISTS tripadvisor_restaurants');
-  // Note: restaurants table is no longer used, replaced with tripadvisor_restaurants
+  // Old tables (no longer used)
   await db.query('DROP TABLE IF EXISTS restaurant_opening_hours');
   await db.query('DROP TABLE IF EXISTS restaurants');
+  await db.query('DROP TABLE IF EXISTS cities'); // Completely removed - use new_cities
   await db.query('DROP TABLE IF EXISTS categories'); 
 }
 
@@ -35,11 +36,11 @@ async function seedAll() {
     console.log('Seeding tags...');
     await seedTags();
     
-    console.log('Seeding cities...');
-    await seedCities();
+    console.log('Seeding new_cities...');
+    await seedNewCities();
 
-    // Restaurants are now seeded from tripadvisor_restaurants table
-    // await seedRestaurants(); // Replaced with tripadvisor data
+    console.log('Seeding tripadvisor restaurants...');
+    await seedTripadvisorBasic();
 
     console.log('Seeding events...');
     await seedEvents();
