@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
 import LoginModal from '../../Modals/LoginModal/LoginModal';
 import CreateAccountModal from '../../Modals/CreateAccountModal/CreateAccountModal';
+import { useModal } from '../../../contexts/ModalContext';
 
 type LoginButtonsProps = {
   onClose: () => void;
@@ -13,6 +14,7 @@ export default function LoginButtons({ onClose }: LoginButtonsProps) {
   const { isLoggedIn, logout } = useAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const { openLogin, openCreate } = useModal();
 
   if (isLoggedIn) {
     return (
@@ -35,7 +37,7 @@ export default function LoginButtons({ onClose }: LoginButtonsProps) {
           <BaseButton
             variantType='primary'
             fullWidth
-            onClick={() => setLoginModalOpen(true)}
+            onClick={openLogin}
             onClose={onClose}>
             Logga in
           </BaseButton>
@@ -43,7 +45,7 @@ export default function LoginButtons({ onClose }: LoginButtonsProps) {
           <BaseButton
             variantType='secondary'
             fullWidth
-            onClick={() => setCreateModalOpen(true)}
+            onClick={openCreate}
             onClose={onClose}>
             Skapa konto
           </BaseButton>
