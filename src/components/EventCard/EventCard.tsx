@@ -99,14 +99,18 @@ export default function EventCard({
     month: 'short',
   });
 
-  const start = start_time.slice(0, 5);
-  const end = end_time.slice(0, 5);
+  const safeStart = typeof start_time === 'string' ? start_time : '';
+  const safeEnd = typeof end_time === 'string' ? end_time : '';
+  const start = safeStart.slice(0, 5);
+  const end = safeEnd.slice(0, 5);
   const timeRange = `${start}–${end}`;
 
+  const safeDescription = typeof description === 'string' ? description : '';
+  const safeMaxLength = typeof maxDescriptionLength === 'number' && !isNaN(maxDescriptionLength) ? maxDescriptionLength : 100;
   const shortDescription =
-    description.length > maxDescriptionLength
-      ? description.slice(0, maxDescriptionLength).trim() + '…'
-      : description;
+    safeDescription.length > safeMaxLength
+      ? safeDescription.slice(0, safeMaxLength).trim() + '…'
+      : safeDescription;
 
   return (
     <Card
