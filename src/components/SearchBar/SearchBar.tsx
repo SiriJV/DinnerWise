@@ -148,7 +148,12 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            handleNavigate(value);
+            const match = data.find((s) => s.value === value);
+            if (match) {
+              handleNavigate(value);
+            } else if (value.trim().length > 0) {
+              navigate(`/search?q=${encodeURIComponent(value.trim())}&type=events`);
+            }
           }
         }}
         rightSection={
@@ -191,7 +196,13 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              handleNavigate(value);
+              // If value matches a suggestion, navigate to that; otherwise, go to search page with type param
+              const match = data.find((s) => s.value === value);
+              if (match) {
+                handleNavigate(value);
+              } else if (value.trim().length > 0) {
+                navigate(`/search?q=${encodeURIComponent(value.trim())}&type=events`);
+              }
             }
           }}
           rightSection={
