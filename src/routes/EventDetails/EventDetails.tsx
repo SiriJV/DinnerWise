@@ -344,12 +344,21 @@ export default function EventDetails(): React.ReactNode {
               </Stack>
 
               <Stack gap='xs'>
-                <Image
-                  src='https://upload.wikimedia.org/wikipedia/commons/3/3e/GNOME_Maps_3.32_screenshot.png'
-                  h={200}
-                  bdrs='md'
-                  className='map-image'
-                />
+                {/* Google Maps iframe using address if lat/lng are missing */}
+                {event.restaurant_address && event.restaurant_city ? (
+                  <iframe
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                      `${event.restaurant_address} ${event.restaurant_city}`.trim(),
+                    )}&z=15&output=embed`}
+                    title='Google map'
+                    width='100%'
+                    height={200}
+                    style={{ border: 0, display: 'block', borderRadius: '8px' }}
+                    loading='lazy'
+                  />
+                ) : (
+                  <Text c='dimmed' p='md'>Ingen karta tillgänglig</Text>
+                )}
                 <Group gap='xs'>
                   <MapPin size='16px' />
                   <Text>{event.restaurant_address || 'Adress saknas'}</Text>
