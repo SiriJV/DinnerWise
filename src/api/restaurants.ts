@@ -1,3 +1,16 @@
+export async function fetchRestaurants(): Promise<Restaurant[]> {
+  try {
+    const res = await fetch('http://localhost:3001/restaurants');
+    if (!res.ok) {
+      throw new Error('Failed to fetch restaurants');
+    }
+    const data: Restaurant[] = await res.json();
+    return data;
+  } catch (err) {
+    console.error('Failed to load restaurants:', err);
+    return [];
+  }
+}
 export type Restaurant = {
   id: number;
   name: string;
@@ -16,7 +29,9 @@ export type Restaurant = {
   city_name?: string;
 };
 
-export async function fetchRestaurantById(id: number): Promise<Restaurant | null> {
+export async function fetchRestaurantById(
+  id: number,
+): Promise<Restaurant | null> {
   try {
     const res = await fetch(`http://localhost:3001/restaurants/${id}`);
     if (!res.ok) {
@@ -30,9 +45,13 @@ export async function fetchRestaurantById(id: number): Promise<Restaurant | null
   }
 }
 
-export async function fetchRestaurantEvents(restaurantId: number): Promise<any[]> {
+export async function fetchRestaurantEvents(
+  restaurantId: number,
+): Promise<any[]> {
   try {
-    const res = await fetch(`http://localhost:3001/restaurants/${restaurantId}/events`);
+    const res = await fetch(
+      `http://localhost:3001/restaurants/${restaurantId}/events`,
+    );
     if (!res.ok) {
       throw new Error('Failed to fetch restaurant events');
     }

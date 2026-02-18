@@ -14,7 +14,7 @@ import './EventCard.scss';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { NavLink } from 'react-router-dom';
 import { fetchUsers, type User } from '../../api/users';
-import { slugify } from '../../utils/slugify';
+import { slugify, generateEventSlug } from '../../utils/slugify';
 import { useAuth } from '../../contexts/AuthContext';
 
 type EventCardProps = {
@@ -43,6 +43,7 @@ export default function EventCard({
   date,
   start_time,
   end_time,
+  restaurant_id,
   restaurant_name,
   restaurant_address,
   maxDescriptionLength = 100,
@@ -112,7 +113,7 @@ export default function EventCard({
     <Card
       className='eventCard'
       component={NavLink}
-      to={`/event/${slugify(title)}`}
+      to={`/event/${generateEventSlug(title, id)}`}
       state={{ id }}
       shadow='sm'
       radius='md'
@@ -172,7 +173,7 @@ export default function EventCard({
         <Box className='eventInfo' mb='xs'>
           <Text size='xs' c='dimmed' fw={600}>
             <NavLink
-              to={`/restaurang/${slugify(restaurant_name)}`}
+              to={`/restaurang/${slugify(restaurant_name)}${typeof restaurant_id !== 'undefined' ? '-' + restaurant_id : ''}`}
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
               {restaurant_name || 'Restaurang'}
