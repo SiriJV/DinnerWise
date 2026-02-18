@@ -121,10 +121,10 @@ router.get('/', async (req, res) => {
 
       case 'users': {
         const [rows] = await db.query(
-          `SELECT id, username, display_name
+          `SELECT id, name, alias
            FROM users
-           WHERE username LIKE ? OR display_name LIKE ?
-           ORDER BY username ASC
+           WHERE name LIKE ? OR alias LIKE ?
+           ORDER BY name ASC
            LIMIT ?`,
           [search, search, maxLimit]
         );
