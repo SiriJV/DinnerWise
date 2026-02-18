@@ -55,7 +55,7 @@ const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: '/event/:slug',
+        path: '/event/:slug/',
         element: <EventDetails />,
       },
       {

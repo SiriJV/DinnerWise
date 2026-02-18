@@ -29,8 +29,18 @@ export default function Breadcrumb() {
       const eventId = extractIdFromSlug(eventSlug);
       if (eventId) {
         fetchEventById(eventId)
-          .then((data) => setEventName(data?.title || `Event ${eventId}`))
+          .then((data) => {
+            setEventName(data?.title || `Event ${eventId}`);
+          })
           .catch(() => setEventName(`Event ${eventId}`));
+      } else {
+        // If no id, try to match event by slugified title
+        import('../../api/events').then(({ fetchEvents }) => {
+          fetchEvents().then((events) => {
+            const match = events.find((e) => slugify(e.title) === eventSlug);
+            setEventName(match ? match.title : eventSlug);
+          });
+        });
       }
     }
 
@@ -39,10 +49,20 @@ export default function Breadcrumb() {
       const restaurantId = extractIdFromSlug(restaurantSlug);
       if (restaurantId) {
         fetchRestaurantById(restaurantId)
-          .then((data) =>
-            setRestaurantName(data?.name || `Restaurang ${restaurantId}`),
-          )
+          .then((data) => {
+            setRestaurantName(data?.name || `Restaurang ${restaurantId}`);
+          })
           .catch(() => setRestaurantName(`Restaurang ${restaurantId}`));
+      } else {
+        // If no id, try to match restaurant by slugified name
+        import('../../api/restaurants').then(({ fetchRestaurants }) => {
+          fetchRestaurants().then((restaurants) => {
+            const match = restaurants.find(
+              (r) => slugify(r.name) === restaurantSlug,
+            );
+            setRestaurantName(match ? match.name : restaurantSlug);
+          });
+        });
       }
     }
 

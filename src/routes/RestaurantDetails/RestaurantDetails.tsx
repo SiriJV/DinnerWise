@@ -14,12 +14,12 @@ import {
 import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
-import { slugify } from '../../utils/slugify';
+import { slugify, extractIdFromSlug } from '../../utils/slugify';
 
 type Restaurant = {
   id: number;
   name: string;
-  address_string: string; // Changed from 'address' to match tripadvisor_restaurants
+  address: string;
   city: string;
   location_id: string; // TripAdvisor location ID
   postalcode?: string; // New from tripadvisor_restaurants
@@ -48,21 +48,23 @@ export default function RestaurangDetails(): React.ReactNode {
       try {
         setLoading(true);
         let restaurantData;
-
-        if (state?.id) {
+        let restaurantId: number | undefined = undefined;
+        if (state?.id && !isNaN(Number(state.id))) {
+          restaurantId = Number(state.id);
+        } else if (slug) {
+          const extracted = extractIdFromSlug(slug);
+          if (typeof extracted === 'number' && !isNaN(extracted)) {
+            restaurantId = extracted;
+          }
+        }
+        if (typeof restaurantId === 'number' && !isNaN(restaurantId)) {
           const res = await fetch(
-            `http://localhost:3001/restaurants/${state.id}`,
+            `http://localhost:3001/restaurants/${restaurantId}`,
           );
           if (!res.ok) throw new Error('Kunde inte hämta restaurang');
           restaurantData = await res.json();
         } else {
-          const res = await fetch(`http://localhost:3001/restaurants`);
-          if (!res.ok) throw new Error('Kunde inte hämta restauranger');
-          const restaurants = await res.json();
-          restaurantData = restaurants.find(
-            (r: Restaurant) => slugify(r.name) === slug,
-          );
-          if (!restaurantData) throw new Error('Restaurang hittades inte');
+          throw new Error('Restaurang hittades inte');
         }
 
         setRestaurant(restaurantData);
@@ -110,7 +112,8 @@ export default function RestaurangDetails(): React.ReactNode {
         <Stack gap={0}>
           <Title order={2}>{restaurant.name}</Title>
           <Text c='dimmed'>
-            {restaurant.address_string}, {restaurant.city}
+            {restaurant.address ? restaurant.address : 'Adress saknas'},{' '}
+            {restaurant.city}
           </Text>
           {restaurant.website_url && (
             <Anchor
@@ -160,7 +163,8 @@ export default function RestaurangDetails(): React.ReactNode {
             <Group gap='xs'>
               <MapPin size='16px' />
               <Text>
-                {restaurant.address_string}, {restaurant.city}
+                {restaurant.address ? restaurant.address : 'Adress saknas'},{' '}
+                {restaurant.city}
               </Text>
             </Group>
           </Stack>
@@ -186,7 +190,9 @@ export default function RestaurangDetails(): React.ReactNode {
                   end_time={event.end_time}
                   restaurant_id={event.restaurant_id}
                   restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
+                  restaurant_address={
+                    event.restaurant_address || restaurant?.address || ''
+                  }
                 />
               ))}
             </SimpleGrid>
