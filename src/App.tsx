@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
+        path: '/search',
+        element: <SearchPage />,
+      },
+      {
         path: '/cookies',
         element: <CookiesPage />,
       },
