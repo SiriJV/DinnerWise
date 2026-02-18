@@ -25,8 +25,8 @@ router.get('/', async (req, res) => {
       );
 
       const [cities] = await db.query(
-        `SELECT id, name
-         FROM cities
+        `SELECT id, name, latitude, longitude
+         FROM new_cities
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
@@ -97,8 +97,8 @@ router.get('/', async (req, res) => {
 
       case 'cities': {
         const [rows] = await db.query(
-          `SELECT id, name
-           FROM cities
+          `SELECT id, name, latitude, longitude
+           FROM new_cities
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,

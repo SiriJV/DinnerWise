@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   const q = (req.query.q as string | undefined)?.toLowerCase();
 
-  let sql = 'SELECT * FROM cities';
+  let sql = 'SELECT * FROM new_cities';
   const params: any[] = [];
 
   if (q) {
@@ -25,20 +25,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/region/:region', async (req, res) => {
-  const region = req.params.region;
-
-  try {
-    const [rows] = await db.query(
-      'SELECT * FROM cities WHERE region = ? ORDER BY name ASC',
-      [region]
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta städer för regionen' });
-  }
-});
 
 router.get('/search', async (req, res) => {
   const { q } = req.query;
@@ -53,7 +39,7 @@ router.get('/search', async (req, res) => {
     const [rows]: any[] = await db.query(
       `
       SELECT *
-      FROM cities
+      FROM new_cities
       WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?
       ORDER BY name ASC
       `,
