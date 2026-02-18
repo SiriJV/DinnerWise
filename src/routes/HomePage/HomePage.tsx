@@ -1,5 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Divider, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import {
+  Divider,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+  Pagination,
+} from '@mantine/core';
+// Utility: chunk array into pages
+function chunk<T>(array: T[], size: number): T[][] {
+  if (!array.length) {
+    return [];
+  }
+  const head = array.slice(0, size);
+  const tail = array.slice(size);
+  return [head, ...chunk(tail, size)];
+}
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 // import DateFilterDropdown from '../../components/Filters/DatePickerFilter/DatePickerFilter';
@@ -26,6 +43,14 @@ export default function HomePage() {
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
+
+  // Pagination state
+  const [activePage, setActivePage] = useState(1);
+  const pageSize = 9;
+
+  // Chunk events into pages
+  const eventPages = chunk(events, pageSize);
+  const pagedEvents = eventPages[activePage - 1] || [];
 
   useEffect(() => {
     async function loadEvents() {
@@ -58,6 +83,7 @@ export default function HomePage() {
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
         setEvents(data);
+        setActivePage(1); // Reset to first page on new fetch
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -132,25 +158,37 @@ export default function HomePage() {
               Ett fel uppstod: {error}
             </Text>
           ) : (
-            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
-                />
-              ))}
-            </SimpleGrid>
+            <>
+              <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+                {pagedEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    id={event.id}
+                    title={event.title}
+                    description={event.description}
+                    current_participants={event.current_participants}
+                    max_participants={event.max_participants}
+                    price={event.price}
+                    date={new Date(event.date)}
+                    start_time={event.start_time}
+                    end_time={event.end_time}
+                    restaurant_id={event.restaurant_id}
+                    restaurant_name={event.restaurant_name}
+                    restaurant_address={event.restaurant_address}
+                  />
+                ))}
+              </SimpleGrid>
+              {eventPages.length > 1 && (
+                <Group justify='center' mt='md'>
+                  <Pagination
+                    total={eventPages.length}
+                    value={activePage}
+                    onChange={setActivePage}
+                    size='md'
+                  />
+                </Group>
+              )}
+            </>
           )}
         </Stack>
       </Stack>
