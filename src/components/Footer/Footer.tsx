@@ -88,17 +88,21 @@ export default function Footer() {
             </Stack>
 
             <Group className='footer-groups' align='flex-start' wrap='wrap'>
-              {accordionItems.map((group) => (
-                <Stack key={group.value} gap={6} className='footer-group'>
+              {accordionItems.map((group, groupIdx) => (
+                <Stack
+                  key={group.value || group.label || groupIdx}
+                  gap={6}
+                  className='footer-group'>
                   <Text fw={600} className='footer-title'>
                     {group.label}
                   </Text>
 
-                  {group.panels.map((link) => {
+                  {group.panels.map((link, linkIdx) => {
+                    const uniqueKey = `${link.label || ''}-${link.path || ''}-${linkIdx}`;
                     if (link.modal === 'login') {
                       return (
                         <button
-                          key={link.label}
+                          key={uniqueKey}
                           className='footer-link'
                           style={{
                             background: 'none',
@@ -115,7 +119,7 @@ export default function Footer() {
                     if (link.modal === 'create') {
                       return (
                         <button
-                          key={link.label}
+                          key={uniqueKey}
                           className='footer-link'
                           style={{
                             background: 'none',
@@ -132,7 +136,7 @@ export default function Footer() {
                     if (link.modal === 'logout') {
                       return (
                         <button
-                          key={link.label}
+                          key={uniqueKey}
                           className='footer-link'
                           style={{
                             background: 'none',
@@ -148,7 +152,7 @@ export default function Footer() {
                     }
                     return (
                       <NavLink
-                        key={link.path}
+                        key={uniqueKey}
                         to={link.path}
                         className='footer-link'>
                         {link.label}

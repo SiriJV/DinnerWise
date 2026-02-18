@@ -48,17 +48,20 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
           paddingBottom: 0,
         },
       }}>
-      {accordionItems.map((item) => (
-        <Accordion.Item key={item.value} value={item.value}>
+      {accordionItems.map((item, itemIdx) => (
+        <Accordion.Item
+          key={item.value || item.label || itemIdx}
+          value={item.value}>
           <AccordionControl>{item.label}</AccordionControl>
 
           {item.panels
             .filter((panel) => panel.element !== null || panel.modal)
             .map((panel, index) => {
+              const uniqueKey = `${panel.label || ''}-${panel.path || ''}-${index}`;
               if (panel.modal === 'login') {
                 return (
                   <button
-                    key={panel.label}
+                    key={uniqueKey}
                     className='accordionLink'
                     style={{
                       background: 'none',
@@ -85,7 +88,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
               if (panel.modal === 'create') {
                 return (
                   <button
-                    key={panel.label}
+                    key={uniqueKey}
                     className='accordionLink'
                     style={{
                       background: 'none',
@@ -112,7 +115,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
               if (panel.modal === 'logout') {
                 return (
                   <button
-                    key={panel.label}
+                    key={uniqueKey}
                     className='accordionLink'
                     style={{
                       background: 'none',
@@ -138,7 +141,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
               }
               return (
                 <NavLink
-                  key={panel.path}
+                  key={uniqueKey}
                   to={panel.path}
                   onClick={onClose}
                   className={({ isActive }) =>
