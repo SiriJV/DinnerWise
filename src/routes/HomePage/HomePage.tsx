@@ -175,6 +175,7 @@ export default function HomePage() {
                     restaurant_id={event.restaurant_id}
                     restaurant_name={event.restaurant_name}
                     restaurant_address={event.restaurant_address}
+                    restaurant_city={event.restaurant_city}
                   />
                 ))}
               </SimpleGrid>
