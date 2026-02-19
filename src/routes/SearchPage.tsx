@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Tabs, Loader, Box, Text, Group, Paper } from '@mantine/core';
+import { Tabs, Loader, Box, Text, Group, Paper, SimpleGrid } from '@mantine/core';
 import { searchApi } from '../api/search';
 import type { SearchType } from '../api/search';
 import EventCard from '../components/EventCard/EventCard';
@@ -54,18 +54,31 @@ export default function SearchPage() {
             {loading ? (
               <Group justify="start" mt="xl"><Loader /></Group>
             ) : error ? (
-              <Text color="red" style={{ textAlign: 'left' }}>{error}</Text>
+              <Text c="red" style={{ textAlign: 'left' }}>{error}</Text>
             ) : results.length === 0 ? (
               <Text c="dimmed" style={{ textAlign: 'left' }}>Inga resultat.</Text>
             ) : t.value === 'events' ? (
               <Box style={{ textAlign: 'left' }}>
-                {results.map((event: any) => (
-                  <EventCard
-                    key={event.id}
-                    {...event}
-                    date={event.date ? new Date(event.date) : new Date()}
-                  />
-                ))}
+                <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+                                {results.map((event: any) => (
+                                  <EventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    description={event.description}
+                                    current_participants={event.current_participants}
+                                    max_participants={event.max_participants}
+                                    price={event.price}
+                                    date={new Date(event.date)}
+                                    start_time={event.start_time}
+                                    end_time={event.end_time}
+                                    restaurant_id={event.restaurant_id}
+                                    restaurant_name={event.restaurant_name}
+                                    restaurant_address={event.restaurant_address}
+                                    restaurant_city={event.restaurant_city}
+                                  />
+                                ))}
+                              </SimpleGrid>
               </Box>
             ) : t.value === 'restaurants' ? (
               <Box style={{ textAlign: 'left' }}>
