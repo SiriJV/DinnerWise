@@ -24,6 +24,7 @@ import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import FloatingActionButton from '../../components/FAB/FAB';
+import CreateEventModal from '../../components/CreateEventModal';
 
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
@@ -43,6 +44,8 @@ export default function HomePage() {
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
+
+  const [modalOpened, setModalOpened] = useState(false);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -113,8 +116,9 @@ export default function HomePage() {
 
   return (
     <>
+      <CreateEventModal opened={modalOpened} onClose={() => setModalOpened(false)} />
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-      <FloatingActionButton to='/skapa-event' />
+      <FloatingActionButton onClick={() => setModalOpened(true)} />
       <Stack p='md'>
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />
