@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Divider,
   Group,
@@ -46,6 +46,7 @@ export default function HomePage() {
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
+  const eventTitleRef = useRef<HTMLHeadingElement>(null);
   const pageSize = 9;
 
   // Chunk events into pages
@@ -98,6 +99,18 @@ export default function HomePage() {
     setSortBy(value);
   };
 
+  const handlePageChange = (page: number) => {
+    setActivePage(page);
+    if (eventTitleRef.current) {
+      const yOffset = -80; // Justera denna höjd till din header
+      const y =
+        eventTitleRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
@@ -106,7 +119,9 @@ export default function HomePage() {
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />
         <Stack mt='xs'>
-          <Title order={2}>Event</Title>
+          <Title order={2} ref={eventTitleRef}>
+            Event
+          </Title>
           <Group justify='space-between'>
             <Group>
               <FilterDropdown
@@ -175,6 +190,7 @@ export default function HomePage() {
                     restaurant_id={event.restaurant_id}
                     restaurant_name={event.restaurant_name}
                     restaurant_address={event.restaurant_address}
+                    restaurant_city={event.restaurant_city}
                   />
                 ))}
               </SimpleGrid>
@@ -183,7 +199,7 @@ export default function HomePage() {
                   <Pagination
                     total={eventPages.length}
                     value={activePage}
-                    onChange={setActivePage}
+                    onChange={handlePageChange}
                     size='md'
                   />
                 </Group>

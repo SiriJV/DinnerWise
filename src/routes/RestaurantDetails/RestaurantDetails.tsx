@@ -19,15 +19,17 @@ import { slugify, extractIdFromSlug } from '../../utils/slugify';
 type Restaurant = {
   id: number;
   name: string;
-  address: string;
+  address_string: string;
   city: string;
   location_id: string; // TripAdvisor location ID
-  postalcode?: string; // New from tripadvisor_restaurants
-  latitude?: number; // New from tripadvisor_restaurants
-  longitude?: number; // New from tripadvisor_restaurants
+  postalcode?: string;
+  latitude?: number;
+  longitude?: number;
   phone_number?: string;
   website_url?: string;
   photos?: string; // JSON array of photos from TripAdvisor
+  cover_picture_url?: string;
+  description?: string;
 };
 
 export default function RestaurangDetails(): React.ReactNode {
@@ -88,117 +90,156 @@ export default function RestaurangDetails(): React.ReactNode {
 
   if (loading) {
     return (
-      <>
-        <Text p='xl' ta='center' c='dimmed'>
-          Laddar restaurang...
-        </Text>
-      </>
+      <Text p='xl' ta='center' c='dimmed'>
+        Laddar restaurang...
+      </Text>
     );
   }
 
   if (error || !restaurant) {
     return (
-      <>
-        <Text p='xl' ta='center' c='red'>
-          {error || 'Restaurang hittades inte'}
-        </Text>
-      </>
+      <Text p='xl' ta='center' c='red'>
+        {error || 'Restaurang hittades inte'}
+      </Text>
     );
   }
 
+  // Parse TripAdvisor photos if available
+  let photos: string[] = [];
+  if (restaurant.photos) {
+    try {
+      const parsed = JSON.parse(restaurant.photos);
+      if (Array.isArray(parsed)) {
+        photos = parsed;
+      }
+    } catch {}
+  }
+
   return (
-    <>
-      <Stack m='md' gap='xl'>
-        <Stack gap={0}>
-          <Title order={2}>{restaurant.name}</Title>
-          <Text c='dimmed'>
-            {restaurant.address ? restaurant.address : 'Adress saknas'},{' '}
-            {restaurant.city}
-          </Text>
-          {restaurant.website_url && (
-            <Anchor
-              href={restaurant.website_url}
-              target='_blank'
-              style={{ textDecoration: 'none' }}>
-              <Group gap='xs' mt='xs'>
-                <ExternalLink size={16} color='black' />
-                <Text size='sm' c='dark'>
-                  {restaurant.website_url.replace(/^https?:\/\/(www\.)?/, '')}
-                </Text>
-              </Group>
-            </Anchor>
-          )}
-        </Stack>
-
-        {restaurant.phone_number && (
-          <Box>
-            <Text fw={600} mb='xs'>
-              Kontakt
-            </Text>
-            <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
-          </Box>
+    <Stack m='md' gap='xl'>
+      <Stack gap={0}>
+        <Title order={2}>{restaurant.name}</Title>
+        <Text c='dimmed'>
+          {restaurant.address_string
+            ? restaurant.address_string
+            : 'Adress saknas'}
+          {restaurant.city ? `, ${restaurant.city}` : ''}
+        </Text>
+        {restaurant.website_url && (
+          <Anchor
+            href={restaurant.website_url}
+            target='_blank'
+            style={{ textDecoration: 'none' }}>
+            <Group gap='xs' mt='xs'>
+              <ExternalLink size={16} color='black' />
+              <Text size='sm' c='dark'>
+                {restaurant.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+              </Text>
+            </Group>
+          </Anchor>
         )}
+      </Stack>
 
-        <Group align='flex-start' gap='md' wrap='wrap'>
-          <Box style={{ flex: 1, minWidth: '300px' }}>
+      {restaurant.phone_number && (
+        <Box>
+          <Text fw={600} mb='xs'>
+            Kontakt
+          </Text>
+          <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
+        </Box>
+      )}
+
+      <Group align='flex-start' gap='md' wrap='wrap'>
+        <Box style={{ flex: 1, minWidth: '300px' }}>
+          {photos.length > 0 ? (
             <Image
-              src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+              src={photos[0]}
               className='restaurant-image'
               height={250}
               bdrs='md'
             />
-          </Box>
+          ) : (
+            <Image
+              src={
+                restaurant.cover_picture_url ||
+                'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+              }
+              className='restaurant-image'
+              height={250}
+              bdrs='md'
+            />
+          )}
+        </Box>
 
-          <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
-            <Box bdrs='md' style={{ overflow: 'hidden' }}>
+        <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
+          <Box bdrs='md' style={{ overflow: 'hidden' }}>
+            {/* Google Maps iframe using address if lat/lng are missing */}
+            {restaurant.latitude && restaurant.longitude ? (
               <iframe
-                src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2076.3658!2d12.53667!3d57.92968!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x464ff2a8f0c5b7e7%3A0x5c8c5b8c5b8c5b8c!2sVed%20House%20Alings%C3%A5s!5e0!3m2!1ssv!2sse!4v1644262070010!5m2!1ssv!2sse'
+                src={`https://maps.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}&z=15&output=embed`}
                 title='Google map'
                 width='100%'
                 height={250}
                 style={{ border: 0, display: 'block' }}
                 loading='lazy'
               />
-            </Box>
-            <Group gap='xs'>
-              <MapPin size='16px' />
-              <Text>
-                {restaurant.address ? restaurant.address : 'Adress saknas'},{' '}
-                {restaurant.city}
+            ) : restaurant.address_string || restaurant.city ? (
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                  `${restaurant.address_string || ''} ${restaurant.city || ''}`.trim(),
+                )}&z=15&output=embed`}
+                title='Google map'
+                width='100%'
+                height={250}
+                style={{ border: 0, display: 'block' }}
+                loading='lazy'
+              />
+            ) : (
+              <Text c='dimmed' p='md'>
+                Ingen karta tillgänglig
               </Text>
-            </Group>
-          </Stack>
-        </Group>
+            )}
+          </Box>
+          <Group gap='xs'>
+            <MapPin size='16px' />
+            <Text>
+              {restaurant.address_string
+                ? restaurant.address_string
+                : 'Adress saknas'}
+              {restaurant.city ? `, ${restaurant.city}` : ''}
+            </Text>
+          </Group>
+        </Stack>
+      </Group>
 
-        <Divider />
+      <Divider />
 
-        {events.length > 0 && (
-          <Stack gap='md'>
-            <Title order={3}>Kommande event på {restaurant.name}</Title>
-            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={
-                    event.restaurant_address || restaurant?.address || ''
-                  }
-                />
-              ))}
-            </SimpleGrid>
-          </Stack>
-        )}
-      </Stack>
-    </>
+      {events.length > 0 && (
+        <Stack gap='md'>
+          <Title order={3}>Kommande event på {restaurant.name}</Title>
+          <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
+            {events.map((event) => (
+              <EventCard
+                key={event.id}
+                id={event.id}
+                title={event.title}
+                description={event.description}
+                current_participants={event.current_participants}
+                max_participants={event.max_participants}
+                price={event.price}
+                date={new Date(event.date)}
+                start_time={event.start_time}
+                end_time={event.end_time}
+                restaurant_id={event.restaurant_id}
+                restaurant_name={event.restaurant_name}
+                restaurant_address={
+                  event.restaurant_address || restaurant?.address_string || ''
+                }
+              />
+            ))}
+          </SimpleGrid>
+        </Stack>
+      )}
+    </Stack>
   );
 }
