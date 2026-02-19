@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { slugify } from '../../utils/slugify';
+import { slugify, generateRestaurantSlug } from '../../utils/slugify';
 import {
   Text,
   Image,
@@ -316,8 +316,8 @@ export default function EventDetails(): React.ReactNode {
                 <Box
                   component={NavLink}
                   to={
-                    event.restaurant_name
-                      ? `/restaurang/${slugify(event.restaurant_name)}`
+                    event.restaurant_name && event.restaurant_id
+                      ? `/restaurang/${generateRestaurantSlug(event.restaurant_name, event.restaurant_id)}`
                       : `/restaurang/${event.restaurant_id}`
                   }
                   className='restaurant-image-box'
