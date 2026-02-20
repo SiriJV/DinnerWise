@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Stepper, TextInput, Textarea, Select, Group, Stack, Text, Badge, Card, ScrollArea, Alert, MultiSelect, Box, Center, } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Modal, Button, Stepper, TextInput, Textarea, Select, Group, Stack, Text, Badge, Card, Alert, MultiSelect, Box, Center } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { Calendar, Clock, AlertCircle, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { fetchCategories, type Category } from '../api/categories';
@@ -122,26 +122,45 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     loadData();
   }, [opened]);
 
-  const Step1EventDetails = () => {
-    const newErrors: string[] = [];
-    if (!eventDetails.title.trim()) newErrors.push('Eventtitel krävs');
-    if (!eventDetails.category) newErrors.push('Kategori krävs');
-    if (!eventDetails.description.trim()) newErrors.push('Beskrivning krävs');
+  const categoryOptions = categories.length > 0 
+    ? categories.map((cat) => ({ value: cat.id.toString(), label: cat.name }))
+    : [];
+  const tagOptions = allTags.length > 0
+    ? allTags.map((tag) => ({ value: tag.id.toString(), label: tag.name }))
+    : [];
 
-    const categoryOptions = categories && categories.length > 0 
-      ? categories.map((cat) => ({
-          value: cat.id.toString(),
-          label: cat.name,
-        }))
-      : [];
+  const [cityFilters, setCityFilters] = useState<number[]>([]);
+  const [uniqueCities, setUniqueCities] = useState<{ id: number; name: string }[]>([]);
 
-    const tagOptions = allTags && allTags.length > 0
-      ? allTags.map((tag) => ({
-          value: tag.id.toString(),
-          label: tag.name,
-        }))
-      : [];
+  useEffect(() => {
+    const cities = Array.from(
+      new Map(
+        restaurants
+          .filter((r) => r.city)
+          .map((r) => [r.city, r])
+      ).values()
+    );
+    const uniqueCityList = cities
+      .map((restaurant, idx) => ({
+        id: idx,
+        name: restaurant.city || '',
+      }))
+      .filter((city) => city.name);
+    setUniqueCities(uniqueCityList);
+  }, [restaurants]);
 
+  const filteredByCity =
+    cityFilters.length > 0
+      ? restaurants.filter((r) => {
+          const cityIndex = uniqueCities.findIndex((c) => c.name === r.city);
+          return cityIndex !== -1 && cityFilters.includes(cityIndex);
+        })
+      : restaurants;
+  const filteredBySearch = filteredByCity.filter((r) =>
+    r.name.toLowerCase().includes(restaurantSearch.toLowerCase())
+  );
+
+  const renderStep1 = () => {
     if (isLoading) {
       return (
         <Stack gap="md">
@@ -149,7 +168,6 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         </Stack>
       );
     }
-
     return (
       <Stack gap="md">
         {errors.length > 0 && (
@@ -161,7 +179,6 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
             </ul>
           </Alert>
         )}
-
         <TextInput
           label="Titel"
           placeholder="Ge ditt event en titel"
@@ -169,29 +186,18 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           onChange={(e) => setEventDetails({ ...eventDetails, title: e.currentTarget.value })}
           required
         />
-
         <Select
           label="Kategori"
           placeholder="Välj en passande kategori"
           data={categoryOptions}
           value={eventDetails.category}
-          onChange={(value) => {
-            console.log('Selected category value:', value);
-            setEventDetails({ ...eventDetails, category: value });
-          }}
+          onChange={(value) => setEventDetails({ ...eventDetails, category: value })}
           required
           searchable
           clearable
           nothingFoundMessage="Ingen kategori hittades"
-          dropdownPosition="flip"
-          styles={{
-            dropdown: {
-              zIndex: 9999,
-            },
-          }}
-          searchable
+          styles={{ dropdown: { zIndex: 9999 } }}
         />
-
         <Textarea
           label="Beskrivning"
           placeholder="Beskriv ditt event..."
@@ -200,7 +206,6 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           rows={4}
           required
         />
-
         <MultiSelect
           label="Taggar (valfritt)"
           placeholder="Sök och välj passande taggar"
@@ -214,41 +219,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     );
   };
 
-  const Step2RestaurantSelection = () => {
-    const [cityFilters, setCityFilters] = useState<number[]>([]);
-    const [uniqueCities, setUniqueCities] = useState<{ id: number; name: string }[]>([]);
-
-    useEffect(() => {
-      const cities = Array.from(
-        new Map(
-          restaurants
-            .filter((r) => r.city)
-            .map((r) => [r.city, r])
-        ).values()
-      );
-
-      const uniqueCityList = cities
-        .map((restaurant, idx) => ({
-          id: idx,
-          name: restaurant.city || '',
-        }))
-        .filter((city) => city.name);
-
-      setUniqueCities(uniqueCityList);
-    }, [restaurants]);
-
-    const filteredByCity =
-      cityFilters.length > 0
-        ? restaurants.filter((r) => {
-            const cityIndex = uniqueCities.findIndex((c) => c.name === r.city);
-            return cityIndex !== -1 && cityFilters.includes(cityIndex);
-          })
-        : restaurants;
-
-    const filteredBySearch = filteredByCity.filter((r) =>
-      r.name.toLowerCase().includes(restaurantSearch.toLowerCase())
-    );
-
+  const renderStep2 = () => {
     return (
       <Stack gap="md">
         {errors.length > 0 && (
@@ -256,7 +227,6 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
             {errors[0]}
           </Alert>
         )}
-
         <TextInput
           placeholder="Sök restaurang..."
           leftSection={<Search size={16} />}
@@ -277,68 +247,61 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
             }}
           />
         </Stack>
-
-        {/* <ScrollArea style={{ height: '300px' }}> */}
-          <Stack gap="sm">
-            {filteredBySearch.length > 0 ? (
-              filteredBySearch.map((restaurant) => (
-                <Card
-                  key={restaurant.id}
-                  padding="md"
-                  radius="md"
-                  withBorder
-                  style={{
-                    cursor: 'pointer',
-                    borderWidth: 2,
-                    borderColor:
-                      selectedRestaurant?.id === restaurant.id ? '#b21515ff' : '#dee2e6',
-                    backgroundColor:
-                      selectedRestaurant?.id === restaurant.id ? '#ffe7e7ff' : 'white',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => {
-                    setSelectedRestaurant(restaurant);
-                    setErrors([]);
-                  }}
-                >
-                  <Group justify="space-between" mb="xs">
-                    <div>
-                      <Text fw={500}>{restaurant.name}</Text>
-                      <Text size="sm" c="dimmed">
-                        {restaurant.city}
-                      </Text>
-                    </div>
-                  </Group>
-                  <Text size="sm">{restaurant.address_string}</Text>
-                </Card>
-              ))
-            ) : (
-              <Center py="xl">
-                <Text size="sm" c="dimmed">
-                  Inga restauranger hittades
-                </Text>
-              </Center>
-            )}
-          </Stack>
-        {/* </ScrollArea> */}
+        <Stack gap="sm">
+          {filteredBySearch.length > 0 ? (
+            filteredBySearch.map((restaurant) => (
+              <Card
+                key={restaurant.id}
+                padding="md"
+                radius="md"
+                withBorder
+                style={{
+                  cursor: 'pointer',
+                  borderWidth: 2,
+                  borderColor:
+                    selectedRestaurant?.id === restaurant.id ? '#b21515ff' : '#dee2e6',
+                  backgroundColor:
+                    selectedRestaurant?.id === restaurant.id ? '#ffe7e7ff' : 'white',
+                  transition: 'all 0.2s ease',
+                }}
+                onClick={() => {
+                  setSelectedRestaurant(restaurant);
+                  setErrors([]);
+                }}
+              >
+                <Group justify="space-between" mb="xs">
+                  <div>
+                    <Text fw={500}>{restaurant.name}</Text>
+                    <Text size="sm" c="dimmed">
+                      {restaurant.city}
+                    </Text>
+                  </div>
+                </Group>
+                <Text size="sm">{restaurant.address_string}</Text>
+              </Card>
+            ))
+          ) : (
+            <Center py="xl">
+              <Text size="sm" c="dimmed">
+                Inga restauranger hittades
+              </Text>
+            </Center>
+          )}
+        </Stack>
       </Stack>
     );
   };
 
-  const Step3TimeSelection = () => {
+  const renderStep3 = () => {
     if (!selectedRestaurant) return null;
-
     const availability =
       MOCK_AVAILABILITY[selectedRestaurant.id as keyof typeof MOCK_AVAILABILITY] || [];
-
     const visibleDates = availability.slice(
       currentWeekOffset * 7,
       currentWeekOffset * 7 + 7
     );
-
     const canGoPrev = currentWeekOffset > 0;
     const canGoNext = currentWeekOffset < 3;
-
     return (
       <Stack gap="md">
         {errors.length > 0 && (
@@ -371,8 +334,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           </Button>
         </Group>
 
-        {/* <ScrollArea style={{ height: '350px' }}> */}
-          <Stack gap="lg" pr="md">
+        <Stack gap="lg" pr="md">
             {visibleDates.length > 0 ? (
               visibleDates.map((slot, idx) => (
                 <Card key={idx} padding="md" radius="md" withBorder>
@@ -418,13 +380,12 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
                 </Text>
               </Center>
             )}
-          </Stack>
-        {/* </ScrollArea> */}
+        </Stack>
       </Stack>
     );
   };
 
-  const Step4Confirmation = () => {
+  const renderStep4 = () => {
     const categoryName = categories.find((c) => c.id.toString() === eventDetails.category)?.name;
     const selectedTagNames = allTags
       .filter((tag) => eventDetails.tags.includes(tag.id.toString()))
@@ -561,10 +522,10 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
       ) : null}
 
       <Box style={{ flex: 1, overflow: 'auto', marginBottom: '16px' }}>
-        {currentStep === 0 && <Step1EventDetails />}
-        {currentStep === 1 && <Step2RestaurantSelection />}
-        {currentStep === 2 && <Step3TimeSelection />}
-        {currentStep === 3 && <Step4Confirmation />}
+        {currentStep === 0 && renderStep1()}
+        {currentStep === 1 && renderStep2()}
+        {currentStep === 2 && renderStep3()}
+        {currentStep === 3 && renderStep4()}
       </Box>
 
       <Box
@@ -617,29 +578,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           ) : (
             <Button
               onClick={() => {
-                const categoryName = categories.find((c) => c.id.toString() === eventDetails.category)?.name;
-                const selectedTagNames = allTags
-                  .filter((tag) => eventDetails.tags.includes(tag.id.toString()))
-                  .map((tag) => tag.name);
-
-                const finalEventData = {
-                  event: {
-                    title: eventDetails.title,
-                    category: categoryName,
-                    description: eventDetails.description,
-                    tags: selectedTagNames,
-                  },
-                  restaurant: {
-                    name: selectedRestaurant?.name,
-                    city: selectedRestaurant?.city,
-                    address: selectedRestaurant?.address_string,
-                  },
-                  dateTime: selectedTime,
-                  createdAt: new Date().toISOString(),
-                };
-
                 alert('Event skapat!');
-
                 resetModal();
                 onClose();
               }}
