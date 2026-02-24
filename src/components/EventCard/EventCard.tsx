@@ -208,7 +208,13 @@ export default function EventCard({
               to={`/restaurang/${slugify(restaurant_name)}${typeof restaurant_id !== 'undefined' ? '-' + restaurant_id : ''}`}
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
-              {restaurant_name || 'Restaurang'}
+              {(() => {
+                const maxLength = 22;
+                if (!restaurant_name) return 'Restaurang';
+                return restaurant_name.length > maxLength
+                  ? restaurant_name.slice(0, maxLength).trim() + '…'
+                  : restaurant_name;
+              })()}
             </NavLink>{' '}
             ·{' '}
             {(() => {
