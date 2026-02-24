@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   Box,
@@ -14,7 +14,8 @@ import {
 import { MapPin, ExternalLink } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
-import { slugify, extractIdFromSlug } from '../../utils/slugify';
+import { extractIdFromSlug } from '../../utils/slugify';
+import { Carousel } from '@mantine/carousel';
 
 type Restaurant = {
   id: number;
@@ -35,6 +36,8 @@ type Restaurant = {
 export default function RestaurangDetails(): React.ReactNode {
   // const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const emblaApiRef = useRef<any>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,6 +91,38 @@ export default function RestaurangDetails(): React.ReactNode {
     if (slug) loadRestaurant();
   }, [slug, state]);
 
+  // Parse TripAdvisor photos if available (alltid deklarera och parsa, även om restaurant är null)
+  let photos: string[] = [];
+  if (restaurant && restaurant.photos) {
+    try {
+      const parsed = JSON.parse(restaurant.photos);
+      if (Array.isArray(parsed)) {
+        photos = parsed;
+      }
+    } catch {}
+  }
+
+  // Enkel autoplay för karusellen
+  useEffect(() => {
+    if (!photos || photos.length <= 1) return;
+    setCurrentSlide(0); // starta alltid från första bilden när nya bilder laddas
+    const max = Math.min(photos.length, 5);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % max);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [photos.length]);
+
+  // Synka embla-carousel till rätt slide när currentSlide ändras
+  useEffect(() => {
+    if (
+      emblaApiRef.current &&
+      typeof emblaApiRef.current.scrollTo === 'function'
+    ) {
+      emblaApiRef.current.scrollTo(currentSlide);
+    }
+  }, [currentSlide]);
+
   if (loading) {
     return (
       <Text p='xl' ta='center' c='dimmed'>
@@ -102,17 +137,6 @@ export default function RestaurangDetails(): React.ReactNode {
         {error || 'Restaurang hittades inte'}
       </Text>
     );
-  }
-
-  // Parse TripAdvisor photos if available
-  let photos: string[] = [];
-  if (restaurant.photos) {
-    try {
-      const parsed = JSON.parse(restaurant.photos);
-      if (Array.isArray(parsed)) {
-        photos = parsed;
-      }
-    } catch {}
   }
 
   return (
@@ -151,21 +175,42 @@ export default function RestaurangDetails(): React.ReactNode {
 
       <Group align='flex-start' gap='md' wrap='wrap'>
         <Box style={{ flex: 1, minWidth: '300px' }}>
-          {photos.length > 0 ? (
-            <Image
-              src={photos[0]}
-              className='restaurant-image'
-              height={250}
-              bdrs='md'
-            />
+          {photos.length > 1 ? (
+            <Stack>
+              <Carousel
+                withIndicators
+                height={250}
+                slideSize='100%'
+                styles={{ indicator: { background: '#333' } }}
+                withControls={false}
+                emblaOptions={{ loop: true }}
+                getEmblaApi={(api) => {
+                  emblaApiRef.current = api;
+                }}
+                onSlideChange={setCurrentSlide}>
+                {photos.slice(0, 5).map((photo, idx) => (
+                  <Carousel.Slide key={idx}>
+                    <Image
+                      src={photo}
+                      className='restaurant-image'
+                      height={250}
+                      fit='cover'
+                      bdrs='md'
+                    />
+                  </Carousel.Slide>
+                ))}
+              </Carousel>
+            </Stack>
           ) : (
             <Image
               src={
+                photos[0] ||
                 restaurant.cover_picture_url ||
                 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
               }
               className='restaurant-image'
               height={250}
+              fit='cover'
               bdrs='md'
             />
           )}

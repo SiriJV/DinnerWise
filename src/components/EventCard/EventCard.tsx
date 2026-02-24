@@ -15,6 +15,7 @@ import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { NavLink } from 'react-router-dom';
 import { fetchUsers, type User } from '../../api/users';
 import { slugify, generateEventSlug } from '../../utils/slugify';
+import { fetchRestaurantById, type Restaurant } from '../../api/restaurants';
 import { useAuth } from '../../contexts/AuthContext';
 
 type EventCardProps = {
@@ -52,6 +53,7 @@ export default function EventCard({
 }: EventCardProps) {
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const { isLoggedIn, bookmarks, addBookmark, removeBookmark } = useAuth();
 
   useEffect(() => {
@@ -75,6 +77,24 @@ export default function EventCard({
     }
     loadUsers();
   }, [id, current_participants]);
+
+  useEffect(() => {
+    if (restaurant_id) {
+      fetchRestaurantById(restaurant_id).then(setRestaurant);
+    }
+  }, [restaurant_id]);
+
+  let restaurantPhoto = undefined;
+  if (restaurant?.photos) {
+    try {
+      const arr = JSON.parse(restaurant.photos);
+      if (Array.isArray(arr) && arr.length > 0) {
+        restaurantPhoto = arr[0];
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
 
   const displayMaxSpots = max_participants;
   const displayCurrentParticipants = current_participants || 0;
@@ -123,14 +143,17 @@ export default function EventCard({
       className='eventCard'
       component={NavLink}
       to={`/event/${generateEventSlug(title, id)}`}
-      state={{ id }}
+      state={{ id, restaurantPhoto }}
       shadow='sm'
       radius='md'
       pb='0'
       withBorder>
       <Card.Section pos='relative'>
         <Image
-          src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+          src={
+            restaurantPhoto ||
+            'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+          }
           h={140}
           alt={title}
           fit='cover'

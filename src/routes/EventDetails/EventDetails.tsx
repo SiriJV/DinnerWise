@@ -88,9 +88,14 @@ export default function EventDetails(): React.ReactNode {
     loadUsers();
   }, [event]);
 
+  let restaurantPhoto = undefined;
   const location = useLocation();
-  const state = location.state as { id?: string } | undefined;
-  // const { slug } = useParams<{ slug: string }>();
+  const state = location.state as
+    | { id?: string; restaurantPhoto?: string }
+    | undefined;
+  if (state?.restaurantPhoto) {
+    restaurantPhoto = state.restaurantPhoto;
+  }
 
   useEffect(() => {
     async function loadEvent() {
@@ -276,9 +281,8 @@ export default function EventDetails(): React.ReactNode {
                 <Group gap='0' wrap='nowrap' className='host-row'>
                   <Image
                     src={
-                      host?.profile_picture_url ||
-                      'https://placehold.co/200x200/png?text=Profilbild'
-                      // 'https://images.unsplash.com/photo-1560250097-0b93528c311a'
+                      restaurantPhoto ||
+                      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
                     }
                     w={{ base: 80, md: 100 }}
                     className='host-image'
@@ -323,7 +327,10 @@ export default function EventDetails(): React.ReactNode {
                   className='restaurant-image-box'
                   style={{ textDecoration: 'none', color: 'inherit' }}>
                   <Image
-                    src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+                    src={
+                      restaurantPhoto ||
+                      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+                    }
                     className='restaurant-image'
                     height={140}
                   />
