@@ -239,12 +239,16 @@ export default function EventCard({
                         !/^SE|Sverige|Sweden$/i.test(s),
                     ) || '';
               }
-              let addressString = street.trim() + (city ? `, ${city}` : '');
-              const maxAddressLength = 28;
-              if (addressString.length > maxAddressLength) {
-                addressString =
-                  addressString.slice(0, maxAddressLength).trim() + '…';
+              // Always show city if available
+              const maxStreetLength = 22;
+              let streetDisplay = street.trim();
+              if (streetDisplay.length > maxStreetLength) {
+                streetDisplay =
+                  streetDisplay.slice(0, maxStreetLength).trim() + '…';
               }
+              let addressString = city
+                ? `${streetDisplay}, ${city}`
+                : streetDisplay;
               return addressString;
             })()}
           </Text>
