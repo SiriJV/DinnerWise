@@ -86,7 +86,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             Sparade ({bookmarks.length})
           </Tabs.Tab>
           <Tabs.Tab value='past' color='black'>
-            Tidigare
+            Tidigare (0)
           </Tabs.Tab>
         </Tabs.List>
 
