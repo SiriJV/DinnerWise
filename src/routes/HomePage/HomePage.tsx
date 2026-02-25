@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import {
   Divider,
   Group,
@@ -34,6 +35,8 @@ import type { EventType } from '../../types/EventType';
 import './HomePage.scss';
 
 export default function HomePage() {
+  const location = useLocation();
+  const navigationType = useNavigationType ? useNavigationType() : 'PUSH';
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,14 +50,29 @@ export default function HomePage() {
 
   const [modalOpened, setModalOpened] = useState(false);
 
-  // Pagination state
-  const [activePage, setActivePage] = useState(1);
+  // Pagination state with sessionStorage persistence
   const eventTitleRef = useRef<HTMLHeadingElement>(null);
   const pageSize = 9;
+  const PAGINATION_KEY = 'homepage_activePage';
+  const getInitialPage = () => {
+    // Återställ till 1 om navigation är PUSH (t.ex. klick på HomePage-länk)
+    if (navigationType === 'PUSH') {
+      sessionStorage.removeItem(PAGINATION_KEY);
+      return 1;
+    }
+    const stored = sessionStorage.getItem(PAGINATION_KEY);
+    return stored ? parseInt(stored, 10) || 1 : 1;
+  };
+  const [activePage, setActivePage] = useState<number>(getInitialPage);
 
   // Chunk events into pages
   const eventPages = chunk(events, pageSize);
   const pagedEvents = eventPages[activePage - 1] || [];
+
+  // Spara pagineringsläge när det ändras
+  useEffect(() => {
+    sessionStorage.setItem(PAGINATION_KEY, String(activePage));
+  }, [activePage]);
 
   useEffect(() => {
     async function loadEvents() {
@@ -87,7 +105,7 @@ export default function HomePage() {
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
         setEvents(data);
-        setActivePage(1); // Reset to first page on new fetch
+        setActivePage(getInitialPage()); // Återställ till sparad sida eller 1
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -96,6 +114,7 @@ export default function HomePage() {
     }
 
     loadEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryFilters, cityFilters, tagFilters, priceFilters, sortBy]);
 
   const handleSortChange = (value: SortValue) => {
@@ -116,7 +135,10 @@ export default function HomePage() {
 
   return (
     <>
-      <CreateEventModal opened={modalOpened} onClose={() => setModalOpened(false)} />
+      <CreateEventModal
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+      />
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
       <FloatingActionButton onClick={() => setModalOpened(true)} />
       <Stack p='md'>
