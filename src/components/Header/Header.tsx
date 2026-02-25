@@ -5,6 +5,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 import HeaderLoginButton from './HeaderLoginButton';
 import { useAuth } from '../../contexts/AuthContext';
+import { Brain } from 'lucide-react';
 
 interface HeaderProps {
   opened: boolean;
@@ -29,9 +30,12 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
 
         <NavLink to='/' onClick={onClose}>
           <UnstyledButton className='logo'>
-            <Title order={1} size='lg'>
-              DinnerWise
-            </Title>
+            <Group gap='xs'>
+              <Brain color='white' />
+              <Title order={1} size='lg'>
+                DinnerWise
+              </Title>
+            </Group>
           </UnstyledButton>
         </NavLink>
       </Group>
