@@ -52,8 +52,12 @@ export default function TagPage() {
 
         url.searchParams.append('tag_ids', currentTag.id.toString());
 
-        cityFilters.forEach((id) => url.searchParams.append('city_ids', id.toString()));
-        priceFilters.forEach((id) => url.searchParams.append('price_ids', id.toString()));
+        cityFilters.forEach((id) =>
+          url.searchParams.append('city_ids', id.toString()),
+        );
+        priceFilters.forEach((id) =>
+          url.searchParams.append('price_ids', id.toString()),
+        );
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
@@ -74,25 +78,25 @@ export default function TagPage() {
     loadEvents();
   }, [tag, cityFilters, priceFilters, sortBy]);
 
-  if (error) return <Text c="red">{error}</Text>;
+  if (error) return <Text c='red'>{error}</Text>;
   if (!tag) return <Text>Tagg hittades inte</Text>;
 
   return (
-    <Stack p="md">
+    <Stack p='md'>
       <Title order={1}>{tag.name}</Title>
 
-      <Divider mt="sm" mb="lg" />
+      <Divider mt='sm' mb='lg' />
 
-      <Group justify="space-between">
+      <Group justify='space-between'>
         <Group>
           <SearchableFilterDropdown
-            label="Stad"
-            fetchUrl="http://localhost:3001/cities"
+            label='Stad'
+            fetchUrl='http://localhost:3001/cities'
             onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
           />
 
           <PriceDropdown
-            label="Pris"
+            label='Pris'
             onApply={(selected) => setPriceFilters(selected.map((s) => s.id))}
           />
         </Group>
@@ -100,25 +104,38 @@ export default function TagPage() {
         <Sort onSortChange={(value) => setSortBy(value)} />
       </Group>
 
-      <Stack mt="xs">
+      <Stack mt='xs'>
         {loading ? (
-          <Text p="md" ta="center" c="dimmed">
+          <Text p='md' ta='center' c='dimmed'>
             Laddar events…
           </Text>
         ) : events.length === 0 ? (
-          <Text p="md" ta="center">
+          <Text p='md' ta='center'>
             Inga events för denna tagg.
           </Text>
         ) : (
-          <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing="md">
+          <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
             {events.map((event) => (
               <EventCard
                 key={event.id}
                 id={event.id}
                 title={event.title}
                 description={event.description}
-                current_participants={event.current_participants}
-                price={event.price}
+                current_participants={
+                  typeof event.current_participants === 'number'
+                    ? event.current_participants
+                    : parseInt(event.current_participants ?? '0', 10) || 0
+                }
+                max_participants={
+                  typeof event.max_participants === 'number'
+                    ? event.max_participants
+                    : parseInt(event.max_participants ?? '8', 10) || 8
+                }
+                price={
+                  typeof event.price === 'number'
+                    ? event.price
+                    : parseFloat(event.price ?? '0') || 0
+                }
                 date={new Date(event.date)}
                 start_time={event.start_time}
                 end_time={event.end_time}

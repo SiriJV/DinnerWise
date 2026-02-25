@@ -269,9 +269,21 @@ export default function RestaurangDetails(): React.ReactNode {
                 id={event.id}
                 title={event.title}
                 description={event.description}
-                current_participants={event.current_participants}
-                max_participants={event.max_participants}
-                price={event.price}
+                current_participants={
+                  typeof event.current_participants === 'number'
+                    ? event.current_participants
+                    : parseInt(event.current_participants ?? '0', 10) || 0
+                }
+                max_participants={
+                  typeof event.max_participants === 'number'
+                    ? event.max_participants
+                    : parseInt(event.max_participants ?? '8', 10) || 8
+                }
+                price={
+                  typeof event.price === 'number'
+                    ? event.price
+                    : parseFloat(event.price ?? '0') || 0
+                }
                 date={new Date(event.date)}
                 start_time={event.start_time}
                 end_time={event.end_time}
