@@ -54,6 +54,8 @@ export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: 
       closeOnItemClick={false}
       width={260}
       shadow="md"
+      position="bottom-start"
+      styles={{ dropdown: { zIndex: 10000 } }}
     >
       <Menu.Target>
         <Button rightSection={<ChevronDown size={18} />}>
