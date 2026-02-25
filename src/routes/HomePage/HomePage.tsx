@@ -146,7 +146,7 @@ export default function HomePage() {
         <Divider mt='sm' mb='lg' />
         <Stack mt='xs'>
           <Title order={2} ref={eventTitleRef}>
-            Event
+            {`Event (${events.length})`}
           </Title>
           <Group justify='space-between'>
             <Group>
@@ -201,24 +201,30 @@ export default function HomePage() {
           ) : (
             <>
               <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-                {pagedEvents.map((event) => (
-                  <EventCard
-                    key={event.id}
-                    id={event.id}
-                    title={event.title}
-                    description={event.description}
-                    current_participants={event.current_participants}
-                    max_participants={event.max_participants}
-                    price={event.price}
-                    date={new Date(event.date)}
-                    start_time={event.start_time}
-                    end_time={event.end_time}
-                    restaurant_id={event.restaurant_id}
-                    restaurant_name={event.restaurant_name}
-                    restaurant_address={event.restaurant_address}
-                    restaurant_city={event.restaurant_city}
-                  />
-                ))}
+                {pagedEvents.length === 0 ? (
+                  <Text p='xl' ta='center' c='dimmed'>
+                    Det finns just nu inga event som matchar dina filter.
+                  </Text>
+                ) : (
+                  pagedEvents.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      id={event.id}
+                      title={event.title}
+                      description={event.description}
+                      current_participants={event.current_participants}
+                      max_participants={event.max_participants}
+                      price={event.price}
+                      date={new Date(event.date)}
+                      start_time={event.start_time}
+                      end_time={event.end_time}
+                      restaurant_id={event.restaurant_id}
+                      restaurant_name={event.restaurant_name}
+                      restaurant_address={event.restaurant_address}
+                      restaurant_city={event.restaurant_city}
+                    />
+                  ))
+                )}
               </SimpleGrid>
               {eventPages.length > 1 && (
                 <Group justify='center' mt='md'>
