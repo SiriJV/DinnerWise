@@ -58,6 +58,8 @@ export default function FilterDropdown({ fetchUrl, label, onApply }: FilterDropd
       closeOnItemClick={false}
       shadow="md"
       width={220}
+      position="bottom-start"
+      styles={{ dropdown: { zIndex: 10000 } }}
     >
       <Menu.Target>
         <Button rightSection={<ChevronDown size={20} />}>
