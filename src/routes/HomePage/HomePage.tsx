@@ -123,7 +123,8 @@ export default function HomePage() {
 
   const handlePageChange = (page: number) => {
     setActivePage(page);
-    if (eventTitleRef.current) {
+    // Only scroll if navigationType is PUSH (not POP/back)
+    if (navigationType === 'PUSH' && eventTitleRef.current) {
       const yOffset = -80; // Justera denna höjd till din header
       const y =
         eventTitleRef.current.getBoundingClientRect().top +
