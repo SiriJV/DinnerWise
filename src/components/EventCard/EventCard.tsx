@@ -239,7 +239,13 @@ export default function EventCard({
                         !/^SE|Sverige|Sweden$/i.test(s),
                     ) || '';
               }
-              return street.trim() + (city ? `, ${city}` : '');
+              let addressString = street.trim() + (city ? `, ${city}` : '');
+              const maxAddressLength = 28;
+              if (addressString.length > maxAddressLength) {
+                addressString =
+                  addressString.slice(0, maxAddressLength).trim() + '…';
+              }
+              return addressString;
             })()}
           </Text>
 
