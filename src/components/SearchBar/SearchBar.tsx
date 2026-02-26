@@ -11,10 +11,14 @@ type Suggestion = {
 };
 
 interface SearchBarProps {
-  variant?: 'expandable' | 'static';
+  variant?: 'expandable' | 'static' | 'fullwidth';
+  style?: React.CSSProperties;
 }
 
-export default function SearchBar({ variant = 'static' }: SearchBarProps) {
+export default function SearchBar({
+  variant = 'static',
+  style,
+}: SearchBarProps) {
   const [value, setValue] = useState('');
   const [data, setData] = useState<Suggestion[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -152,7 +156,47 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
             if (match) {
               handleNavigate(value);
             } else if (value.trim().length > 0) {
-              navigate(`/search?q=${encodeURIComponent(value.trim())}&type=events`);
+              navigate(
+                `/search?q=${encodeURIComponent(value.trim())}&type=events`,
+              );
+            }
+          }
+        }}
+        rightSection={
+          <SearchIcon
+            size={18}
+            className='searchBar-icon'
+            onClick={handleClick}
+            cursor='pointer'
+          />
+        }
+        data={data}
+        value={value}
+        onChange={setValue}
+        maxDropdownHeight={200}
+      />
+    );
+  }
+
+  if (variant === 'fullwidth') {
+    return (
+      <Autocomplete
+        className='searchBar'
+        style={{ width: '100%', ...style }}
+        placeholder='Sök...'
+        onOptionSubmit={(val) => {
+          handleNavigate(val);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const match = data.find((s) => s.value === value);
+            if (match) {
+              handleNavigate(value);
+            } else if (value.trim().length > 0) {
+              navigate(
+                `/search?q=${encodeURIComponent(value.trim())}&type=events`,
+              );
             }
           }
         }}
@@ -201,7 +245,9 @@ export default function SearchBar({ variant = 'static' }: SearchBarProps) {
               if (match) {
                 handleNavigate(value);
               } else if (value.trim().length > 0) {
-                navigate(`/search?q=${encodeURIComponent(value.trim())}&type=events`);
+                navigate(
+                  `/search?q=${encodeURIComponent(value.trim())}&type=events`,
+                );
               }
             }
           }}
