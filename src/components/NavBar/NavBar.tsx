@@ -24,9 +24,10 @@ type Category = {
 interface NavBarProps {
   opened: boolean;
   onClose: () => void;
+  offset?: number;
 }
 
-export default function NavBar({ opened, onClose }: NavBarProps) {
+export default function NavBar({ opened, onClose, offset }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -48,7 +49,15 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
     <>
       <div className='navOverlay' onClick={onClose} />
 
-      <nav className='sideNav'>
+      <nav
+        className='sideNav'
+        {...(typeof offset === 'number'
+          ? {
+              style: {
+                '--header-height': `${offset}px`,
+              } as React.CSSProperties,
+            }
+          : {})}>
         <Stack className='sideNavInner'>
           <Text fw={800} size='lg' px='md' pt='md'>
             Utforska efter kategori

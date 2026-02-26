@@ -10,10 +10,10 @@
 
 .sideNav {
   position: fixed;
-  top: var(--header-height, 60px);
+  top: var(--header-height, 100px);
   left: 0;
   width: 300px;
-  height: calc(100vh - var(--header-height, 60px));
+  height: calc(100vh - var(--header-height));
   background: white;
   z-index: 200;
 

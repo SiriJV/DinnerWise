@@ -13,9 +13,19 @@ export default function AppShell() {
   // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
 
+  // Responsive header height: 100px desktop, 60px mobile
+  const HEADER_HEIGHT = 120;
+  const HEADER_HEIGHT_MOBILE = 60;
+
   return (
     <>
-      <MantineAppShell header={{ height: 60 }} padding='0' withBorder={false}>
+      <MantineAppShell
+        header={{
+          // height: HEADER_HEIGHT,
+          height: { base: HEADER_HEIGHT_MOBILE, sm: HEADER_HEIGHT },
+        }}
+        padding='0'
+        withBorder={false}>
         <MantineAppShell.Header className='appHeader'>
           <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
@@ -39,7 +49,15 @@ export default function AppShell() {
         </MantineAppShell.Main>
       </MantineAppShell>
 
-      <NavBar opened={opened} onClose={close} />
+      <NavBar
+        opened={opened}
+        onClose={close}
+        offset={
+          window.matchMedia('(max-width: 48em)').matches
+            ? HEADER_HEIGHT_MOBILE
+            : HEADER_HEIGHT
+        }
+      />
     </>
   );
 }
