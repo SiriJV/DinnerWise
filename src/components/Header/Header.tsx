@@ -31,7 +31,7 @@ export default function Header({ opened, onToggle, onClose }: HeaderProps) {
         <NavLink to='/' onClick={onClose}>
           <UnstyledButton className='logo'>
             <Group gap='xs'>
-              <Brain color='white' />
+              {/* <Brain color='white' /> */}
               <Title order={1} size='lg'>
                 DinnerWise
               </Title>
