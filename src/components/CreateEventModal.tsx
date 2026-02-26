@@ -5,7 +5,7 @@ import { Calendar, Clock, AlertCircle, ChevronLeft, ChevronRight, Search } from 
 import { fetchCategories, type Category } from '../api/categories';
 import { fetchTags, type Tag } from '../api/tags';
 import { fetchRestaurants, type Restaurant } from '../api/restaurants';
-import FilterDropdown from './Filters/FilterDropdown/FilterDropdown';
+import SearchableFilterDropdown from './Filters/SearchFilterDropdown/SearchFilterDropdown';
 
 const HEADER_HEIGHT = 60;
 const HEADER_OFFSET = 10;
@@ -235,7 +235,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         />
 
         <Stack gap="xs">
-          <FilterDropdown
+          <SearchableFilterDropdown
             fetchUrl="http://localhost:3001/cities"
             label="Stad"
             onApply={(selected: Array<{id: number; name: string}>) => {
@@ -394,7 +394,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     return (
       <Stack gap="md">
         <Alert icon={<AlertCircle size={16} />} color="red" title="Granska ditt event">
-          Vänligen bekräfta alla detaljer innan du skapar din event.
+          Vänligen bekräfta alla detaljer innan du skapar ditt event.
         </Alert>
 
         <Card padding="md" radius="md" withBorder>
@@ -521,7 +521,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         </Box>
       ) : null}
 
-      <Box style={{ flex: 1, overflow: 'auto', marginBottom: '16px' }}>
+      <Box style={{ flex: 1, overflowY: 'auto', overflowX: 'visible', marginBottom: '16px', position: 'relative' }}>
         {currentStep === 0 && renderStep1()}
         {currentStep === 1 && renderStep2()}
         {currentStep === 2 && renderStep3()}
