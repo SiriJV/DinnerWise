@@ -1,4 +1,4 @@
-import { ActionIcon, Text } from '@mantine/core';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import { UserRound } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useModal } from '../../contexts/ModalContext';
@@ -32,7 +32,13 @@ export default function HeaderLoginButton({
         cursor: 'pointer',
       }}
       onClick={openLogin}>
-      <Text c='white'>Logga in</Text>
+      <ActionIcon variant='subtle' color='white' size='md' w='auto' p='5px'>
+        <Group gap='xs'>
+          <UserRound size={20} color='white' />
+
+          <Text c='white'>Logga in</Text>
+        </Group>
+      </ActionIcon>
     </button>
   );
 }
