@@ -116,6 +116,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
                   restaurant_name={event.restaurant_name}
                   restaurant_address={event.restaurant_address}
                   restaurant_city={event.restaurant_city}
+                  isHost={true}
                 />
               ))}
             </SimpleGrid>
