@@ -136,12 +136,8 @@ export default function HomePage() {
 
   return (
     <>
-      <CreateEventModal
-        opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-      />
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-      <FloatingActionButton onClick={() => setModalOpened(true)} />
+      <FloatingActionButton />{' '}
       <Stack p='md'>
         <ImageCarousel />
         <Divider mt='sm' mb='lg' />

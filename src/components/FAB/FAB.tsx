@@ -2,6 +2,8 @@ import { Button } from '@mantine/core';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
+import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 type FloatingActionButtonProps = {
   onClick?: () => void;
@@ -11,6 +13,7 @@ export default function FloatingActionButton({
   onClick,
 }: FloatingActionButtonProps) {
   const [modalOpened, setModalOpened] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   return (
     <>
@@ -34,10 +37,17 @@ export default function FloatingActionButton({
         aria-label='Skapa'>
         <Plus size={28} />
       </Button>
-      <CreateEventModal
-        opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-      />
+      {isLoggedIn ? (
+        <CreateEventModal
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+        />
+      ) : (
+        <CreateEventLoginModal
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+        />
+      )}
     </>
   );
 }
