@@ -1,21 +1,23 @@
 import { Button } from '@mantine/core';
 import { Plus } from 'lucide-react';
-import CreateEventModal from '../CreateEventModal';
 import { useState } from 'react';
+import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
 
 type FloatingActionButtonProps = {
   onClick?: () => void;
 };
 
-export default function FloatingActionButton({ onClick }: FloatingActionButtonProps) {
+export default function FloatingActionButton({
+  onClick,
+}: FloatingActionButtonProps) {
   const [modalOpened, setModalOpened] = useState(false);
 
   return (
     <>
       <Button
         onClick={onClick || (() => setModalOpened(true))}
-        radius="xl"
-        size="lg"
+        radius='xl'
+        size='lg'
         style={{
           position: 'fixed',
           bottom: 20,
@@ -29,11 +31,13 @@ export default function FloatingActionButton({ onClick }: FloatingActionButtonPr
           justifyContent: 'center',
           zIndex: 1000,
         }}
-        aria-label="Skapa"
-      >
+        aria-label='Skapa'>
         <Plus size={28} />
       </Button>
-      <CreateEventModal opened={modalOpened} onClose={() => setModalOpened(false)} />
+      <CreateEventModal
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+      />
     </>
   );
 }

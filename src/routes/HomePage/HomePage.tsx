@@ -25,7 +25,6 @@ import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import FloatingActionButton from '../../components/FAB/FAB';
-import CreateEventModal from '../../components/CreateEventModal';
 
 import EventCard from '../../components/EventCard/EventCard';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
@@ -33,6 +32,7 @@ import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
 
 import './HomePage.scss';
+import CreateEventModal from '../../components/Modals/CreateEventModal/CreateEventModal';
 
 export default function HomePage() {
   const location = useLocation();

@@ -1,11 +1,34 @@
 import { useState, useEffect } from 'react';
-import { Modal, Button, Stepper, TextInput, Textarea, Select, Group, Stack, Text, Badge, Card, Alert, MultiSelect, Box, Center } from '@mantine/core';
+import {
+  Modal,
+  Button,
+  Stepper,
+  TextInput,
+  Textarea,
+  Select,
+  Group,
+  Stack,
+  Text,
+  Badge,
+  Card,
+  Alert,
+  MultiSelect,
+  Box,
+  Center,
+} from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { Calendar, Clock, AlertCircle, ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { fetchCategories, type Category } from '../api/categories';
-import { fetchTags, type Tag } from '../api/tags';
-import { fetchRestaurants, type Restaurant } from '../api/restaurants';
-import SearchableFilterDropdown from './Filters/SearchFilterDropdown/SearchFilterDropdown';
+import {
+  Calendar,
+  Clock,
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from 'lucide-react';
+import { fetchRestaurants, type Restaurant } from '../../../api/restaurants';
+import { fetchCategories, type Category } from '../../../api/categories';
+import { fetchTags, type Tag } from '../../../api/tags';
+import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
 
 const HEADER_HEIGHT = 60;
 const HEADER_OFFSET = 10;
@@ -28,7 +51,10 @@ interface CreateEventModalProps {
 }
 
 const generateAvailability = () => {
-  const availability: Record<number, { date: string; slots: { time: string; available: boolean }[] }[]> = {};
+  const availability: Record<
+    number,
+    { date: string; slots: { time: string; available: boolean }[] }[]
+  > = {};
   const now = new Date(2026, 1, 19);
 
   for (let restaurantId = 1; restaurantId <= 100; restaurantId++) {
@@ -48,7 +74,17 @@ const generateAvailability = () => {
         });
 
         const slots = [];
-        const timeSlots = ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'];
+        const timeSlots = [
+          '17:00',
+          '17:30',
+          '18:00',
+          '18:30',
+          '19:00',
+          '19:30',
+          '20:00',
+          '20:30',
+          '21:00',
+        ];
 
         for (const time of timeSlots) {
           slots.push({ time, available: Math.random() > 0.25 });
@@ -72,7 +108,8 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     description: '',
     tags: [],
   });
-  const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<Restaurant | null>(null);
   const [selectedTime, setSelectedTime] = useState<SelectedTime | null>(null);
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 
@@ -100,7 +137,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
   useEffect(() => {
     const loadData = async () => {
       if (!opened) return;
-      
+
       setIsLoading(true);
       try {
         const [categoriesData, tagsData, restaurantsData] = await Promise.all([
@@ -122,23 +159,25 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     loadData();
   }, [opened]);
 
-  const categoryOptions = categories.length > 0 
-    ? categories.map((cat) => ({ value: cat.id.toString(), label: cat.name }))
-    : [];
-  const tagOptions = allTags.length > 0
-    ? allTags.map((tag) => ({ value: tag.id.toString(), label: tag.name }))
-    : [];
+  const categoryOptions =
+    categories.length > 0
+      ? categories.map((cat) => ({ value: cat.id.toString(), label: cat.name }))
+      : [];
+  const tagOptions =
+    allTags.length > 0
+      ? allTags.map((tag) => ({ value: tag.id.toString(), label: tag.name }))
+      : [];
 
   const [cityFilters, setCityFilters] = useState<number[]>([]);
-  const [uniqueCities, setUniqueCities] = useState<{ id: number; name: string }[]>([]);
+  const [uniqueCities, setUniqueCities] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   useEffect(() => {
     const cities = Array.from(
       new Map(
-        restaurants
-          .filter((r) => r.city)
-          .map((r) => [r.city, r])
-      ).values()
+        restaurants.filter((r) => r.city).map((r) => [r.city, r]),
+      ).values(),
     );
     const uniqueCityList = cities
       .map((restaurant, idx) => ({
@@ -157,21 +196,24 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         })
       : restaurants;
   const filteredBySearch = filteredByCity.filter((r) =>
-    r.name.toLowerCase().includes(restaurantSearch.toLowerCase())
+    r.name.toLowerCase().includes(restaurantSearch.toLowerCase()),
   );
 
   const renderStep1 = () => {
     if (isLoading) {
       return (
-        <Stack gap="md">
-          <Text c="dimmed">Laddar kategorier...</Text>
+        <Stack gap='md'>
+          <Text c='dimmed'>Laddar kategorier...</Text>
         </Stack>
       );
     }
     return (
-      <Stack gap="md">
+      <Stack gap='md'>
         {errors.length > 0 && (
-          <Alert icon={<AlertCircle size={16} />} color="red" title="Valideringsfel">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            color='red'
+            title='Valideringsfel'>
             <ul style={{ marginLeft: 20 }}>
               {errors.map((error, idx) => (
                 <li key={idx}>{error}</li>
@@ -180,38 +222,49 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           </Alert>
         )}
         <TextInput
-          label="Titel"
-          placeholder="Ge ditt event en titel"
+          label='Titel'
+          placeholder='Ge ditt event en titel'
           value={eventDetails.title}
-          onChange={(e) => setEventDetails({ ...eventDetails, title: e.currentTarget.value })}
+          onChange={(e) =>
+            setEventDetails({ ...eventDetails, title: e.currentTarget.value })
+          }
           required
         />
         <Select
-          label="Kategori"
-          placeholder="Välj en passande kategori"
+          label='Kategori'
+          placeholder='Välj en passande kategori'
           data={categoryOptions}
           value={eventDetails.category}
-          onChange={(value) => setEventDetails({ ...eventDetails, category: value })}
+          onChange={(value) =>
+            setEventDetails({ ...eventDetails, category: value })
+          }
           required
           searchable
           clearable
-          nothingFoundMessage="Ingen kategori hittades"
+          nothingFoundMessage='Ingen kategori hittades'
           styles={{ dropdown: { zIndex: 9999 } }}
         />
         <Textarea
-          label="Beskrivning"
-          placeholder="Beskriv ditt event..."
+          label='Beskrivning'
+          placeholder='Beskriv ditt event...'
           value={eventDetails.description}
-          onChange={(e) => setEventDetails({ ...eventDetails, description: e.currentTarget.value })}
+          onChange={(e) =>
+            setEventDetails({
+              ...eventDetails,
+              description: e.currentTarget.value,
+            })
+          }
           rows={4}
           required
         />
         <MultiSelect
-          label="Taggar (valfritt)"
-          placeholder="Sök och välj passande taggar"
+          label='Taggar (valfritt)'
+          placeholder='Sök och välj passande taggar'
           data={tagOptions}
           value={eventDetails.tags}
-          onChange={(values) => setEventDetails({ ...eventDetails, tags: values })}
+          onChange={(values) =>
+            setEventDetails({ ...eventDetails, tags: values })
+          }
           searchable
           clearable
         />
@@ -221,68 +274,78 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
 
   const renderStep2 = () => {
     return (
-      <Stack gap="md">
+      <Stack gap='md'>
         {errors.length > 0 && (
-          <Alert icon={<AlertCircle size={16} />} color="red" title="Valideringsfel">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            color='red'
+            title='Valideringsfel'>
             {errors[0]}
           </Alert>
         )}
         <TextInput
-          placeholder="Sök restaurang..."
+          placeholder='Sök restaurang...'
           leftSection={<Search size={16} />}
           value={restaurantSearch}
           onChange={(e) => setRestaurantSearch(e.currentTarget.value)}
         />
 
-        <Stack gap="xs">
+        <Stack gap='xs'>
           <SearchableFilterDropdown
-            fetchUrl="http://localhost:3001/cities"
-            label="Stad"
-            onApply={(selected: Array<{id: number; name: string}>) => {
-              const selectedIds = selected.map((city: {id: number; name: string}) => {
-                const idx = uniqueCities.findIndex((c: {id: number; name: string}) => c.name === city.name);
-                return idx;
-              });
+            fetchUrl='http://localhost:3001/cities'
+            label='Stad'
+            onApply={(selected: Array<{ id: number; name: string }>) => {
+              const selectedIds = selected.map(
+                (city: { id: number; name: string }) => {
+                  const idx = uniqueCities.findIndex(
+                    (c: { id: number; name: string }) => c.name === city.name,
+                  );
+                  return idx;
+                },
+              );
               setCityFilters(selectedIds.filter((id: number) => id !== -1));
             }}
           />
         </Stack>
-        <Stack gap="sm">
+        <Stack gap='sm'>
           {filteredBySearch.length > 0 ? (
             filteredBySearch.map((restaurant) => (
               <Card
                 key={restaurant.id}
-                padding="md"
-                radius="md"
+                padding='md'
+                radius='md'
                 withBorder
                 style={{
                   cursor: 'pointer',
                   borderWidth: 2,
                   borderColor:
-                    selectedRestaurant?.id === restaurant.id ? '#b21515ff' : '#dee2e6',
+                    selectedRestaurant?.id === restaurant.id
+                      ? '#b21515ff'
+                      : '#dee2e6',
                   backgroundColor:
-                    selectedRestaurant?.id === restaurant.id ? '#ffe7e7ff' : 'white',
+                    selectedRestaurant?.id === restaurant.id
+                      ? '#ffe7e7ff'
+                      : 'white',
                   transition: 'all 0.2s ease',
                 }}
                 onClick={() => {
                   setSelectedRestaurant(restaurant);
                   setErrors([]);
-                }}
-              >
-                <Group justify="space-between" mb="xs">
+                }}>
+                <Group justify='space-between' mb='xs'>
                   <div>
                     <Text fw={500}>{restaurant.name}</Text>
-                    <Text size="sm" c="dimmed">
+                    <Text size='sm' c='dimmed'>
                       {restaurant.city}
                     </Text>
                   </div>
                 </Group>
-                <Text size="sm">{restaurant.address_string}</Text>
+                <Text size='sm'>{restaurant.address_string}</Text>
               </Card>
             ))
           ) : (
-            <Center py="xl">
-              <Text size="sm" c="dimmed">
+            <Center py='xl'>
+              <Text size='sm' c='dimmed'>
                 Inga restauranger hittades
               </Text>
             </Center>
@@ -295,128 +358,147 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
   const renderStep3 = () => {
     if (!selectedRestaurant) return null;
     const availability =
-      MOCK_AVAILABILITY[selectedRestaurant.id as keyof typeof MOCK_AVAILABILITY] || [];
+      MOCK_AVAILABILITY[
+        selectedRestaurant.id as keyof typeof MOCK_AVAILABILITY
+      ] || [];
     const visibleDates = availability.slice(
       currentWeekOffset * 7,
-      currentWeekOffset * 7 + 7
+      currentWeekOffset * 7 + 7,
     );
     const canGoPrev = currentWeekOffset > 0;
     const canGoNext = currentWeekOffset < 3;
     return (
-      <Stack gap="md">
+      <Stack gap='md'>
         {errors.length > 0 && (
-          <Alert icon={<AlertCircle size={16} />} color="red" title="Valideringsfel">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            color='red'
+            title='Valideringsfel'>
             {errors[0]}
           </Alert>
         )}
 
-        <Group justify="space-between" align="center" gap="md">
+        <Group justify='space-between' align='center' gap='md'>
           <Button
-            variant="light"
-            size="sm"
+            variant='light'
+            size='sm'
             onClick={() => setCurrentWeekOffset((p) => p - 1)}
             disabled={!canGoPrev}
-            leftSection={<ChevronLeft size={16} />}
-          >
-          </Button>
+            leftSection={<ChevronLeft size={16} />}></Button>
 
-          <Text fw={500} size="sm" style={{ minWidth: '120px', textAlign: 'center' }}>
+          <Text
+            fw={500}
+            size='sm'
+            style={{ minWidth: '120px', textAlign: 'center' }}>
             Vecka {currentWeekOffset + 1} av 4
           </Text>
 
           <Button
-            variant="light"
-            size="sm"
+            variant='light'
+            size='sm'
             onClick={() => setCurrentWeekOffset((p) => p + 1)}
             disabled={!canGoNext}
-            rightSection={<ChevronRight size={16} />}
-          >
-          </Button>
+            rightSection={<ChevronRight size={16} />}></Button>
         </Group>
 
-        <Stack gap="lg" pr="md">
-            {visibleDates.length > 0 ? (
-              visibleDates.map((slot, idx) => (
-                <Card key={idx} padding="md" radius="md" withBorder>
-                  <Stack gap="xs">
-                    <Text fw={500} size="sm" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Calendar size={16} />
-                      {slot.date}
-                    </Text>
-                    <Group gap="xs" wrap="wrap">
-                      {slot.slots.map((slotData) => (
-                        <Button
-                          key={slotData.time}
-                          variant={
-                            selectedTime?.date === slot.date && selectedTime?.time === slotData.time
-                              ? 'filled'
-                              : 'light'
+        <Stack gap='lg' pr='md'>
+          {visibleDates.length > 0 ? (
+            visibleDates.map((slot, idx) => (
+              <Card key={idx} padding='md' radius='md' withBorder>
+                <Stack gap='xs'>
+                  <Text
+                    fw={500}
+                    size='sm'
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}>
+                    <Calendar size={16} />
+                    {slot.date}
+                  </Text>
+                  <Group gap='xs' wrap='wrap'>
+                    {slot.slots.map((slotData) => (
+                      <Button
+                        key={slotData.time}
+                        variant={
+                          selectedTime?.date === slot.date &&
+                          selectedTime?.time === slotData.time
+                            ? 'filled'
+                            : 'light'
+                        }
+                        onClick={() => {
+                          if (slotData.available) {
+                            setSelectedTime({
+                              date: slot.date,
+                              time: slotData.time,
+                            });
+                            setErrors([]);
                           }
-                          onClick={() => {
-                            if (slotData.available) {
-                              setSelectedTime({ date: slot.date, time: slotData.time });
-                              setErrors([]);
-                            }
-                          }}
-                          size="xs"
-                          disabled={!slotData.available}
-                          leftSection={<Clock size={14} />}
-                          style={{
-                            opacity: slotData.available ? 1 : 0.5,
-                          }}
-                          title={!slotData.available ? 'Inte tillgänglig' : ''}
-                        >
-                          {slotData.time}
-                        </Button>
-                      ))}
-                    </Group>
-                  </Stack>
-                </Card>
-              ))
-            ) : (
-              <Center py="xl">
-                <Text size="sm" c="dimmed">
-                  Inga tillgängliga datum denna vecka
-                </Text>
-              </Center>
-            )}
+                        }}
+                        size='xs'
+                        disabled={!slotData.available}
+                        leftSection={<Clock size={14} />}
+                        style={{
+                          opacity: slotData.available ? 1 : 0.5,
+                        }}
+                        title={!slotData.available ? 'Inte tillgänglig' : ''}>
+                        {slotData.time}
+                      </Button>
+                    ))}
+                  </Group>
+                </Stack>
+              </Card>
+            ))
+          ) : (
+            <Center py='xl'>
+              <Text size='sm' c='dimmed'>
+                Inga tillgängliga datum denna vecka
+              </Text>
+            </Center>
+          )}
         </Stack>
       </Stack>
     );
   };
 
   const renderStep4 = () => {
-    const categoryName = categories.find((c) => c.id.toString() === eventDetails.category)?.name;
+    const categoryName = categories.find(
+      (c) => c.id.toString() === eventDetails.category,
+    )?.name;
     const selectedTagNames = allTags
       .filter((tag) => eventDetails.tags.includes(tag.id.toString()))
       .map((tag) => tag.name);
 
     return (
-      <Stack gap="md">
-        <Alert icon={<AlertCircle size={16} />} color="red" title="Granska ditt event">
+      <Stack gap='md'>
+        <Alert
+          icon={<AlertCircle size={16} />}
+          color='red'
+          title='Granska ditt event'>
           Vänligen bekräfta alla detaljer innan du skapar ditt event.
         </Alert>
 
-        <Card padding="md" radius="md" withBorder>
-          <Text fw={500} mb="md">
+        <Card padding='md' radius='md' withBorder>
+          <Text fw={500} mb='md'>
             Eventdetaljer
           </Text>
-          <Stack gap="xs" ml="md">
-            <Text size="sm">
+          <Stack gap='xs' ml='md'>
+            <Text size='sm'>
               <strong>Titel:</strong> {eventDetails.title}
             </Text>
-            <Text size="sm">
+            <Text size='sm'>
               <strong>Kategori:</strong> {categoryName}
             </Text>
-            <Text size="sm">
+            <Text size='sm'>
               <strong>Beskrivning:</strong> {eventDetails.description}
             </Text>
             {selectedTagNames.length > 0 && (
               <div>
-                <Text size="sm" mb="xs">
+                <Text size='sm' mb='xs'>
                   <strong>Taggar:</strong>
                 </Text>
-                <Group gap="xs" ml="md">
+                <Group gap='xs' ml='md'>
                   {selectedTagNames.map((tag) => (
                     <Badge key={tag}>{tag}</Badge>
                   ))}
@@ -426,32 +508,32 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           </Stack>
         </Card>
 
-        <Card padding="md" radius="md" withBorder>
-          <Text fw={500} mb="md">
+        <Card padding='md' radius='md' withBorder>
+          <Text fw={500} mb='md'>
             Restaurang
           </Text>
-          <Stack gap="xs" ml="md">
-            <Text size="sm">
+          <Stack gap='xs' ml='md'>
+            <Text size='sm'>
               <strong>Namn:</strong> {selectedRestaurant?.name}
             </Text>
-            <Text size="sm">
+            <Text size='sm'>
               <strong>Stad:</strong> {selectedRestaurant?.city}
             </Text>
-            <Text size="sm">
+            <Text size='sm'>
               <strong>Adress:</strong> {selectedRestaurant?.address_string}
             </Text>
           </Stack>
         </Card>
 
-        <Card padding="md" radius="md" withBorder>
-          <Text fw={500} mb="md">
+        <Card padding='md' radius='md' withBorder>
+          <Text fw={500} mb='md'>
             Datum & Tid
           </Text>
-          <Stack gap="xs" ml="md">
-            <Text size="sm">
+          <Stack gap='xs' ml='md'>
+            <Text size='sm'>
               <strong>Datum:</strong> {selectedTime?.date}
             </Text>
-            <Text size="sm">
+            <Text size='sm'>
               <strong>Tid:</strong> {selectedTime?.time}
             </Text>
           </Stack>
@@ -477,8 +559,8 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         resetModal();
         onClose();
       }}
-      title="Skapa Event"
-      size="xl"
+      title='Skapa Event'
+      size='xl'
       centered
       styles={{
         content: {
@@ -495,8 +577,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         },
       }}
       zIndex={1000}
-      withinPortal={true}
-    >
+      withinPortal={true}>
       {!isVerySmall ? (
         <Box style={{ marginBottom: '24px', flex: '0 0 auto' }}>
           <Stepper
@@ -511,17 +592,23 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
               step: {
                 padding: '8px 4px',
               },
-            }}
-          >
-            <Stepper.Step label="Detaljer" description="Eventinfo" />
-            <Stepper.Step label="Restaurang" description="Välj plats" />
-            <Stepper.Step label="Tid" description="Välj tid" />
-            <Stepper.Step label="Bekräfta" description="Granska" />
+            }}>
+            <Stepper.Step label='Detaljer' description='Eventinfo' />
+            <Stepper.Step label='Restaurang' description='Välj plats' />
+            <Stepper.Step label='Tid' description='Välj tid' />
+            <Stepper.Step label='Bekräfta' description='Granska' />
           </Stepper>
         </Box>
       ) : null}
 
-      <Box style={{ flex: 1, overflowY: 'auto', overflowX: 'visible', marginBottom: '16px', position: 'relative' }}>
+      <Box
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          overflowX: 'visible',
+          marginBottom: '16px',
+          position: 'relative',
+        }}>
         {currentStep === 0 && renderStep1()}
         {currentStep === 1 && renderStep2()}
         {currentStep === 2 && renderStep3()}
@@ -536,17 +623,15 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           paddingTop: '16px',
           borderTop: '1px solid #e9ecef',
           flex: '0 0 auto',
-        }}
-      >
+        }}>
         <Button
-          variant="default"
+          variant='default'
           onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-          disabled={currentStep === 0}
-        >
+          disabled={currentStep === 0}>
           Tillbaka
         </Button>
-        <Group gap="12px">
-          <Button variant="default" onClick={onClose}>
+        <Group gap='12px'>
+          <Button variant='default' onClick={onClose}>
             Avbryt
           </Button>
           {currentStep < 3 ? (
@@ -555,11 +640,14 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
                 const newErrors: string[] = [];
 
                 if (currentStep === 0) {
-                  if (!eventDetails.title.trim()) newErrors.push('Eventtitel krävs');
+                  if (!eventDetails.title.trim())
+                    newErrors.push('Eventtitel krävs');
                   if (!eventDetails.category) newErrors.push('Kategori krävs');
-                  if (!eventDetails.description.trim()) newErrors.push('Beskrivning krävs');
+                  if (!eventDetails.description.trim())
+                    newErrors.push('Beskrivning krävs');
                 } else if (currentStep === 1) {
-                  if (!selectedRestaurant) newErrors.push('Vänligen välj en restaurang');
+                  if (!selectedRestaurant)
+                    newErrors.push('Vänligen välj en restaurang');
                 } else if (currentStep === 2) {
                   if (!selectedTime) newErrors.push('Vänligen välj en tidslot');
                 }
@@ -571,8 +659,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
 
                 setErrors([]);
                 setCurrentStep(currentStep + 1);
-              }}
-            >
+              }}>
               Nästa
             </Button>
           ) : (
@@ -582,8 +669,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
                 resetModal();
                 onClose();
               }}
-              color="red"
-            >
+              color='red'>
               Skapa
             </Button>
           )}
