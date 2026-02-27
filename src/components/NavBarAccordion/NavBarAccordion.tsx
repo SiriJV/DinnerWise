@@ -18,22 +18,17 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
   const location = useLocation();
   const { isLoggedIn, logout } = useAuth();
   const { openLogin, openCreate } = useModal();
-  const [opened, setOpened] = useState<string[]>([]);
-
   const accordionItems = getAccordionItems(isLoggedIn);
 
-  useEffect(() => {
-    // Sätt bara initialt öppnad sektion vid första render
-    if (opened.length === 0) {
-      const match = accordionItems.find((item) =>
-        item.panels.some((panel) => panel.path === location.pathname),
-      );
-      if (match) {
-        setOpened([match.value]);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accordionItems]);
+  // Initialize opened state based on current location
+  const initialOpened = (() => {
+    const match = accordionItems.find((item) =>
+      item.panels.some((panel) => panel.path === location.pathname),
+    );
+    return match ? [match.value] : [];
+  })();
+
+  const [opened, setOpened] = useState<string[]>(initialOpened);
 
   return (
     <Accordion
@@ -58,7 +53,15 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
             .filter((panel) => panel.element !== null || panel.modal)
             .map((panel, index) => {
               const uniqueKey = `${panel.label || ''}-${panel.path || ''}-${index}`;
-              if (panel.modal === 'login') {
+
+              const handleClick = () => {
+                if (panel.modal === 'login') openLogin();
+                if (panel.modal === 'create') openCreate();
+                if (panel.modal === 'logout') logout();
+                if (onClose) onClose();
+              };
+
+              if (panel.modal) {
                 return (
                   <button
                     key={uniqueKey}
@@ -70,10 +73,7 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
                       width: '100%',
                       textAlign: 'left',
                     }}
-                    onClick={() => {
-                      openLogin();
-                      if (onClose) onClose();
-                    }}>
+                    onClick={handleClick}>
                     <Accordion.Panel
                       className={
                         index === item.panels.length - 1
@@ -85,64 +85,11 @@ export default function NavBarAccordion({ onClose }: NavBarAccordionProps) {
                   </button>
                 );
               }
-              if (panel.modal === 'create') {
-                return (
-                  <button
-                    key={uniqueKey}
-                    className='accordionLink'
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      width: '100%',
-                      textAlign: 'left',
-                    }}
-                    onClick={() => {
-                      openCreate();
-                      if (onClose) onClose();
-                    }}>
-                    <Accordion.Panel
-                      className={
-                        index === item.panels.length - 1
-                          ? 'lastPanel'
-                          : undefined
-                      }>
-                      {panel.label}
-                    </Accordion.Panel>
-                  </button>
-                );
-              }
-              if (panel.modal === 'logout') {
-                return (
-                  <button
-                    key={uniqueKey}
-                    className='accordionLink'
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      width: '100%',
-                      textAlign: 'left',
-                    }}
-                    onClick={() => {
-                      logout();
-                      if (onClose) onClose();
-                    }}>
-                    <Accordion.Panel
-                      className={
-                        index === item.panels.length - 1
-                          ? 'lastPanel'
-                          : undefined
-                      }>
-                      {panel.label}
-                    </Accordion.Panel>
-                  </button>
-                );
-              }
+
               return (
                 <NavLink
                   key={uniqueKey}
-                  to={panel.path}
+                  to={panel.path!}
                   onClick={onClose}
                   className={({ isActive }) =>
                     `accordionLink ${isActive ? 'active' : ''}`
