@@ -38,11 +38,11 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
   },
   {
     value: 'account',
-    label: 'Ditt konto',
+    label: isLoggedIn ? 'Mitt konto' : 'Ditt konto',
     panels: isLoggedIn
       ? [
           {
-            label: 'Din profil',
+            label: 'Min profil',
             path: '/profil/anna_s',
             element: <ProfilePage />,
           },
