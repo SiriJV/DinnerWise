@@ -32,7 +32,7 @@ export default function LoginButtons({ onClose }: LoginButtonsProps) {
 
   return (
     <>
-      <Stack gap='xs' align='stretch' p='md'>
+      <Stack gap='xs' align='stretch'>
         <Stack gap='xs'>
           <BaseButton
             variantType='primary'
