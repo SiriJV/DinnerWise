@@ -33,6 +33,7 @@ type EventCardProps = {
   restaurant_address?: string;
   restaurant_city?: string;
   maxDescriptionLength?: number;
+  isHost?: boolean;
 };
 
 export default function EventCard({
@@ -50,6 +51,7 @@ export default function EventCard({
   restaurant_address,
   restaurant_city,
   maxDescriptionLength = 100,
+  isHost = false,
 }: EventCardProps) {
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
@@ -160,15 +162,27 @@ export default function EventCard({
         />
 
         {isLoggedIn && (
-          <Box
-            className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
-            onClick={handleBookmarkClick}>
-            <BookmarkIcon
-              size={18}
-              color='black'
-              fill={isBookmarked ? 'black' : 'none'}
-            />
-          </Box>
+          <>
+            {isHost ? (
+              <Badge
+                color='rgba(211, 4, 59, 1)'
+                variant='filled'
+                size='sm'
+                className='hostBadge'>
+                Ditt event
+              </Badge>
+            ) : (
+              <Box
+                className={`bookmarkButton ${isBookmarked ? 'bookmarked' : ''}`}
+                onClick={handleBookmarkClick}>
+                <BookmarkIcon
+                  size={18}
+                  color='black'
+                  fill={isBookmarked ? 'black' : 'none'}
+                />
+              </Box>
+            )}
+          </>
         )}
 
         <Avatar
