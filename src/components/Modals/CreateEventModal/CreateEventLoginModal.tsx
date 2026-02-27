@@ -21,8 +21,15 @@ export default function CreateEventLoginModal({
       size='md'
       centered>
       <Text ta='center' mb='md'>
-        Du måste <Anchor onClick={openLogin}>logga in</Anchor> för att skapa ett
-        event.
+        Du måste{' '}
+        <Anchor
+          onClick={() => {
+            onClose();
+            openLogin();
+          }}>
+          logga in
+        </Anchor>{' '}
+        för att skapa ett event.
       </Text>
 
       <BaseButton
