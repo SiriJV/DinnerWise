@@ -24,6 +24,7 @@ export default function RegisteringBaseModal({
       size='lg'
       opened={opened}
       onClose={onClose}
+      yOffset='140'
       title={
         <Group gap='md' wrap='nowrap' className='modal-title-group'>
           <Text fw={600}>{title}</Text>
@@ -111,7 +112,6 @@ export default function RegisteringBaseModal({
           display: 'flex',
         },
         body: {
-          maxHeight: '70vh',
           overflowY: 'auto',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',

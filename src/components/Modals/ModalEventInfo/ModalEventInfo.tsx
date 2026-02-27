@@ -1,4 +1,4 @@
-import { Box, Text } from '@mantine/core';
+import { Alert, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
 import './ModalEventInfo.scss';
@@ -44,13 +44,16 @@ export default function ModalEventInfo({
   });
 
   return (
-    <Box bg='gray.2' p='md' bdrs='sm' className='modal-event-info'>
-      <Text size='lg' fw={600} pb='xs'>
-        {event.title}
-      </Text>
+    <Alert
+      color='red'
+      title={
+        <Text size='lg' fw={600} pb='xs'>
+          {event.title}
+        </Text>
+      }>
       <Text>
         <Text span fw={600}>
-          Datum:{' '}
+          Datum:
         </Text>
         {formattedDate}
       </Text>
@@ -81,7 +84,7 @@ export default function ModalEventInfo({
           </Text>
           {Math.floor(event.price)} kr
         </Text>
-      )}
-    </Box>
+      )}{' '}
+    </Alert>
   );
 }

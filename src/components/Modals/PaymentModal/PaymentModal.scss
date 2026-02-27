@@ -15,23 +15,18 @@
 }
 
 .payment-options-box {
-  border: 1px solid var(--mantine-color-gray-3);
-  border-top: none;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #dee2e6;
+  background-color: white;
   padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
   cursor: pointer;
-
-  &:first-of-type {
-    border-top: 1px solid var(--mantine-color-gray-3);
-    border-radius: var(--mantine-radius-xs) var(--mantine-radius-xs) 0 0;
-  }
-
-  &:last-of-type {
-    border-radius: 0 0 var(--mantine-radius-xs) var(--mantine-radius-xs);
-  }
+  transition: all 0.2s ease;
+  margin-bottom: var(--mantine-spacing-xs);
 
   &.active {
-    outline: 1px solid var(--mantine-color-red-6);
-    outline-offset: -1px;
-    background-color: var.$gray1;
+    border-color: #b21515ff;
+    background-color: #ffe7e7ff;
   }
 }
