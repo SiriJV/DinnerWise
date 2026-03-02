@@ -3,9 +3,9 @@ import {
   Text,
   UnstyledButton,
   Space,
-  Container,
   Group,
   Anchor,
+  Drawer,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
@@ -13,6 +13,13 @@ import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
+import { Brain } from 'lucide-react';
+import { useMediaQuery } from '@mantine/hooks';
+import { useAuth } from '../../contexts/AuthContext';
+import BaseButton from '../Buttons/BaseButton/BaseButton';
+import { useModal } from '../../contexts/ModalContext';
+import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
+import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
 
 type Category = {
   id: number;
@@ -25,10 +32,18 @@ interface NavBarProps {
   opened: boolean;
   onClose: () => void;
   offset?: number;
+  onClickCreate?: () => void;
 }
 
-export default function NavBar({ opened, onClose, offset }: NavBarProps) {
+export default function NavBar({
+  opened,
+  onClose,
+  onClickCreate,
+}: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const isMobile = useMediaQuery('(max-width: 48em)');
+  const [modalOpened, setModalOpened] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function loadCategories() {
@@ -47,23 +62,17 @@ export default function NavBar({ opened, onClose, offset }: NavBarProps) {
 
   return (
     <>
-      <div className='navOverlay' onClick={onClose} />
-
-      <nav
-        className='sideNav'
-        {...(typeof offset === 'number'
-          ? {
-              style: {
-                '--header-height': `${offset}px`,
-              } as React.CSSProperties,
-            }
-          : {})}>
-        <Stack className='sideNavInner'>
-          <Text fw={800} size='lg' px='md' pt='md'>
+      <Drawer
+        size={isMobile ? 'xs' : 'sm'}
+        opened={opened}
+        onClose={onClose}
+        zIndex={2000}
+        title={<Brain color='rgba(211, 4, 59, 1)' />}>
+        <Stack px='md' align='stretch'>
+          <Text fw={800} size='lg' pt='md'>
             Utforska efter kategori
           </Text>
-
-          <Stack gap={15} px='md'>
+          <Stack gap={15}>
             {categories.map((category) => (
               <NavLink
                 key={category.id}
@@ -78,61 +87,92 @@ export default function NavBar({ opened, onClose, offset }: NavBarProps) {
               </NavLink>
             ))}
           </Stack>
-
           {/* <Divider my='sm' /> */}
           <Space h='xs' />
 
-          {/* <Text fw={800} size='lg' px='md' pt='md'>
-            Om DinnerWise
-            </Text> */}
-          <NavBarAccordion onClose={onClose} />
+          {/* <BaseButton variant='primary' onClick={openCreate}>
+          Skapa event
+        </BaseButton>
+        <Space h='xs' /> */}
 
+          {/* <Anchor
+            variant='subtle'
+            c='red'
+            size='md'
+            onClick={() => {
+              // först öppna modal
+              setModalOpened(true);
+
+              // sedan stäng drawer nästa tick
+              setTimeout(() => {
+                onClose();
+              }, 0);
+            }}
+            style={{ cursor: 'pointer' }}>
+            Skapa event
+          </Anchor> */}
+
+          <NavBarAccordion onClose={onClose} />
           <Space h='xs' />
           <LoginButtons onClose={onClose} />
 
-          <Container size='lg'>
-            <Group
-              justify='space-between'
-              align='center'
-              py='md'
-              className='footer-bottom'
-              wrap='wrap'>
-              <Text size='sm' c='dimmed'>
-                © 2026 DinnerWise. All rights reserved.
-              </Text>
+          {/* <Container size='lg'> */}
+          <Stack
+            justify='center'
+            align='center'
+            // wrap='wrap'
+            className='footer-bottom'
+            style={{ width: '100%' }}>
+            <Text size='xs' c='dimmed'>
+              © 2026 DinnerWise. All rights reserved.
+            </Text>
 
-              <Group gap='md'>
-                <Anchor
-                  component={NavLink}
-                  to='/kopvillkor'
-                  size='sm'
-                  c='dimmed'
-                  underline='hover'>
-                  Köpvillkor
-                </Anchor>
+            <Group gap='md' w='100%' justify='space-around'>
+              <Anchor
+                component={NavLink}
+                to='/kopvillkor'
+                size='xs'
+                c='dimmed'
+                underline='hover'
+                onClick={onClose}>
+                Köpvillkor
+              </Anchor>
 
-                <Anchor
-                  component={NavLink}
-                  to='/integritetspolicy'
-                  size='sm'
-                  c='dimmed'
-                  underline='hover'>
-                  Integritetspolicy
-                </Anchor>
+              <Anchor
+                component={NavLink}
+                to='/integritetspolicy'
+                size='xs'
+                c='dimmed'
+                underline='hover'
+                onClick={onClose}>
+                Integritetspolicy
+              </Anchor>
 
-                <Anchor
-                  component={NavLink}
-                  to='/cookies'
-                  size='sm'
-                  c='dimmed'
-                  underline='hover'>
-                  Cookies
-                </Anchor>
-              </Group>
+              <Anchor
+                component={NavLink}
+                to='/cookies'
+                size='xs'
+                c='dimmed'
+                underline='hover'
+                onClick={onClose}>
+                Cookies
+              </Anchor>
             </Group>
-          </Container>
+          </Stack>
+          {/* </Container> */}
         </Stack>
-      </nav>
+      </Drawer>
+      {/* {isLoggedIn ? (
+        <CreateEventModal
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+        />
+      ) : (
+        <CreateEventLoginModal
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+        />
+      )} */}
     </>
   );
 }
