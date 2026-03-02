@@ -15,7 +15,7 @@ export default function AppShell() {
 
   // Responsive header height: 100px desktop, 60px mobile
   const HEADER_HEIGHT = 120;
-  const HEADER_HEIGHT_MOBILE = 60;
+  const HEADER_HEIGHT_MOBILE = 80;
 
   return (
     <>
