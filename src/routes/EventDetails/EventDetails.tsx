@@ -281,7 +281,7 @@ export default function EventDetails(): React.ReactNode {
                 <Group gap='0' wrap='nowrap' className='host-row'>
                   <Image
                     src={
-                      restaurantPhoto ||
+                      host?.profile_picture_url ||
                       'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
                     }
                     w={{ base: 80, md: 100 }}
