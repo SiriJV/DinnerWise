@@ -1,7 +1,7 @@
 import { Accordion, Text, type AccordionControlProps } from '@mantine/core';
 import { NavLink, useLocation } from 'react-router-dom';
 import { getAccordionItems } from '../../data/AccordionItems';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './NavBarAccordion.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
