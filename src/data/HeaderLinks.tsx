@@ -4,10 +4,9 @@ export type HeaderLink = {
 };
 
 export const headerLinks: HeaderLink[] = [
-  { path: '/', label: 'Menyval 1' },
-  { path: '/', label: 'Menyval 2' },
+  { path: '/stad/goteborg', label: 'Göteborg' },
+  { path: '/kategori/musik', label: 'Musik' },
   { path: '/', label: 'Menyval 3' },
   { path: '/', label: 'Menyval 4' },
   { path: '/', label: 'Menyval 5' },
-  { path: '/', label: 'Menyval 6' },
 ];
