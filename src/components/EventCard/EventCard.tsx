@@ -223,7 +223,7 @@ export default function EventCard({
               className='unstyledNavLink'
               onClick={(e) => e.stopPropagation()}>
               {(() => {
-                const maxLength = 22;
+                const maxLength = 30;
                 if (!restaurant_name) return 'Restaurang';
                 return restaurant_name.length > maxLength
                   ? restaurant_name.slice(0, maxLength).trim() + '…'
@@ -232,18 +232,14 @@ export default function EventCard({
             </NavLink>{' '}
             ·{' '}
             {(() => {
-              if (!restaurant_address) return 'Adress saknas';
-              // Split by comma, take first part as street
-              const [street] = restaurant_address.split(',');
-              // Prefer explicit restaurant_city prop if available
-              let city = restaurant_city;
-              // Fallback: try to extract city from address if not provided
-              if (!city && restaurant_address) {
+              if (restaurant_city) return restaurant_city;
+
+              if (restaurant_address) {
                 const parts = restaurant_address
                   .split(',')
                   .map((s) => s.trim());
-                // Find first part after street that is not just numbers or country
-                city =
+
+                const city =
                   parts
                     .slice(1)
                     .find(
@@ -252,18 +248,11 @@ export default function EventCard({
                         s.length > 0 &&
                         !/^SE|Sverige|Sweden$/i.test(s),
                     ) || '';
+
+                if (city) return city;
               }
-              // Always show city if available
-              const maxStreetLength = 22;
-              let streetDisplay = street.trim();
-              if (streetDisplay.length > maxStreetLength) {
-                streetDisplay =
-                  streetDisplay.slice(0, maxStreetLength).trim() + '…';
-              }
-              let addressString = city
-                ? `${streetDisplay}, ${city}`
-                : streetDisplay;
-              return addressString;
+
+              return 'Ort saknas';
             })()}
           </Text>
 
