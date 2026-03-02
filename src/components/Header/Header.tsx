@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Anchor,
   Box,
   Burger,
   Group,
@@ -18,6 +17,7 @@ import { useState } from 'react';
 import { headerLinks } from '../../data/HeaderLinks';
 import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
+import './Header.scss';
 
 interface HeaderProps {
   opened: boolean;
@@ -99,13 +99,12 @@ export default function Header({
       {/* Links */}
       <Group gap='xl' visibleFrom='sm' style={{ marginTop: '8px' }}>
         {headerLinks.map((link, i) => (
-          <Anchor
+          <NavLink
             key={link.path + link.label + i}
-            href={link.path}
-            c='white'
-            underline='hover'>
+            to={link.path}
+            className='headerLinks'>
             {link.label}
-          </Anchor>
+          </NavLink>
         ))}
       </Group>
 
