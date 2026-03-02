@@ -7,6 +7,7 @@ import { fetchEventById } from '../../api/events';
 import { fetchRestaurantById } from '../../api/restaurants';
 import { fetchCategories } from '../../api/categories';
 import { fetchTags } from '../../api/tags';
+import { staticRouteLabels } from '../../data/StaticRouteLabels';
 
 export default function Breadcrumb() {
   const location = useLocation();
@@ -192,7 +193,8 @@ export default function Breadcrumb() {
 
       // For other paths, show them as text (not clickable)
       const decodedValue = decodeURIComponent(value);
-      const label = decodedValue.replace(/-/g, ' ');
+      const label =
+        staticRouteLabels[decodedValue] || decodedValue.replace(/-/g, ' ');
       const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
 
       return (
