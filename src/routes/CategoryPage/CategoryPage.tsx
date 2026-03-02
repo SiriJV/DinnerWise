@@ -1,22 +1,13 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-// import { Divider, Group, Pill, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { NavLink, useNavigationType, useParams } from 'react-router-dom';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
-import {
-  Title,
-  Text,
-  Group,
-  SimpleGrid,
-  Stack,
-  Divider,
-  Pill,
-} from '@mantine/core';
-import EventCard from '../../components/EventCard/EventCard';
+import { Title, Text, Group, Stack, Divider, Pill } from '@mantine/core';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
+import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -35,6 +26,7 @@ export default function CategoryPage() {
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (!slug) return;
@@ -179,25 +171,12 @@ export default function CategoryPage() {
               Inga events för denna kategori.
             </Text>
           ) : (
-            <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
-                />
-              ))}
-            </SimpleGrid>
+            <PaginatedEventGrid
+              events={events}
+              pageSize={9}
+              paginationKey='categorypage_activePage'
+              navigationType={navigationType}
+            />
           )}
         </Stack>
       </Stack>

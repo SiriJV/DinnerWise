@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigationType, useParams } from 'react-router-dom';
 import {
   Box,
   Stack,
@@ -7,15 +7,14 @@ import {
   Image,
   Group,
   Anchor,
-  SimpleGrid,
   Divider,
   Title,
 } from '@mantine/core';
 import { MapPin, ExternalLink } from 'lucide-react';
-import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { extractIdFromSlug } from '../../utils/slugify';
 import { Carousel } from '@mantine/carousel';
+import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 type Restaurant = {
   id: number;
@@ -45,6 +44,7 @@ export default function RestaurangDetails(): React.ReactNode {
   const location = useLocation();
   const state = location.state as { id?: string } | undefined;
   const { slug } = useParams<{ slug: string }>();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function loadRestaurant() {
@@ -74,13 +74,14 @@ export default function RestaurangDetails(): React.ReactNode {
 
         setRestaurant(restaurantData);
 
-        const eventsRes = await fetch(
-          `http://localhost:3001/restaurants/${restaurantData.id}/events`,
+        const eventsRes = await fetch(`http://localhost:3001/events`);
+        const allEvents: EventType[] = await eventsRes.json();
+
+        const restaurantEvents = allEvents.filter(
+          (e) => e.restaurant_id === restaurantData.id,
         );
-        if (eventsRes.ok) {
-          const eventsData = await eventsRes.json();
-          setEvents(eventsData);
-        }
+
+        setEvents(restaurantEvents);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -262,39 +263,12 @@ export default function RestaurangDetails(): React.ReactNode {
       {events.length > 0 && (
         <Stack gap='md'>
           <Title order={3}>Kommande event på {restaurant.name}</Title>
-          <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                id={event.id}
-                title={event.title}
-                description={event.description}
-                current_participants={
-                  typeof event.current_participants === 'number'
-                    ? event.current_participants
-                    : parseInt(event.current_participants ?? '0', 10) || 0
-                }
-                max_participants={
-                  typeof event.max_participants === 'number'
-                    ? event.max_participants
-                    : parseInt(event.max_participants ?? '8', 10) || 8
-                }
-                price={
-                  typeof event.price === 'number'
-                    ? event.price
-                    : parseFloat(event.price ?? '0') || 0
-                }
-                date={new Date(event.date)}
-                start_time={event.start_time}
-                end_time={event.end_time}
-                restaurant_id={event.restaurant_id}
-                restaurant_name={event.restaurant_name}
-                restaurant_address={
-                  event.restaurant_address || restaurant?.address_string || ''
-                }
-              />
-            ))}
-          </SimpleGrid>
+          <PaginatedEventGrid
+            events={events}
+            pageSize={9}
+            paginationKey='restaurantdetailspage_activePage'
+            navigationType={navigationType}
+          />
         </Stack>
       )}
     </Stack>

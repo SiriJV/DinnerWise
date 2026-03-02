@@ -1,8 +1,9 @@
-import { SimpleGrid, Tabs, Text, Title } from '@mantine/core';
+import { Tabs, Text, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
+import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import { useNavigationType } from 'react-router-dom';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -14,6 +15,8 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { bookmarks } = useAuth();
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function loadData() {
@@ -35,32 +38,22 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     loadData();
   }, []);
 
-  // Find the user's index in the users array (same as EventCard/EventDetails)
   const userIndex = allUsers.findIndex((u) => u.id === userId);
 
-  // Deterministiskt välja events där användaren är värd (samma logik som EventCard/EventDetails)
   const hostingEvents = allEvents.filter((event) => {
-    if (allUsers.length === 0) return false;
+    if (!allUsers.length) return false;
     const hostIndex = event.id % allUsers.length;
     return hostIndex === userIndex;
   });
 
-  // Deterministiskt välja events där användaren är deltagare (samma logik som EventCard/EventDetails)
   const participatingEvents = allEvents.filter((event) => {
-    if (allUsers.length === 0) return false;
-
-    // Check if user is host first
+    if (!allUsers.length) return false;
     const hostIndex = event.id % allUsers.length;
-    const isHost = hostIndex === userIndex;
-    if (isHost) return false;
-
-    // Check if user is selected as participant (same algorithm as EventCard)
+    if (hostIndex === userIndex) return false;
     const numParticipants = Math.min(3 + (event.id % 3), allUsers.length);
     for (let i = 0; i < numParticipants; i++) {
       const participantIndex = (event.id * 7 + i * 13) % allUsers.length;
-      if (participantIndex === userIndex) {
-        return true;
-      }
+      if (participantIndex === userIndex) return true;
     }
     return false;
   });
@@ -96,30 +89,12 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               Inga event som värd ännu.
             </Text>
           ) : (
-            <SimpleGrid
-              cols={{ base: 1, sm: 1, md: 2, lg: 3 }}
-              spacing='md'
-              mt='md'>
-              {hostingEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
-                  restaurant_city={event.restaurant_city}
-                  isHost={true}
-                />
-              ))}
-            </SimpleGrid>
+            <PaginatedEventGrid
+              events={hostingEvents.map((e) => ({ ...e, isHost: true }))}
+              pageSize={6}
+              paginationKey={`profile_hosting_${userId}`}
+              navigationType={navigationType}
+            />
           )}
         </Tabs.Panel>
 
@@ -129,29 +104,12 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               Inga event som deltagare ännu.
             </Text>
           ) : (
-            <SimpleGrid
-              cols={{ base: 1, sm: 1, md: 2, lg: 3 }}
-              spacing='md'
-              mt='md'>
-              {participatingEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants ?? 0}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
-                  restaurant_city={event.restaurant_city}
-                />
-              ))}
-            </SimpleGrid>
+            <PaginatedEventGrid
+              events={participatingEvents}
+              pageSize={6}
+              paginationKey={`profile_participating_${userId}`}
+              navigationType={navigationType}
+            />
           )}
         </Tabs.Panel>
 
@@ -161,29 +119,12 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               Inga sparade event ännu.
             </Text>
           ) : (
-            <SimpleGrid
-              cols={{ base: 1, sm: 1, md: 2, lg: 3 }}
-              spacing='md'
-              mt='md'>
-              {savedEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  title={event.title}
-                  description={event.description}
-                  current_participants={event.current_participants}
-                  max_participants={event.max_participants ?? 0}
-                  price={event.price}
-                  date={new Date(event.date)}
-                  start_time={event.start_time}
-                  end_time={event.end_time}
-                  restaurant_id={event.restaurant_id}
-                  restaurant_name={event.restaurant_name}
-                  restaurant_address={event.restaurant_address}
-                  restaurant_city={event.restaurant_city}
-                />
-              ))}
-            </SimpleGrid>
+            <PaginatedEventGrid
+              events={savedEvents}
+              pageSize={6}
+              paginationKey={`profile_saved_${userId}`}
+              navigationType={navigationType}
+            />
           )}
         </Tabs.Panel>
 

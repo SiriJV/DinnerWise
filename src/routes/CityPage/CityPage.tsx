@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Divider, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { useNavigationType, useParams } from 'react-router-dom';
+import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
-import EventCard from '../../components/EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
+import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 export default function CityPage() {
+  const navigationType = useNavigationType();
   const { slug } = useParams<{ slug: string }>();
   const [city, setCity] = useState<{ id: number; name: string } | null>(null);
 
@@ -126,26 +127,12 @@ export default function CityPage() {
             Inga events för denna stad.
           </Text>
         ) : (
-          <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                id={event.id}
-                title={event.title}
-                description={event.description}
-                current_participants={event.current_participants}
-                max_participants={event.max_participants}
-                price={event.price}
-                date={new Date(event.date)}
-                start_time={event.start_time}
-                end_time={event.end_time}
-                restaurant_id={event.restaurant_id}
-                restaurant_name={event.restaurant_name}
-                restaurant_address={event.restaurant_address}
-                restaurant_city={event.restaurant_city}
-              />
-            ))}
-          </SimpleGrid>
+          <PaginatedEventGrid
+            events={events}
+            pageSize={9}
+            paginationKey={`citypage_activePage_${city.id}`}
+            navigationType={navigationType}
+          />
         )}
       </Stack>
     </Stack>
