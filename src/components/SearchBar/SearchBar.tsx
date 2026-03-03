@@ -49,7 +49,7 @@ export default function SearchBar({
         if (!res.ok) throw new Error('Något gick fel');
 
         const json = await res.json();
-        const { events, cities, tags, categories, restaurants } = json.results;
+        const { events, cities, tags, categories, restaurants, users } = json.results;
 
         const suggestions: Suggestion[] = [
           ...events.map((e: any) => ({
@@ -71,6 +71,10 @@ export default function SearchBar({
           ...restaurants.map((r: any) => ({
             value: `restaurant-${slugify(r.name)}-${r.id}`,
             label: `🍽️${r.name}, ${r.city} (restaurang)`,
+          })),
+          ...users.map((u: any) => ({
+            value: `user-${slugify(u.alias)}`,
+            label: `👤${u.name} (@${u.alias})`,
           })),
         ];
 
@@ -136,6 +140,12 @@ export default function SearchBar({
         const slug = rest.join('-');
 
         navigate(`/restaurang/${slug}`, { state: { id } });
+        break;
+      }
+
+      case 'user': {
+        const slug = rest.join('-');
+        navigate(`/profil/${slug}`);
         break;
       }
     }
