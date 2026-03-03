@@ -23,6 +23,7 @@ type PaginatedEventGridProps = {
   pageSize?: number;
   paginationKey?: string;
   navigationType?: NavigationType;
+  showTitle?: boolean;
 };
 
 export default function PaginatedEventGrid({
@@ -30,6 +31,7 @@ export default function PaginatedEventGrid({
   pageSize = 9,
   paginationKey,
   navigationType,
+  showTitle = true,
 }: PaginatedEventGridProps) {
   const getInitialPage = () => {
     if (!paginationKey) return 1;
@@ -78,7 +80,9 @@ export default function PaginatedEventGrid({
   return (
     <>
       <Stack>
-        <Title order={2} ref={gridRef}>{`Event (${events.length})`}</Title>
+        {showTitle && (
+          <Title order={2} ref={gridRef}>{`Event (${events.length})`}</Title>
+        )}
 
         <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
           {pagedEvents.length === 0 ? (
