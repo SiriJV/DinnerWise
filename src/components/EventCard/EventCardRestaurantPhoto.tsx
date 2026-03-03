@@ -1,14 +1,14 @@
 import { Image } from '@mantine/core';
 
-interface EventCardPhotoProps {
+interface EventCardRestaurantPhotoProps {
   pic_url: string;
   restaurantName: string;
 }
 
-export default function EventCardPhoto({
+export default function EventCardRestaurantPhoto({
   pic_url,
   restaurantName,
-}: EventCardPhotoProps) {
+}: EventCardRestaurantPhotoProps) {
   return (
     <Image
       src={

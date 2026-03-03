@@ -9,8 +9,8 @@ import EventSpotsBadge from '../EventSpotsBadge/EventSpotsBadge';
 import EventCardInfo from './EventCardInfo';
 import EventCardHostAvatar from './EventCardHostAvatar';
 import BookmarkButton from '../BookmarkIcon/BookmarkIcon';
-import EventCardPhoto from './EventCardPhoto';
 import useEventUsers from '../../hooks/useEventUsers';
+import EventCardRestaurantPhoto from './EventCardRestaurantPhoto';
 
 type EventCardProps = {
   id: number;
@@ -105,7 +105,7 @@ export default function EventCard({
       pb='0'
       withBorder>
       <Card.Section pos='relative'>
-        <EventCardPhoto
+        <EventCardRestaurantPhoto
           pic_url={restaurantPhoto}
           restaurantName={restaurant_name || 'Restaurangbild'}
         />
