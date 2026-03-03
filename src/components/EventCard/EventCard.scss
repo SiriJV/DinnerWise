@@ -42,7 +42,7 @@
   }
 }
 
-.spotsBadge {
+.eventCardSpotsBadge {
   position: absolute;
   top: var(--mantine-radius-md);
   left: var(--mantine-radius-md);
@@ -56,6 +56,27 @@
   right: var(--mantine-radius-md);
   z-index: 2;
   height: 32px;
+}
+
+.hostAvatar {
+  position: absolute;
+  bottom: -28px;
+  left: var(--mantine-radius-md);
+
+  border: 3px solid white;
+  background: white;
+
+  z-index: 3;
+}
+
+.unstyledNavLink {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    // color: var.$gray5;
+    text-decoration: underline;
+  }
 }
 
 .bookmarkButton {
@@ -91,26 +112,5 @@
 
   &.bookmarked {
     color: var.$primaryred;
-  }
-}
-
-.hostAvatar {
-  position: absolute;
-  bottom: -28px;
-  left: var(--mantine-radius-md);
-
-  border: 3px solid white;
-  background: white;
-
-  z-index: 3;
-}
-
-.unstyledNavLink {
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    // color: var.$gray5;
-    text-decoration: underline;
   }
 }

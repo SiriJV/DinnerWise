@@ -1,0 +1,130 @@
+import { Box, Group, Text, Divider } from '@mantine/core';
+import { NavLink } from 'react-router-dom';
+import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
+import { slugify } from '../../utils/slugify';
+import type { User } from '../../api/users';
+
+interface EventCardInfoProps {
+  title: string;
+  displayPrice: number;
+  host?: User | null;
+  restaurant_name?: string;
+  restaurant_address?: string;
+  restaurant_city?: string;
+  restaurant_id?: number;
+  formattedDate: string;
+  timeRange: string;
+  participants: User[];
+  displayCurrentParticipants: number;
+  displayMaxSpots: number;
+  shortDescription: string;
+}
+
+export default function EventCardInfo({
+  title,
+  displayPrice,
+  host,
+  restaurant_name,
+  restaurant_address,
+  restaurant_city,
+  restaurant_id,
+  formattedDate,
+  timeRange,
+  participants,
+  displayCurrentParticipants,
+  displayMaxSpots,
+  shortDescription,
+}: EventCardInfoProps) {
+  const truncateRestaurantName = (name?: string, maxLength = 30) => {
+    if (!name) return 'Restaurang';
+    return name.length > maxLength
+      ? name.slice(0, maxLength).trim() + '…'
+      : name;
+  };
+
+  const getCity = () => {
+    if (restaurant_city) return restaurant_city;
+
+    if (restaurant_address) {
+      const parts = restaurant_address.split(',').map((s) => s.trim());
+      const city =
+        parts
+          .slice(1)
+          .find(
+            (s) =>
+              isNaN(Number(s)) &&
+              s.length > 0 &&
+              !/^SE|Sverige|Sweden$/i.test(s),
+          ) || '';
+      if (city) return city;
+    }
+
+    return 'Ort saknas';
+  };
+
+  return (
+    <>
+      <Group justify='space-between'>
+        <Text fw={800}>{title}</Text>
+        <Text fw={600} c='black' className='price'>
+          {Math.floor(displayPrice)} kr
+        </Text>
+      </Group>
+
+      <Text size='sm' mb='xs'>
+        med{' '}
+        <NavLink
+          to={host ? `/profil/${host.alias}` : '/profil/'}
+          className='unstyledNavLink'
+          onClick={(e) => e.stopPropagation()}>
+          {host?.name || 'Anders Blom'}
+        </NavLink>
+      </Text>
+
+      <Box className='eventInfo' mb='xs'>
+        <Text size='xs' c='dimmed' fw={600}>
+          <NavLink
+            to={`/restaurang/${slugify(restaurant_name)}${restaurant_id ? '-' + restaurant_id : ''}`}
+            className='unstyledNavLink'
+            onClick={(e) => e.stopPropagation()}>
+            {truncateRestaurantName(restaurant_name)}
+          </NavLink>{' '}
+          · {getCity()}
+        </Text>
+
+        <Divider orientation='vertical' size='sm' />
+
+        <Group justify='space-between' wrap='nowrap' style={{ flex: 1 }}>
+          <Text size='xs' c='dimmed'>
+            {formattedDate} {timeRange}
+          </Text>
+          <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
+            <ParticipantAvatars
+              participants={participants}
+              maxVisible={3}
+              size='sm'
+              currentParticipants={displayCurrentParticipants}
+              maxParticipants={displayMaxSpots}
+            />
+          </Box>
+        </Group>
+      </Box>
+
+      <Group justify='space-between' visibleFrom='sm' w='100%' wrap='nowrap'>
+        <Text size='sm' c='dimmed' className='eventDescription'>
+          {shortDescription}
+        </Text>
+
+        <Box style={{ flexShrink: 0 }}>
+          <ParticipantAvatars
+            participants={participants}
+            maxVisible={3}
+            size='sm'
+            currentParticipants={displayCurrentParticipants}
+            maxParticipants={displayMaxSpots}
+          />
+        </Box>
+      </Group>
+    </>
+  );
+}
