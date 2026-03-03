@@ -10,7 +10,6 @@ type ProfilePageEventsProps = {
 };
 
 export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
-  const [activeTab, setActiveTab] = useState<string | null>('hosting');
   const [allEvents, setAllEvents] = useState<EventType[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +36,19 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     }
     loadData();
   }, []);
+
+  const TAB_STORAGE_KEY = `profile_active_tab_${userId}`;
+
+  const [activeTab, setActiveTab] = useState<string | null>(() => {
+    const storedTab = sessionStorage.getItem(TAB_STORAGE_KEY);
+    return storedTab || 'hosting';
+  });
+
+  useEffect(() => {
+    if (navigationType === 'POP' && activeTab) {
+      sessionStorage.setItem(TAB_STORAGE_KEY, activeTab);
+    }
+  }, [activeTab, navigationType]);
 
   const userIndex = allUsers.findIndex((u) => u.id === userId);
 
@@ -67,8 +79,9 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   return (
     <>
       <Title order={3}>Event</Title>
-      <Tabs value={activeTab} onChange={setActiveTab}>
-        <Tabs.List>
+      <Tabs value={activeTab} onChange={(value) => setActiveTab(value!)}>
+        {' '}
+        <Tabs.List mb='md'>
           <Tabs.Tab value='hosting' color='black'>
             Värd för ({hostingEvents.length})
           </Tabs.Tab>
@@ -82,7 +95,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             Tidigare (0)
           </Tabs.Tab>
         </Tabs.List>
-
         <Tabs.Panel value='hosting'>
           {hostingEvents.length === 0 ? (
             <Text mt='md' c='dimmed'>
@@ -94,10 +106,10 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_hosting_${userId}`}
               navigationType={navigationType}
+              showTitle={false}
             />
           )}
         </Tabs.Panel>
-
         <Tabs.Panel value='participating'>
           {participatingEvents.length === 0 ? (
             <Text mt='md' c='dimmed'>
@@ -109,10 +121,10 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_participating_${userId}`}
               navigationType={navigationType}
+              showTitle={false}
             />
           )}
         </Tabs.Panel>
-
         <Tabs.Panel value='saved'>
           {savedEvents.length === 0 ? (
             <Text mt='md' c='dimmed'>
@@ -124,10 +136,10 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_saved_${userId}`}
               navigationType={navigationType}
+              showTitle={false}
             />
           )}
         </Tabs.Panel>
-
         <Tabs.Panel value='past'>
           <Text mt='md' c='dimmed'>
             Inga tidigare event ännu.
