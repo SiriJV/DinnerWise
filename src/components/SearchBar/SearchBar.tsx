@@ -11,7 +11,7 @@ type Suggestion = {
 };
 
 interface SearchBarProps {
-  variant?: 'expandable' | 'static' | 'fullwidth';
+  variant?: 'static' | 'fullwidth';
   style?: React.CSSProperties;
 }
 
@@ -21,13 +21,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [value, setValue] = useState('');
   const [data, setData] = useState<Suggestion[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  const handleToggle = () => {
-    setIsOpen(true);
-  };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -87,25 +81,6 @@ export default function SearchBar({
 
     fetchSuggestions();
   }, [value]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen && variant === 'expandable') {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, variant]);
 
   const handleNavigate = (rawValue: string) => {
     const [type, ...rest] = rawValue.split('-');
@@ -225,56 +200,4 @@ export default function SearchBar({
       />
     );
   }
-
-  return (
-    <div
-      ref={containerRef}
-      className={`searchBar-container ${isOpen ? 'open' : ''}`}>
-      {!isOpen && (
-        <ActionIcon
-          variant='subtle'
-          color='white'
-          size='md'
-          onClick={handleToggle}>
-          <SearchIcon size={20} />
-        </ActionIcon>
-      )}
-      {isOpen && (
-        <Autocomplete
-          className='searchBar'
-          placeholder='Sök...'
-          autoFocus
-          onOptionSubmit={(val) => {
-            handleNavigate(val);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              // If value matches a suggestion, navigate to that; otherwise, go to search page with type param
-              const match = data.find((s) => s.value === value);
-              if (match) {
-                handleNavigate(value);
-              } else if (value.trim().length > 0) {
-                navigate(
-                  `/search?q=${encodeURIComponent(value.trim())}&type=events`,
-                );
-              }
-            }
-          }}
-          rightSection={
-            <SearchIcon
-              size={18}
-              className='searchBar-icon'
-              onClick={handleClick}
-              cursor='pointer'
-            />
-          }
-          data={data}
-          value={value}
-          onChange={setValue}
-          maxDropdownHeight={200}
-        />
-      )}
-    </div>
-  );
 }
