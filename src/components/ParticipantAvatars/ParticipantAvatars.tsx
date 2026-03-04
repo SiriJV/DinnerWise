@@ -1,6 +1,7 @@
 import { Avatar, Tooltip, Box, Popover, Text } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import './ParticipantAvatars.scss';
 
 type User = {
   id: number;
@@ -24,6 +25,7 @@ export default function ParticipantAvatars({
   currentParticipants,
   maxParticipants,
 }: ParticipantAvatarsProps) {
+  const navigate = useNavigate();
   const [popoverOpened, setPopoverOpened] = useState(false);
 
   return (
@@ -31,12 +33,20 @@ export default function ParticipantAvatars({
       <Avatar.Group spacing={size === 'lg' ? 'sm' : 'xs'}>
         {participants.slice(0, maxVisible).map((user) => (
           <Tooltip key={user.id} label={user.name} withArrow>
-            <NavLink
-              to={`/profil/${user.alias}`}
+            <Box
               className='unstyledNavLink'
-              onClick={(e) => e.stopPropagation()}>
-              <Avatar src={user.profile_picture_url} radius='xl' size={size} />
-            </NavLink>
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profil/${user.alias}`);
+              }}
+              style={{ cursor: 'pointer' }}>
+              <Avatar
+                src={user.profile_picture_url}
+                radius='xl'
+                size={size}
+                className='participant-avatar'
+              />
+            </Box>
           </Tooltip>
         ))}
         {participants.length > maxVisible && (
@@ -77,18 +87,21 @@ export default function ParticipantAvatars({
                   </Text>
                 )}
               {participants.slice(maxVisible).map((user) => (
-                <NavLink
+                <Box
                   key={user.id}
-                  to={`/profil/${user.alias}`}
                   className='unstyledNavLink'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/profil/${user.alias}`);
+                  }}
                   style={{
                     display: 'block',
                     padding: '2px 0',
                     color: 'var(--mantine-color-white)',
-                    textDecoration: 'none',
+                    cursor: 'pointer',
                   }}>
                   {user.name}
-                </NavLink>
+                </Box>
               ))}
             </Popover.Dropdown>
           </Popover>
