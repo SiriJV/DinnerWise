@@ -1,8 +1,8 @@
 import { Box, Group, Text, Divider } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { slugify } from '../../utils/slugify';
 import type { User } from '../../api/users';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface EventCardInfoProps {
   title: string;
@@ -35,6 +35,7 @@ export default function EventCardInfo({
   displayMaxSpots,
   shortDescription,
 }: EventCardInfoProps) {
+  const navigate = useNavigate();
   const truncateRestaurantName = (name?: string, maxLength = 30) => {
     if (!name) return 'Restaurang';
     return name.length > maxLength
@@ -73,23 +74,33 @@ export default function EventCardInfo({
 
       <Text size='sm' mb='xs'>
         med{' '}
-        <NavLink
-          to={host ? `/profil/${host.alias}` : '/profil/'}
+        <Text
+          span
           className='unstyledNavLink'
-          onClick={(e) => e.stopPropagation()}>
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/profil/${host?.alias}`);
+          }}>
           {host?.name || 'Anders Blom'}
-        </NavLink>
+        </Text>
       </Text>
 
       <Box className='eventInfo' mb='xs'>
         <Text size='xs' c='dimmed' fw={600}>
-          <NavLink
-            to={`/restaurang/${slugify(restaurant_name)}${restaurant_id ? '-' + restaurant_id : ''}`}
+          <Text
+            span
             className='unstyledNavLink'
-            onClick={(e) => e.stopPropagation()}>
+            onClick={(e) => {
+              e.stopPropagation();
+
+              const path = `/restaurang/${slugify(
+                restaurant_name,
+              )}${restaurant_id ? '-' + restaurant_id : ''}`;
+
+              navigate(path);
+            }}>
             {truncateRestaurantName(restaurant_name)}
-          </NavLink>{' '}
-          · {getCity()}
+          </Text>
         </Text>
 
         <Divider orientation='vertical' size='sm' />
