@@ -24,8 +24,19 @@
 }
 
 .event-info {
-  background-color: var.$gray3;
+  // background-color: var.$gray3;
+  background-color: var.$lightred;
   border-radius: var(--mantine-radius-sm);
+}
+
+.host-card {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+  &:hover {
+    transform: translateY(-4px);
+    // box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .restaurant-information {
