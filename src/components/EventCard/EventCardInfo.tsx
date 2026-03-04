@@ -2,7 +2,7 @@ import { Box, Group, Text, Divider } from '@mantine/core';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { slugify } from '../../utils/slugify';
 import type { User } from '../../api/users';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface EventCardInfoProps {
   title: string;
