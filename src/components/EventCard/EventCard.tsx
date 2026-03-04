@@ -1,7 +1,7 @@
 import { Card, Badge, Box } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import './EventCard.scss';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { generateEventSlug } from '../../utils/slugify';
 import { fetchRestaurantById, type Restaurant } from '../../api/restaurants';
 import { useAuth } from '../../contexts/AuthContext';
@@ -47,6 +47,7 @@ export default function EventCard({
   maxDescriptionLength = 100,
   isHost = false,
 }: EventCardProps) {
+  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const { isLoggedIn } = useAuth();
 
@@ -97,13 +98,16 @@ export default function EventCard({
   return (
     <Card
       className='eventCard'
-      component={NavLink}
-      to={`/event/${generateEventSlug(title, id)}`}
-      state={{ id, restaurantPhoto }}
       shadow='sm'
       radius='md'
       pb='0'
-      withBorder>
+      withBorder
+      onClick={() =>
+        navigate(`/event/${generateEventSlug(title, id)}`, {
+          state: { id, restaurantPhoto },
+        })
+      }
+      style={{ cursor: 'pointer' }}>
       <Card.Section pos='relative'>
         <EventCardRestaurantPhoto
           pic_url={restaurantPhoto}
@@ -121,7 +125,7 @@ export default function EventCard({
                 Ditt event
               </Badge>
             ) : (
-              <BookmarkButton eventId={id} />
+              <BookmarkButton eventId={id} variant='sm' />
             )}
           </>
         )}
