@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigationType, useParams } from 'react-router-dom';
+import { useNavigationType, useParams } from 'react-router-dom';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
-import { Title, Text, Group, Stack, Divider, Pill } from '@mantine/core';
+import { Title, Text, Group, Stack, Divider } from '@mantine/core';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
