@@ -8,6 +8,7 @@ import { Title, Text, Group, Stack, Divider, Pill } from '@mantine/core';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import TagPill from '../../components/TagPill/TagPill';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -126,12 +127,7 @@ export default function CategoryPage() {
         {tags.length > 0 && (
           <Group gap='xs' mb='md' wrap='wrap'>
             {tags.map((tag) => (
-              <NavLink
-                key={tag.id}
-                to={`/tagg/${slugify(tag.name)}`}
-                style={{ textDecoration: 'none' }}>
-                <Pill style={{ cursor: 'pointer' }}>{tag.name}</Pill>
-              </NavLink>
+              <TagPill key={tag.id} tagID={tag.id} title={tag.name} />
             ))}
           </Group>
         )}
