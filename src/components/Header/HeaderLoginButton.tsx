@@ -24,21 +24,17 @@ export default function HeaderLoginButton({
     );
   }
   return (
-    <button
-      style={{
-        background: 'none',
-        border: 'none',
-        padding: 0,
-        cursor: 'pointer',
-      }}
+    <ActionIcon
+      variant='subtle'
+      color='white'
+      size='md'
+      w='auto'
+      p='5px'
       onClick={openLogin}>
-      <ActionIcon variant='subtle' color='white' size='md' w='auto' p='5px'>
-        <Group gap='xs'>
-          <UserRound size={20} color='white' />
-
-          <Text c='white'>Logga in</Text>
-        </Group>
-      </ActionIcon>
-    </button>
+      <Group gap='xs'>
+        <UserRound size={20} color='white' />
+        <Text c='white'>Logga in</Text>
+      </Group>
+    </ActionIcon>
   );
 }
