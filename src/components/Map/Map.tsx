@@ -1,4 +1,4 @@
-import { Group, Text } from '@mantine/core';
+import { Group, Stack, Text } from '@mantine/core';
 import { MapPin } from 'lucide-react';
 
 type MapProps = {
@@ -8,7 +8,7 @@ type MapProps = {
 
 export default function Map({ restaurant_address, restaurant_city }: MapProps) {
   return (
-    <>
+    <Stack gap='0'>
       <iframe
         src={`https://maps.google.com/maps?q=${encodeURIComponent(
           `${restaurant_address} ${restaurant_city}`.trim(),
@@ -25,6 +25,6 @@ export default function Map({ restaurant_address, restaurant_city }: MapProps) {
           {restaurant_address || 'Adress saknas'}
         </Text>
       </Group>
-    </>
+    </Stack>
   );
 }
