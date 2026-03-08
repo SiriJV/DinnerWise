@@ -31,7 +31,7 @@ export default function EventSpotsBadge({
 
   const label = isFull
     ? `Fullt (${maxParticipants}/${maxParticipants})`
-    : `${currentParticipants} anmälda, ${remainingSpots} ${
+    : `${currentParticipants} ${currentParticipants === 1 ? 'anmäld' : 'anmälda'}, ${remainingSpots} ${
         remainingSpots === 1 ? 'plats' : 'platser'
       } kvar`;
 
