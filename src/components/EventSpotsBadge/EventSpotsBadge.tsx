@@ -1,10 +1,11 @@
 import { Badge } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 type EventSpotsBadgeProps = {
   currentParticipants: number;
   maxParticipants: number;
   className?: string;
-  size: 'xl' | 'lg' | 'md' | 'sm' | 'xs';
+  size: 'xl' | 'lg' | 'md' | 'sm' | 'xs' | 'responsive';
 };
 
 export default function EventSpotsBadge({
@@ -13,6 +14,8 @@ export default function EventSpotsBadge({
   className,
   size,
 }: EventSpotsBadgeProps) {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const badgeSize = size === 'responsive' ? (isMobile ? 'lg' : 'xl') : size;
   const remainingSpots = maxParticipants - currentParticipants;
   const isFull = remainingSpots <= 0;
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
@@ -36,7 +39,11 @@ export default function EventSpotsBadge({
       } kvar`;
 
   return (
-    <Badge bg={backgroundColor} c={textColor} size={size} className={className}>
+    <Badge
+      bg={backgroundColor}
+      c={textColor}
+      size={badgeSize}
+      className={className}>
       {label}
     </Badge>
   );
