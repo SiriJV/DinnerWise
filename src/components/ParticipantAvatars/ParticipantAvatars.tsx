@@ -2,6 +2,7 @@ import { Avatar, Tooltip, Box, Popover, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './ParticipantAvatars.scss';
+import { useMediaQuery } from '@mantine/hooks';
 
 type User = {
   id: number;
@@ -27,6 +28,7 @@ export default function ParticipantAvatars({
 }: ParticipantAvatarsProps) {
   const navigate = useNavigate();
   const [popoverOpened, setPopoverOpened] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   return (
     <Tooltip.Group openDelay={300} closeDelay={100}>
@@ -43,7 +45,7 @@ export default function ParticipantAvatars({
               <Avatar
                 src={user.profile_picture_url}
                 radius='xl'
-                size={size}
+                size={isMobile ? 'md' : 'lg'}
                 className='participant-avatar'
               />
             </Box>
