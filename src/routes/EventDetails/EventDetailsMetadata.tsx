@@ -24,7 +24,7 @@ export default function EventDetailsMetadata({
       med{' '}
       <Text
         span
-        c='dimmed'
+        c='rgba(211, 4, 59, 1)'
         className='unstyledNavLink'
         onClick={(e) => {
           e.stopPropagation();
@@ -36,7 +36,7 @@ export default function EventDetailsMetadata({
       på{' '}
       <Text
         span
-        c='dimmed'
+        c='rgba(211, 4, 59, 1)'
         className='unstyledNavLink'
         onClick={(e) => {
           e.stopPropagation();
@@ -55,7 +55,7 @@ export default function EventDetailsMetadata({
       i{' '}
       <Text
         span
-        c='dimmed'
+        c='rgba(211, 4, 59, 1)'
         className='unstyledNavLink'
         onClick={(e) => {
           e.stopPropagation();
