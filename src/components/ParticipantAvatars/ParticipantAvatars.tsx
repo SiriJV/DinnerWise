@@ -14,7 +14,7 @@ type User = {
 type ParticipantAvatarsProps = {
   participants: User[];
   maxVisible?: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'responsive';
   currentParticipants?: number;
   maxParticipants?: number;
 };
@@ -29,6 +29,7 @@ export default function ParticipantAvatars({
   const navigate = useNavigate();
   const [popoverOpened, setPopoverOpened] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const avatarSize = size === 'responsive' ? (isMobile ? 'md' : 'lg') : size;
 
   return (
     <Tooltip.Group openDelay={300} closeDelay={100}>
@@ -45,7 +46,7 @@ export default function ParticipantAvatars({
               <Avatar
                 src={user.profile_picture_url}
                 radius='xl'
-                size={isMobile ? 'md' : 'lg'}
+                size={avatarSize}
                 className='participant-avatar'
               />
             </Box>
