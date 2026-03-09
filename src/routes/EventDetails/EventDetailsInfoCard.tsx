@@ -17,7 +17,9 @@ export default function EventDetailsInfoCard({
       bg='rgba(255, 204, 199, 1)'>
       <Stack align='center' gap={4}>
         <Text size='sm'>{title}</Text>
-        <Text fw={600}>{content}</Text>
+        <Text size='sm' fw={600} ta='center'>
+          {content}
+        </Text>
       </Stack>
     </Box>
   );
