@@ -15,11 +15,6 @@ import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import { Brain } from 'lucide-react';
 import { useMediaQuery } from '@mantine/hooks';
-import { useAuth } from '../../contexts/AuthContext';
-import BaseButton from '../Buttons/BaseButton/BaseButton';
-import { useModal } from '../../contexts/ModalContext';
-import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
-import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
 
 type Category = {
   id: number;
@@ -35,15 +30,9 @@ interface NavBarProps {
   onClickCreate?: () => void;
 }
 
-export default function NavBar({
-  opened,
-  onClose,
-  onClickCreate,
-}: NavBarProps) {
+export default function NavBar({ opened, onClose }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const isMobile = useMediaQuery('(max-width: 48em)');
-  const [modalOpened, setModalOpened] = useState(false);
-  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function loadCategories() {
@@ -89,28 +78,6 @@ export default function NavBar({
           </Stack>
           {/* <Divider my='sm' /> */}
           <Space h='xs' />
-
-          {/* <BaseButton variant='primary' onClick={openCreate}>
-          Skapa event
-        </BaseButton>
-        <Space h='xs' /> */}
-
-          {/* <Anchor
-            variant='subtle'
-            c='red'
-            size='md'
-            onClick={() => {
-              // först öppna modal
-              setModalOpened(true);
-
-              // sedan stäng drawer nästa tick
-              setTimeout(() => {
-                onClose();
-              }, 0);
-            }}
-            style={{ cursor: 'pointer' }}>
-            Skapa event
-          </Anchor> */}
 
           <NavBarAccordion onClose={onClose} />
           <Space h='xs' />
@@ -162,17 +129,6 @@ export default function NavBar({
           {/* </Container> */}
         </Stack>
       </Drawer>
-      {/* {isLoggedIn ? (
-        <CreateEventModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      ) : (
-        <CreateEventLoginModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      )} */}
     </>
   );
 }
