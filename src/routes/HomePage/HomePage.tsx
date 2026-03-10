@@ -132,6 +132,7 @@ export default function HomePage() {
               pageSize={9}
               paginationKey='homepage_activePage'
               navigationType={navigationType}
+              showTitle={false}
             />
           )}
         </Stack>
