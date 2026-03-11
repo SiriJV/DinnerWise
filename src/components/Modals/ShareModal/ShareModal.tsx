@@ -14,10 +14,24 @@ interface ShareModalProps {
 export default function ShareModal({
   opened,
   onClose,
-  eventUrl = 'https://dinnerwise.se/event',
+  eventUrl = 'http://localhost:5173/event',
   eventName = '',
 }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
+  // Generate event slug and url
+  function generateEventSlug(title: string, id?: string | number) {
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-');
+    return id ? `${slug}-${id}` : slug;
+  }
+  // If eventUrl contains id, generate full url
+  const eventId = eventUrl.match(/\d+$/)?.[0];
+  const generatedUrl =
+    eventName && eventId
+      ? `http://localhost:5173/event/${generateEventSlug(eventName, eventId)}`
+      : eventUrl;
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailTo, setEmailTo] = useState('');
   const [emailSent, setEmailSent] = useState(false);
@@ -61,10 +75,7 @@ export default function ShareModal({
               to,
               name: firstName || 'Vän',
               event: event || 'Event',
-              path: eventUrl.replace(
-                /^https?:\/\/(localhost:5173|dinnerwise\.se)\//,
-                '',
-              ),
+              path: generatedUrl,
               emailMessage,
             }),
           },
@@ -123,7 +134,7 @@ export default function ShareModal({
       <Stack gap='md'>
         <TextInput
           label='Kopiera länk'
-          value={copied ? 'Kopierad!' : eventUrl}
+          value={copied ? 'Kopierad!' : generatedUrl}
           variant='filled'
           readOnly
           radius='xs'
