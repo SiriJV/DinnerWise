@@ -1,5 +1,5 @@
 import { Modal, Text, Group, Stack, TextInput, Textarea } from '@mantine/core';
-import { Mail, Link, Instagram } from 'lucide-react';
+import { Mail, Link } from 'lucide-react';
 import { useState } from 'react';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
 // import './ShareModal.scss';
@@ -8,18 +8,83 @@ interface ShareModalProps {
   opened: boolean;
   onClose: () => void;
   eventUrl?: string;
+  eventName?: string;
 }
 
 export default function ShareModal({
   opened,
   onClose,
   eventUrl = 'https://dinnerwise.se/event',
+  eventName = '',
 }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailTo, setEmailTo] = useState('');
-  const [emailMessage, setEmailMessage] = useState('');
   const [emailSent, setEmailSent] = useState(false);
+  const [event, setEvent] = useState(eventName);
+  const [firstName, setFirstName] = useState('');
+  const defaultMessage = `Din vän vill gå på ${eventName} med dig!`;
+  const [emailMessage, setEmailMessage] = useState(defaultMessage);
+
+  // Uppdatera emailMessage automatiskt när namn ändras
+  const updateEmailMessage = (name: string, eventName: string) => {
+    setEmailMessage(`Din vän ${name || ''} vill gå på ${eventName} med dig!`);
+  };
+
+  // Hantera ändring av namn
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFirstName(e.currentTarget.value);
+    updateEmailMessage(e.currentTarget.value, event);
+  };
+
+  // Funktion för att skicka share-mejl via backend
+  const handleSendEmail = async () => {
+    // Split emails by comma, trim whitespace
+    const emails = emailTo
+      .split(',')
+      .map((e) => e.trim())
+      .filter((e) => e);
+    if (emails.length === 0 || !emailMessage || !emails.every(isValidEmail)) {
+      alert('Skriv in giltiga e-postadresser och meddelande');
+      return;
+    }
+
+    try {
+      // Send email to each address
+      for (const to of emails) {
+        const response = await fetch(
+          'http://localhost:3001/email/send-share-email',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to,
+              name: firstName || 'Vän',
+              event: event || 'Event',
+              path: eventUrl.replace(
+                /^https?:\/\/(localhost:5173|dinnerwise\.se)\//,
+                '',
+              ),
+              emailMessage,
+            }),
+          },
+        );
+        const data = await response.json();
+        console.log('Mail skickat:', data);
+      }
+      setEmailSent(true);
+      setTimeout(() => {
+        setShowEmailForm(false);
+        setEmailTo('');
+        setEmailMessage(defaultMessage);
+        setEmailSent(false);
+      }, 2000);
+      alert('Mejl skickat!'); // enkel feedback
+    } catch (err) {
+      console.error('Fetch failed', err);
+      alert('Något gick fel med mejlet');
+    }
+  };
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -39,18 +104,9 @@ export default function ShareModal({
   const handleEmailClick = () => {
     setShowEmailForm(!showEmailForm);
     setEmailSent(false);
-  };
-
-  const handleSendEmail = () => {
-    // Demo - ingen faktisk funktionalitet
-    console.log('Skickar email till:', emailTo, 'Meddelande:', emailMessage);
-    setEmailSent(true);
-    setTimeout(() => {
-      setShowEmailForm(false);
-      setEmailTo('');
-      setEmailMessage('');
-      setEmailSent(false);
-    }, 2000);
+    if (!showEmailForm) {
+      setEmailMessage(defaultMessage);
+    }
   };
 
   return (
@@ -121,16 +177,28 @@ export default function ShareModal({
               <>
                 <TextInput
                   label='Till (e-post)'
-                  placeholder='mottagare@email.com'
-                  type='email'
+                  required
+                  placeholder='mottagare@email.com, annan@email.com'
+                  type='text'
                   value={emailTo}
-                  maxLength={40}
+                  maxLength={120}
                   onChange={(e) => setEmailTo(e.currentTarget.value)}
                   error={
-                    emailTo && !isValidEmail(emailTo)
+                    emailTo &&
+                    emailTo
+                      .split(',')
+                      .some((e) => e.trim() && !isValidEmail(e.trim()))
                       ? 'Ogiltig e-postadress'
                       : ''
                   }
+                  radius='xs'
+                />
+                <TextInput
+                  label='Ditt namn'
+                  placeholder='Ditt namn'
+                  value={firstName}
+                  maxLength={30}
+                  onChange={handleNameChange}
                   radius='xs'
                 />
                 <Textarea
