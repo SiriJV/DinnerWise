@@ -1,4 +1,5 @@
 import type { EventType } from '../../types/EventType';
+import { generateEventSlug } from '../../utils/slugify';
 import ConfirmationModal from './ConfirmationModal/ConfirmationModal';
 import PaymentModal from './PaymentModal/PaymentModal';
 import RegisteringModal from './RegisteringModal/RegisteringModal';
@@ -47,7 +48,16 @@ export default function EventModals({
         event={event}
       />
 
-      <ShareModal opened={share.opened} onClose={share.close} />
+      <ShareModal
+        opened={share.opened}
+        onClose={share.close}
+        eventUrl={
+          event
+            ? `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`
+            : ''
+        }
+        eventName={event ? event.title : ''}
+      />
 
       <WaitlistConfirmationModal
         opened={waitlist.opened}
