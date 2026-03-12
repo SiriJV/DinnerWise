@@ -37,7 +37,7 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
         event: event.title,
         participants: event.max_participants,
         eventId: event.id,
-        name: 'Förnamn Efternamn', // Replace with actual host name if available
+        name: 'Anna Svensson (demo)', // Replace with actual host name if available
         path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
       }),
     });
