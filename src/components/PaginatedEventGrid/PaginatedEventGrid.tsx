@@ -68,7 +68,7 @@ export default function PaginatedEventGrid({
 
     // Scrolla upp till toppen av eventlistan
     if (gridRef.current) {
-      const yOffset = -120; // justera om du har sticky header
+      const yOffset = -130; // justera om du har sticky header
       const y =
         gridRef.current.getBoundingClientRect().top +
         window.pageYOffset +
@@ -79,10 +79,8 @@ export default function PaginatedEventGrid({
 
   return (
     <>
-      <Stack>
-        {showTitle && (
-          <Title order={2} ref={gridRef}>{`Event (${events.length})`}</Title>
-        )}
+      <Stack ref={gridRef}>
+        {showTitle && <Title order={2}>{`Event (${events.length})`}</Title>}
 
         <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
           {pagedEvents.length === 0 ? (
