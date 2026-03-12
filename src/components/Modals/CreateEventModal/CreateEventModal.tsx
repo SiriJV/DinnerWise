@@ -101,6 +101,38 @@ const generateAvailability = () => {
 const MOCK_AVAILABILITY = generateAvailability();
 
 const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
+  // Send booking emails to host and restaurant
+  async function sendBookingEmails() {
+    if (!selectedRestaurant || !selectedTime || !eventDetails.title) return;
+    // Host email
+    await fetch('http://localhost:3001/email/send-host-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: selectedRestaurant.name,
+        date: selectedTime.date,
+        event: eventDetails.title,
+        participants: 8, // Adjust as needed
+        eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        name: 'Förnamn Efternamn', // Replace with actual host name
+        slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
+      }),
+    });
+    // Restaurant email
+    await fetch('http://localhost:3001/email/send-restaurant-booking-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: selectedRestaurant.name,
+        date: selectedTime.date,
+        event: eventDetails.title,
+        participants: 8, // Adjust as needed
+        eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        name: 'Förnamn Efternamn', // Replace with actual host name
+        slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
+      }),
+    });
+  }
   const [currentStep, setCurrentStep] = useState(0);
   const [eventDetails, setEventDetails] = useState<EventDetails>({
     title: '',
@@ -668,6 +700,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
                 alert('Event skapat!');
                 resetModal();
                 onClose();
+                sendBookingEmails();
               }}
               color='red'>
               Skapa
