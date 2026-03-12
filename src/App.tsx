@@ -82,6 +82,10 @@ const router = createBrowserRouter([
         path: '/tagg/:slug',
         element: <TagPage />,
       },
+      {
+        path: '/bokningshantering/:slug',
+        element: <RestaurantAcceptancePage />,
+      },
       ...infoPages.map(({ path, component: Comp }) => ({
         path,
         element: <Comp />,
@@ -91,6 +95,7 @@ const router = createBrowserRouter([
 ]);
 
 import { useEffect, useState } from 'react';
+import RestaurantAcceptancePage from './routes/RestaurantAcceptancePage/RestaurantAcceptancePage';
 
 function GlobalModals() {
   const { loginOpen, createOpen, closeModals } = useModal();
