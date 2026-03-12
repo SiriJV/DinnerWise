@@ -13,6 +13,7 @@ import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
+import { generateEventSlug } from '../../../utils/slugify';
 
 interface RegisteringModalProps {
   opened: boolean;
@@ -39,6 +40,30 @@ export default function RegisteringModal({
   const isFull = event
     ? displayMaxSpots - (event.current_participants ?? 0) <= 0
     : false;
+
+  // Dummy participant info, replace with real data
+  const participant = {
+    name: 'Förnamn Efternamn',
+    email: 'exempel@email.com',
+  };
+
+  async function sendWaitlistEmail() {
+    if (!event) return;
+
+    // Send to participant
+    await fetch('http://localhost:3001/email/send-waitlist-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: event.restaurant_name,
+        date: event.date,
+        event: event.title,
+        startTime: event.start_time,
+        to: participant.email,
+        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+      }),
+    });
+  }
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -200,6 +225,7 @@ export default function RegisteringModal({
           onClose();
           if (isFull) {
             onOpenWaitlist();
+            sendWaitlistEmail();
           } else {
             onOpenPayment();
           }
