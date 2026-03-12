@@ -37,6 +37,16 @@ export default function EventDetails(): React.ReactNode {
   const state = location.state as
     | { id?: string; restaurantPhoto?: string }
     | undefined;
+
+  // Extrahera event-id från URL-slug om state saknas
+  let eventId: string | undefined = state?.id;
+  if (!eventId) {
+    const slugMatch = location.pathname.match(/event\/.+-(\d+)$/);
+    if (slugMatch) {
+      eventId = slugMatch[1];
+    }
+  }
+
   if (state?.restaurantPhoto) {
     restaurantPhoto = state.restaurantPhoto;
   }
@@ -46,18 +56,18 @@ export default function EventDetails(): React.ReactNode {
       try {
         setLoading(true);
 
-        if (!state?.id) {
+        if (!eventId) {
           throw new Error('Event ID saknas');
         }
 
-        const res = await fetch(`http://localhost:3001/events/${state.id}`);
+        const res = await fetch(`http://localhost:3001/events/${eventId}`);
         if (!res.ok) throw new Error('Kunde inte hämta event');
         const eventData = await res.json();
 
         setEvent(eventData);
 
         const tagsRes = await fetch(
-          `http://localhost:3001/events/${state.id}/tags`,
+          `http://localhost:3001/events/${eventId}/tags`,
         );
         if (tagsRes.ok) {
           const tagsData = await tagsRes.json();
