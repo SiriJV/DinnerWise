@@ -36,7 +36,13 @@ export default function ShareModal({
           <Text fw={600}>Dela event</Text>
         </Group>
       }
-      centered>
+      centered
+      styles={{
+        content: {
+          maxHeight: 'calc(100vh - 300px)',
+          overflowY: 'auto',
+        },
+      }}>
       <Stack gap='md'>
         <ShareLink eventUrl={eventUrl} generatedUrl={generatedUrl} />
         <ShareByEmail eventName={eventName} generatedUrl={generatedUrl} />
