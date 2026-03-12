@@ -7,6 +7,7 @@ import searchRouter from './routes/search.js';
 import usersRouter from './routes/users.js';
 import citiesRouter from './routes/cities.js';
 import tripadvisorRouter from './routes/tripadvisor.js';
+import emailRouter from './routes/email.js';
 import cors from 'cors';
 
 import dotenv from 'dotenv';
@@ -17,7 +18,7 @@ const app = express();
 app.use(
   cors({
     origin: 'http://localhost:5173',
-  })
+  }),
 );
 
 app.use(express.json());
@@ -26,8 +27,6 @@ app.use(express.json());
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
-
-
 
 // Database-dependent routes
 app.use('/api', tripadvisorRouter);
@@ -38,6 +37,7 @@ app.use('/tags', tagsRouter);
 app.use('/search', searchRouter);
 app.use('/users', usersRouter);
 app.use('/cities', citiesRouter);
+app.use('/email', emailRouter);
 
 // Error handling middleware
 app.use((err: any, _req: any, res: any, _next: any) => {
