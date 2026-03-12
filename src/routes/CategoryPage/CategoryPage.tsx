@@ -117,7 +117,9 @@ export default function CategoryPage() {
   return (
     <>
       <Stack p='md'>
-        <Title order={1}>{category.name}</Title>
+        <Title order={1}>
+          {category.name} ({events.length} event)
+        </Title>
         {category.description && (
           <Text size='lg' c='dimmed' mb='sm'>
             {category.description}

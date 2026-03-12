@@ -1,12 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import {
-  SimpleGrid,
-  Group,
-  Pagination,
-  Text,
-  Stack,
-  Title,
-} from '@mantine/core';
+import { SimpleGrid, Group, Pagination, Text, Stack } from '@mantine/core';
 import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import type { NavigationType } from 'react-router-dom';
@@ -23,7 +16,6 @@ type PaginatedEventGridProps = {
   pageSize?: number;
   paginationKey?: string;
   navigationType?: NavigationType;
-  showTitle?: boolean;
 };
 
 export default function PaginatedEventGrid({
@@ -31,7 +23,6 @@ export default function PaginatedEventGrid({
   pageSize = 9,
   paginationKey,
   navigationType,
-  showTitle = true,
 }: PaginatedEventGridProps) {
   const getInitialPage = () => {
     if (!paginationKey) return 1;
@@ -80,8 +71,6 @@ export default function PaginatedEventGrid({
   return (
     <>
       <Stack ref={gridRef}>
-        {showTitle && <Title order={2}>{`Event (${events.length})`}</Title>}
-
         <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
           {pagedEvents.length === 0 ? (
             <Text p='xl' ta='center' c='dimmed'>

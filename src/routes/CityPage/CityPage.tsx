@@ -88,7 +88,9 @@ export default function CityPage() {
 
   return (
     <Stack p='md'>
-      <Title order={1}>{city.name}</Title>
+      <Title order={1}>
+        {city.name} ({events.length} event)
+      </Title>
 
       <Divider mt='sm' mb='lg' />
 

@@ -84,7 +84,9 @@ export default function TagPage() {
 
   return (
     <Stack p='md'>
-      <Title order={1}>{tag.name}</Title>
+      <Title order={1}>
+        {tag.name} ({events.length} event)
+      </Title>
 
       <Divider mt='sm' mb='lg' />
 

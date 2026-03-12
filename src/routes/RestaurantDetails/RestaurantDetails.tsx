@@ -158,7 +158,9 @@ export default function RestaurangDetails(): React.ReactNode {
 
       {events.length > 0 && (
         <Stack gap='md'>
-          <Title order={3}>Kommande event på {restaurant.name}</Title>
+          <Title order={3}>
+            Kommande event på {restaurant.name} ({events.length} event)
+          </Title>
           <PaginatedEventGrid
             events={events}
             pageSize={9}

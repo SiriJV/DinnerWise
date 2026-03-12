@@ -106,7 +106,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_hosting_${userId}`}
               navigationType={navigationType}
-              showTitle={false}
             />
           )}
         </Tabs.Panel>
@@ -121,7 +120,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_participating_${userId}`}
               navigationType={navigationType}
-              showTitle={false}
             />
           )}
         </Tabs.Panel>
@@ -136,7 +134,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               pageSize={6}
               paginationKey={`profile_saved_${userId}`}
               navigationType={navigationType}
-              showTitle={false}
             />
           )}
         </Tabs.Panel>
