@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (userObj?: { id: number; name: string }) => {
     setIsLoggedIn(true);
-    setUser(userObj || { id: 1, name: 'Demo User' });
+    setUser(userObj || { id: 1, name: 'Anna Svensson (demo)' });
   };
 
   const logout = () => {
