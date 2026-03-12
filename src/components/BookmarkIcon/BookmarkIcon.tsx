@@ -32,35 +32,43 @@ export default function BookmarkButton({
           right: 12,
           cursor: 'pointer',
           background: 'white',
-          borderRadius: 999,
-          padding: 8,
+          borderRadius: '50%',
+          width: 34,
+          height: 34,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         }}>
         <BookmarkIcon
           size={18}
           color='black'
           fill={isBookmarked ? 'black' : 'none'}
+          style={{ display: 'block' }}
         />
       </Box>
     );
   }
 
   return (
-    <Flex
-      px='md'
-      py='sm'
-      bg='rgba(206, 212, 218, 1)'
-      bdrs='sm'
+    <Box
+      onClick={handleBookmarkClick}
       style={{
         cursor: 'pointer',
-        width: 'fit-content',
-      }}
-      onClick={handleBookmarkClick}>
+        background: 'rgba(206, 212, 218, 1)',
+        borderRadius: '50%',
+        width: 44,
+        height: 44,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       <BookmarkIcon
         size={22}
         color='black'
         fill={isBookmarked ? 'black' : 'none'}
+        style={{ display: 'block' }}
       />
-    </Flex>
+    </Box>
   );
 }
