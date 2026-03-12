@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { fetchEventById } from '../../api/events';
 import type { Event } from '../../api/events';
 import { generateEventSlug } from '../../utils/slugify';
+import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 
 export default function RestaurantAcceptancePage(): React.ReactNode {
   const [approved, setApproved] = useState(false);
@@ -125,8 +126,12 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
                 </Group>
               ) : (
                 <Group>
-                  <Button onClick={handleApprove}>Godkänn bokning</Button>
-                  <Button>Avvisa eller ändra bokning</Button>
+                  <BaseButton onClick={handleApprove}>
+                    Godkänn bokning
+                  </BaseButton>
+                  <BaseButton variantType='secondary'>
+                    Avvisa eller ändra bokning
+                  </BaseButton>
                 </Group>
               )}
             </Stack>
