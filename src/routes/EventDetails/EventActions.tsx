@@ -37,15 +37,20 @@ export default function EventActions({
 
           {isLoggedIn && <BookmarkButton eventId={eventId} variant='lg' />}
 
-          <Flex
-            px='md'
-            py='sm'
+          <div
             onClick={share.open}
-            bg='rgba(206, 212, 218, 1)'
-            bdrs='sm'
-            style={{ cursor: 'pointer' }}>
-            <Share size={22} />
-          </Flex>
+            style={{
+              cursor: 'pointer',
+              background: 'rgba(206, 212, 218, 1)',
+              borderRadius: '50%',
+              width: 44,
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Share size={22} style={{ display: 'block' }} />
+          </div>
         </Group>
       </Grid.Col>
     </Grid>
