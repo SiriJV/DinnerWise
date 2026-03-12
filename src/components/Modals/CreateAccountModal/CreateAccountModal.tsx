@@ -34,6 +34,16 @@ export default function CreateAccountModal({
     emailsMatch &&
     passwordsMatch;
 
+  async function sendWelcomeEmail() {
+    await fetch('http://localhost:3001/email/send-welcome-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+      }),
+    });
+  }
+
   return (
     <Modal opened={opened} onClose={onClose} title='Skapa konto' centered>
       <Text ta='center'>
@@ -104,6 +114,7 @@ export default function CreateAccountModal({
         onClick={() => {
           login();
           onClose();
+          sendWelcomeEmail();
         }}
         mt='lg'>
         Skapa konto
