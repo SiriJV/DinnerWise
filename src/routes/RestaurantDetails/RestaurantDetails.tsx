@@ -1,20 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigationType, useParams } from 'react-router-dom';
-import {
-  Box,
-  Stack,
-  Text,
-  Image,
-  Group,
-  Anchor,
-  Divider,
-  Title,
-} from '@mantine/core';
-import { MapPin, ExternalLink } from 'lucide-react';
+import { Box, Stack, Text, Group, Anchor, Divider, Title } from '@mantine/core';
+import { ExternalLink } from 'lucide-react';
 import type { EventType } from '../../types/EventType';
 import { extractIdFromSlug } from '../../utils/slugify';
-import { Carousel } from '@mantine/carousel';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import Map from '../../components/Map/Map';
+import RestaurantPhotosCarousel from './RestaurantPhotosCarousel';
 
 type Restaurant = {
   id: number;
@@ -35,8 +27,6 @@ type Restaurant = {
 export default function RestaurangDetails(): React.ReactNode {
   // const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const emblaApiRef = useRef<any>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,50 +82,18 @@ export default function RestaurangDetails(): React.ReactNode {
     if (slug) loadRestaurant();
   }, [slug, state]);
 
-  // Parse TripAdvisor photos if available (alltid deklarera och parsa, även om restaurant är null)
-  let photos: string[] = [];
-  if (restaurant && restaurant.photos) {
-    try {
-      const parsed = JSON.parse(restaurant.photos);
-      if (Array.isArray(parsed)) {
-        photos = parsed;
-      }
-    } catch {}
+  if (error || !restaurant) {
+    return (
+      <Text p='xl' ta='center' c='red'>
+        {error || 'Restaurang hittades inte'}
+      </Text>
+    );
   }
-
-  // Enkel autoplay för karusellen
-  useEffect(() => {
-    if (!photos || photos.length <= 1) return;
-    setCurrentSlide(0); // starta alltid från första bilden när nya bilder laddas
-    const max = Math.min(photos.length, 5);
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % max);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [photos.length]);
-
-  // Synka embla-carousel till rätt slide när currentSlide ändras
-  useEffect(() => {
-    if (
-      emblaApiRef.current &&
-      typeof emblaApiRef.current.scrollTo === 'function'
-    ) {
-      emblaApiRef.current.scrollTo(currentSlide);
-    }
-  }, [currentSlide]);
 
   if (loading) {
     return (
       <Text p='xl' ta='center' c='dimmed'>
         Laddar restaurang...
-      </Text>
-    );
-  }
-
-  if (error || !restaurant) {
-    return (
-      <Text p='xl' ta='center' c='red'>
-        {error || 'Restaurang hittades inte'}
       </Text>
     );
   }
@@ -175,86 +133,24 @@ export default function RestaurangDetails(): React.ReactNode {
       )}
 
       <Group align='flex-start' gap='md' wrap='wrap'>
-        <Box style={{ flex: 1, minWidth: '300px' }}>
-          {photos.length > 1 ? (
-            <Stack>
-              <Carousel
-                withIndicators
-                height={250}
-                slideSize='100%'
-                styles={{ indicator: { background: '#333' } }}
-                withControls={false}
-                emblaOptions={{ loop: true }}
-                getEmblaApi={(api) => {
-                  emblaApiRef.current = api;
-                }}
-                onSlideChange={setCurrentSlide}>
-                {photos.slice(0, 5).map((photo, idx) => (
-                  <Carousel.Slide key={idx}>
-                    <Image
-                      src={photo}
-                      className='restaurant-image'
-                      height={250}
-                      fit='cover'
-                      bdrs='md'
-                    />
-                  </Carousel.Slide>
-                ))}
-              </Carousel>
-            </Stack>
-          ) : (
-            <Image
-              src={
-                photos[0] ||
-                restaurant.cover_picture_url ||
-                'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
-              }
-              className='restaurant-image'
-              height={250}
-              fit='cover'
-              bdrs='md'
-            />
-          )}
-        </Box>
+        <RestaurantPhotosCarousel
+          photos={(() => {
+            if (typeof restaurant.photos === 'string') {
+              try {
+                const parsed = JSON.parse(restaurant.photos);
+                if (Array.isArray(parsed)) return parsed;
+              } catch {}
+            }
+            return [];
+          })()}
+          restaurant={restaurant}
+        />
 
         <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
-          <Box bdrs='md' style={{ overflow: 'hidden' }}>
-            {/* Google Maps iframe using address if lat/lng are missing */}
-            {restaurant.latitude && restaurant.longitude ? (
-              <iframe
-                src={`https://maps.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}&z=15&output=embed`}
-                title='Google map'
-                width='100%'
-                height={250}
-                style={{ border: 0, display: 'block' }}
-                loading='lazy'
-              />
-            ) : restaurant.address_string || restaurant.city ? (
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                  `${restaurant.address_string || ''} ${restaurant.city || ''}`.trim(),
-                )}&z=15&output=embed`}
-                title='Google map'
-                width='100%'
-                height={250}
-                style={{ border: 0, display: 'block' }}
-                loading='lazy'
-              />
-            ) : (
-              <Text c='dimmed' p='md'>
-                Ingen karta tillgänglig
-              </Text>
-            )}
-          </Box>
-          <Group gap='xs'>
-            <MapPin size='16px' />
-            <Text>
-              {restaurant.address_string
-                ? restaurant.address_string
-                : 'Adress saknas'}
-              {restaurant.city ? `, ${restaurant.city}` : ''}
-            </Text>
-          </Group>
+          <Map
+            restaurant_address={restaurant.address_string}
+            restaurant_city={restaurant.city}
+          />
         </Stack>
       </Group>
 
