@@ -2,7 +2,8 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  user: { id: number; name: string } | null;
+  login: (user?: { id: number; name: string }) => void;
   logout: () => void;
   bookmarks: number[];
   addBookmark: (id: number) => void;
@@ -13,14 +14,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<{ id: number; name: string } | null>(null);
   const [bookmarks, setBookmarks] = useState<number[]>([]);
 
-  const login = () => {
+  const login = (userObj?: { id: number; name: string }) => {
     setIsLoggedIn(true);
+    setUser(userObj || { id: 1, name: 'Demo User' });
   };
 
   const logout = () => {
     setIsLoggedIn(false);
+    setUser(null);
     setBookmarks([]);
   };
 
@@ -36,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        user,
         login,
         logout,
         bookmarks,
