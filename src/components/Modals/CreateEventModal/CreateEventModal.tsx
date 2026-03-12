@@ -127,7 +127,8 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         date: selectedTime.date,
         event: eventDetails.title,
         participants: 8, // Adjust as needed
-        eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        // eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        eventId: 1,
         name: 'Förnamn Efternamn', // Replace with actual host name
         slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
       }),
