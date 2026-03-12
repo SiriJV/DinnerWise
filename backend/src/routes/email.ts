@@ -164,6 +164,60 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
   }
 });
 
+// Bekräftelsemejl till värd
+router.post('/send-confirmation-email-to-host', async (req, res) => {
+  const { restaurant, date, event, participants, eventId, name, path } =
+    req.body;
+
+  if (
+    !restaurant ||
+    !date ||
+    !event ||
+    !participants ||
+    !eventId ||
+    !name ||
+    !path
+  ) {
+    return res.status(400).json({
+      error:
+        'Missing restaurant, date, event, participants, eventId, name or slug',
+    });
+  }
+
+  try {
+    const formattedDate = formatDate(date);
+    const html = `
+      <h1>Ditt event är bekräftat av restaurangen, ${name}!</h1>
+      <p>Ditt event ${event} (ID: ${eventId}) den ${formattedDate} med ${participants} deltagare är bekräftat av restaurangen ${restaurant}.</p>
+      <p>Nu syns ditt event på DinnerWise!</p>
+      <p>Dela event med <a href=${path}>${path}</a>.</p>
+      <a href="${path}"
+         style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#e84132;
+          color:white;
+          text-decoration:none;
+          border-radius:6px;
+         ">
+        Se ditt event     
+      </a>
+    `;
+
+    const data = await resend.emails.send({
+      from: 'DinnerWise <onboarding@resend.dev>',
+      to: devEmail,
+      subject: `Ditt event är bokat!`,
+      html,
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
 // Bokningsmejl till deltagare
 router.post('/send-booking-email', async (req, res) => {
   const { restaurant, date, startTime, event, path } = req.body;
