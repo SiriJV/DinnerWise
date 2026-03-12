@@ -29,6 +29,7 @@ import { fetchRestaurants, type Restaurant } from '../../../api/restaurants';
 import { fetchCategories, type Category } from '../../../api/categories';
 import { fetchTags, type Tag } from '../../../api/tags';
 import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const HEADER_HEIGHT = 60;
 const HEADER_OFFSET = 10;
@@ -101,9 +102,20 @@ const generateAvailability = () => {
 const MOCK_AVAILABILITY = generateAvailability();
 
 const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
+  const { user } = useAuth();
   // Send booking emails to host and restaurant
   async function sendBookingEmails() {
-    if (!selectedRestaurant || !selectedTime || !eventDetails.title) return;
+    if (!selectedRestaurant || !selectedTime || !eventDetails.title) {
+      console.error('Missing event, restaurant, or time info');
+      return;
+    }
+    if (!user || !user.name) {
+      console.error(
+        'Missing user or user name, cannot send booking emails:',
+        user,
+      );
+      return;
+    }
     // Host email
     await fetch('http://localhost:3001/email/send-host-email', {
       method: 'POST',
@@ -113,8 +125,9 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         date: selectedTime.date,
         event: eventDetails.title,
         participants: 8, // Adjust as needed
-        eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
-        name: 'Förnamn Efternamn', // Replace with actual host name
+        eventId: 1,
+        // eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        name: user.name,
         slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
       }),
     });
@@ -127,9 +140,9 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         date: selectedTime.date,
         event: eventDetails.title,
         participants: 8, // Adjust as needed
-        // eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
         eventId: 1,
-        name: 'Förnamn Efternamn', // Replace with actual host name
+        // eventId: Math.floor(Math.random() * 100000), // Replace with actual eventId if available
+        name: user.name,
         slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
       }),
     });
@@ -697,11 +710,11 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
             </Button>
           ) : (
             <Button
-              onClick={() => {
+              onClick={async () => {
                 alert('Event skapat!');
                 resetModal();
                 onClose();
-                sendBookingEmails();
+                await sendBookingEmails();
               }}
               color='red'>
               Skapa
