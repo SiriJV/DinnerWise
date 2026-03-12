@@ -19,7 +19,7 @@ export default function Map({ restaurant_address, restaurant_city }: MapProps) {
         style={{ border: 0, display: 'block', borderRadius: '12px' }}
         loading='lazy'
       />
-      <Group gap='xs' mt='sm'>
+      <Group gap='xs' mt='sm' wrap='nowrap' align='center'>
         <MapPin size={16} />
         <Text size='sm' c='dimmed'>
           {restaurant_address || 'Adress saknas'}
