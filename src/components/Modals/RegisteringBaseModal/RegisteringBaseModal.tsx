@@ -42,7 +42,7 @@ export default function RegisteringBaseModal({
               </Popover.Target>
               <Popover.Dropdown>
                 <Text size='sm' fw={600} mb='xs'>
-                  Hjälp{' '}
+                  Hjälp (DEMO){' '}
                 </Text>
                 <Stack gap='xs'>
                   {isFull ? (
@@ -52,17 +52,6 @@ export default function RegisteringBaseModal({
                         du kontaktad via e-post om en plats blir ledig. Du
                         behöver inte betala förrän du får en plats!
                       </Text>
-                      <Text size='sm'>
-                        Behöver du mer hjälp? Kontakta oss på{' '}
-                        <Text span fw={500}>
-                          support@dinnerwise.se
-                        </Text>{' '}
-                        eller ring oss på{' '}
-                        <Text span fw={500}>
-                          08-123 456 78
-                        </Text>
-                        .
-                      </Text>
                     </>
                   ) : (
                     <>
@@ -71,19 +60,23 @@ export default function RegisteringBaseModal({
                         innan du går vidare. Välj en betalningsmetod och klicka
                         dig vidare. Nu är du anmäld!
                       </Text>
-                      <Text size='sm'>
-                        Behöver du mer hjälp? Kontakta oss på{' '}
-                        <Text span fw={500}>
-                          support@dinnerwise.se
-                        </Text>{' '}
-                        eller ring oss på{' '}
-                        <Text span fw={500}>
-                          08-123 456 78
-                        </Text>
-                        .
-                      </Text>
                     </>
                   )}
+                  <Text size='sm'>
+                    Behöver du mer hjälp? Kontakta oss på{' '}
+                    <Text span fw={600}>
+                      support@dinnerwise.se
+                    </Text>{' '}
+                    eller ring oss på{' '}
+                    <Text span fw={600}>
+                      08-123 456 78
+                    </Text>
+                    .
+                  </Text>
+                  <Text c='red' size='sm'>
+                    (E-post och nummer är bara exempel för demo och fungerar
+                    inte.)
+                  </Text>
                 </Stack>
               </Popover.Dropdown>
             </Popover>
