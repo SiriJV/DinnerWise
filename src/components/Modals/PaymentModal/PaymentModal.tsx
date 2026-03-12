@@ -17,6 +17,7 @@ import klarnaLogo from '../../../assets/klarna-logo.webp';
 import type { EventType } from '../../../types/EventType';
 import './PaymentModal.scss';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
+import { generateEventSlug } from '../../../utils/slugify';
 
 interface PaymentModalProps {
   opened: boolean;
@@ -24,6 +25,11 @@ interface PaymentModalProps {
   onOpenConfirmation: () => void;
   onOpenRegistration: () => void;
   event?: EventType | null;
+  // participant: {
+  //   name: string;
+  //   email: string;
+  //   phone?: string;
+  // };
 }
 
 export default function PaymentModal({
@@ -32,8 +38,46 @@ export default function PaymentModal({
   onOpenConfirmation,
   onOpenRegistration,
   event,
+  // participant,
 }: PaymentModalProps) {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+
+  const participant = {
+    name: 'Förnamn Efternamn',
+    email: 'exempel@email.com',
+    phone: '+46701234567',
+  };
+
+  async function sendBookingEmails() {
+    if (!event) return;
+    // Send to host
+    await fetch('http://localhost:3001/email/send-booking-email-to-host', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: event.restaurant_name,
+        date: event.date,
+        startTime: event.start_time,
+        event: event.title,
+        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        name: participant.name,
+      }),
+    });
+
+    // Send to participant
+    await fetch('http://localhost:3001/email/send-booking-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: event.restaurant_name,
+        date: event.date,
+        event: event.title,
+        startTime: event.start_time,
+        // to: participant.email,
+        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+      }),
+    });
+  }
 
   return (
     <RegisteringBaseModal
@@ -94,20 +138,20 @@ export default function PaymentModal({
         <Box bg='gray.0' p='md' bdrs='sm'>
           <Text size='sm'>
             <Text span fw={600}>
-              Förnamn Efternamn
+              {participant.name}
             </Text>
           </Text>
           <Text size='sm'>
             <Text span fw={600}>
               Telefon:{' '}
             </Text>
-            +46703123456
+            {participant.phone || ''}
           </Text>
           <Text size='sm'>
             <Text span fw={600}>
               E-post:{' '}
             </Text>
-            exempel@email.com
+            {participant.email}
           </Text>
         </Box>
       </Box>
@@ -192,7 +236,7 @@ export default function PaymentModal({
           </Box>
         </Stack>
         <Text size='lg' fw={600} mt='md'>
-          Totalbelopp: 150 kr
+          Totalbelopp: {event ? Math.floor(event.price) : 0} kr
         </Text>
         <Text mt='xs' size='xs'>
           Genom att slutföra köpet godkänner du våra köpvillkor och bekräftar
@@ -206,7 +250,8 @@ export default function PaymentModal({
         fullWidth
         mt='lg'
         disabled={!selectedPayment}
-        onClick={() => {
+        onClick={async () => {
+          await sendBookingEmails();
           onClose();
           onOpenConfirmation();
         }}>
