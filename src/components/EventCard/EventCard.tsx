@@ -45,13 +45,13 @@ export default function EventCard({
   restaurant_address,
   restaurant_city,
   maxDescriptionLength = 100,
-  isHost = false,
 }: EventCardProps) {
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const { host, participants } = useEventUsers(id, current_participants);
+  const isHost = user && host && user.id === host.id;
 
   useEffect(() => {
     if (restaurant_id) {
