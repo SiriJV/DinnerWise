@@ -47,8 +47,22 @@ export default function RegisteringModal({
     email: 'exempel@email.com',
   };
 
-  async function sendWaitlistEmail() {
+  async function sendWaitlistEmails() {
     if (!event) return;
+
+    // Send to host
+    await fetch('http://localhost:3001/email/send-waitlist-email-to-host', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: event.restaurant_name,
+        date: event.date,
+        startTime: event.start_time,
+        event: event.title,
+        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        name: participant.name,
+      }),
+    });
 
     // Send to participant
     await fetch('http://localhost:3001/email/send-waitlist-email', {
@@ -225,7 +239,7 @@ export default function RegisteringModal({
           onClose();
           if (isFull) {
             onOpenWaitlist();
-            sendWaitlistEmail();
+            sendWaitlistEmails();
           } else {
             onOpenPayment();
           }
