@@ -12,14 +12,17 @@ function formatDate(date: string | Date): string {
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const router = Router();
+const devEmail = 'jessicaagren@hotmail.com';
 
 // Välkomstmejl
 router.post('/send-welcome-email', async (req, res) => {
-  const { to } = req.body;
+  const {
+    // to
+  } = req.body;
 
-  if (!to) {
-    return res.status(400).json({ error: 'Missing to or name' });
-  }
+  // if (!to) {
+  //   return res.status(400).json({ error: 'Missing to' });
+  // }
 
   try {
     const html = `
@@ -40,7 +43,8 @@ router.post('/send-welcome-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: [to],
+      // to = [to],
+      to: devEmail,
       subject: `Välkommen till DinnerWise!`,
       html,
     });
@@ -94,7 +98,7 @@ router.post('/send-host-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: 'jessicaagren@hotmail.com',
+      to: devEmail,
       subject: `Ditt event är bokat!`,
       html,
     });
@@ -148,7 +152,7 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: 'jessicaagren@hotmail.com',
+      to: devEmail,
       subject: `Inkommande bokning från DinnerWise`,
       html,
     });
@@ -190,8 +194,50 @@ router.post('/send-booking-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: 'jessicaagren@hotmail.com',
+      to: devEmail,
       subject: `Bokningsbekräftelse för ${event}`,
+      html,
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
+// Bokningsmejl till värd när deltagare anmält sig
+router.post('/send-booking-email-to-host', async (req, res) => {
+  const { restaurant, date, startTime, event, path, name } = req.body;
+
+  if (!restaurant || !date || !startTime || !event || !path || !name) {
+    return res
+      .status(400)
+      .json({ error: 'Missing restaurant, date, event or path' });
+  }
+
+  try {
+    const formattedDate = formatDate(date);
+    const html = `
+      <h1>Hurra! En ny deltagare är anmäld till ${event}!</h1>
+      <p>${name} är anmäld till ${event} ${formattedDate}, kl. ${startTime.slice(0, 5)} på ${restaurant}.</p>
+      <a href="${path}"
+         style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#e84132;
+          color:white;
+          text-decoration:none;
+          border-radius:6px;
+         ">
+         Se eventet här      
+      </a>
+    `;
+
+    const data = await resend.emails.send({
+      from: 'DinnerWise <onboarding@resend.dev>',
+      to: devEmail,
+      subject: `Ny anmälan till ${event}`,
       html,
     });
 
@@ -234,8 +280,50 @@ router.post('/send-waitlist-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: 'jessicaagren@hotmail.com',
+      to: devEmail,
       subject: `Tack för ditt intresse`,
+      html,
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
+// Bokningsmejl till värd när deltagare skrivit upp sig på väntelista
+router.post('/send-waitlist-email-to-host', async (req, res) => {
+  const { restaurant, date, startTime, event, path, name } = req.body;
+
+  if (!restaurant || !date || !startTime || !event || !path || !name) {
+    return res
+      .status(400)
+      .json({ error: 'Missing restaurant, date, event or path' });
+  }
+
+  try {
+    const formattedDate = formatDate(date);
+    const html = `
+      <h1>En ny deltagare har skrivit upp sig på väntelista till ${event}!</h1>
+      <p>${name} har skrivit upp sig på väntelista till ${event} ${formattedDate}, kl. ${startTime.slice(0, 5)} på ${restaurant}.</p>
+      <a href="${path}"
+         style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#e84132;
+          color:white;
+          text-decoration:none;
+          border-radius:6px;
+         ">
+         Se eventet här      
+      </a>
+    `;
+
+    const data = await resend.emails.send({
+      from: 'DinnerWise <onboarding@resend.dev>',
+      to: devEmail,
+      subject: `Ny person på väntelista till ${event}`,
       html,
     });
 
@@ -275,7 +363,8 @@ router.post('/send-share-email', async (req, res) => {
 
     const data = await resend.emails.send({
       from: 'DinnerWise <onboarding@resend.dev>',
-      to: [to],
+      // to: [to],
+      to: devEmail,
       subject: `Vill du med på event?`,
       html,
     });
