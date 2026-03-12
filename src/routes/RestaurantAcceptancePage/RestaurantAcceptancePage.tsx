@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchEventById } from '../../api/events';
 import type { Event } from '../../api/events';
+import { generateEventSlug } from '../../utils/slugify';
 
 export default function RestaurantAcceptancePage(): React.ReactNode {
   const [approved, setApproved] = useState(false);
@@ -25,8 +26,26 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
     }
   }, [eventId]);
 
+  async function sendAcceptanceEmail() {
+    if (!event) return;
+    await fetch('http://localhost:3001/email/send-confirmation-email-to-host', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: event.restaurant_name,
+        date: event.date,
+        event: event.title,
+        participants: event.max_participants,
+        eventId: event.id,
+        name: 'Förnamn Efternamn', // Replace with actual host name if available
+        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+      }),
+    });
+  }
+
   const handleApprove = () => {
     setApproved(true);
+    sendAcceptanceEmail();
   };
 
   return (
