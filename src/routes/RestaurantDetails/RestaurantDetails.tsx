@@ -1,12 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigationType, useParams } from 'react-router-dom';
-import { Box, Stack, Text, Group, Anchor, Divider, Title } from '@mantine/core';
+import {
+  Box,
+  Stack,
+  Text,
+  Group,
+  Anchor,
+  Divider,
+  Title,
+  Container,
+  SimpleGrid,
+} from '@mantine/core';
 import { ExternalLink } from 'lucide-react';
 import type { EventType } from '../../types/EventType';
 import { extractIdFromSlug } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import Map from '../../components/Map/Map';
 import RestaurantPhotosCarousel from './RestaurantPhotosCarousel';
+import EventDetailsHeroImage from '../EventDetails/EventDetailsHeroImage';
 
 type Restaurant = {
   id: number;
@@ -35,6 +46,18 @@ export default function RestaurangDetails(): React.ReactNode {
   const state = location.state as { id?: string } | undefined;
   const { slug } = useParams<{ slug: string }>();
   const navigationType = useNavigationType();
+
+  let restaurantPhoto = undefined;
+  if (restaurant?.photos) {
+    try {
+      const arr = JSON.parse(restaurant.photos);
+      if (Array.isArray(arr) && arr.length > 0) {
+        restaurantPhoto = arr[0];
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
 
   useEffect(() => {
     async function loadRestaurant() {
@@ -99,65 +122,131 @@ export default function RestaurangDetails(): React.ReactNode {
   }
 
   return (
-    <Stack m='md' gap='xl'>
-      <Stack gap={0}>
-        <Title order={2}>{restaurant.name}</Title>
-        <Text c='dimmed'>
-          {restaurant.address_string
-            ? restaurant.address_string
-            : 'Adress saknas'}
-          {restaurant.city ? `, ${restaurant.city}` : ''}
-        </Text>
-        {restaurant.website_url && (
-          <Anchor
-            href={restaurant.website_url}
-            target='_blank'
-            style={{ textDecoration: 'none' }}>
-            <Group gap='xs' mt='xs'>
-              <ExternalLink size={16} color='black' />
-              <Text size='sm' c='dark'>
-                {restaurant.website_url.replace(/^https?:\/\/(www\.)?/, '')}
-              </Text>
-            </Group>
-          </Anchor>
-        )}
-      </Stack>
+    <>
+      <Box
+        p='md'
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}
+        pos='relative'>
+        <EventDetailsHeroImage
+          image={
+            restaurantPhoto ||
+            'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+          }
+        />
 
-      {restaurant.phone_number && (
-        <Box>
-          <Text fw={600} mb='xs'>
-            Kontakt
-          </Text>
-          <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
-        </Box>
-      )}
+        <Container
+          fluid
+          pos='relative'
+          w={{ base: '100%', sm: '90%', lg: '75%' }}
+          bg='white'
+          bdrs='xs'
+          bd='1px solid rgba(206, 212, 218, 1)'
+          py='xl'
+          px={{ base: 'md', sm: 'lg', lg: 'xl' }}
+          mt={{ base: 'md', md: '-60px', lg: '-90px' }}
+          style={{ zIndex: 2 }}>
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl'>
+            <Stack m='md' gap='xl'>
+              <Stack gap={0}>
+                <Title order={2}>{restaurant.name}</Title>
+                <Text c='dimmed'>
+                  {restaurant.address_string
+                    ? restaurant.address_string
+                    : 'Adress saknas'}
+                  {restaurant.city ? `, ${restaurant.city}` : ''}
+                </Text>
+                {restaurant.website_url && (
+                  <Anchor
+                    href={restaurant.website_url}
+                    target='_blank'
+                    w='fit-content'
+                    style={{ textDecoration: 'none' }}>
+                    <Group gap='xs' mt='xs'>
+                      <ExternalLink size={16} color='rgba(211, 4, 59, 1)' />
+                      <Text size='sm' c='rgba(211, 4, 59, 1)'>
+                        {restaurant.website_url.replace(
+                          /^https?:\/\/(www\.)?/,
+                          '',
+                        )}
+                      </Text>
+                    </Group>
+                  </Anchor>
+                )}
+              </Stack>
 
-      <Group align='flex-start' gap='md' wrap='wrap'>
-        <RestaurantPhotosCarousel
-          photos={(() => {
+              {restaurant.phone_number && (
+                <Box>
+                  <Text fw={600} mb='xs'>
+                    Kontakt
+                  </Text>
+                  <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
+                </Box>
+              )}
+            </Stack>
+            <Map
+              restaurant_address={restaurant.address_string}
+              restaurant_city={restaurant.city}
+            />
+          </SimpleGrid>
+          {/* Grid of up to 10 photos, 5 per row */}
+          {(() => {
+            let photosArr: string[] = [];
             if (typeof restaurant.photos === 'string') {
               try {
                 const parsed = JSON.parse(restaurant.photos);
-                if (Array.isArray(parsed)) return parsed;
+                if (Array.isArray(parsed)) photosArr = parsed;
               } catch {}
             }
-            return [];
+            if (photosArr.length > 0) {
+              return (
+                <SimpleGrid
+                  cols={{ base: 2, md: 5 }}
+                  spacing='xs'
+                  mb='md'
+                  mt='lg'>
+                  {photosArr.map((url, idx) => (
+                    <Box
+                      key={idx}
+                      style={{
+                        aspectRatio: '1/1',
+                        overflow: 'hidden',
+                        borderRadius: 8,
+                        border: '1px solid #eee',
+                      }}>
+                      <img
+                        src={url}
+                        alt={`Restaurangbild ${idx + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              );
+            }
+            return null;
           })()}
-          restaurant={restaurant}
-        />
-
-        <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
-          <Map
-            restaurant_address={restaurant.address_string}
-            restaurant_city={restaurant.city}
-          />
-        </Stack>
-      </Group>
-
-      <Divider />
-
+          {/* <Group align='flex-start' gap='md' wrap='wrap' mt='lg'>
+            <RestaurantPhotosCarousel
+              photos={(() => {
+                if (typeof restaurant.photos === 'string') {
+                  try {
+                    const parsed = JSON.parse(restaurant.photos);
+                    if (Array.isArray(parsed)) return parsed;
+                  } catch {}
+                }
+                return [];
+              })()}
+              restaurant={restaurant}
+            />
+          </Group> */}
+        </Container>
+      </Box>
       {events.length > 0 && (
-        <Stack gap='md'>
+        <Stack m='md' gap='md'>
           <Title order={3}>
             Kommande event på {restaurant.name} ({events.length} event)
           </Title>
@@ -169,6 +258,6 @@ export default function RestaurangDetails(): React.ReactNode {
           />
         </Stack>
       )}
-    </Stack>
+    </>
   );
 }
