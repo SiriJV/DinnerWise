@@ -6,7 +6,6 @@ import {
   Text,
   Group,
   Anchor,
-  Divider,
   Title,
   Container,
   SimpleGrid,
