@@ -9,6 +9,7 @@ import SupportPage from '../routes/info pages/SupportPage';
 import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import ProfilePage from '../routes/ProfilePage/ProfilePage';
+import HowToPage from '../routes/info pages/HowToPage';
 
 type AccordionPanelItem = {
   label: string;
@@ -33,6 +34,11 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
         label: 'Nyhetsbrev',
         path: '/nyhetsbrev',
         element: <NewsletterPage />,
+      },
+      {
+        label: 'Att skapa event',
+        path: '/att-skapa-event',
+        element: <HowToPage />,
       },
     ],
   },

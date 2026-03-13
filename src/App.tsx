@@ -8,16 +8,13 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ModalProvider } from './contexts/ModalContext';
 import LoginModal from './components/Modals/LoginModal/LoginModal';
 import CreateAccountModal from './components/Modals/CreateAccountModal/CreateAccountModal';
-import DemoInfoModal from './components/Modals/DemoInfoModal/DemoInfoModal';
+// import DemoInfoModal from './components/Modals/DemoInfoModal/DemoInfoModal';
 import { useModal } from './contexts/ModalContext';
 import HomePage from './routes/HomePage/HomePage';
-import CookiesPage from './routes/info pages/CookiesPage';
 import EventDetails from './routes/EventDetails/EventDetails';
 import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
 import SearchPage from './routes/SearchPage';
 import ProfilePage from './routes/ProfilePage/ProfilePage';
-import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
-import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
 import CategoryPage from './routes/CategoryPage/CategoryPage';
 import TagPage from './routes/TagPage/TagPage';
 import CityPage from './routes/CityPage/CityPage';
@@ -47,10 +44,6 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: '/cookies',
-        element: <CookiesPage />,
-      },
-      {
         path: '/profil/:alias',
         element: <ProfilePage />,
       },
@@ -61,14 +54,6 @@ const router = createBrowserRouter([
       {
         path: '/restaurang/:slug',
         element: <RestaurangDetails />,
-      },
-      {
-        path: '/skapa-event',
-        element: <CreateEventPage />,
-      },
-      {
-        path: '/valj-restaurang',
-        element: <SelectRestaurantPage />,
       },
       {
         path: '/kategori/:slug',
@@ -108,7 +93,7 @@ function GlobalModals() {
 
   return (
     <>
-      <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} />
+      {/* <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} /> */}
       <LoginModal opened={loginOpen} onClose={closeModals} />
       <CreateAccountModal opened={createOpen} onClose={closeModals} />
     </>
