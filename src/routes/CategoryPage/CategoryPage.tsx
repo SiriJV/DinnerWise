@@ -171,7 +171,6 @@ export default function CategoryPage() {
           ) : (
             <PaginatedEventGrid
               events={events}
-              pageSize={9}
               paginationKey='categorypage_activePage'
               navigationType={navigationType}
             />

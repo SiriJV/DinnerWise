@@ -119,7 +119,6 @@ export default function TagPage() {
         ) : (
           <PaginatedEventGrid
             events={events}
-            pageSize={9}
             paginationKey='tagpage_activePage'
             navigationType={navigationType}
           />

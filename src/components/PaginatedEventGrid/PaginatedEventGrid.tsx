@@ -20,7 +20,7 @@ type PaginatedEventGridProps = {
 
 export default function PaginatedEventGrid({
   events,
-  pageSize = 9,
+  pageSize = 6,
   paginationKey,
   navigationType,
 }: PaginatedEventGridProps) {

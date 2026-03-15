@@ -129,7 +129,6 @@ export default function HomePage() {
           ) : (
             <PaginatedEventGrid
               events={events}
-              pageSize={9}
               paginationKey='homepage_activePage'
               navigationType={navigationType}
             />

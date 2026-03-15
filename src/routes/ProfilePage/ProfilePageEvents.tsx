@@ -103,7 +103,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           ) : (
             <PaginatedEventGrid
               events={hostingEvents.map((e) => ({ ...e, isHost: true }))}
-              pageSize={6}
               paginationKey={`profile_hosting_${userId}`}
               navigationType={navigationType}
             />
@@ -117,7 +116,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           ) : (
             <PaginatedEventGrid
               events={participatingEvents}
-              pageSize={6}
               paginationKey={`profile_participating_${userId}`}
               navigationType={navigationType}
             />
@@ -131,7 +129,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           ) : (
             <PaginatedEventGrid
               events={savedEvents}
-              pageSize={6}
               paginationKey={`profile_saved_${userId}`}
               navigationType={navigationType}
             />

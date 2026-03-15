@@ -131,7 +131,6 @@ export default function CityPage() {
         ) : (
           <PaginatedEventGrid
             events={events}
-            pageSize={9}
             paginationKey={`citypage_activePage_${city.id}`}
             navigationType={navigationType}
           />
