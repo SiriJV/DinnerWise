@@ -48,12 +48,16 @@ const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: '/event/:slug/',
+        path: '/event/:slug',
         element: <EventDetails />,
       },
       {
         path: '/event/:slug/feedback',
         element: <EventFeedback />,
+      },
+      {
+        path: '/restaurang/:slug',
+        element: <RestaurangDetails />,
       },
       {
         path: '/restaurang/:slug',
