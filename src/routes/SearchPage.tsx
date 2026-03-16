@@ -162,7 +162,7 @@ export default function SearchPage() {
                 {results
                   .filter((t: any) => t.id)
                   .map((t: any) => (
-                    <TagPill key={t.id} title={t.name} />
+                    <TagPill key={t.id} title={t.name} size='lg' />
                   ))}
               </Box>
             ) : t.value === 'users' ? (

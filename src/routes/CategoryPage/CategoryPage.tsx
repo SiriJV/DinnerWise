@@ -128,8 +128,8 @@ export default function CategoryPage() {
 
         {tags.length > 0 && (
           <Group gap='xs' mb='md' wrap='wrap'>
-            {tags.map((tag) => (
-              <TagPill key={tag.id} title={tag.name} />
+            {tags.map((tag, index) => (
+              <TagPill key={index} title={tag.name} />
             ))}
           </Group>
         )}
