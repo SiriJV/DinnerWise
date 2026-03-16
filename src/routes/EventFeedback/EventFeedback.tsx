@@ -103,7 +103,7 @@ export default function EventFeedback(): React.ReactNode {
 
   return (
     <Center>
-      <Stack m='md' maw={500}>
+      <Stack m='md' maw={500} gap='lg'>
         <Text fw={700} fz='xl'>
           Lämna feedback på eventet{' '}
           <Text span c='rgba(211, 4, 59, 1)' fw={700} fz='xl'>
@@ -235,7 +235,11 @@ export default function EventFeedback(): React.ReactNode {
               <Text size='md' mb='xs' fw={600}>
                 Betygsätt eventet
               </Text>
-              <Rating value={eventScore ?? 0} onChange={setEventScore} />
+              <Rating
+                value={eventScore ?? 0}
+                onChange={setEventScore}
+                color='rgba(211, 4, 59, 1)'
+              />
               {showEventFeedback && (
                 <Textarea
                   mt='md'
@@ -256,7 +260,11 @@ export default function EventFeedback(): React.ReactNode {
               <Text size='md' mb='xs' fw={600}>
                 Betygsätt värden{' '}
               </Text>
-              <Rating value={hostScore ?? 0} onChange={setHostScore} />
+              <Rating
+                value={hostScore ?? 0}
+                onChange={setHostScore}
+                color='rgba(211, 4, 59, 1)'
+              />
               {showHostFeedback && (
                 <Textarea
                   mt='md'
