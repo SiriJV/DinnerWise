@@ -148,6 +148,7 @@ export default function SearchBar({
               navigate(
                 `/search?q=${encodeURIComponent(value.trim())}&type=events`,
               );
+              setValue('');
             }
           }
         }}
@@ -186,6 +187,7 @@ export default function SearchBar({
               navigate(
                 `/search?q=${encodeURIComponent(value.trim())}&type=events`,
               );
+              setValue('');
             }
           }
         }}
