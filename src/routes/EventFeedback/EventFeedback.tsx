@@ -11,6 +11,7 @@ import {
   Group,
   Center,
   Radio,
+  MantineThemeProvider,
 } from '@mantine/core';
 
 import type { EventType } from '../../types/EventType';
@@ -291,8 +292,18 @@ export default function EventFeedback(): React.ReactNode {
                 value={recommend ?? undefined}
                 onChange={(value) => setRecommend(value as 'yes' | 'no')}>
                 <Group mt='xs'>
-                  <Radio value='yes' label='Ja' />
-                  <Radio value='no' label='Nej' />
+                  <MantineThemeProvider>
+                    <Radio
+                      value='yes'
+                      label='Ja'
+                      style={{ label: { cursor: 'pointer' } }}
+                    />
+                    <Radio
+                      value='no'
+                      label='Nej'
+                      style={{ label: { cursor: 'pointer' } }}
+                    />
+                  </MantineThemeProvider>
                 </Group>
               </Radio.Group>
 
