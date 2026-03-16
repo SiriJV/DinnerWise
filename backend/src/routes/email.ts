@@ -1,3 +1,23 @@
+// Centralized error handling for required fields in email routes
+function checkAllFieldsRequired(obj: any, res: any): boolean {
+  for (const field of Object.keys(obj)) {
+    if (!obj[field]) {
+      res.status(400).json({ error: `Missing ${field}` });
+      return false;
+    }
+  }
+  return true;
+}
+// Helper for sending missing field error in email routes
+function checkRequiredFields(obj: any, fields: string[], res: any): boolean {
+  for (const field of fields) {
+    if (!obj[field]) {
+      res.status(400).json({ error: `Missing ${field}` });
+      return false;
+    }
+  }
+  return true;
+}
 import { Router } from 'express';
 import { Resend } from 'resend';
 
@@ -58,23 +78,15 @@ router.post('/send-welcome-email', async (req, res) => {
 
 // Bokningsmejl till värd
 router.post('/send-host-email', async (req, res) => {
-  const { restaurant, date, event, participants, eventId, name, slug } =
-    req.body;
-
+  const { restaurant, date, event, participants, eventId, name } = req.body;
   if (
-    !restaurant ||
-    !date ||
-    !event ||
-    !participants ||
-    !eventId ||
-    !name ||
-    !slug
-  ) {
-    return res.status(400).json({
-      error:
-        'Missing restaurant, date, event, participants, eventId, name or slug',
-    });
-  }
+    !checkRequiredFields(
+      req.body,
+      ['restaurant', 'date', 'event', 'participants', 'eventId', 'name'],
+      res,
+    )
+  )
+    return;
 
   try {
     const bookingUrl = `http://localhost:5173/`;
@@ -114,21 +126,7 @@ router.post('/send-host-email', async (req, res) => {
 router.post('/send-restaurant-booking-email', async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, slug } =
     req.body;
-
-  if (
-    !restaurant ||
-    !date ||
-    !event ||
-    !participants ||
-    !eventId ||
-    !name ||
-    !slug
-  ) {
-    return res.status(400).json({
-      error:
-        'Missing restaurant, date, event, participants, eventId, name or slug',
-    });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const bookingUrl = `http://localhost:5173/bokningshantering/${slug}?eventId=${eventId}`;
@@ -168,21 +166,7 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
 router.post('/send-confirmation-email-to-host', async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, path } =
     req.body;
-
-  if (
-    !restaurant ||
-    !date ||
-    !event ||
-    !participants ||
-    !eventId ||
-    !name ||
-    !path
-  ) {
-    return res.status(400).json({
-      error:
-        'Missing restaurant, date, event, participants, eventId, name or slug',
-    });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const formattedDate = formatDate(date);
@@ -221,12 +205,7 @@ router.post('/send-confirmation-email-to-host', async (req, res) => {
 // Bokningsmejl till deltagare
 router.post('/send-booking-email', async (req, res) => {
   const { restaurant, date, startTime, event, path } = req.body;
-
-  if (!restaurant || !date || !startTime || !event || !path) {
-    return res
-      .status(400)
-      .json({ error: 'Missing restaurant, date, event or path' });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const formattedDate = formatDate(date);
@@ -263,12 +242,7 @@ router.post('/send-booking-email', async (req, res) => {
 // Bokningsmejl till värd när deltagare anmält sig
 router.post('/send-booking-email-to-host', async (req, res) => {
   const { restaurant, date, startTime, event, path, name } = req.body;
-
-  if (!restaurant || !date || !startTime || !event || !path || !name) {
-    return res
-      .status(400)
-      .json({ error: 'Missing restaurant, date, event or path' });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const formattedDate = formatDate(date);
@@ -305,12 +279,7 @@ router.post('/send-booking-email-to-host', async (req, res) => {
 // Bokningsmejl till väntelistedeltagare
 router.post('/send-waitlist-email', async (req, res) => {
   const { restaurant, date, startTime, event, path } = req.body;
-
-  if (!restaurant || !date || !startTime || !event || !path) {
-    return res
-      .status(400)
-      .json({ error: 'Missing restaurant, date, event or path' });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const formattedDate = formatDate(date);
@@ -349,12 +318,7 @@ router.post('/send-waitlist-email', async (req, res) => {
 // Bokningsmejl till värd när deltagare skrivit upp sig på väntelista
 router.post('/send-waitlist-email-to-host', async (req, res) => {
   const { restaurant, date, startTime, event, path, name } = req.body;
-
-  if (!restaurant || !date || !startTime || !event || !path || !name) {
-    return res
-      .status(400)
-      .json({ error: 'Missing restaurant, date, event or path' });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const formattedDate = formatDate(date);
@@ -388,15 +352,49 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
   }
 });
 
+// Feedbackmejl till deltagare
+router.post('/send-feedback-email', async (req, res) => {
+  const { restaurant, date, startTime, event, path, name } = req.body;
+  if (!checkAllFieldsRequired(req.body, res)) return;
+
+  try {
+    const formattedDate = formatDate(date);
+    const html = `
+      <h1>Hej, ${name}! </h1>
+      <p>Du var nyss på ${event}, och vi hoppas att du hade ett givande möte.</p>
+      <p>Nu behöver vi dina åsikter kring eventet, värden och bokningsprocessen för att kunna förbättra upplevelsen framöver.</p>
+      <p>Tack så mycket för att du hjälper oss att bli bättre!</p>
+      <a href="${path}"
+         style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#e84132;
+          color:white;
+          text-decoration:none;
+          border-radius:6px;
+         ">
+        Ge feedback här
+      </a>
+    `;
+
+    const data = await resend.emails.send({
+      from: 'DinnerWise <onboarding@resend.dev>',
+      to: devEmail,
+      subject: `Vi behöver din feedback på ${event}`,
+      html,
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
 // Delning på mejl
 router.post('/send-share-email', async (req, res) => {
   const { to, name, event, path, emailMessage } = req.body;
-
-  if (!to || !name || !event || !path || !emailMessage) {
-    return res
-      .status(400)
-      .json({ error: 'Missing to, name, event, path or emailMessage' });
-  }
+  if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
     const html = `
