@@ -1,6 +1,6 @@
 import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Group, Stack, Text, Title } from '@mantine/core';
+import { Box, Group, Rating, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
@@ -125,6 +125,12 @@ export default function ProfilePage() {
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
+          <Rating
+            value={3.5}
+            fractions={2}
+            readOnly
+            color='rgba(211, 4, 59, 1)'
+          />
         </Stack>
         <ProfilePageEvents userId={user.id} />
       </Stack>
