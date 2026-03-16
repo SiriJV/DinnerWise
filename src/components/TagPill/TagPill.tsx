@@ -1,20 +1,21 @@
 import { Box, Pill } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
+import './TagPill.scss';
 
 type TagPillProps = {
   title: string;
-  key: number;
+  size?: 'md' | 'lg';
 };
 
-export default function TagPill({ title, key }: TagPillProps) {
+export default function TagPill({ title, size }: TagPillProps) {
   const navigate = useNavigate();
   return (
     <Box
-      key={key}
+      className='tag-pill'
       onClick={() => navigate(`/tagg/${slugify(title)}`)}
-      style={{ cursor: 'pointer' }}>
-      <Pill>{title}</Pill>
+      style={{ cursor: 'pointer', transition: '0.2s ease' }}>
+      <Pill size={size ?? 'md'}>{title}</Pill>
     </Box>
   );
 }
