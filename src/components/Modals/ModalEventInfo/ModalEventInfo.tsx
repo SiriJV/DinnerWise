@@ -12,11 +12,15 @@ type User = {
 interface ModalEventInfoProps {
   event: EventType;
   showPrice?: boolean;
+  showTitle?: boolean;
+  showDescription?: boolean;
 }
 
 export default function ModalEventInfo({
   event,
   showPrice = true,
+  showTitle = true,
+  showDescription = false,
 }: ModalEventInfoProps) {
   const [host, setHost] = useState<User | null>(null);
 
@@ -47,9 +51,13 @@ export default function ModalEventInfo({
     <Alert
       color='red'
       title={
-        <Text size='lg' fw={600} pb='xs'>
-          {event.title}
-        </Text>
+        showTitle ? (
+          <Text size='lg' fw={600} pb='xs'>
+            {event.title}
+          </Text>
+        ) : (
+          ''
+        )
       }>
       <Text>
         <Text span fw={600}>
@@ -83,6 +91,14 @@ export default function ModalEventInfo({
             Kostnad:{' '}
           </Text>
           {Math.floor(event.price)} kr
+        </Text>
+      )}{' '}
+      {showDescription && (
+        <Text pt='lg'>
+          <Text span fw={600}>
+            Beskrivning:{' '}
+          </Text>
+          {event.description}{' '}
         </Text>
       )}{' '}
     </Alert>
