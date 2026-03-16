@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Tabs, Loader, Box, Text, Group, Card, Title } from '@mantine/core';
+import {
+  Tabs,
+  Loader,
+  Box,
+  Text,
+  Group,
+  Card,
+  Title,
+  SimpleGrid,
+} from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/search';
 import type { SearchType } from '../api/search';
@@ -76,18 +85,18 @@ export default function SearchPage() {
             ) : t.value === 'events' ? (
               <PaginatedEventGrid events={results} />
             ) : t.value === 'restaurants' ? (
-              <Group gap='md'>
+              <SimpleGrid cols={{ base: 1, sm: 1, md: 3, lg: 5 }} spacing='md'>
                 {results.map((r: any) => (
                   <Card
                     key={r.id || r.name}
                     withBorder
                     p='md'
                     component='button'
+                    className='hover-style'
+                    w='auto'
                     style={{
                       cursor: 'pointer',
-                      transition: 'box-shadow 0.2s, background 0.2s',
                       boxShadow: 'none',
-                      marginBottom: 16,
                       textAlign: 'left',
                     }}
                     onClick={() =>
@@ -97,8 +106,7 @@ export default function SearchPage() {
                     }
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
-                        '0 2px 8px rgba(0,0,0,0.08)';
-                      e.currentTarget.style.background = '#f8f9fa';
+                        '0 8px 24px rgba(0, 0, 0, 0.12)';
                     }}
                     onMouseOut={(e) => {
                       e.currentTarget.style.boxShadow = 'none';
@@ -108,27 +116,25 @@ export default function SearchPage() {
                     <div>{r.city}</div>
                   </Card>
                 ))}
-              </Group>
+              </SimpleGrid>
             ) : t.value === 'cities' ? (
-              <Group gap='md'>
+              <SimpleGrid cols={{ base: 1, sm: 1, md: 4, lg: 6 }} spacing='md'>
                 {results.map((c: any) => (
                   <Card
                     key={c.id || c.name}
                     withBorder
                     p='md'
                     component='button'
+                    className='hover-style'
                     style={{
                       cursor: 'pointer',
-                      transition: 'box-shadow 0.2s, background 0.2s',
                       boxShadow: 'none',
-                      marginBottom: 16,
                       textAlign: 'left',
                     }}
                     onClick={() => navigate(`/stad/${slugify(c.name)}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
-                        '0 2px 8px rgba(0,0,0,0.08)';
-                      e.currentTarget.style.background = '#f8f9fa';
+                        '0 8px 24px rgba(0, 0, 0, 0.12)';
                     }}
                     onMouseOut={(e) => {
                       e.currentTarget.style.boxShadow = 'none';
@@ -137,27 +143,25 @@ export default function SearchPage() {
                     <strong>{c.name}</strong>
                   </Card>
                 ))}
-              </Group>
+              </SimpleGrid>
             ) : t.value === 'categories' ? (
-              <Group gap='md'>
+              <SimpleGrid cols={{ base: 1, sm: 1, md: 3, lg: 5 }} spacing='md'>
                 {results.map((cat: any) => (
                   <Card
                     key={cat.id || cat.name}
                     withBorder
                     p='md'
                     component='button'
+                    className='hover-style'
                     style={{
                       cursor: 'pointer',
-                      transition: 'box-shadow 0.2s, background 0.2s',
                       boxShadow: 'none',
-                      marginBottom: 16,
                       textAlign: 'left',
                     }}
                     onClick={() => navigate(`/kategori/${slugify(cat.name)}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
-                        '0 2px 8px rgba(0,0,0,0.08)';
-                      e.currentTarget.style.background = '#f8f9fa';
+                        '0 8px 24px rgba(0, 0, 0, 0.12)';
                     }}
                     onMouseOut={(e) => {
                       e.currentTarget.style.boxShadow = 'none';
@@ -166,7 +170,7 @@ export default function SearchPage() {
                     <strong>{cat.name}</strong>
                   </Card>
                 ))}
-              </Group>
+              </SimpleGrid>
             ) : t.value === 'tags' ? (
               <Group gap='md'>
                 {results
@@ -176,25 +180,23 @@ export default function SearchPage() {
                   ))}
               </Group>
             ) : t.value === 'users' ? (
-              <Group gap='md'>
+              <SimpleGrid cols={{ base: 1, sm: 1, md: 4, lg: 6 }} spacing='md'>
                 {results.map((u: any) => (
                   <Card
                     key={u.id || u.name}
                     withBorder
                     p='md'
                     component='button'
+                    className='hover-style'
                     style={{
                       cursor: 'pointer',
-                      transition: 'box-shadow 0.2s, background 0.2s',
                       boxShadow: 'none',
-                      marginBottom: 16,
                       textAlign: 'left',
                     }}
                     onClick={() => navigate(`/profil/${u.alias}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
-                        '0 2px 8px rgba(0,0,0,0.08)';
-                      e.currentTarget.style.background = '#f8f9fa';
+                        '0 8px 24px rgba(0, 0, 0, 0.12)';
                     }}
                     onMouseOut={(e) => {
                       e.currentTarget.style.boxShadow = 'none';
@@ -204,7 +206,7 @@ export default function SearchPage() {
                     <div>{u.alias}</div>
                   </Card>
                 ))}
-              </Group>
+              </SimpleGrid>
             ) : null}
           </Tabs.Panel>
         ))}
