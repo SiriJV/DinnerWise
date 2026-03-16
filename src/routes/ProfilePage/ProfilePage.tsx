@@ -3,7 +3,7 @@ import ProfilePageAvatar from './ProfilePageAvatar';
 import { Box, Group, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
-import { PenIcon, SettingsIcon } from 'lucide-react';
+import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
@@ -116,9 +116,12 @@ export default function ProfilePage() {
               </Group>
             )}
             {isLoggedIn && user.id !== 1 && (
-              <BaseButton variantType='primary' onClick={logout}>
-                Följ
-              </BaseButton>
+              <Group gap='xs'>
+                <FlagIcon color='rgba(211, 4, 59, 1)' />
+                <Text size='sm' c='rgba(211, 4, 59, 1)'>
+                  Rapportera användare
+                </Text>
+              </Group>
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
