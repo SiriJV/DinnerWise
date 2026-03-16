@@ -71,7 +71,7 @@ export default function SearchPage() {
             ) : t.value === 'events' ? (
               <PaginatedEventGrid events={results} />
             ) : t.value === 'restaurants' ? (
-              <Box style={{ textAlign: 'left' }}>
+              <Group gap='md' style={{ textAlign: 'left' }}>
                 {results.map((r: any) => (
                   <Card
                     key={r.id || r.name}
@@ -103,9 +103,9 @@ export default function SearchPage() {
                     <div>{r.city}</div>
                   </Card>
                 ))}
-              </Box>
+              </Group>
             ) : t.value === 'cities' ? (
-              <Box style={{ textAlign: 'left' }}>
+              <Group gap='md' style={{ textAlign: 'left' }}>
                 {results.map((c: any) => (
                   <Card
                     key={c.id || c.name}
@@ -132,9 +132,9 @@ export default function SearchPage() {
                     <strong>{c.name}</strong>
                   </Card>
                 ))}
-              </Box>
+              </Group>
             ) : t.value === 'categories' ? (
-              <Box style={{ textAlign: 'left' }}>
+              <Group gap='md' style={{ textAlign: 'left' }}>
                 {results.map((cat: any) => (
                   <Card
                     key={cat.id || cat.name}
@@ -161,7 +161,7 @@ export default function SearchPage() {
                     <strong>{cat.name}</strong>
                   </Card>
                 ))}
-              </Box>
+              </Group>
             ) : t.value === 'tags' ? (
               <Group gap='md' style={{ textAlign: 'left' }}>
                 {results
@@ -171,7 +171,7 @@ export default function SearchPage() {
                   ))}
               </Group>
             ) : t.value === 'users' ? (
-              <Box style={{ textAlign: 'left' }}>
+              <Group gap='md' style={{ textAlign: 'left' }}>
                 {results.map((u: any) => (
                   <Card
                     key={u.id || u.name}
@@ -199,7 +199,7 @@ export default function SearchPage() {
                     <div>{u.alias}</div>
                   </Card>
                 ))}
-              </Box>
+              </Group>
             ) : null}
           </Tabs.Panel>
         ))}
