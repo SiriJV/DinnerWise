@@ -129,7 +129,7 @@ export default function CategoryPage() {
         {tags.length > 0 && (
           <Group gap='xs' mb='md' wrap='wrap'>
             {tags.map((tag) => (
-              <TagPill key={tag.id} tagID={tag.id} title={tag.name} />
+              <TagPill key={tag.id} title={tag.name} />
             ))}
           </Group>
         )}
