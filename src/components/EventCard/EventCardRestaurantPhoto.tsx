@@ -15,7 +15,7 @@ export default function EventCardRestaurantPhoto({
         pic_url ||
         'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
       }
-      h={140}
+      h={120}
       alt={restaurantName}
       fit='cover'
     />
