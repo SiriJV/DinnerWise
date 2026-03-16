@@ -52,6 +52,10 @@ const router = createBrowserRouter([
         element: <EventDetails />,
       },
       {
+        path: '/event/:slug/feedback',
+        element: <EventFeedback />,
+      },
+      {
         path: '/restaurang/:slug',
         element: <RestaurangDetails />,
       },
@@ -81,6 +85,7 @@ const router = createBrowserRouter([
 
 import { useEffect, useState } from 'react';
 import RestaurantAcceptancePage from './routes/RestaurantAcceptancePage/RestaurantAcceptancePage';
+import EventFeedback from './routes/EventFeedback/EventFeedback';
 
 function GlobalModals() {
   const { loginOpen, createOpen, closeModals } = useModal();
