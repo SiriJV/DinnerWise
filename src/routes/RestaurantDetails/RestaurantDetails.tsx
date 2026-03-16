@@ -1,22 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigationType, useParams } from 'react-router-dom';
-import {
-  Box,
-  Stack,
-  Text,
-  Group,
-  Anchor,
-  Title,
-  Container,
-  SimpleGrid,
-} from '@mantine/core';
+import { Text, Group, Anchor, Title, SimpleGrid } from '@mantine/core';
 import { ExternalLink } from 'lucide-react';
 import type { EventType } from '../../types/EventType';
 import { extractIdFromSlug } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import Map from '../../components/Map/Map';
-import RestaurantPhotosCarousel from './RestaurantPhotosCarousel';
 import EventDetailsHeroImage from '../EventDetails/EventDetailsHeroImage';
+import { Box, Container, Stack } from '@mantine/core';
+import RestaurantPhotos from './RestaurantPhotos';
 
 type Restaurant = {
   id: number;
@@ -35,7 +27,6 @@ type Restaurant = {
 };
 
 export default function RestaurangDetails(): React.ReactNode {
-  // const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +76,6 @@ export default function RestaurangDetails(): React.ReactNode {
         }
 
         setRestaurant(restaurantData);
-
         const eventsRes = await fetch(`http://localhost:3001/events`);
         const allEvents: EventType[] = await eventsRes.json();
 
@@ -145,7 +135,7 @@ export default function RestaurangDetails(): React.ReactNode {
           mt={{ base: 'md', md: '-60px', lg: '-90px' }}
           style={{ zIndex: 2 }}>
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl'>
-            <Stack m='md' gap='xl'>
+            <Stack gap='xl'>
               <Stack gap={0}>
                 <Title order={2}>{restaurant.name}</Title>
                 <Text c='dimmed'>
@@ -187,61 +177,9 @@ export default function RestaurangDetails(): React.ReactNode {
               restaurant_city={restaurant.city}
             />
           </SimpleGrid>
-          {/* Grid of up to 10 photos, 5 per row */}
-          {(() => {
-            let photosArr: string[] = [];
-            if (typeof restaurant.photos === 'string') {
-              try {
-                const parsed = JSON.parse(restaurant.photos);
-                if (Array.isArray(parsed)) photosArr = parsed;
-              } catch {}
-            }
-            if (photosArr.length > 0) {
-              return (
-                <SimpleGrid
-                  cols={{ base: 2, md: 5 }}
-                  spacing='xs'
-                  mb='md'
-                  mt='lg'>
-                  {photosArr.map((url, idx) => (
-                    <Box
-                      key={idx}
-                      style={{
-                        aspectRatio: '1/1',
-                        overflow: 'hidden',
-                        borderRadius: 8,
-                        border: '1px solid #eee',
-                      }}>
-                      <img
-                        src={url}
-                        alt={`Restaurangbild ${idx + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                      />
-                    </Box>
-                  ))}
-                </SimpleGrid>
-              );
-            }
-            return null;
-          })()}
-          {/* <Group align='flex-start' gap='md' wrap='wrap' mt='lg'>
-            <RestaurantPhotosCarousel
-              photos={(() => {
-                if (typeof restaurant.photos === 'string') {
-                  try {
-                    const parsed = JSON.parse(restaurant.photos);
-                    if (Array.isArray(parsed)) return parsed;
-                  } catch {}
-                }
-                return [];
-              })()}
-              restaurant={restaurant}
-            />
-          </Group> */}
+          <RestaurantPhotos
+            photos={restaurant ? restaurant.photos : undefined}
+          />
         </Container>
       </Box>
       {events.length > 0 && (
@@ -251,7 +189,6 @@ export default function RestaurangDetails(): React.ReactNode {
           </Title>
           <PaginatedEventGrid
             events={events}
-            pageSize={9}
             paginationKey='restaurantdetailspage_activePage'
             navigationType={navigationType}
           />
