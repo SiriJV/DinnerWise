@@ -84,7 +84,7 @@ export default function TagPage() {
 
   return (
     <Stack p='md'>
-      <Title order={1}>
+      <Title order={2}>
         {tag.name} ({events.length} event)
       </Title>
 
