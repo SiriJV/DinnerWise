@@ -1,4 +1,4 @@
-import { Box, Flex } from '@mantine/core';
+import { Box } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
