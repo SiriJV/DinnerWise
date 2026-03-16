@@ -25,8 +25,6 @@ export default function EventCardInfo({
   displayPrice,
   host,
   restaurant_name,
-  restaurant_address,
-  restaurant_city,
   restaurant_id,
   formattedDate,
   timeRange,
@@ -43,31 +41,13 @@ export default function EventCardInfo({
       : name;
   };
 
-  const getCity = () => {
-    if (restaurant_city) return restaurant_city;
-
-    if (restaurant_address) {
-      const parts = restaurant_address.split(',').map((s) => s.trim());
-      const city =
-        parts
-          .slice(1)
-          .find(
-            (s) =>
-              isNaN(Number(s)) &&
-              s.length > 0 &&
-              !/^SE|Sverige|Sweden$/i.test(s),
-          ) || '';
-      if (city) return city;
-    }
-
-    return 'Ort saknas';
-  };
-
   return (
     <>
-      <Group justify='space-between'>
-        <Text fw={800}>{title}</Text>
-        <Text fw={600} c='black' className='price'>
+      <Group justify='space-between' align='flex-start' gap='md'>
+        <Text fw={800} style={{ flex: 1 }}>
+          {title}
+        </Text>
+        <Text fw={600} c='black' style={{ flexShrink: 0 }}>
           {Math.floor(displayPrice)} kr
         </Text>
       </Group>
