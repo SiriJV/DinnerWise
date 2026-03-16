@@ -2,7 +2,7 @@ import { Autocomplete } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import './SearchBar.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   generateEventSlug,
   generateRestaurantSlug,
@@ -26,6 +26,7 @@ export default function SearchBar({
   const [value, setValue] = useState('');
   const [data, setData] = useState<Suggestion[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -130,6 +131,21 @@ export default function SearchBar({
     }
   };
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q');
+
+    if (location.pathname === '/search' && q) {
+      setValue(q);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (location.pathname !== '/search') {
+      setValue('');
+    }
+  }, [location.pathname]);
+
   if (variant === 'static') {
     return (
       <Autocomplete
@@ -148,7 +164,6 @@ export default function SearchBar({
               navigate(
                 `/search?q=${encodeURIComponent(value.trim())}&type=events`,
               );
-              setValue('');
             }
           }
         }}
@@ -187,7 +202,6 @@ export default function SearchBar({
               navigate(
                 `/search?q=${encodeURIComponent(value.trim())}&type=events`,
               );
-              setValue('');
             }
           }
         }}
