@@ -13,7 +13,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const [allEvents, setAllEvents] = useState<EventType[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const { bookmarks } = useAuth();
+  const { bookmarks, user: authUser } = useAuth();
 
   const navigationType = useNavigationType();
 
@@ -80,7 +80,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     <>
       <Title order={3}>Event</Title>
       <Tabs value={activeTab} onChange={(value) => setActiveTab(value!)}>
-        {' '}
         <Tabs.List mb='md'>
           <Tabs.Tab value='hosting' color='black'>
             Värd för ({hostingEvents.length})
@@ -88,9 +87,11 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           <Tabs.Tab value='participating' color='black'>
             Deltagare i ({participatingEvents.length})
           </Tabs.Tab>
-          <Tabs.Tab value='saved' color='black'>
-            Sparade ({bookmarks.length})
-          </Tabs.Tab>
+          {authUser && userId === authUser.id && (
+            <Tabs.Tab value='saved' color='black'>
+              Sparade ({bookmarks.length})
+            </Tabs.Tab>
+          )}
           <Tabs.Tab value='past' color='black'>
             Tidigare (0)
           </Tabs.Tab>
@@ -121,19 +122,21 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             />
           )}
         </Tabs.Panel>
-        <Tabs.Panel value='saved'>
-          {savedEvents.length === 0 ? (
-            <Text mt='md' c='dimmed'>
-              Inga sparade event ännu.
-            </Text>
-          ) : (
-            <PaginatedEventGrid
-              events={savedEvents}
-              paginationKey={`profile_saved_${userId}`}
-              navigationType={navigationType}
-            />
-          )}
-        </Tabs.Panel>
+        {authUser && userId === authUser.id && (
+          <Tabs.Panel value='saved'>
+            {savedEvents.length === 0 ? (
+              <Text mt='md' c='dimmed'>
+                Inga sparade event ännu.
+              </Text>
+            ) : (
+              <PaginatedEventGrid
+                events={savedEvents}
+                paginationKey={`profile_saved_${userId}`}
+                navigationType={navigationType}
+              />
+            )}
+          </Tabs.Panel>
+        )}
         <Tabs.Panel value='past'>
           <Text mt='md' c='dimmed'>
             Inga tidigare event ännu.
