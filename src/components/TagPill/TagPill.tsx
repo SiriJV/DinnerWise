@@ -1,7 +1,6 @@
 import { Box, Pill } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
-import './TagPill.scss';
 
 type TagPillProps = {
   title: string;

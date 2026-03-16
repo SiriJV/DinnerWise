@@ -1,7 +1,6 @@
 import { Avatar, Tooltip, Box, Popover, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import './ParticipantAvatars.scss';
 import { useMediaQuery } from '@mantine/hooks';
 
 type User = {
