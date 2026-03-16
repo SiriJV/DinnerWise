@@ -12,7 +12,7 @@ export default function TagPill({ title, size }: TagPillProps) {
   const navigate = useNavigate();
   return (
     <Box
-      className='tag-pill'
+      className='hover-style'
       onClick={() => navigate(`/tagg/${slugify(title)}`)}
       style={{ cursor: 'pointer', transition: '0.2s ease' }}>
       <Pill size={size ?? 'md'}>{title}</Pill>

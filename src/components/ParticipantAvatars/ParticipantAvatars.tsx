@@ -47,7 +47,7 @@ export default function ParticipantAvatars({
                 src={user.profile_picture_url}
                 radius='xl'
                 size={avatarSize}
-                className='participant-avatar'
+                className='hover-style'
               />
             </Box>
           </Tooltip>

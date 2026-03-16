@@ -16,7 +16,7 @@ export default function EventDetailsHostCard({
   const navigate = useNavigate();
   return (
     <Box
-      className='host-card'
+      className='hover-style'
       onClick={() => navigate(host ? `/profil/${host.alias}` : '/profil/')}
       style={{
         textDecoration: 'none',
