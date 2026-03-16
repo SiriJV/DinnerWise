@@ -71,7 +71,7 @@ export default function SearchPage() {
             ) : t.value === 'events' ? (
               <PaginatedEventGrid events={results} />
             ) : t.value === 'restaurants' ? (
-              <Group gap='md' style={{ textAlign: 'left' }}>
+              <Group gap='md'>
                 {results.map((r: any) => (
                   <Card
                     key={r.id || r.name}
@@ -105,7 +105,7 @@ export default function SearchPage() {
                 ))}
               </Group>
             ) : t.value === 'cities' ? (
-              <Group gap='md' style={{ textAlign: 'left' }}>
+              <Group gap='md'>
                 {results.map((c: any) => (
                   <Card
                     key={c.id || c.name}
@@ -134,7 +134,7 @@ export default function SearchPage() {
                 ))}
               </Group>
             ) : t.value === 'categories' ? (
-              <Group gap='md' style={{ textAlign: 'left' }}>
+              <Group gap='md'>
                 {results.map((cat: any) => (
                   <Card
                     key={cat.id || cat.name}
@@ -163,7 +163,7 @@ export default function SearchPage() {
                 ))}
               </Group>
             ) : t.value === 'tags' ? (
-              <Group gap='md' style={{ textAlign: 'left' }}>
+              <Group gap='md'>
                 {results
                   .filter((t: any) => t.id)
                   .map((t: any) => (
@@ -171,7 +171,7 @@ export default function SearchPage() {
                   ))}
               </Group>
             ) : t.value === 'users' ? (
-              <Group gap='md' style={{ textAlign: 'left' }}>
+              <Group gap='md'>
                 {results.map((u: any) => (
                   <Card
                     key={u.id || u.name}
