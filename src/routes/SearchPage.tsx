@@ -6,6 +6,7 @@ import { searchApi } from '../api/search';
 import type { SearchType } from '../api/search';
 import PaginatedEventGrid from '../components/PaginatedEventGrid/PaginatedEventGrid';
 import TagPill from '../components/TagPill/TagPill';
+import { generateRestaurantSlug, slugify } from '../utils/slugify';
 
 const SEARCH_TYPES: { value: SearchType; label: string }[] = [
   { value: 'events', label: 'Event' },
@@ -84,7 +85,11 @@ export default function SearchPage() {
                       marginBottom: 16,
                       textAlign: 'left',
                     }}
-                    onClick={() => navigate(`/restaurants/${r.id}`)}
+                    onClick={() =>
+                      navigate(
+                        `/restaurang/${generateRestaurantSlug(r.name, r.id)}`,
+                      )
+                    }
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
                         '0 2px 8px rgba(0,0,0,0.08)';
@@ -114,7 +119,7 @@ export default function SearchPage() {
                       marginBottom: 16,
                       textAlign: 'left',
                     }}
-                    onClick={() => navigate(`/cities/${c.id}`)}
+                    onClick={() => navigate(`/stad/${slugify(c.name)}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
                         '0 2px 8px rgba(0,0,0,0.08)';
@@ -143,7 +148,7 @@ export default function SearchPage() {
                       marginBottom: 16,
                       textAlign: 'left',
                     }}
-                    onClick={() => navigate(`/categories/${cat.id}`)}
+                    onClick={() => navigate(`/kategori/${slugify(cat.name)}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
                         '0 2px 8px rgba(0,0,0,0.08)';
@@ -158,13 +163,13 @@ export default function SearchPage() {
                 ))}
               </Box>
             ) : t.value === 'tags' ? (
-              <Box style={{ textAlign: 'left' }}>
+              <Group gap='md' style={{ textAlign: 'left' }}>
                 {results
                   .filter((t: any) => t.id)
                   .map((t: any) => (
                     <TagPill key={t.id} title={t.name} size='lg' />
                   ))}
-              </Box>
+              </Group>
             ) : t.value === 'users' ? (
               <Box style={{ textAlign: 'left' }}>
                 {results.map((u: any) => (
@@ -180,7 +185,7 @@ export default function SearchPage() {
                       marginBottom: 16,
                       textAlign: 'left',
                     }}
-                    onClick={() => navigate(`/users/${u.id}`)}
+                    onClick={() => navigate(`/profil/${u.alias}`)}
                     onMouseOver={(e) => {
                       e.currentTarget.style.boxShadow =
                         '0 2px 8px rgba(0,0,0,0.08)';
