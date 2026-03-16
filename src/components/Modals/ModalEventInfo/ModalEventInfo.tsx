@@ -53,7 +53,7 @@ export default function ModalEventInfo({
       }>
       <Text>
         <Text span fw={600}>
-          Datum:
+          Datum:{' '}
         </Text>
         {formattedDate}
       </Text>
