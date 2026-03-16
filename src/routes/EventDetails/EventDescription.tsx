@@ -16,7 +16,7 @@ export default function EventDescription({ description, tags }: Props) {
       {tags.length > 0 && (
         <Group gap='sm' wrap='wrap'>
           {tags.map((tag) => (
-            <TagPill key={tag.id} tagID={tag.id} title={tag.name} />
+            <TagPill key={tag.id} title={tag.name} />
           ))}
         </Group>
       )}
