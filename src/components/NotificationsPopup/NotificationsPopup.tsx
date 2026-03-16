@@ -2,6 +2,7 @@ import { ActionIcon, Group, Popover, Stack, Text } from '@mantine/core';
 import {
   AlarmClock,
   BellIcon,
+  CircleAlert,
   ClipboardList,
   Flame,
   Settings,
@@ -34,33 +35,44 @@ export default function NotificationsPopup() {
           </Group>
           <Stack gap='md'>
             <NotificationsContent
+              icon={CircleAlert}
+              title='Ge feedback på event!'
+              text='Eventet "Internet of Things" har nyligen avslutats - vi vill höra dina åsikter.'
+              minutes={2}
+              path='/event/internet-of-things-55/feedback'
+            />
+            <NotificationsContent
               icon={Flame}
-              title='2 nya franska-event i ditt område!'
-              text='Det har tillkommit två nya träffar kopplade till taggen "Franska".'
+              title='2 nya grammatik-event i ditt område!'
+              text='Det har tillkommit två nya träffar kopplade till taggen "Grammatik".'
               minutes={10}
+              path='/tagg/grammatik'
             />
             <NotificationsContent
               icon={UtensilsCrossed}
               title='Bokning bekräftad!'
               text='Ert bord för 8 personer är nu reserverat inför "Poesikväll".'
               minutes={27}
+              path='/event/poesikvall-2'
             />
             <NotificationsContent
               icon={UserRound}
               title='Ny deltagare'
               text='Amanda L har anmält sig till "Datasäkerhet för alla".'
               hours={5}
+              path='/event/datasakerhet-for-alla-17'
             />
           </Stack>
           <Text size='sm' fw={600} mt='md'>
             Senaste 30 dagarna
           </Text>{' '}
-          <Stack gap='md'>
+          <Stack gap='md' mb='xs'>
             <NotificationsContent
               icon={Flame}
               title='Populärt just nu!'
-              text='"Konversation i lätt svenska" har 2 platser kvar - säkra din plats nu.'
+              text='"Konversation på tyska" har 2 platser kvar - säkra din plats nu.'
               date='igår'
+              path='/event/konversation-pa-tyska-24'
             />
             <NotificationsContent
               icon={AlarmClock}
