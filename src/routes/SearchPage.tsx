@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Tabs, Loader, Box, Text, Group, Card } from '@mantine/core';
+import { Tabs, Loader, Box, Text, Group, Card, Title } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/search';
 import type { SearchType } from '../api/search';
@@ -46,11 +46,16 @@ export default function SearchPage() {
 
   return (
     <Box mt='lg' px='md'>
+      {q && (
+        <Title order={2}>
+          Resultat för: "<strong>{q}</strong>"
+        </Title>
+      )}
       <Tabs value={type} onChange={handleTabChange} keepMounted={false}>
         <Tabs.List>
           {SEARCH_TYPES.map((t) => (
             <Tabs.Tab key={t.value} value={t.value}>
-              {t.label}
+              {t.label}{' '}
             </Tabs.Tab>
           ))}
         </Tabs.List>
