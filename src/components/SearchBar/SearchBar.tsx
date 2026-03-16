@@ -1,6 +1,6 @@
-import { Autocomplete, ActionIcon } from '@mantine/core';
+import { Autocomplete } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './SearchBar.scss';
 import { useNavigate } from 'react-router-dom';
 import {
