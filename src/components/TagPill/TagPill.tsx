@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
 
 type TagPillProps = {
-  tagID: number;
   title: string;
+  key: number;
 };
 
-export default function TagPill({ tagID, title }: TagPillProps) {
+export default function TagPill({ title, key }: TagPillProps) {
   const navigate = useNavigate();
   return (
     <Box
-      key={tagID}
+      key={key}
       onClick={() => navigate(`/tagg/${slugify(title)}`)}
       style={{ cursor: 'pointer' }}>
       <Pill>{title}</Pill>
