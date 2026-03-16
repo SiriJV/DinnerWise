@@ -3,7 +3,11 @@ import { SearchIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import './SearchBar.scss';
 import { useNavigate } from 'react-router-dom';
-import { slugify } from '../../utils/slugify';
+import {
+  generateEventSlug,
+  generateRestaurantSlug,
+  slugify,
+} from '../../utils/slugify';
 
 type Suggestion = {
   value: string;
@@ -43,11 +47,12 @@ export default function SearchBar({
         if (!res.ok) throw new Error('Något gick fel');
 
         const json = await res.json();
-        const { events, cities, tags, categories, restaurants, users } = json.results;
+        const { events, cities, tags, categories, restaurants, users } =
+          json.results;
 
         const suggestions: Suggestion[] = [
           ...events.map((e: any) => ({
-            value: `event-${slugify(e.title)}-${e.id}`,
+            value: `event-${generateEventSlug(e.title, e.id)}`,
             label: `🌐${e.title} (event)`,
           })),
           ...cities.map((c: any) => ({
@@ -63,7 +68,7 @@ export default function SearchBar({
             label: `🔡${cat.name} (kategori)`,
           })),
           ...restaurants.map((r: any) => ({
-            value: `restaurant-${slugify(r.name)}-${r.id}`,
+            value: `restaurant-${generateRestaurantSlug(r.name, r.id)}`,
             label: `🍽️${r.name}, ${r.city} (restaurang)`,
           })),
           ...users.map((u: any) => ({
@@ -105,7 +110,7 @@ export default function SearchBar({
         const [_, ...rest] = rawValue.split('-');
         const id = rest.pop();
         const slug = rest.join('-');
-        navigate(`/event/${slug}`, { state: { id } });
+        navigate(`/event/${slug}-${id}`, { state: { id } });
         break;
       }
 
@@ -113,8 +118,7 @@ export default function SearchBar({
         const [_, ...rest] = rawValue.split('-');
         const id = rest.pop();
         const slug = rest.join('-');
-
-        navigate(`/restaurang/${slug}`, { state: { id } });
+        navigate(`/restaurang/${slug}-${id}`, { state: { id } });
         break;
       }
 
