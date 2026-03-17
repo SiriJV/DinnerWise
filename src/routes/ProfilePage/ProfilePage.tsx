@@ -1,6 +1,6 @@
 import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Group, Rating, Stack, Text, Title } from '@mantine/core';
+import { Box, Group, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
