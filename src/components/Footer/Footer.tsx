@@ -48,8 +48,9 @@ export default function Footer() {
             <Stack className='newsletter-stack'>
               <Text fw={600}>Håll dig uppdaterad!</Text>
               <Text size='sm'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Skriv upp dig på vårt nyhetsbrev för att få de senaste
+                uppdateringarna, tipsen och exklusiva erbjudanden direkt i din
+                inkorg!
               </Text>
             </Stack>
 
