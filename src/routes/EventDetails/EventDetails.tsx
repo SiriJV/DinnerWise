@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Text, Stack, Box, Container, SimpleGrid } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import './EventDetails.scss';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
 import EventDetailsHeroImage from './EventDetailsHeroImage';
