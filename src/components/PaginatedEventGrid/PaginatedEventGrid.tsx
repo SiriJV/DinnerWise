@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { SimpleGrid, Group, Pagination, Text, Stack } from '@mantine/core';
 import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
-import type { NavigationType } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 function chunk<T>(array: T[], size: number): T[][] {
   if (!array.length) return [];
@@ -14,49 +14,36 @@ function chunk<T>(array: T[], size: number): T[][] {
 type PaginatedEventGridProps = {
   events: EventType[];
   pageSize?: number;
-  paginationKey?: string;
-  navigationType?: NavigationType;
 };
 
 export default function PaginatedEventGrid({
   events,
   pageSize = 12,
-  paginationKey,
-  navigationType,
 }: PaginatedEventGridProps) {
-  const getInitialPage = () => {
-    if (!paginationKey) return 1;
-    const stored = sessionStorage.getItem(paginationKey);
-    return stored ? parseInt(stored, 10) || 1 : 1;
-  };
+  const [params, setParams] = useSearchParams();
+  const pageParam = params.get('page');
+  const [activePage, setActivePage] = useState<number>(
+    pageParam ? parseInt(pageParam, 10) : 1,
+  );
 
-  const [activePage, setActivePage] = useState<number>(getInitialPage);
+  // Sync state with URL param
+  useEffect(() => {
+    if (pageParam && activePage !== parseInt(pageParam, 10)) {
+      setActivePage(parseInt(pageParam, 10));
+    }
+  }, [pageParam]);
 
   const gridRef = useRef<HTMLDivElement>(null);
 
   const eventPages = chunk(events, pageSize);
   const pagedEvents = eventPages[activePage - 1] || [];
 
-  // Spara pagination i sessionStorage
-  useEffect(() => {
-    if (paginationKey) {
-      sessionStorage.setItem(paginationKey, String(activePage));
-    }
-  }, [activePage, paginationKey]);
-
-  // Reset endast vid PUSH-navigation (t.ex. klick på länk)
-  useEffect(() => {
-    if (navigationType === 'PUSH') {
-      setActivePage(1);
-      if (paginationKey) {
-        sessionStorage.removeItem(paginationKey);
-      }
-    }
-  }, [navigationType, paginationKey]);
-
   const handlePageChange = (page: number) => {
     setActivePage(page);
-
+    setParams({
+      ...Object.fromEntries(params.entries()),
+      page: page.toString(),
+    });
     // Scrolla upp till toppen av eventlistan
     if (gridRef.current) {
       const yOffset = -130; // justera om du har sticky header

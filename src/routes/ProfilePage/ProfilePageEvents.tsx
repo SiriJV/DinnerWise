@@ -4,6 +4,7 @@ import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import { useNavigationType } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -16,6 +17,28 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const { bookmarks, user: authUser } = useAuth();
 
   const navigationType = useNavigationType();
+  const [params, setParams] = useSearchParams();
+  const tabParam = params.get('tab');
+  const pageParam = params.get('page');
+
+  const [activeTab, setActiveTab] = useState<string | null>(
+    tabParam || 'hosting',
+  );
+
+  useEffect(() => {
+    if (tabParam && activeTab !== tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  function handleTabChange(tab: string | null) {
+    setActiveTab(tab);
+    setParams({
+      ...Object.fromEntries(params.entries()),
+      tab: tab || 'hosting',
+      page: '1',
+    });
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -38,11 +61,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   }, []);
 
   const TAB_STORAGE_KEY = `profile_active_tab_${userId}`;
-
-  const [activeTab, setActiveTab] = useState<string | null>(() => {
-    const storedTab = sessionStorage.getItem(TAB_STORAGE_KEY);
-    return storedTab || 'hosting';
-  });
 
   useEffect(() => {
     if (navigationType === 'POP' && activeTab) {
@@ -79,7 +97,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   return (
     <>
       <Title order={3}>Event</Title>
-      <Tabs value={activeTab} onChange={(value) => setActiveTab(value!)}>
+      <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
         <Tabs.List mb='md'>
           <Tabs.Tab value='hosting' color='black'>
             Värd för ({hostingEvents.length})
@@ -103,10 +121,9 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             </Text>
           ) : (
             <PaginatedEventGrid
-              events={hostingEvents.map((e) => ({ ...e, isHost: true }))}
-              paginationKey={`profile_hosting_${userId}`}
-              navigationType={navigationType}
+              events={hostingEvents}
               pageSize={6}
+              // pageParam will be picked up by PaginatedEventGrid
             />
           )}
         </Tabs.Panel>
@@ -118,9 +135,8 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
           ) : (
             <PaginatedEventGrid
               events={participatingEvents}
-              paginationKey={`profile_participating_${userId}`}
-              navigationType={navigationType}
               pageSize={6}
+              // pageParam will be picked up by PaginatedEventGrid
             />
           )}
         </Tabs.Panel>
@@ -133,9 +149,8 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             ) : (
               <PaginatedEventGrid
                 events={savedEvents}
-                paginationKey={`profile_saved_${userId}`}
-                navigationType={navigationType}
                 pageSize={6}
+                // pageParam will be picked up by PaginatedEventGrid
               />
             )}
           </Tabs.Panel>

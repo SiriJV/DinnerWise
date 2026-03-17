@@ -187,11 +187,7 @@ export default function RestaurangDetails(): React.ReactNode {
           <Title order={3}>
             Kommande event på {restaurant.name} ({events.length} event)
           </Title>
-          <PaginatedEventGrid
-            events={events}
-            paginationKey='restaurantdetailspage_activePage'
-            navigationType={navigationType}
-          />
+          <PaginatedEventGrid events={events} />
         </Stack>
       )}
     </>
