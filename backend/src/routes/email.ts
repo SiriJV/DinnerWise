@@ -354,11 +354,10 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
 
 // Feedbackmejl till deltagare
 router.post('/send-feedback-email', async (req, res) => {
-  const { restaurant, date, startTime, event, path, name } = req.body;
+  const { event, path, name } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
-    const formattedDate = formatDate(date);
     const html = `
       <h1>Hej, ${name}! </h1>
       <p>Du var nyss på ${event}, och vi hoppas att du hade ett givande möte.</p>
@@ -418,6 +417,43 @@ router.post('/send-share-email', async (req, res) => {
       // to: [to],
       to: devEmail,
       subject: `Vill du med på event?`,
+      html,
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
+// Bekräftelse på nyhetsbrev
+router.post('/send-newsletter-confirmation-email', async (req, res) => {
+  const { to, name } = req.body;
+  if (!checkAllFieldsRequired(req.body, res)) return;
+
+  try {
+    const html = `
+      <h1>Hej, ${name}!</h1>
+      <p>Tack för att du har skrivit upp dig på vårt nyhetsbrev! Nu får du de senaste uppdateringarna, våra bästa tips och exklusiva erbjudanden direkt i din inkorg!</p>
+      <a href="http://localhost:5173/"
+         style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#e84132;
+          color:white;
+          text-decoration:none;
+          border-radius:6px;
+         ">
+         Gå till DinnerWise
+      </a>
+    `;
+
+    const data = await resend.emails.send({
+      from: 'DinnerWise <onboarding@resend.dev>',
+      // to: [to],
+      to: devEmail,
+      subject: `Tack för att du vill ha nyhetsbrev från oss!`,
       html,
     });
 
