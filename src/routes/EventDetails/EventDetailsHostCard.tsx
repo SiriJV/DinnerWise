@@ -1,4 +1,4 @@
-import { Box, Group, Image, Stack, Text } from '@mantine/core';
+import { Box, Group, Image, Rating, Stack, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
 type EventDetailsHostCardProps = {
@@ -28,7 +28,7 @@ export default function EventDetailsHostCard({
         bdrs='lg'
         bd='1px solid rgba(206, 212, 218, 1)'
         style={{ transition: '0.2s ease' }}>
-        <Group align='flex-start' gap='lg' wrap='nowrap'>
+        <Group align='center' gap='lg' wrap='nowrap'>
           <Image
             bdrs={100}
             src={
@@ -42,6 +42,12 @@ export default function EventDetailsHostCard({
 
           <Stack gap='xs'>
             <Text fw={600}>{host?.name || 'Anders Blom'}</Text>
+            <Rating
+              value={3.5}
+              fractions={2}
+              readOnly
+              color='rgba(211, 4, 59, 1)'
+            />
             <Text size='sm' c='dimmed' lineClamp={3}>
               {host?.bio || 'Klicka för att läsa mer om värden.'}
             </Text>
