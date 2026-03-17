@@ -5,8 +5,8 @@ export type HeaderLink = {
 
 export const headerLinks: HeaderLink[] = [
   { path: '/stad/goteborg', label: 'Göteborg' },
-  { path: '/stad/stockholm', label: 'Stockholm' },
   { path: '/stad/boras', label: 'Borås' },
-  { path: '/kategori/musik', label: 'Musik' },
-  { path: '/kategori/sprak', label: 'Språk' },
+  { path: '/att-skapa-event', label: 'Skapa event' },
+  { path: '/om-oss', label: 'Om oss' },
+  { path: '/nyhetsbrev', label: 'Nyhetsbrev' },
 ];
