@@ -127,7 +127,11 @@ export default function ProfilePage() {
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
-          <RatingComponent value={getRating(user)} readOnly={true} />
+          <RatingComponent
+            value={getRating(user)}
+            fractions={2}
+            readOnly={true}
+          />
         </Stack>
         <ProfilePageEvents userId={user.id} />
       </Stack>
