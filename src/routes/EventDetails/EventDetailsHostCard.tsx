@@ -45,7 +45,11 @@ export default function EventDetailsHostCard({
 
           <Stack gap='xs'>
             <Text fw={600}>{host?.name || 'Anders Blom'}</Text>
-            <RatingComponent value={getRating(host)} readOnly={true} />
+            <RatingComponent
+              value={getRating(host)}
+              fractions={2}
+              readOnly={true}
+            />
             <Text size='sm' c='dimmed' lineClamp={3}>
               {host?.bio || 'Klicka för att läsa mer om värden.'}
             </Text>
