@@ -16,6 +16,7 @@ import {
 
 import type { EventType } from '../../types/EventType';
 import ModalEventInfo from '../../components/Modals/ModalEventInfo/ModalEventInfo';
+import RatingComponent from '../../components/RatingComponent/RatingComponent';
 
 export default function EventFeedback(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
@@ -236,10 +237,11 @@ export default function EventFeedback(): React.ReactNode {
               <Text size='md' mb='xs' fw={600}>
                 Betygsätt eventet
               </Text>
-              <Rating
+              <RatingComponent
                 value={eventScore ?? 0}
+                fractions={1}
+                readOnly={false}
                 onChange={setEventScore}
-                color='rgba(211, 4, 59, 1)'
               />
               {showEventFeedback && (
                 <Textarea
@@ -261,10 +263,11 @@ export default function EventFeedback(): React.ReactNode {
               <Text size='md' mb='xs' fw={600}>
                 Betygsätt värden{' '}
               </Text>
-              <Rating
+              <RatingComponent
                 value={hostScore ?? 0}
+                fractions={1}
+                readOnly={false}
                 onChange={setHostScore}
-                color='rgba(211, 4, 59, 1)'
               />
               {showHostFeedback && (
                 <Textarea
