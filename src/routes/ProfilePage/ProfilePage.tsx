@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../contexts/AuthContext';
+import RatingComponent from '../../components/RatingComponent/RatingComponent';
+import { getRating } from '../../utils/getRating';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -125,12 +127,7 @@ export default function ProfilePage() {
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
-          <Rating
-            value={3.5}
-            fractions={2}
-            readOnly
-            color='rgba(211, 4, 59, 1)'
-          />
+          <RatingComponent value={getRating(user)} readOnly={true} />
         </Stack>
         <ProfilePageEvents userId={user.id} />
       </Stack>

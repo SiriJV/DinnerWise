@@ -1,5 +1,7 @@
-import { Box, Group, Image, Rating, Stack, Text } from '@mantine/core';
+import { Box, Group, Image, Stack, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import RatingComponent from '../../components/RatingComponent/RatingComponent';
+import { getRating } from '../../utils/getRating';
 
 type EventDetailsHostCardProps = {
   host: {
@@ -14,6 +16,7 @@ export default function EventDetailsHostCard({
   host,
 }: EventDetailsHostCardProps) {
   const navigate = useNavigate();
+
   return (
     <Box
       className='hover-style'
@@ -42,12 +45,7 @@ export default function EventDetailsHostCard({
 
           <Stack gap='xs'>
             <Text fw={600}>{host?.name || 'Anders Blom'}</Text>
-            <Rating
-              value={3.5}
-              fractions={2}
-              readOnly
-              color='rgba(211, 4, 59, 1)'
-            />
+            <RatingComponent value={getRating(host)} readOnly={true} />
             <Text size='sm' c='dimmed' lineClamp={3}>
               {host?.bio || 'Klicka för att läsa mer om värden.'}
             </Text>
