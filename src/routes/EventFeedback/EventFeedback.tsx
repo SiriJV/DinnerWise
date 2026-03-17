@@ -7,7 +7,6 @@ import {
   Textarea,
   Button,
   Box,
-  Rating,
   Group,
   Center,
   Radio,
