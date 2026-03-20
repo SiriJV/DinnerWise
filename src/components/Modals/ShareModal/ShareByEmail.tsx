@@ -30,26 +30,20 @@ export default function ShareByEmail({
 
   // Funktion för att skicka share-mejl via backend
   const handleSendEmail = async () => {
-    // Split emails by comma, trim whitespace
-    const emails = emailTo
-      .split(',')
-      .map((e) => e.trim())
-      .filter((e) => e);
-    if (emails.length === 0 || !emailMessage || !emails.every(isValidEmail)) {
+    if (!emailMessage || !isValidEmail(emailTo)) {
       alert('Skriv in giltiga e-postadresser och meddelande');
       return;
     }
 
     try {
-      // Send email to each address
-      for (const to of emails) {
+      {
         const response = await fetch(
           'http://localhost:3001/email/send-share-email',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              to,
+              to: emailTo,
               name: firstName || 'Vän',
               event: event || 'Event',
               path: generatedUrl,
