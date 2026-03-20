@@ -1,4 +1,12 @@
-import { Container, Title, Text } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Stack,
+  SimpleGrid,
+  Image,
+  Grid,
+} from '@mantine/core';
 
 export default function AboutPage(): React.ReactNode {
   return (
@@ -7,21 +15,35 @@ export default function AboutPage(): React.ReactNode {
         <Title order={2} mb='md'>
           Om oss
         </Title>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
-        </Text>
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
+            <Stack>
+              <Text>
+                DinnerWise är en plattform skapad för dig som vill upptäcka nya
+                smaker, möta nya människor och dela inspirerande samtal över en
+                god måltid. Vi tror att de bästa mötena sker runt matbordet -
+                oavsett om du är ny i stan, vill bredda ditt nätverk eller bara
+                är nyfiken på att träffa andra med liknande intressen.{' '}
+              </Text>
+              <Text>
+                Hos oss kan du enkelt skapa eller delta i middagsevent med olika
+                teman, på restauranger runt om i landet. Välj ett ämne du
+                brinner för, eller låt dig överraskas av nya samtal och
+                perspektiv. Vår vision är att göra det enkelt och tryggt att
+                mötas och samtidigt ge restauranger möjlighet att fylla sina
+                bord med glada gäster.
+              </Text>
+              <Text>
+                Oavsett om du är värd eller deltagare vill vi att DinnerWise ska
+                kännas välkomnande, inkluderande och inspirerande. Vi hoppas att
+                du hittar både nya favoriträtter och nya vänner hos oss!
+              </Text>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 1, md: 2 }}>
+            <Image src='src/assets/4.jpg' alt='Om oss' radius='md' />
+          </Grid.Col>
+        </Grid>
       </Container>
     </>
   );
