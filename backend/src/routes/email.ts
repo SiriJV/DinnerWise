@@ -36,13 +36,11 @@ const devEmail = 'jessicaagren@hotmail.com';
 
 // Välkomstmejl
 router.post('/send-welcome-email', async (req, res) => {
-  const {
-    // to
-  } = req.body;
+  const { to } = req.body;
 
-  // if (!to) {
-  //   return res.status(400).json({ error: 'Missing to' });
-  // }
+  if (!to) {
+    return res.status(400).json({ error: 'Missing to' });
+  }
 
   try {
     const html = `
@@ -62,9 +60,9 @@ router.post('/send-welcome-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      // to = [to],
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Välkommen till DinnerWise!`,
       html,
     });
@@ -78,7 +76,7 @@ router.post('/send-welcome-email', async (req, res) => {
 
 // Bokningsmejl till värd
 router.post('/send-host-email', async (req, res) => {
-  const { restaurant, date, event, participants, eventId, name } = req.body;
+  const { restaurant, date, event, participants, eventId, name, to } = req.body;
   if (
     !checkRequiredFields(
       req.body,
@@ -109,8 +107,9 @@ router.post('/send-host-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Ditt event är bokat!`,
       html,
     });
@@ -124,7 +123,7 @@ router.post('/send-host-email', async (req, res) => {
 
 // Bokningsmejl till restaurang
 router.post('/send-restaurant-booking-email', async (req, res) => {
-  const { restaurant, date, event, participants, eventId, name, slug } =
+  const { restaurant, date, event, participants, eventId, name, slug, to } =
     req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -149,8 +148,9 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Inkommande bokning från DinnerWise`,
       html,
     });
@@ -164,7 +164,7 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
 
 // Bekräftelsemejl till värd
 router.post('/send-confirmation-email-to-host', async (req, res) => {
-  const { restaurant, date, event, participants, eventId, name, path } =
+  const { restaurant, date, event, participants, eventId, name, path, to } =
     req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -189,8 +189,9 @@ router.post('/send-confirmation-email-to-host', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Ditt event är bokat!`,
       html,
     });
@@ -204,7 +205,7 @@ router.post('/send-confirmation-email-to-host', async (req, res) => {
 
 // Bokningsmejl till deltagare
 router.post('/send-booking-email', async (req, res) => {
-  const { restaurant, date, startTime, event, path } = req.body;
+  const { restaurant, date, startTime, event, path, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -226,8 +227,9 @@ router.post('/send-booking-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Bokningsbekräftelse för ${event}`,
       html,
     });
@@ -241,7 +243,7 @@ router.post('/send-booking-email', async (req, res) => {
 
 // Bokningsmejl till värd när deltagare anmält sig
 router.post('/send-booking-email-to-host', async (req, res) => {
-  const { restaurant, date, startTime, event, path, name } = req.body;
+  const { restaurant, date, startTime, event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -263,8 +265,9 @@ router.post('/send-booking-email-to-host', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Ny anmälan till ${event}`,
       html,
     });
@@ -278,7 +281,7 @@ router.post('/send-booking-email-to-host', async (req, res) => {
 
 // Bokningsmejl till väntelistedeltagare
 router.post('/send-waitlist-email', async (req, res) => {
-  const { restaurant, date, startTime, event, path } = req.body;
+  const { restaurant, date, startTime, event, path, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -302,8 +305,9 @@ router.post('/send-waitlist-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Tack för ditt intresse`,
       html,
     });
@@ -317,7 +321,7 @@ router.post('/send-waitlist-email', async (req, res) => {
 
 // Bokningsmejl till värd när deltagare skrivit upp sig på väntelista
 router.post('/send-waitlist-email-to-host', async (req, res) => {
-  const { restaurant, date, startTime, event, path, name } = req.body;
+  const { restaurant, date, startTime, event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -339,8 +343,9 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Ny person på väntelista till ${event}`,
       html,
     });
@@ -354,7 +359,7 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
 
 // Feedbackmejl till deltagare
 router.post('/send-feedback-email', async (req, res) => {
-  const { event, path, name } = req.body;
+  const { event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -377,8 +382,9 @@ router.post('/send-feedback-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Vi behöver din feedback på ${event}`,
       html,
     });
@@ -392,7 +398,7 @@ router.post('/send-feedback-email', async (req, res) => {
 
 // Delning på mejl
 router.post('/send-share-email', async (req, res) => {
-  const { to, name, event, path, emailMessage } = req.body;
+  const { to, event, path, emailMessage } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
   try {
@@ -413,9 +419,9 @@ router.post('/send-share-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      // to: [to],
-      to: devEmail,
+      from: 'DinnerWise <info@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Vill du med på event?`,
       html,
     });
@@ -450,9 +456,9 @@ router.post('/send-newsletter-confirmation-email', async (req, res) => {
     `;
 
     const data = await resend.emails.send({
-      from: 'DinnerWise <onboarding@resend.dev>',
-      // to: [to],
-      to: devEmail,
+      from: 'DinnerWise <nyhetsbrev@dinnerwise.se>',
+      to: [to],
+      // to: devEmail,
       subject: `Tack för att du vill ha nyhetsbrev från oss!`,
       html,
     });
