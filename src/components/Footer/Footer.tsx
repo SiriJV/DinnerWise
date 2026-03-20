@@ -6,6 +6,7 @@ import {
   Anchor,
   TextInput,
   Button,
+  SimpleGrid,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import './Footer.scss';
@@ -14,6 +15,7 @@ import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import { useMediaQuery } from '@mantine/hooks';
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
+import { useState } from 'react';
 
 export default function Footer() {
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -21,49 +23,105 @@ export default function Footer() {
   const { openLogin, openCreate } = useModal();
   const accordionItems = getAccordionItems(isLoggedIn);
 
+  const [emailTo, setEmailTo] = useState('');
+  const [name, setName] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [nameError, setNameError] = useState('');
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSendEmail = async () => {
+    let hasError = false;
+
+    if (!name.trim()) {
+      setNameError('Fyll i ditt namn');
+      hasError = true;
+    } else {
+      setNameError('');
+    }
+
+    if (!emailTo || !isValidEmail(emailTo)) {
+      setEmailError('Ogiltig e-postadress');
+      hasError = true;
+    } else {
+      setEmailError('');
+    }
+
+    if (hasError) return;
+
+    const firstName = name.trim().split(' ')[0];
+
+    try {
+      const response = await fetch(
+        'http://localhost:3001/email/send-newsletter-confirmation-email',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: emailTo,
+            name: firstName,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      console.log('Mail skickat:', data);
+
+      setEmailTo('');
+      setName('');
+    } catch (err) {
+      console.error('Fetch failed', err);
+    }
+  };
+
   return (
     <footer className='footer'>
       <Container size='lg'>
-        {isMobile ? (
-          <Stack gap='md' pb='xl' className='newsletter-group'>
-            <Stack className='newsletter-stack'>
-              <Text fw={600}>Håll dig uppdaterad!</Text>
-              <Text size='sm'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </Text>
-            </Stack>
-
-            <Group style={{ width: '100%' }} gap={0}>
-              <TextInput
-                className='newsletter-input'
-                placeholder='exempel@epost.se'
-                radius='0'
-              />
-              <Button className='newsletter-button'>Registrera dig</Button>
-            </Group>
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing='md' pb='xl'>
+          <Stack className='newsletter-stack'>
+            <Text fw={600}>Håll dig uppdaterad!</Text>
+            <Text size='sm'>
+              Skriv upp dig på vårt nyhetsbrev för att få de senaste
+              uppdateringarna, tipsen och exklusiva erbjudanden direkt i din
+              inkorg
+            </Text>
           </Stack>
-        ) : (
-          <Group align='flex-end' gap='md' pb='xl' className='newsletter-group'>
-            <Stack className='newsletter-stack'>
-              <Text fw={600}>Håll dig uppdaterad!</Text>
-              <Text size='sm'>
-                Skriv upp dig på vårt nyhetsbrev för att få de senaste
-                uppdateringarna, tipsen och exklusiva erbjudanden direkt i din
-                inkorg!
-              </Text>
-            </Stack>
 
-            <Group style={{ flex: 1, maxWidth: '50%' }} gap={0}>
+          <Stack justify='flex-end'>
+            <SimpleGrid
+              cols={{ base: 1, sm: 3 }}
+              spacing='xs'
+              style={{ alignItems: 'flex-end' }}>
               <TextInput
-                className='newsletter-input'
-                placeholder='exempel@epost.se'
-                radius='0'
+                label='Namn'
+                placeholder='Anna Svensson'
+                radius='sm'
+                value={name}
+                required
+                onChange={(event) => {
+                  setName(event.currentTarget.value);
+                }}
               />
-              <Button className='newsletter-button'>Registrera dig</Button>
-            </Group>
-          </Group>
-        )}
+
+              <TextInput
+                label='E-post'
+                placeholder='exempel@epost.se'
+                value={emailTo}
+                required
+                onChange={(event) => {
+                  setEmailTo(event.currentTarget.value);
+                }}
+              />
+
+              <Button onClick={handleSendEmail} disabled={!name || !emailTo}>
+                Registrera dig
+              </Button>
+            </SimpleGrid>
+          </Stack>
+        </SimpleGrid>
 
         {isMobile ? (
           <Stack gap='md' pt='xl' pb='xl'>
