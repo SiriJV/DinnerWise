@@ -85,18 +85,6 @@ export default function HowToPage() {
               det ska vara något som lockar deltagarna och är roligt att
               utforska tillsammans.
             </List.Item>
-            <List.Item
-              className='list-item'
-              icon={
-                <ThemeIcon size={24} radius='xl'>
-                  <OctagonX size={16} />
-                </ThemeIcon>
-              }
-              c='red'>
-              DinnerWise godkänner inte event som är av politisk, religiös eller
-              kommersiell natur, eller som på annat sätt kan uppfattas som
-              stötande eller olämpliga.
-            </List.Item>
             <List.Item className='list-item'>
               Var välkomnande och tydlig som värd. Hjälp deltagarna att känna
               sig inkluderade och trygga, särskilt i en liten grupp där alla kan
@@ -116,6 +104,18 @@ export default function HowToPage() {
               Skicka eventuell förhandsinformation. Om deltagarna behöver ta med
               något eller förbereda sig på ett visst sätt, ge tydlig och vänlig
               instruktion innan eventet.
+            </List.Item>
+            <List.Item
+              className='list-item'
+              icon={
+                <ThemeIcon size={24} radius='xl'>
+                  <OctagonX size={16} />
+                </ThemeIcon>
+              }
+              c='red'>
+              DinnerWise godkänner inte event som är av politisk, religiös eller
+              kommersiell natur, eller som på annat sätt kan uppfattas som
+              stötande eller olämpliga.
             </List.Item>
           </List>
         </Stack>
