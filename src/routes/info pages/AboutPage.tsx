@@ -1,12 +1,4 @@
-import {
-  Container,
-  Title,
-  Text,
-  Stack,
-  SimpleGrid,
-  Image,
-  Grid,
-} from '@mantine/core';
+import { Container, Title, Text, Stack, Image, Grid } from '@mantine/core';
 
 export default function AboutPage(): React.ReactNode {
   return (
