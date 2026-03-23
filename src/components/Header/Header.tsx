@@ -18,6 +18,7 @@ import { headerLinks } from '../../data/HeaderLinks';
 import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
 import './Header.scss';
+import { APP_CONFIG } from '../../config/appConfig';
 
 interface HeaderProps {
   opened: boolean;
@@ -38,7 +39,7 @@ export default function Header({
   return (
     <Stack justify='space-between' p='md' h='100%'>
       {/* Top row */}
-      <Group h='100%' justify='space-between' bg='#D3043B'>
+      <Group h='100%' justify='space-between' bg='red'>
         <Group gap='sm'>
           <Burger
             opened={opened}
@@ -64,7 +65,7 @@ export default function Header({
                   size='xl'
                   c='white'
                   style={{ textDecoration: 'none' }}>
-                  DinnerWise
+                  {APP_CONFIG.brandName}
                 </Title>
               </Group>
             </UnstyledButton>

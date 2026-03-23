@@ -5,6 +5,7 @@ import { fetchEventById } from '../../api/events';
 import type { Event } from '../../api/events';
 import { generateEventSlug } from '../../utils/slugify';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
+import { APP_CONFIG } from '../../config/appConfig';
 
 export default function RestaurantAcceptancePage(): React.ReactNode {
   const [approved, setApproved] = useState(false);
@@ -109,7 +110,7 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
                 <Text span fw={800}>
                   Telefonnummer:
                 </Text>{' '}
-                0703-123456
+                {APP_CONFIG.exampleTelephone}{' '}
               </Text>
               <Text>
                 {' '}

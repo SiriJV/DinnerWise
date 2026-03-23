@@ -11,6 +11,7 @@ import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
 import { useState } from 'react';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 interface LoginModalProps {
   opened: boolean;
@@ -20,7 +21,9 @@ interface LoginModalProps {
 export default function LoginModal({ opened, onClose }: LoginModalProps) {
   const { login } = useAuth();
   const { openCreate } = useModal();
-  const [email, setEmail] = useState('anna.svensson@email.se');
+  const [email, setEmail] = useState(
+    APP_CONFIG.exampleUserEmail || 'exempel@epost.se',
+  );
   const [password, setPassword] = useState('lösenord123');
 
   const isValidEmail = (email: string) => {

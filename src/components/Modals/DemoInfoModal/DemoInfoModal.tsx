@@ -1,5 +1,6 @@
 import { Text, Modal } from '@mantine/core';
 import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 interface DemoInfoModalProps {
   opened: boolean;
@@ -11,18 +12,19 @@ export default function DemoInfoModal({ opened, onClose }: DemoInfoModalProps) {
     <Modal
       opened={opened}
       onClose={onClose}
-      // title='Demo DinnerWise'
+      // title='Demo {APP_CONFIG.brandName}'
       withCloseButton={false}
       size='md'
       centered>
       <Text ta='center' mb='md'>
-        Den här är en demoversion av DinnerWise. Ingenting du skriver in eller
-        klickar på sparas. När du laddar om webbläsaren kommer all data att
-        raderas permanent.
+        Den här är en demoversion av {APP_CONFIG.brandName}. Ingenting du
+        skriver in eller klickar på sparas. Inga mejladresser eller
+        telefonnummer leder någonstans utan är bara exempel.
       </Text>
       <Text ta='center'>
         Du kan fritt utforska och testa alla funktioner utan att informationen
-        används utanför denna session.
+        används utanför denna session. När du laddar om webbläsaren kommer all
+        data att raderas permanent.
       </Text>
 
       <BaseButton

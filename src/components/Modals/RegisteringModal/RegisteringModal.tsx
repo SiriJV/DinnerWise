@@ -14,6 +14,7 @@ import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 import { generateEventSlug } from '../../../utils/slugify';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 interface RegisteringModalProps {
   opened: boolean;
@@ -30,10 +31,18 @@ export default function RegisteringModal({
   onOpenWaitlist,
   event,
 }: RegisteringModalProps) {
-  const [firstName, setFirstName] = useState('Anna');
-  const [lastName, setLastName] = useState('Svensson');
-  const [phone, setPhone] = useState('+46701234567');
-  const [email, setEmail] = useState('anna.svensson@email.se');
+  const [firstName, setFirstName] = useState(
+    APP_CONFIG.exampleUserFirstName || 'Förnamn',
+  );
+  const [lastName, setLastName] = useState(
+    APP_CONFIG.exampleUserLastName || 'Efternamn',
+  );
+  const [phone, setPhone] = useState(
+    APP_CONFIG.exampleUserTelephone || '+46701234567',
+  );
+  const [email, setEmail] = useState(
+    APP_CONFIG.exampleUserEmail || 'exempel@epost.se',
+  );
   const [message, setMessage] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const displayMaxSpots = event?.max_participants ?? 0;
@@ -43,8 +52,8 @@ export default function RegisteringModal({
 
   // Dummy participant info, replace with real data
   const participant = {
-    name: 'Förnamn Efternamn',
-    email: 'exempel@email.com',
+    name: `${firstName} ${lastName}`,
+    email: `${email}`,
   };
 
   async function sendWaitlistEmails() {
