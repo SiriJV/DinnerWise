@@ -118,7 +118,7 @@ export default function EventCard({
           <>
             {isHost ? (
               <Badge
-                color='rgba(211, 4, 59, 1)'
+                color='red'
                 variant='filled'
                 size='sm'
                 className='hostBadge'>
