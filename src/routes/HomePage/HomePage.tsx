@@ -9,7 +9,7 @@ import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import FloatingActionButton from '../../components/FAB/FAB';
 
-import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
+import ImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
 import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
 

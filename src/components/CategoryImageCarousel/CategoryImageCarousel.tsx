@@ -3,7 +3,7 @@ import { Box, Card, Image, Text, Title } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
-import './ImageCarousel.scss';
+import './CategoryImageCarousel.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 
@@ -40,8 +40,9 @@ export default function NavCarousel() {
         emblaOptions={{ align: 'start', loop: true }}
         slideSize={{
           base: '100%',
-          sm: '50%',
-          md: '33.3333%',
+          xs: '50%',
+          sm: '33.3333%',
+          md: '25%',
           lg: '20%',
         }}
         nextControlIcon={<ChevronRight size={28} />}
