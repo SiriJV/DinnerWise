@@ -6,6 +6,7 @@ import {
   Card,
   Group,
   Divider,
+  Button,
 } from '@mantine/core';
 import { newsLetters } from '../../data/newsletters';
 import { useState, useEffect } from 'react';
@@ -123,18 +124,9 @@ export default function NewsletterPage(): React.ReactNode {
             </Card>
 
             <Group mt='md'>
-              <button
-                type='button'
-                onClick={handleBack}
-                style={{
-                  fontWeight: 600,
-                  color: '#d3043b',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}>
+              <Button variant='transparent' c='red' onClick={handleBack}>
                 ← Tillbaka till alla nyheter
-              </button>
+              </Button>
             </Group>
           </>
         )}
