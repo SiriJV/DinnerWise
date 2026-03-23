@@ -66,7 +66,7 @@ export default function NewsletterPage(): React.ReactNode {
   }
 
   return (
-    <Container size='lg' pt='md'>
+    <Container size='sm' pt='md'>
       {selected === null ? (
         <Title order={2} mb='md'>
           Nyhetsbrev
