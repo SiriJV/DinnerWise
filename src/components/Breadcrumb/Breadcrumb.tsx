@@ -184,6 +184,7 @@ export default function Breadcrumb() {
       // Skip "event", "restaurang", "kategori", "tagg" labels
       if (
         value === 'event' ||
+        value === 'stad' ||
         value === 'restaurang' ||
         value === 'kategori' ||
         value === 'tagg'
