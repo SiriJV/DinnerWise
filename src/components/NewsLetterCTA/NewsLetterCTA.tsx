@@ -1,7 +1,6 @@
 import {
   Container,
   Text,
-  Box,
   SimpleGrid,
   Stack,
   TextInput,
@@ -67,7 +66,7 @@ export default function NewsLetterCTA(): React.ReactNode {
   };
   return (
     <>
-      <Center bg='rgba(255, 204, 199, 1)' pt='xl'>
+      <Center bg='lightred.5' pt='xl'>
         <Container size='lg'>
           {/* Newsletter */}
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='lg' pb='xl'>
