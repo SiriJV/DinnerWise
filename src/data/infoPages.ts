@@ -8,12 +8,10 @@ import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import HowToPage from '../routes/info pages/HowToPage/HowToPage';
-import AccountPage from '../routes/info pages/AccountPage';
 import CookiesPage from '../routes/info pages/CookiesPage';
 
 export const infoPages = [
   { path: '/om-oss', component: AboutPage },
-  { path: '/installningar', component: AccountPage },
   { path: '/kontakt', component: ContactPage },
   { path: '/cookies', component: CookiesPage },
   { path: '/faq', component: FAQPage },
