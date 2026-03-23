@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType } from 'react-router-dom';
 import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
@@ -18,8 +17,6 @@ import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEve
 import './HomePage.scss';
 
 export default function HomePage() {
-  const navigationType = useNavigationType();
-
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -127,11 +124,7 @@ export default function HomePage() {
               Ett fel uppstod: {error}
             </Text>
           ) : (
-            <PaginatedEventGrid
-              events={events}
-              paginationKey='homepage_activePage'
-              navigationType={navigationType}
-            />
+            <PaginatedEventGrid events={events} />
           )}
         </Stack>
       </Stack>
