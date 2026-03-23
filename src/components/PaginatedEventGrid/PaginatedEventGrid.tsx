@@ -58,7 +58,7 @@ export default function PaginatedEventGrid({
   return (
     <>
       <Stack ref={gridRef}>
-        <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='lg'>
+        <SimpleGrid cols={{ base: 1, xs: 1, sm: 2, md: 3 }} spacing='lg'>
           {pagedEvents.length === 0 ? (
             <Text p='xl' ta='center' c='dimmed'>
               Det finns just nu inga event som matchar dina filter.
