@@ -1,5 +1,6 @@
-import { Container, Title, Text } from '@mantine/core';
+import { Container, Title, Text, Stack } from '@mantine/core';
 import { APP_CONFIG } from '../../config/appConfig';
+import { Link } from 'react-router-dom';
 
 export default function ContactPage(): React.ReactNode {
   return (
@@ -8,21 +9,34 @@ export default function ContactPage(): React.ReactNode {
         <Title order={2} mb='md'>
           Kontakt{' '}
         </Title>
-        <Text>
-          Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
-          oss! Vi finns här för att hjälpa dig och göra din upplevelse på
-          {APP_CONFIG.brandName} så smidig som möjligt. Du kan nå oss via e-post
-          på
-          <Text span c='red'>
-            {' '}
-            {APP_CONFIG.contactEmail}{' '}
+        <Stack>
+          <Text>
+            Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
+            oss! Vi finns här för att hjälpa dig och göra din upplevelse på{' '}
+            {APP_CONFIG.brandName} så smidig som möjligt.{' '}
           </Text>
-          eller ringa oss på{' '}
-          <Text span c='red'>
-            {APP_CONFIG.telephone}
+          <Text>
+            Läs gärna vår{' '}
+            <Link to='/faq' style={{ textDecoration: 'none' }}>
+              <Text span c='red' unstyled>
+                FAQ
+              </Text>
+            </Link>{' '}
+            först för att se om du kan få svar på dina frågor där.
           </Text>
-          . Vi ser fram emot att höra från dig!
-        </Text>
+          <Text>
+            Annars når du oss via e-post på
+            <Text span c='red'>
+              {' '}
+              {APP_CONFIG.contactEmail} (demo){' '}
+            </Text>
+            eller via telefon på{' '}
+            <Text span c='red'>
+              {APP_CONFIG.telephone} (demo)
+            </Text>
+            . Vi ser fram emot att höra från dig!
+          </Text>
+        </Stack>
       </Container>
     </>
   );
