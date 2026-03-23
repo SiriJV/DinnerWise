@@ -1,7 +1,6 @@
 import { Alert, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
-import './ModalEventInfo.scss';
 
 type User = {
   id: number;

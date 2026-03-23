@@ -1,7 +1,6 @@
 import { AppShell as MantineAppShell, Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Header from '../Header/Header';
-import './AppShell.scss';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer/Footer';
@@ -26,7 +25,7 @@ export default function AppShell() {
         }}
         padding='0'
         withBorder={false}>
-        <MantineAppShell.Header className='appHeader'>
+        <MantineAppShell.Header bg='red' c='white' zIndex={300}>
           <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
 
