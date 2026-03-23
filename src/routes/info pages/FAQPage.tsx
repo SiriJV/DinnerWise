@@ -36,7 +36,7 @@ const FAQdata = [
 export default function FAQPage(): React.ReactNode {
   return (
     <>
-      <Container size='lg'>
+      <Container size='lg' pt='md'>
         <Title order={2} mb='md'>
           FAQ{' '}
         </Title>

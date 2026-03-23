@@ -3,7 +3,7 @@ import { Container, Title, Text, Stack } from '@mantine/core';
 export default function CookiesPage(): React.ReactNode {
   return (
     <>
-      <Container size='lg'>
+      <Container size='lg' pt='md'>
         <Title order={2} mb='md'>
           Cookies{' '}
         </Title>

@@ -53,7 +53,7 @@ export default function HowToPage() {
   }, []);
 
   return (
-    <Container size='lg' p='md'>
+    <Container size='lg' pt='md'>
       <FloatingActionButton />
 
       <Title order={2} mb='md'>
