@@ -3,12 +3,12 @@ import { Container, Title, Text, Stack, Image, Grid } from '@mantine/core';
 export default function AboutPage(): React.ReactNode {
   return (
     <>
-      <Container size='lg'>
+      <Container size='lg' pt='md'>
         <Title order={2} mb='md'>
           Om oss
         </Title>
         <Grid>
-          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
+          <Grid.Col span={{ base: 12, sm: 6 }} order={{ base: 2, sm: 1 }}>
             <Stack>
               <Text>
                 DinnerWise är en plattform skapad för dig som vill upptäcka nya
@@ -32,7 +32,7 @@ export default function AboutPage(): React.ReactNode {
               </Text>
             </Stack>
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 1, md: 2 }}>
+          <Grid.Col span={{ base: 12, sm: 6 }} order={{ base: 1, sm: 2 }}>
             <Image src='src/assets/4.jpg' alt='Om oss' radius='md' />
           </Grid.Col>
         </Grid>
