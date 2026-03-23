@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import FloatingActionButton from '../../../components/FAB/FAB';
 import './HowToPage.scss';
 import { CircleCheckBig, OctagonX } from 'lucide-react';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 export default function HowToPage() {
   const [active, setActive] = useState(0);
@@ -113,9 +114,9 @@ export default function HowToPage() {
                 </ThemeIcon>
               }
               c='red'>
-              DinnerWise godkänner inte event som är av politisk, religiös eller
-              kommersiell natur, eller som på annat sätt kan uppfattas som
-              stötande eller olämpliga.
+              {APP_CONFIG.brandName} godkänner inte event som är av politisk,
+              religiös eller kommersiell natur, eller som på annat sätt kan
+              uppfattas som stötande eller olämpliga.
             </List.Item>
           </List>
         </Stack>
@@ -167,8 +168,8 @@ export default function HowToPage() {
 
                 <Text ref={stepRefs[2]}>
                   När eventet är klart att publiceras, dubbelkolla all
-                  information. När det har godkänts av DinnerWise och
-                  restaurangen har bekräftat bokningen blir det synligt för
+                  information. När det har godkänts av {APP_CONFIG.brandName}{' '}
+                  och restaurangen har bekräftat bokningen blir det synligt för
                   deltagare. Tips: Dela eventet på sociala medier och i
                   relevanta grupper för att få fler deltagare.
                 </Text>

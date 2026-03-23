@@ -1,4 +1,5 @@
 import { Container, Title, Text, Stack, Image, Grid } from '@mantine/core';
+import { APP_CONFIG } from '../../config/appConfig';
 
 export default function AboutPage(): React.ReactNode {
   return (
@@ -11,11 +12,12 @@ export default function AboutPage(): React.ReactNode {
           <Grid.Col span={{ base: 12, sm: 6 }} order={{ base: 2, sm: 1 }}>
             <Stack>
               <Text>
-                DinnerWise är en plattform skapad för dig som vill upptäcka nya
-                smaker, möta nya människor och dela inspirerande samtal över en
-                god måltid. Vi tror att de bästa mötena sker runt matbordet -
-                oavsett om du är ny i stan, vill bredda ditt nätverk eller bara
-                är nyfiken på att träffa andra med liknande intressen.{' '}
+                {APP_CONFIG.brandName} är en plattform skapad för dig som vill
+                upptäcka nya smaker, möta nya människor och dela inspirerande
+                samtal över en god måltid. Vi tror att de bästa mötena sker runt
+                matbordet - oavsett om du är ny i stan, vill bredda ditt nätverk
+                eller bara är nyfiken på att träffa andra med liknande
+                intressen.{' '}
               </Text>
               <Text>
                 Hos oss kan du enkelt skapa eller delta i middagsevent med olika
@@ -26,9 +28,10 @@ export default function AboutPage(): React.ReactNode {
                 bord med glada gäster.
               </Text>
               <Text>
-                Oavsett om du är värd eller deltagare vill vi att DinnerWise ska
-                kännas välkomnande, inkluderande och inspirerande. Vi hoppas att
-                du hittar både nya favoriträtter och nya vänner hos oss!
+                Oavsett om du är värd eller deltagare vill vi att{' '}
+                {APP_CONFIG.brandName} ska kännas välkomnande, inkluderande och
+                inspirerande. Vi hoppas att du hittar både nya favoriträtter och
+                nya vänner hos oss!
               </Text>
             </Stack>
           </Grid.Col>

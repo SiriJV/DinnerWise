@@ -1,8 +1,9 @@
 import { Container, Title, Text, Accordion } from '@mantine/core';
+import { APP_CONFIG } from '../../config/appConfig';
 
 const FAQdata = [
   {
-    title: 'Hur fungerar DinnerWise?',
+    title: `Hur fungerar ${APP_CONFIG.brandName}?`,
     content:
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
   },
@@ -12,7 +13,7 @@ const FAQdata = [
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
   },
   {
-    title: 'Är det gratis att använda DinnerWise?',
+    title: `Är det gratis att använda ${APP_CONFIG.brandName}?`,
     content:
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi culpa necessitatibus, temporibus, in at consequuntur maiores cum dignissimos laborum tempora magni eaque dolorem accusamus deserunt tenetur. Alias accusantium blanditiis tenetur.',
   },

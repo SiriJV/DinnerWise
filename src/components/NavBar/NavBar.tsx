@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import { Brain } from 'lucide-react';
 import { useMediaQuery } from '@mantine/hooks';
+import { APP_CONFIG } from '../../config/appConfig';
 
 type Category = {
   id: number;
@@ -91,7 +92,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
             className='footer-bottom'
             style={{ width: '100%' }}>
             <Text size='xs' c='dimmed'>
-              © 2026 DinnerWise. All rights reserved.
+              © 2026 {APP_CONFIG.brandName}. All rights reserved.
             </Text>
 
             <Group gap='md' w='100%' justify='space-around'>

@@ -10,6 +10,7 @@ import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import ProfilePage from '../routes/ProfilePage/ProfilePage';
 import HowToPage from '../routes/info pages/HowToPage/HowToPage';
+import { APP_CONFIG } from '../config/appConfig';
 
 type AccordionPanelItem = {
   label: string;
@@ -26,8 +27,8 @@ type AccordionItems = {
 
 export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
   {
-    value: 'dinnerwise',
-    label: 'DinnerWise',
+    value: `${APP_CONFIG.brandName.toLowerCase()}`,
+    label: `${APP_CONFIG.brandName}`,
     panels: [
       { label: 'Om oss', path: '/om-oss', element: <AboutPage /> },
       {

@@ -1,6 +1,7 @@
 import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
 import { CircleHelp, ChevronLeft } from 'lucide-react';
 import './RegisteringBaseModal.scss';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 interface RegisteringBaseModalProps {
   opened: boolean;
@@ -65,17 +66,16 @@ export default function RegisteringBaseModal({
                   <Text size='sm'>
                     Behöver du mer hjälp? Kontakta oss på{' '}
                     <Text span fw={600}>
-                      support@dinnerwise.se
+                      {APP_CONFIG.supportEmail}{' '}
                     </Text>{' '}
                     eller ring oss på{' '}
                     <Text span fw={600}>
-                      08-123 456 78
+                      {APP_CONFIG.telephone}{' '}
                     </Text>
                     .
                   </Text>
                   <Text c='red' size='sm'>
-                    (E-post och nummer är bara exempel för demo och fungerar
-                    inte.)
+                    (E-post och telefon är bara exempel för demo.)
                   </Text>
                 </Stack>
               </Popover.Dropdown>

@@ -11,7 +11,8 @@ export default function ContactPage(): React.ReactNode {
         <Text>
           Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
           oss! Vi finns här för att hjälpa dig och göra din upplevelse på
-          DinnerWise så smidig som möjligt. Du kan nå oss via e-post på
+          {APP_CONFIG.brandName} så smidig som möjligt. Du kan nå oss via e-post
+          på
           <Text span c='red'>
             {' '}
             {APP_CONFIG.contactEmail}{' '}
