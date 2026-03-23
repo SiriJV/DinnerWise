@@ -15,6 +15,7 @@ import type { EventType } from '../../types/EventType';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 import './HomePage.scss';
+import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -71,62 +72,64 @@ export default function HomePage() {
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
       <FloatingActionButton />
 
-      <Stack p='md'>
+      <Stack p='md' mb='lg'>
         <ImageCarousel />
-        <Divider mt='sm' mb='lg' />
+        {/* <Divider mt='sm' mb='lg' /> */}
+      </Stack>
 
-        <Stack mt='xs'>
-          <Title order={2}>{`Event (${events.length})`}</Title>
+      <NewsLetterCTA />
 
-          <Group justify='space-between'>
-            <Group>
-              <FilterDropdown
-                fetchUrl='http://localhost:3001/categories'
-                label='Kategori'
-                onApply={(selected) =>
-                  setCategoryFilters(selected.map((item) => item.id))
-                }
-              />
+      <Stack mt='lg' p='md'>
+        <Title order={2}>{`Event (${events.length})`}</Title>
 
-              <SearchableFilterDropdown
-                label='Stad'
-                fetchUrl='http://localhost:3001/cities'
-                onApply={(selected) =>
-                  setCityFilters(selected.map((item) => item.id))
-                }
-              />
+        <Group justify='space-between'>
+          <Group>
+            <FilterDropdown
+              fetchUrl='http://localhost:3001/categories'
+              label='Kategori'
+              onApply={(selected) =>
+                setCategoryFilters(selected.map((item) => item.id))
+              }
+            />
 
-              <SearchableFilterDropdown
-                label='Ämne'
-                fetchUrl='http://localhost:3001/tags'
-                onApply={(selected) =>
-                  setTagFilters(selected.map((item) => item.id))
-                }
-              />
+            <SearchableFilterDropdown
+              label='Stad'
+              fetchUrl='http://localhost:3001/cities'
+              onApply={(selected) =>
+                setCityFilters(selected.map((item) => item.id))
+              }
+            />
 
-              <PriceDropdown
-                label='Pris'
-                onApply={(selected) =>
-                  setPriceFilters(selected.map((item) => item.id))
-                }
-              />
-            </Group>
+            <SearchableFilterDropdown
+              label='Ämne'
+              fetchUrl='http://localhost:3001/tags'
+              onApply={(selected) =>
+                setTagFilters(selected.map((item) => item.id))
+              }
+            />
 
-            <Sort onSortChange={setSortBy} />
+            <PriceDropdown
+              label='Pris'
+              onApply={(selected) =>
+                setPriceFilters(selected.map((item) => item.id))
+              }
+            />
           </Group>
 
-          {loading ? (
-            <Text p='md' ta='center' c='dimmed'>
-              Laddar events…
-            </Text>
-          ) : error ? (
-            <Text p='md' c='red' ta='center'>
-              Ett fel uppstod: {error}
-            </Text>
-          ) : (
-            <PaginatedEventGrid events={events} />
-          )}
-        </Stack>
+          <Sort onSortChange={setSortBy} />
+        </Group>
+
+        {loading ? (
+          <Text p='md' ta='center' c='dimmed'>
+            Laddar events…
+          </Text>
+        ) : error ? (
+          <Text p='md' c='red' ta='center'>
+            Ett fel uppstod: {error}
+          </Text>
+        ) : (
+          <PaginatedEventGrid events={events} />
+        )}
       </Stack>
     </>
   );
