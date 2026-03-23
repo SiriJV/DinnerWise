@@ -75,7 +75,7 @@ export default function NewsLetterCTA(): React.ReactNode {
               <Text size='sm'>
                 Skriv upp dig på vårt nyhetsbrev för att få de senaste
                 uppdateringarna, tipsen och exklusiva erbjudanden direkt i din
-                inkorg
+                inkorg.
               </Text>
             </Stack>
 
@@ -86,6 +86,7 @@ export default function NewsLetterCTA(): React.ReactNode {
               <TextInput
                 label='Namn'
                 placeholder='Anna Svensson'
+                required
                 value={name}
                 onChange={(e) => setName(e.currentTarget.value)}
               />
@@ -93,6 +94,7 @@ export default function NewsLetterCTA(): React.ReactNode {
               <TextInput
                 label='E-post'
                 placeholder='exempel@epost.se'
+                required
                 value={emailTo}
                 onChange={(e) => setEmailTo(e.currentTarget.value)}
               />
