@@ -129,7 +129,7 @@ export default function EventDetails(): React.ReactNode {
           bd='1px solid rgba(206, 212, 218, 1)'
           py='xl'
           px={{ base: 'md', sm: 'lg', lg: 'xl' }}
-          mt={{ base: 'md', md: '-60px', lg: '-90px' }}
+          mt={{ base: 'md', sm: '-60px', lg: '-90px' }}
           style={{ zIndex: 2 }}>
           <Stack gap='xl'>
             <EventDetailsHeader
@@ -153,7 +153,7 @@ export default function EventDetails(): React.ReactNode {
               />
             </SimpleGrid>
 
-            <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl' mt='xl'>
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='xl' mt='xl'>
               <Map
                 restaurant_address={event.restaurant_address}
                 restaurant_city={event.restaurant_city}
