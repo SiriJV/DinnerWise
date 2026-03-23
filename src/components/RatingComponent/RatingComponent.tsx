@@ -19,7 +19,7 @@ export default function RatingComponent({
       fractions={fractions}
       readOnly={readOnly}
       onChange={onChange}
-      color='rgba(211, 4, 59, 1)'
+      color='red'
     />
   );
 }

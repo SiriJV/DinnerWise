@@ -23,7 +23,7 @@ export default function EventActions({
       <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
         <Group gap='xs'>
           <FlagIcon color='rgba(211, 4, 59, 1)' />
-          <Text size='sm' c='rgba(211, 4, 59, 1)'>
+          <Text size='sm' c='red'>
             Rapportera event
           </Text>
         </Group>

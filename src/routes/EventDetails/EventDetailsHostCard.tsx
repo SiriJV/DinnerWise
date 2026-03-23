@@ -53,7 +53,7 @@ export default function EventDetailsHostCard({
             <Text size='sm' c='dimmed' lineClamp={3}>
               {host?.bio || 'Klicka för att läsa mer om värden.'}
             </Text>
-            <Text size='xs' c='rgba(211, 4, 59, 1)'>
+            <Text size='xs' c='red'>
               Visa profil →
             </Text>
           </Stack>

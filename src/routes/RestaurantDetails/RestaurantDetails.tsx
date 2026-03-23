@@ -151,8 +151,8 @@ export default function RestaurangDetails(): React.ReactNode {
                     w='fit-content'
                     style={{ textDecoration: 'none' }}>
                     <Group gap='xs' mt='xs'>
-                      <ExternalLink size={16} color='rgba(211, 4, 59, 1)' />
-                      <Text size='sm' c='rgba(211, 4, 59, 1)'>
+                      <ExternalLink size={16} color='red' />
+                      <Text size='sm' c='red'>
                         {restaurant.website_url.replace(
                           /^https?:\/\/(www\.)?/,
                           '',

@@ -120,7 +120,7 @@ export default function ProfilePage() {
             {isLoggedIn && user.id !== 1 && (
               <Group gap='xs'>
                 <FlagIcon color='rgba(211, 4, 59, 1)' />
-                <Text size='sm' c='rgba(211, 4, 59, 1)'>
+                <Text size='sm' c='red'>
                   Rapportera användare
                 </Text>
               </Group>

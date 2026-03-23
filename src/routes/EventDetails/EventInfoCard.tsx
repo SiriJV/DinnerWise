@@ -15,7 +15,7 @@ function EventDetailsInfoCard({
   content: string;
 }) {
   return (
-    <Box p='md' bdrs='md' bg='rgba(255, 204, 199, 1)'>
+    <Box p='md' bdrs='md' bg='lightred.5'>
       <Stack align='center' gap={4}>
         <Text size='sm'>{title}</Text>
         <Text size='sm' fw={600} ta='center'>

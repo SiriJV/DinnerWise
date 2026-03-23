@@ -107,7 +107,7 @@ export default function EventFeedback(): React.ReactNode {
       <Stack m='md' maw={500} gap='lg'>
         <Text fw={700} fz='xl'>
           Lämna feedback på eventet{' '}
-          <Text span c='rgba(211, 4, 59, 1)' fw={700} fz='xl'>
+          <Text span c='red' fw={700} fz='xl'>
             {event.title}
           </Text>
         </Text>
