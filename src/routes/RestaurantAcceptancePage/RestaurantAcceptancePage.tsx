@@ -103,21 +103,22 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
                 <Text span fw={800}>
                   Namn:
                 </Text>{' '}
-                Anders Blom
+                {APP_CONFIG.exampleUserFirstName}{' '}
+                {APP_CONFIG.exampleUserLastName}{' '}
               </Text>
               <Text>
                 {' '}
                 <Text span fw={800}>
                   Telefonnummer:
                 </Text>{' '}
-                {APP_CONFIG.exampleTelephone}{' '}
+                {APP_CONFIG.exampleUserTelephone}{' '}
               </Text>
               <Text>
                 {' '}
                 <Text span fw={800}>
                   Epost:
                 </Text>{' '}
-                anders.blom@epost.se
+                {APP_CONFIG.exampleUserEmail}{' '}
               </Text>
 
               {approved ? (
