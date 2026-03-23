@@ -45,7 +45,9 @@ export default function FAQPage(): React.ReactNode {
           <Accordion variant='separated' defaultValue={FAQdata[0].title}>
             {FAQdata.map((faq) => (
               <Accordion.Item value={faq.title} key={faq.title}>
-                <Accordion.Control>{faq.title}</Accordion.Control>
+                <Accordion.Control>
+                  <Text fw={600}>{faq.title}</Text>
+                </Accordion.Control>
                 <Accordion.Panel>{faq.content}</Accordion.Panel>
               </Accordion.Item>
             ))}
