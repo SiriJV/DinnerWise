@@ -8,7 +8,6 @@ import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import FloatingActionButton from '../../components/FAB/FAB';
 
-import ImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
 import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
 
@@ -16,6 +15,7 @@ import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEve
 
 import './HomePage.scss';
 import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
+import CategoryImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -73,7 +73,7 @@ export default function HomePage() {
       <FloatingActionButton />
 
       <Stack p='md' mb='lg'>
-        <ImageCarousel />
+        <CategoryImageCarousel />
         {/* <Divider mt='sm' mb='lg' /> */}
       </Stack>
 
