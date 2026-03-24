@@ -13,6 +13,11 @@ export default function CreateEventLoginModal({
 }: CreateEventLoginModalProps) {
   const { openLogin } = useModal();
 
+  const handleLogin = () => {
+    onClose();
+    openLogin('createEvent');
+  };
+
   return (
     <Modal
       opened={opened}
@@ -21,15 +26,8 @@ export default function CreateEventLoginModal({
       size='md'
       centered>
       <Text ta='center' mb='md'>
-        Du måste{' '}
-        <Anchor
-          onClick={() => {
-            onClose();
-            openLogin();
-          }}>
-          logga in
-        </Anchor>{' '}
-        för att skapa ett event.
+        Du måste <Anchor onClick={handleLogin}>logga in</Anchor> för att skapa
+        ett event.
       </Text>
       <Group grow mt='lg'>
         <BaseButton
@@ -40,13 +38,7 @@ export default function CreateEventLoginModal({
           fullWidth>
           Jag förstår
         </BaseButton>
-        <BaseButton
-          variantType='primary'
-          onClick={() => {
-            onClose();
-            openLogin();
-          }}
-          fullWidth>
+        <BaseButton variantType='primary' onClick={handleLogin} fullWidth>
           Logga in
         </BaseButton>
       </Group>
