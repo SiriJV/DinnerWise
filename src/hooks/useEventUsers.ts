@@ -7,9 +7,11 @@ export default function useEventUsers(
 ) {
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadUsers() {
+      setLoading(true);
       const data = await fetchUsers();
 
       // Deterministic host based on event ID
@@ -26,10 +28,11 @@ export default function useEventUsers(
         }
       }
       setParticipants(participantsList);
+      setLoading(false);
     }
 
     loadUsers();
   }, [id, current_participants]);
 
-  return { host, participants };
+  return { host, participants, loading };
 }

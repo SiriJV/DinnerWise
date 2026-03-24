@@ -7,7 +7,7 @@ import { fetchEventById } from '../../api/events';
 import { fetchRestaurantById } from '../../api/restaurants';
 import { fetchCategories } from '../../api/categories';
 import { fetchTags } from '../../api/tags';
-import { staticRouteLabels } from '../../data/StaticRouteLabels';
+import { staticRouteLabels } from '../../data/staticRouteLabels';
 
 export default function Breadcrumb() {
   const location = useLocation();
