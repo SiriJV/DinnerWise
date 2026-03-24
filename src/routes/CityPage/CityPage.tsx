@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
@@ -10,7 +10,6 @@ import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 export default function CityPage() {
-  const navigationType = useNavigationType();
   const { slug } = useParams<{ slug: string }>();
   const [city, setCity] = useState<{ id: number; name: string } | null>(null);
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Divider, Group, Stack, Text, Title } from '@mantine/core';
+import { Group, Stack, Text, Title } from '@mantine/core';
 
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';

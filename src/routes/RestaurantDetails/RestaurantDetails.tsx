@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigationType, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Text, Group, Anchor, Title, SimpleGrid } from '@mantine/core';
 import { ExternalLink } from 'lucide-react';
 import type { EventType } from '../../types/EventType';
@@ -35,7 +35,6 @@ export default function RestaurangDetails(): React.ReactNode {
   const location = useLocation();
   const state = location.state as { id?: string } | undefined;
   const { slug } = useParams<{ slug: string }>();
-  const navigationType = useNavigationType();
 
   let restaurantPhoto = undefined;
   if (restaurant?.photos) {

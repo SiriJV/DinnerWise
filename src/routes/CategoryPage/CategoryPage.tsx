@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import Sort from '../../components/Sort/Sort';
@@ -27,7 +27,6 @@ export default function CategoryPage() {
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (!slug) return;

@@ -19,7 +19,6 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const navigationType = useNavigationType();
   const [params, setParams] = useSearchParams();
   const tabParam = params.get('tab');
-  const pageParam = params.get('page');
 
   const [activeTab, setActiveTab] = useState<string | null>(
     tabParam || 'hosting',

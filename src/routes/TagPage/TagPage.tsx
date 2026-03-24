@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
@@ -20,7 +20,6 @@ export default function TagPage() {
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (!slug) return;
