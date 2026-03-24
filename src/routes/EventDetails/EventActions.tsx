@@ -1,4 +1,4 @@
-import { Grid, Group, Text } from '@mantine/core';
+import { Box, Grid, Group, Text } from '@mantine/core';
 import { FlagIcon, Share } from 'lucide-react';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import BookmarkButton from '../../components/BookmarkIcon/BookmarkIcon';
@@ -36,21 +36,20 @@ export default function EventActions({
           </BaseButton>
 
           {isLoggedIn && <BookmarkButton eventId={eventId} variant='lg' />}
-
-          <div
+          <Box
             onClick={share.open}
+            bg='gray.3'
+            w='44px'
+            h='44px'
             style={{
               cursor: 'pointer',
-              background: 'rgba(206, 212, 218, 1)',
               borderRadius: '50%',
-              width: 44,
-              height: 44,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Share size={22} style={{ display: 'block' }} />
-          </div>
+            <Share size={22} color='black' style={{ display: 'block' }} />
+          </Box>
         </Group>
       </Grid.Col>
     </Grid>
