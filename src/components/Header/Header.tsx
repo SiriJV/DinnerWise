@@ -12,10 +12,10 @@ import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 import HeaderLoginButton from './HeaderLoginButton';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 import { Brain, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { headerLinks } from '../../data/HeaderLinks';
-import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
+import { headerLinks } from '../../data/headerLinks';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
 import './Header.scss';
 import { APP_CONFIG } from '../../config/appConfig';
@@ -34,7 +34,8 @@ export default function Header({
   onClickCreate,
 }: HeaderProps) {
   const { isLoggedIn } = useAuth();
-  const [modalOpened, setModalOpened] = useState(false);
+  const { openCreateEvent } = useModal();
+  const [loginModalOpened, setLoginModalOpened] = useState(false);
 
   return (
     <Stack justify='space-between' p='md' h='100%'>
@@ -50,7 +51,11 @@ export default function Header({
             aria-label='Toggle navigation'
           />
 
-          <Link to='/' onClick={onClose} style={{ textDecoration: 'none' }}>
+          <Link
+            to='/'
+            onClick={onClose}
+            onMouseEnter={() => import('../../routes/HomePage/HomePage')}
+            style={{ textDecoration: 'none' }}>
             <UnstyledButton
               c='white'
               style={{
@@ -88,7 +93,11 @@ export default function Header({
             variant='subtle'
             color='white'
             size='md'
-            onClick={onClickCreate || (() => setModalOpened(true))}>
+            onClick={
+              onClickCreate ||
+              (() =>
+                isLoggedIn ? openCreateEvent() : setLoginModalOpened(true))
+            }>
             <PlusCircle size={20} />
           </ActionIcon>
 
@@ -110,17 +119,10 @@ export default function Header({
       </Group>
 
       {/* Modals */}
-      {isLoggedIn ? (
-        <CreateEventModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      ) : (
-        <CreateEventLoginModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      )}
+      <CreateEventLoginModal
+        opened={loginModalOpened}
+        onClose={() => setLoginModalOpened(false)}
+      />
     </Stack>
   );
 }
