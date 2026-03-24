@@ -1,4 +1,4 @@
-import { Card, Badge, Box } from '@mantine/core';
+import { Card, Badge, Box, Skeleton } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import './EventCard.scss';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,35 @@ type EventCardProps = {
   isHost?: boolean;
 };
 
+// Skeleton placeholder for loading state
+function EventCardSkeleton() {
+  return (
+    <Card
+      className='eventCard'
+      shadow='sm'
+      radius='md'
+      pb='0'
+      withBorder
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 280,
+      }}>
+      <Card.Section>
+        <Skeleton height={120} />
+      </Card.Section>
+      <Box mt='xl' px='sm' pb='xs' style={{ flex: 1 }}>
+        <Skeleton height={20} width='80%' mb='sm' />
+        <Skeleton height={14} width='60%' mb='xs' />
+        <Skeleton height={14} width='40%' mb='md' />
+        <Skeleton height={12} width='100%' mb='xs' />
+        <Skeleton height={12} width='90%' />
+      </Box>
+    </Card>
+  );
+}
+
 export default function EventCard({
   id,
   title,
@@ -48,18 +77,28 @@ export default function EventCard({
 }: EventCardProps) {
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [restaurantLoaded, setRestaurantLoaded] = useState(false);
+  const [imagePreloaded, setImagePreloaded] = useState(false);
   const { isLoggedIn, user } = useAuth();
 
-  const { host, participants } = useEventUsers(id, current_participants);
+  const {
+    host,
+    participants,
+    loading: usersLoading,
+  } = useEventUsers(id, current_participants);
   const isHost = user && host && user.id === host.id;
 
   useEffect(() => {
     if (restaurant_id) {
-      fetchRestaurantById(restaurant_id).then(setRestaurant);
+      fetchRestaurantById(restaurant_id)
+        .then(setRestaurant)
+        .finally(() => setRestaurantLoaded(true));
+    } else {
+      setRestaurantLoaded(true);
     }
   }, [restaurant_id]);
 
-  let restaurantPhoto = undefined;
+  let restaurantPhoto: string | undefined = undefined;
   if (restaurant?.photos) {
     try {
       const arr = JSON.parse(restaurant.photos);
@@ -69,6 +108,27 @@ export default function EventCard({
     } catch (e) {
       // ignore
     }
+  }
+
+  // Preload the image before showing the card
+  useEffect(() => {
+    if (!restaurantLoaded) return;
+
+    const fallbackUrl =
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop';
+    const urlToLoad = restaurantPhoto || fallbackUrl;
+
+    const img = new window.Image();
+    img.onload = () => setImagePreloaded(true);
+    img.onerror = () => setImagePreloaded(true);
+    img.src = urlToLoad;
+  }, [restaurantLoaded, restaurantPhoto]);
+
+  // Show skeleton until all data is ready
+  const isReady = restaurantLoaded && !usersLoading && imagePreloaded;
+
+  if (!isReady) {
+    return <EventCardSkeleton />;
   }
 
   const displayPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -107,7 +167,12 @@ export default function EventCard({
           state: { id, restaurantPhoto },
         })
       }
-      style={{ cursor: 'pointer' }}>
+      style={{
+        cursor: 'pointer',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
       <Card.Section pos='relative'>
         <EventCardRestaurantPhoto
           pic_url={restaurantPhoto}
@@ -133,7 +198,11 @@ export default function EventCard({
         <EventCardHostAvatar pic_url={host?.profile_picture_url || ''} />
       </Card.Section>
 
-      <Box mt='xl' px='0' pb='xs'>
+      <Box
+        mt='xl'
+        px='0'
+        pb='xs'
+        style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <EventCardInfo
           title={title}
           displayPrice={displayPrice}
@@ -149,12 +218,14 @@ export default function EventCard({
           displayMaxSpots={max_participants}
           shortDescription={shortDescription}
         />
-        <EventSpotsBadge
-          currentParticipants={current_participants}
-          maxParticipants={max_participants}
-          className='eventCardSpotsBadge'
-          size='sm'
-        />
+        <Box style={{ marginTop: 'auto' }}>
+          <EventSpotsBadge
+            currentParticipants={current_participants}
+            maxParticipants={max_participants}
+            className='eventCardSpotsBadge'
+            size='sm'
+          />
+        </Box>
       </Box>
     </Card>
   );
