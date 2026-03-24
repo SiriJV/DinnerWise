@@ -1,4 +1,5 @@
-import { Image, Box } from '@mantine/core';
+import { Box, Skeleton } from '@mantine/core';
+import { useState } from 'react';
 
 type ProfilePageBannerImageProps = {
   src?: string;
@@ -22,6 +23,8 @@ export default function ProfilePageBannerImage({
   alt = 'Banner image',
   userId = 0,
 }: ProfilePageBannerImageProps) {
+  const [loaded, setLoaded] = useState(false);
+
   if (!src) {
     const gradientIndex = userId % gradients.length;
     return (
@@ -36,12 +39,26 @@ export default function ProfilePageBannerImage({
   }
 
   return (
-    <Image
-      h={250}
-      src={src}
-      alt={alt}
-      fit='cover'
-      // fallbackSrc='https://images.unsplash.com/photo-1557683311-eac922347aa1'
-    />
+    <Box style={{ position: 'relative', height: 250, width: '100%' }}>
+      {!loaded && (
+        <Skeleton
+          height={250}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+          animate
+        />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        style={{
+          width: '100%',
+          height: 250,
+          objectFit: 'cover',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+        }}
+      />
+    </Box>
   );
 }
