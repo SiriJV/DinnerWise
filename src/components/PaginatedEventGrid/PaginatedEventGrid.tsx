@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { SimpleGrid, Group, Pagination, Text, Stack } from '@mantine/core';
+import {
+  SimpleGrid,
+  Group,
+  Pagination,
+  Text,
+  Stack,
+  Skeleton,
+} from '@mantine/core';
 import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { useSearchParams } from 'react-router-dom';
@@ -14,11 +21,13 @@ function chunk<T>(array: T[], size: number): T[][] {
 type PaginatedEventGridProps = {
   events: EventType[];
   pageSize?: number;
+  loading?: Boolean;
 };
 
 export default function PaginatedEventGrid({
   events,
   pageSize = 12,
+  loading = false,
 }: PaginatedEventGridProps) {
   const [params, setParams] = useSearchParams();
   const pageParam = params.get('page');
@@ -59,7 +68,11 @@ export default function PaginatedEventGrid({
     <>
       <Stack ref={gridRef}>
         <SimpleGrid cols={{ base: 1, xs: 1, sm: 2, md: 3 }} spacing='lg'>
-          {pagedEvents.length === 0 ? (
+          {loading ? (
+            Array.from({ length: pageSize }).map((_, i) => (
+              <Skeleton key={i} height={280} radius='md' />
+            ))
+          ) : pagedEvents.length === 0 ? (
             <Text p='xl' ta='center' c='dimmed'>
               Det finns just nu inga event som matchar dina filter.
             </Text>
