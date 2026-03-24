@@ -1,6 +1,6 @@
 import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Group, Stack, Text, Title } from '@mantine/core';
+import { Box, Center, Group, Loader, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
@@ -74,9 +74,12 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <Text p='xl' ta='center' c='dimmed'>
-        Laddar profil...
-      </Text>
+      // <Text p='xl' ta='center' c='dimmed'>
+      //   Laddar profil...
+      // </Text>
+      <Center>
+        <Loader size='lg' />
+      </Center>
     );
   }
 
