@@ -8,17 +8,28 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ModalProvider } from './contexts/ModalContext';
 import LoginModal from './components/Modals/LoginModal/LoginModal';
 import CreateAccountModal from './components/Modals/CreateAccountModal/CreateAccountModal';
-// import DemoInfoModal from './components/Modals/DemoInfoModal/DemoInfoModal';
+import CreateEventModal from './components/Modals/CreateEventModal/CreateEventModal';
 import { useModal } from './contexts/ModalContext';
-import HomePage from './routes/HomePage/HomePage';
-import EventDetails from './routes/EventDetails/EventDetails';
-import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
-import SearchPage from './routes/SearchPage';
-import ProfilePage from './routes/ProfilePage/ProfilePage';
-import CategoryPage from './routes/CategoryPage/CategoryPage';
-import TagPage from './routes/TagPage/TagPage';
-import CityPage from './routes/CityPage/CityPage';
 import { infoPages } from './data/infoPages';
+import { lazy, useEffect, useState } from 'react';
+
+// Lazy load alla route-komponenter för bättre initial laddning
+const HomePage = lazy(() => import('./routes/HomePage/HomePage'));
+const EventDetails = lazy(() => import('./routes/EventDetails/EventDetails'));
+const ProfilePage = lazy(() => import('./routes/ProfilePage/ProfilePage'));
+const SearchPage = lazy(() => import('./routes/SearchPage'));
+const RestaurantDetails = lazy(
+  () => import('./routes/RestaurantDetails/RestaurantDetails'),
+);
+const CategoryPage = lazy(() => import('./routes/CategoryPage/CategoryPage'));
+const TagPage = lazy(() => import('./routes/TagPage/TagPage'));
+const CityPage = lazy(() => import('./routes/CityPage/CityPage'));
+const RestaurantAcceptancePage = lazy(
+  () => import('./routes/RestaurantAcceptancePage/RestaurantAcceptancePage'),
+);
+const EventFeedback = lazy(
+  () => import('./routes/EventFeedback/EventFeedback'),
+);
 
 const router = createBrowserRouter([
   {
@@ -57,11 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/restaurang/:slug',
-        element: <RestaurangDetails />,
-      },
-      {
-        path: '/restaurang/:slug',
-        element: <RestaurangDetails />,
+        element: <RestaurantDetails />,
       },
       {
         path: '/kategori/:slug',
@@ -87,12 +94,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-import { useEffect, useState } from 'react';
-import RestaurantAcceptancePage from './routes/RestaurantAcceptancePage/RestaurantAcceptancePage';
-import EventFeedback from './routes/EventFeedback/EventFeedback';
-
 function GlobalModals() {
-  const { loginOpen, createOpen, closeModals } = useModal();
+  const {
+    loginOpen,
+    createOpen,
+    closeModals,
+    createEventOpen,
+    closeCreateEvent,
+  } = useModal();
   const [demoOpen, setDemoOpen] = useState(true);
 
   // Visa bara första gången sidan laddas
@@ -105,6 +114,7 @@ function GlobalModals() {
       {/* <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} /> */}
       <LoginModal opened={loginOpen} onClose={closeModals} />
       <CreateAccountModal opened={createOpen} onClose={closeModals} />
+      <CreateEventModal opened={createEventOpen} onClose={closeCreateEvent} />
     </>
   );
 }

@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop';
 import SearchBar from '../SearchBar/SearchBar';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
+import { Suspense } from 'react';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
@@ -42,7 +43,9 @@ export default function AppShell() {
               <SearchBar />
             </Box>
             <ScrollToTop />
-            <Outlet />
+            <Suspense fallback={null}>
+              <Outlet />
+            </Suspense>
           </Box>
           <Footer />
         </MantineAppShell.Main>
