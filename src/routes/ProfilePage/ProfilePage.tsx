@@ -1,6 +1,14 @@
 import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Center, Group, Loader, Stack, Text, Title } from '@mantine/core';
+import {
+  Box,
+  Center,
+  Group,
+  Skeleton,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
@@ -74,12 +82,25 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      // <Text p='xl' ta='center' c='dimmed'>
-      //   Laddar profil...
-      // </Text>
-      <Center>
-        <Loader size='lg' />
-      </Center>
+      <>
+        <Box pos='relative'>
+          <Skeleton height={250} />
+          <Center
+            style={{
+              position: 'absolute',
+              bottom: -60,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}>
+            <Skeleton circle height={120} width={120} />
+          </Center>
+        </Box>
+        <Stack m='md' gap='xs' mt={80}>
+          <Skeleton height={24} width='40%' mx='auto' />
+          <Skeleton height={16} width='60%' mx='auto' />
+          <Skeleton height={20} width='30%' mx='auto' />
+        </Stack>
+      </>
     );
   }
 
@@ -108,7 +129,7 @@ export default function ProfilePage() {
       <Stack m='md' gap='xs'>
         <Stack mb='lg'>
           <Group justify='space-between'>
-            <Title order={2} size='lg' fw='600'>
+            <Title order={2} size='lg' fw='600' mt='md'>
               {user.name}
             </Title>
             {isLoggedIn && user.id === 1 && (
