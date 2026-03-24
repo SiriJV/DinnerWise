@@ -20,7 +20,7 @@ interface LoginModalProps {
 
 export default function LoginModal({ opened, onClose }: LoginModalProps) {
   const { login } = useAuth();
-  const { openCreate } = useModal();
+  const { openCreate, executePendingAction } = useModal();
   const [email, setEmail] = useState(
     APP_CONFIG.exampleUserEmail || 'exempel@epost.se',
   );
@@ -85,6 +85,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         onClick={() => {
           login();
           onClose();
+          executePendingAction();
         }}
         mt='lg'>
         Logga in
