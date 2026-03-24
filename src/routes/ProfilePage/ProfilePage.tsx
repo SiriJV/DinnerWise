@@ -128,8 +128,8 @@ export default function ProfilePage() {
       </Box>
       <Stack m='md' gap='xs'>
         <Stack mb='lg'>
-          <Group justify='space-between'>
-            <Title order={2} size='lg' fw='600' mt='md'>
+          <Group justify='space-between' mt='md'>
+            <Title order={2} size='lg' fw='600'>
               {user.name}
             </Title>
             {isLoggedIn && user.id === 1 && (
