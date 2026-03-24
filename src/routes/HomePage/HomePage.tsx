@@ -128,7 +128,7 @@ export default function HomePage() {
             Ett fel uppstod: {error}
           </Text>
         ) : (
-          <PaginatedEventGrid events={events} />
+          <PaginatedEventGrid events={events} loading={loading} />
         )}
       </Stack>
     </>

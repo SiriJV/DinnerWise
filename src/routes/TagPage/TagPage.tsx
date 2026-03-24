@@ -117,11 +117,7 @@ export default function TagPage() {
             Inga events för denna tagg.
           </Text>
         ) : (
-          <PaginatedEventGrid
-            events={events}
-            paginationKey='tagpage_activePage'
-            navigationType={navigationType}
-          />
+          <PaginatedEventGrid events={events} loading={loading} />
         )}
       </Stack>
     </Stack>

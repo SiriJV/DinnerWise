@@ -129,11 +129,7 @@ export default function CityPage() {
             Inga events för denna stad.
           </Text>
         ) : (
-          <PaginatedEventGrid
-            events={events}
-            paginationKey={`citypage_activePage_${city.id}`}
-            navigationType={navigationType}
-          />
+          <PaginatedEventGrid events={events} loading={loading} />
         )}
       </Stack>
     </Stack>

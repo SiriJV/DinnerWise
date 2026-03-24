@@ -187,7 +187,7 @@ export default function RestaurangDetails(): React.ReactNode {
           <Title order={3}>
             Kommande event på {restaurant.name} ({events.length} event)
           </Title>
-          <PaginatedEventGrid events={events} />
+          <PaginatedEventGrid events={events} loading={loading} />
         </Stack>
       )}
     </>

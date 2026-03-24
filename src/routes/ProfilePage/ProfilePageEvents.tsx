@@ -97,7 +97,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   return (
     <>
       <Title order={3}>Event</Title>
-      <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
+      <Tabs value={activeTab} onChange={handleTabChange}>
         <Tabs.List mb='md'>
           <Tabs.Tab value='hosting' color='black'>
             Värd för ({hostingEvents.length})
@@ -123,7 +123,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             <PaginatedEventGrid
               events={hostingEvents}
               pageSize={6}
-              // pageParam will be picked up by PaginatedEventGrid
+              loading={loading}
             />
           )}
         </Tabs.Panel>
@@ -136,7 +136,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
             <PaginatedEventGrid
               events={participatingEvents}
               pageSize={6}
-              // pageParam will be picked up by PaginatedEventGrid
+              loading={loading}
             />
           )}
         </Tabs.Panel>
@@ -150,7 +150,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
               <PaginatedEventGrid
                 events={savedEvents}
                 pageSize={6}
-                // pageParam will be picked up by PaginatedEventGrid
+                loading={loading}
               />
             )}
           </Tabs.Panel>

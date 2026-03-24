@@ -169,11 +169,7 @@ export default function CategoryPage() {
               Inga events för denna kategori.
             </Text>
           ) : (
-            <PaginatedEventGrid
-              events={events}
-              paginationKey='categorypage_activePage'
-              navigationType={navigationType}
-            />
+            <PaginatedEventGrid events={events} loading={loading} />
           )}
         </Stack>
       </Stack>

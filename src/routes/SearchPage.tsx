@@ -83,7 +83,7 @@ export default function SearchPage() {
                 Inga resultat.
               </Text>
             ) : t.value === 'events' ? (
-              <PaginatedEventGrid events={results} />
+              <PaginatedEventGrid events={results} loading={loading} />
             ) : t.value === 'restaurants' ? (
               <SimpleGrid cols={{ base: 1, sm: 1, md: 3, lg: 5 }} spacing='md'>
                 {results.map((r: any) => (
