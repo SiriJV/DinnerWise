@@ -1,6 +1,6 @@
 import { Text, Group, Stack, Avatar } from '@mantine/core';
 import FollowBadge from './FollowBadge';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface ProfilePageFollowersCardProps {
   alias: string;
@@ -19,7 +19,7 @@ export default function ProfilePageFollowersCard({
 }: ProfilePageFollowersCardProps) {
   return (
     <Group wrap='nowrap' align='center'>
-      <NavLink
+      <Link
         to={`/profil/${alias}`}
         onClick={onNavigate}
         style={{
@@ -35,7 +35,7 @@ export default function ProfilePageFollowersCard({
           <Text fw={600}>{alias}</Text>
           <Text>{name}</Text>
         </Stack>
-      </NavLink>
+      </Link>
       <FollowBadge following={following} />
     </Group>
   );
