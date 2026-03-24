@@ -92,7 +92,7 @@ export default function ShareByEmail({
         onClick={handleEmailClick}
         styles={{
           input: {
-            backgroundColor: 'rgba(36, 56, 33, 1)',
+            backgroundColor: 'var(--mantine-color-darkgreen-5)',
             color: 'white',
             cursor: 'pointer',
             minHeight: '50px',
@@ -111,7 +111,7 @@ export default function ShareByEmail({
               <TextInput
                 label='Till (e-post)'
                 required
-                placeholder='mottagare@email.com'
+                placeholder={'mottagare@epost.se'}
                 type='text'
                 value={emailTo}
                 maxLength={120}

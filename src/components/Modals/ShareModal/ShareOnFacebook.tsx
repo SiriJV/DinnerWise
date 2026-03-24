@@ -29,7 +29,7 @@ export default function ShareOnFacebook({}) {
       }
       styles={{
         input: {
-          backgroundColor: 'rgba(36, 56, 33, 1)',
+          backgroundColor: 'var(--mantine-color-darkgreen-5)',
           color: 'white',
           cursor: 'default',
           pointerEvents: 'none',

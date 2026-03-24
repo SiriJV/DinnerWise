@@ -40,7 +40,7 @@ export default function ShareLink({ eventUrl, generatedUrl }: ShareLinkProps) {
       onClick={handleShareLink}
       styles={{
         input: {
-          backgroundColor: 'var(--mantine-color-gray-0)',
+          backgroundColor: 'var(--mantine-color-gray-3)',
           cursor: 'pointer',
           minHeight: '50px',
           paddingBlock: 'var(--mantine-spacing-md)',
