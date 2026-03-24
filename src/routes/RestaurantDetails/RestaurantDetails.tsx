@@ -128,7 +128,7 @@ export default function RestaurangDetails(): React.ReactNode {
           w={{ base: '100%', sm: '90%', lg: '75%' }}
           bg='white'
           bdrs='xs'
-          bd='1px solid rgba(206, 212, 218, 1)'
+          bd='1px solid gray.4'
           py='xl'
           px={{ base: 'md', sm: 'lg', lg: 'xl' }}
           mt={{ base: 'md', md: '-60px', lg: '-90px' }}

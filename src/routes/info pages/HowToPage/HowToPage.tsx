@@ -76,7 +76,7 @@ export default function HowToPage() {
             size='sm'
             center
             icon={
-              <ThemeIcon size={24} radius='xl' color='rgba(36, 56, 33, 1)'>
+              <ThemeIcon size={24} radius='xl' color='darkgreen'>
                 <CircleCheckBig size={16} />
               </ThemeIcon>
             }>

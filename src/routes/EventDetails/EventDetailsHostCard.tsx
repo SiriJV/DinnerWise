@@ -29,7 +29,7 @@ export default function EventDetailsHostCard({
       <Box
         p='lg'
         bdrs='lg'
-        bd='1px solid rgba(206, 212, 218, 1)'
+        bd='1px solid gray.4'
         style={{ transition: '0.2s ease' }}>
         <Group align='center' gap='lg' wrap='nowrap'>
           <Image
