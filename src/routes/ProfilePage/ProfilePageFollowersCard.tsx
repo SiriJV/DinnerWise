@@ -31,7 +31,7 @@ export default function ProfilePageFollowersCard({
           gap: '12px',
         }}>
         <Avatar src={profile_picture_url} bd='1px solid gray.5'></Avatar>
-        <Stack gap='0' flex={1}>
+        <Stack gap='0' flex={1} className='link-hover'>
           <Text fw={600}>{alias}</Text>
           <Text>{name}</Text>
         </Stack>
