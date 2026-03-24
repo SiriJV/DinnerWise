@@ -53,12 +53,12 @@ export default function BookmarkButton({
   return (
     <Box
       onClick={handleBookmarkClick}
+      bg='gray.3'
+      w='44px'
+      h='44px'
       style={{
         cursor: 'pointer',
-        background: 'rgba(206, 212, 218, 1)',
         borderRadius: '50%',
-        width: 44,
-        height: 44,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
