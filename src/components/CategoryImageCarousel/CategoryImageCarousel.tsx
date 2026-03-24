@@ -6,6 +6,7 @@ import '@mantine/carousel/styles.css';
 import './CategoryImageCarousel.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
+import CategoryImage from './CategoryImage';
 
 type Category = {
   id: number;
@@ -13,36 +14,6 @@ type Category = {
   description?: string;
   cover_picture_url?: string;
 };
-
-function CategoryImage({ src, alt }: { src?: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <Box style={{ height: 110, position: 'relative', overflow: 'hidden' }}>
-      {!loaded && (
-        <Skeleton
-          height={110}
-          radius='md'
-          style={{ position: 'absolute', top: 0, left: 0, right: 0 }}
-          animate
-        />
-      )}
-      <img
-        src={src}
-        alt={alt}
-        onLoad={() => setLoaded(true)}
-        style={{
-          width: '100%',
-          height: 110,
-          objectFit: 'cover',
-          display: 'block',
-          opacity: loaded ? 1 : 0,
-          transition: 'opacity 0.3s ease',
-        }}
-      />
-    </Box>
-  );
-}
 
 export default function CategoryImageCarousel() {
   const [categories, setCategories] = useState<Category[]>([]);
