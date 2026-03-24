@@ -56,7 +56,7 @@ export default function EventCardInfo({
         med{' '}
         <Text
           span
-          className='unstyledNavLink'
+          className='link-hover'
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/profil/${host?.alias}`);
@@ -69,7 +69,7 @@ export default function EventCardInfo({
         <Text size='xs' c='dimmed' fw={600}>
           <Text
             span
-            className='unstyledNavLink'
+            className='link-hover'
             onClick={(e) => {
               e.stopPropagation();
 

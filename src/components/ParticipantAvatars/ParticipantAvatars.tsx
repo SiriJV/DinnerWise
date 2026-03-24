@@ -36,7 +36,7 @@ export default function ParticipantAvatars({
         {participants.slice(0, maxVisible).map((user) => (
           <Tooltip key={user.id} label={user.name} withArrow>
             <Box
-              className='unstyledNavLink'
+              className='link-hover'
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/profil/${user.alias}`);
@@ -91,7 +91,7 @@ export default function ParticipantAvatars({
               {participants.slice(maxVisible).map((user) => (
                 <Box
                   key={user.id}
-                  className='unstyledNavLink'
+                  className='link-hover'
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/profil/${user.alias}`);

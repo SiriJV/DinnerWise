@@ -69,16 +69,6 @@
   z-index: 3;
 }
 
-.unstyledNavLink {
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    // color: var.$gray5;
-    text-decoration: underline;
-  }
-}
-
 .bookmarkButton {
   position: absolute;
   top: var(--mantine-radius-md);

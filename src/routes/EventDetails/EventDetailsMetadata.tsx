@@ -25,7 +25,7 @@ export default function EventDetailsMetadata({
       <Text
         span
         c='red'
-        className='unstyledNavLink'
+        className='link-hover'
         onClick={(e) => {
           e.stopPropagation();
           navigate(host ? `/profil/${host.alias}` : '/profil/');
@@ -37,7 +37,7 @@ export default function EventDetailsMetadata({
       <Text
         span
         c='red'
-        className='unstyledNavLink'
+        className='link-hover'
         onClick={(e) => {
           e.stopPropagation();
           navigate(
@@ -56,7 +56,7 @@ export default function EventDetailsMetadata({
       <Text
         span
         c='red'
-        className='unstyledNavLink'
+        className='link-hover'
         onClick={(e) => {
           e.stopPropagation();
           navigate(`/stad/${slugify(restaurantCity)}`);

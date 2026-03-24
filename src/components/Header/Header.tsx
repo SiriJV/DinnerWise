@@ -7,7 +7,7 @@ import {
   Title,
   UnstyledButton,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 import HeaderLoginButton from './HeaderLoginButton';
@@ -50,7 +50,7 @@ export default function Header({
             aria-label='Toggle navigation'
           />
 
-          <NavLink to='/' onClick={onClose} style={{ textDecoration: 'none' }}>
+          <Link to='/' onClick={onClose} style={{ textDecoration: 'none' }}>
             <UnstyledButton
               c='white'
               style={{
@@ -69,7 +69,7 @@ export default function Header({
                 </Title>
               </Group>
             </UnstyledButton>
-          </NavLink>
+          </Link>
         </Group>
 
         <Box
@@ -100,12 +100,12 @@ export default function Header({
       {/* Links */}
       <Group gap='xl' visibleFrom='sm' style={{ marginTop: '8px' }}>
         {headerLinks.map((link, i) => (
-          <NavLink
+          <Link
             key={link.path + link.label + i}
             to={link.path}
             className='headerLinks'>
             {link.label}
-          </NavLink>
+          </Link>
         ))}
       </Group>
 

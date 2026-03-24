@@ -4,10 +4,9 @@ import {
   UnstyledButton,
   Space,
   Group,
-  Anchor,
   Drawer,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
@@ -96,35 +95,32 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
             </Text>
 
             <Group gap='md' w='100%' justify='space-around'>
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/kopvillkor'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Köpvillkor
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Köpvillkor
+                </Text>
+              </Link>
 
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/integritetspolicy'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Integritetspolicy
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Integritetspolicy
+                </Text>
+              </Link>
 
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/cookies'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Cookies
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Cookies
+                </Text>
+              </Link>
             </Group>
           </Stack>
           {/* </Container> */}

@@ -1,6 +1,6 @@
 import { Carousel } from '@mantine/carousel';
 import { Box, Card, Image, Text, Title } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
 import './CategoryImageCarousel.scss';
@@ -49,14 +49,14 @@ export default function NavCarousel() {
         previousControlIcon={<ChevronLeft size={28} />}>
         {categories.map((category) => (
           <Carousel.Slide key={category.id}>
-            <NavLink
+            <Link
               to={`/kategori/${slugify(category.name)}`}
               className='navCarousel-link'>
               <Card radius='0' padding={0} className='navCarousel-card'>
                 <Image src={category.cover_picture_url} h={110} fit='cover' />
                 <Text className='navCarousel-label'>{category.name}</Text>
               </Card>
-            </NavLink>
+            </Link>
           </Carousel.Slide>
         ))}
       </Carousel>

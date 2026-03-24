@@ -18,7 +18,7 @@ export default function ContactPage(): React.ReactNode {
           <Text>
             Läs gärna vår{' '}
             <Link to='/faq' style={{ textDecoration: 'none' }}>
-              <Text span c='red' unstyled>
+              <Text span c='red' className='link-hover'>
                 FAQ
               </Text>
             </Link>{' '}
