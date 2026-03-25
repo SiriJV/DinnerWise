@@ -13,7 +13,6 @@ import type { EventType } from '../../types/EventType';
 
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
-import './HomePage.scss';
 import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
 import CategoryImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
 
