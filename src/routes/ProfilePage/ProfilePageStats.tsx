@@ -1,5 +1,4 @@
 import { Text, Stack, Box, Group } from '@mantine/core';
-import './ProfilePage.scss';
 import ProfilePageFollowersModal from './ProfilePageFollowersModal';
 import type { User } from '../../api/users';
 
@@ -45,10 +44,10 @@ export default function ProfilePageStats({
       bg='white'
       px='xs'
       py='xs'
-      className='stats-wrapper'>
+      bdrs='sm'>
       {followingModal.modal}
 
-      <Box px='xs' py='xs' className='stats'>
+      <Box px='xs' py='xs' bg='gray.3' bdrs='sm'>
         <Stack
           align='center'
           gap='xs'
@@ -64,7 +63,7 @@ export default function ProfilePageStats({
       </Box>
 
       {followersModal.modal}
-      <Box px='xs' py='xs' className='stats'>
+      <Box px='xs' py='xs' bg='gray.3' bdrs='sm'>
         <Stack
           align='center'
           gap='xs'
@@ -79,7 +78,7 @@ export default function ProfilePageStats({
         </Stack>
       </Box>
 
-      <Box px='xs' py='xs' className='stats'>
+      <Box px='xs' py='xs' bg='gray.3' bdrs='sm'>
         <Stack align='center' gap='xs'>
           <Text fw={700} size='md'>
             {events}
