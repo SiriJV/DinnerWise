@@ -1,5 +1,5 @@
 import { Carousel } from '@mantine/carousel';
-import { Box, Card, Text, Title, Skeleton } from '@mantine/core';
+import { Box, Card, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '@mantine/carousel/styles.css';
