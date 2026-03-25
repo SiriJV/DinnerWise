@@ -1,5 +1,11 @@
-import { Text, Modal, PasswordInput, TextInput, Anchor } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import {
+  Text,
+  Modal,
+  PasswordInput,
+  TextInput,
+  Anchor,
+  Button,
+} from '@mantine/core';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
 import { useState } from 'react';
@@ -107,8 +113,7 @@ export default function CreateAccountModal({
           confirmPassword && !passwordsMatch ? 'Lösenorden matchar inte' : ''
         }
       />
-      <BaseButton
-        variantType='primary'
+      <Button
         fullWidth
         disabled={!isFormValid}
         onClick={() => {
@@ -118,7 +123,7 @@ export default function CreateAccountModal({
         }}
         mt='lg'>
         Skapa konto
-      </BaseButton>{' '}
+      </Button>{' '}
     </Modal>
   );
 }
