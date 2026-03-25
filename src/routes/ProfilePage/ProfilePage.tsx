@@ -2,6 +2,7 @@ import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
 import {
   Box,
+  Button,
   Center,
   Group,
   Skeleton,
@@ -15,7 +16,6 @@ import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
-import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../contexts/AuthContext';
 import RatingComponent from '../../components/RatingComponent/RatingComponent';
 import { getRating } from '../../utils/getRating';
@@ -136,9 +136,9 @@ export default function ProfilePage() {
               <Group gap='xs'>
                 <PenIcon size='20px' />
                 <SettingsIcon size='20px' />
-                <BaseButton variantType='ghost' onClick={logout}>
+                <Button variant='transparent' onClick={logout}>
                   Logga ut
-                </BaseButton>
+                </Button>
               </Group>
             )}
             {isLoggedIn && user.id !== 1 && (
