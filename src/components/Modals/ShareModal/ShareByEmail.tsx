@@ -1,5 +1,4 @@
-import { Stack, TextInput, Text, Textarea, Group } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import { Stack, TextInput, Text, Textarea, Group, Button } from '@mantine/core';
 import { Mail } from 'lucide-react';
 import { useState } from 'react';
 
@@ -145,19 +144,18 @@ export default function ShareByEmail({
                 radius='xs'
               />
               <Group gap='sm' justify='flex-end'>
-                <BaseButton
-                  variantType='secondary'
+                <Button
+                  variant='outline'
                   onClick={() => setShowEmailForm(false)}>
                   Avbryt
-                </BaseButton>
-                <BaseButton
-                  variantType='primary'
+                </Button>
+                <Button
                   onClick={handleSendEmail}
                   disabled={
                     !emailTo || !emailMessage || !isValidEmail(emailTo)
                   }>
                   Skicka
-                </BaseButton>
+                </Button>
               </Group>
             </>
           )}
