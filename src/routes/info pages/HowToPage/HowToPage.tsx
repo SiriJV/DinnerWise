@@ -7,6 +7,8 @@ import {
   Grid,
   List,
   ThemeIcon,
+  Box,
+  Skeleton,
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import FloatingActionButton from '../../../components/FAB/FAB';
@@ -52,6 +54,8 @@ export default function HowToPage() {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <Container size='lg' pt='md'>
@@ -121,6 +125,37 @@ export default function HowToPage() {
           </List>
         </Stack>
 
+        <Box style={{ position: 'relative', minHeight: 250 }}>
+          {!imageLoaded && (
+            <Skeleton
+              height='100%'
+              radius='md'
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+              animate
+            />
+          )}
+          <img
+            src='src/assets/2.jpg'
+            alt='Om oss'
+            onLoad={() => setImageLoaded(true)}
+            style={{
+              width: '100%',
+              height: '100%',
+              maxHeight: '350px',
+              objectFit: 'cover',
+              objectPosition: '75% 20%',
+              borderRadius: 'var(--mantine-radius-md)',
+              opacity: imageLoaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+            }}
+          />
+        </Box>
         <Stack>
           <Title order={3}>Hur går det till?</Title>
 
