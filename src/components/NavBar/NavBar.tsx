@@ -67,10 +67,10 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
                 key={category.id}
                 to={`/kategori/${slugify(category.name)}`}
                 className={({ isActive }) =>
-                  `sideNavLink ${isActive ? 'active' : ''}`
+                  `sideNavLink link-hover ${isActive ? 'active' : ''}`
                 }
                 onClick={onClose}>
-                <UnstyledButton className='sideNavButton'>
+                <UnstyledButton className='sideNavButton link-hover'>
                   {category.name}
                 </UnstyledButton>
               </NavLink>

@@ -1,38 +1,3 @@
-@use '../../styles/variables.scss' as var;
-@use '../../styles/mixins.scss' as *;
-
-// .navOverlay {
-//   position: fixed;
-//   inset: 0;
-//   background: rgba(0, 0, 0, 0.45);
-//   z-index: 100;
-// }
-
-// .sideNav {
-//   position: fixed;
-//   top: var(--header-height, 100px);
-//   left: 0;
-//   width: 300px;
-//   height: calc(100vh - var(--header-height));
-//   background: white;
-//   z-index: 200;
-
-//   @include gray-border(border-right);
-// }
-
-// .sideNavInner {
-//   height: 100%;
-//   overflow-y: auto;
-//   padding-bottom: var(--mantine-spacing-lg);
-
-//   scrollbar-width: none;
-//   -ms-overflow-style: none;
-
-//   &::-webkit-scrollbar {
-//     display: none;
-//   }
-// }
-
 .sideNavLink {
   text-decoration: none;
   color: inherit;
@@ -41,18 +6,10 @@
 .sideNavButton {
   width: 100%;
   text-align: left;
-  border-radius: var(--mantine-radius-sm);
   font-weight: 400;
   transition: background-color 0.15s ease;
-
-  &:hover {
-    // background-color: var.$gray2;
-    // @include hover-color;
-    text-decoration: underline;
-  }
 }
 
 .sideNavLink.active .sideNavButton {
-  // background-color: var.$gray3;
-  @include active-font-weight;
+  font-weight: 600;
 }
