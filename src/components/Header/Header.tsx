@@ -6,6 +6,7 @@ import {
   Stack,
   Title,
   UnstyledButton,
+  Text,
 } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
@@ -17,7 +18,6 @@ import { Brain, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { headerLinks } from '../../data/headerLinks';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
-import './Header.scss';
 import { APP_CONFIG } from '../../config/appConfig';
 
 interface HeaderProps {
@@ -112,8 +112,10 @@ export default function Header({
           <Link
             key={link.path + link.label + i}
             to={link.path}
-            className='headerLinks'>
-            {link.label}
+            style={{ textDecoration: 'none' }}>
+            <Text c='white' className='link-hover'>
+              {link.label}
+            </Text>
           </Link>
         ))}
       </Group>
