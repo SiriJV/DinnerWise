@@ -70,7 +70,7 @@ export default function Header({
                   size='xl'
                   c='white'
                   style={{ textDecoration: 'none' }}>
-                  {APP_CONFIG.brandName}
+                  {APP_CONFIG.brandName.toLocaleUpperCase()}
                 </Title>
               </Group>
             </UnstyledButton>
