@@ -6,8 +6,8 @@ import {
   Anchor,
   Checkbox,
   Group,
+  Button,
 } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
 import { useState } from 'react';
@@ -78,8 +78,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
           Glömt lösenord?
         </Anchor>
       </Group>
-      <BaseButton
-        variantType='primary'
+      <Button
         fullWidth
         disabled={!isFormValid}
         onClick={() => {
@@ -89,7 +88,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         }}
         mt='lg'>
         Logga in
-      </BaseButton>
+      </Button>
     </Modal>
   );
 }

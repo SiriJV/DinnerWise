@@ -6,9 +6,9 @@ import {
   Textarea,
   Grid,
   Stack,
+  Button,
 } from '@mantine/core';
 import { useState } from 'react';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
@@ -239,8 +239,7 @@ export default function RegisteringModal({
           />
         </Stack>
       </Box>
-      <BaseButton
-        variantType='primary'
+      <Button
         fullWidth
         mt='lg'
         disabled={!isFormValid}
@@ -254,7 +253,7 @@ export default function RegisteringModal({
           }
         }}>
         {isFull ? 'Ställ dig på väntelista' : 'Till betalning'}
-      </BaseButton>
+      </Button>
     </RegisteringBaseModal>
   );
 }

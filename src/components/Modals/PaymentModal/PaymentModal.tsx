@@ -8,9 +8,9 @@ import {
   Group,
   Stack,
   Image,
+  Button,
 } from '@mantine/core';
 import { CreditCard } from 'lucide-react';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import swishLogo from '../../../assets/swish-logo.png';
 import klarnaLogo from '../../../assets/klarna-logo.webp';
@@ -245,8 +245,7 @@ export default function PaymentModal({
         </Text>
       </Box>
 
-      <BaseButton
-        variantType='primary'
+      <Button
         fullWidth
         mt='lg'
         disabled={!selectedPayment}
@@ -256,7 +255,7 @@ export default function PaymentModal({
           onOpenConfirmation();
         }}>
         Slutför betalning
-      </BaseButton>
+      </Button>
     </RegisteringBaseModal>
   );
 }

@@ -1,7 +1,6 @@
-import { Box, Text, Flex, Group } from '@mantine/core';
+import { Box, Text, Flex, Group, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
 import ShareModal from '../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
@@ -95,14 +94,13 @@ export default function WaitlistConfirmationModal({
           style={{ cursor: 'pointer' }}>
           <Share size={22} />
         </Flex>
-        <BaseButton
-          variantType='primary'
+        <Button
           style={{ flex: 1 }}
           onClick={() => {
             onClose();
           }}>
           Gå tillbaka till event{' '}
-        </BaseButton>
+        </Button>
       </Group>
       <ShareModal
         opened={shareModalOpened}

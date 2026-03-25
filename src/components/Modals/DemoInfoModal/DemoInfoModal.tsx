@@ -1,5 +1,4 @@
-import { Text, Modal } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import { Text, Modal, Button } from '@mantine/core';
 import { APP_CONFIG } from '../../../config/appConfig';
 
 interface DemoInfoModalProps {
@@ -27,15 +26,14 @@ export default function DemoInfoModal({ opened, onClose }: DemoInfoModalProps) {
         data att raderas permanent.
       </Text>
 
-      <BaseButton
-        variantType='primary'
+      <Button
         fullWidth
         onClick={() => {
           onClose();
         }}
         mt='lg'>
         Jag förstår{' '}
-      </BaseButton>
+      </Button>
     </Modal>
   );
 }
