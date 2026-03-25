@@ -84,34 +84,33 @@ export default function HowToPage() {
                 <CircleCheckBig size={16} />
               </ThemeIcon>
             }>
-            <List.Item className='list-item'>
+            <List.Item>
               Välj ett tydligt ämne eller aktivitet. Det kan vara allt från
               matlagning, språk, bokdiskussioner till hobbyprojekt. Tänk på att
               det ska vara något som lockar deltagarna och är roligt att
               utforska tillsammans.
             </List.Item>
-            <List.Item className='list-item'>
+            <List.Item>
               Var välkomnande och tydlig som värd. Hjälp deltagarna att känna
               sig inkluderade och trygga, särskilt i en liten grupp där alla kan
               bidra till samtalet.
             </List.Item>
-            <List.Item className='list-item'>
+            <List.Item>
               Se till att eventet är anpassat efter gruppen och lokalen. Mötet
               sker över en måltid, så tänk på att välja en restaurang eller
               lokal som passar för det antal deltagare du har och den typ av
               aktivitet ni ska göra.
             </List.Item>
-            <List.Item className='list-item'>
+            <List.Item>
               Uppmuntra positiv interaktion. Hjälp deltagarna att samarbeta,
               ställa frågor och dela sina erfarenheter utan press.
             </List.Item>
-            <List.Item className='list-item'>
+            <List.Item>
               Skicka eventuell förhandsinformation. Om deltagarna behöver ta med
               något eller förbereda sig på ett visst sätt, ge tydlig och vänlig
               instruktion innan eventet.
             </List.Item>
             <List.Item
-              className='list-item'
               icon={
                 <ThemeIcon size={24} radius='xl'>
                   <OctagonX size={16} />
