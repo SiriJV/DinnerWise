@@ -1,5 +1,4 @@
-import { Text, Modal, Anchor, Group } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import { Text, Modal, Anchor, Group, Button } from '@mantine/core';
 import { useModal } from '../../../contexts/ModalContext';
 
 interface CreateEventLoginModalProps {
@@ -30,17 +29,17 @@ export default function CreateEventLoginModal({
         ett event.
       </Text>
       <Group grow mt='lg'>
-        <BaseButton
-          variantType='secondary'
+        <Button
+          variant='outline'
           onClick={() => {
             onClose();
           }}
           fullWidth>
           Jag förstår
-        </BaseButton>
-        <BaseButton variantType='primary' onClick={handleLogin} fullWidth>
+        </Button>
+        <Button onClick={handleLogin} fullWidth>
           Logga in
-        </BaseButton>
+        </Button>
       </Group>
     </Modal>
   );
