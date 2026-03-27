@@ -26,6 +26,11 @@ export default function RegisteringBaseModal({
       opened={opened}
       onClose={onClose}
       yOffset='140'
+      closeButtonProps={{
+        color: 'gray',
+        size: 'md',
+        radius: 'sm',
+      }}
       title={
         <Group gap='md' wrap='nowrap' className='modal-title-group'>
           <Text fw={600}>{title}</Text>
@@ -34,7 +39,7 @@ export default function RegisteringBaseModal({
               <Popover.Target>
                 <ActionIcon
                   variant='subtle'
-                  color='red'
+                  color='gray'
                   size='md'
                   radius='sm'
                   className='modal-help-icon'>
