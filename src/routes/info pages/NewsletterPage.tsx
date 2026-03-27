@@ -78,6 +78,9 @@ export default function NewsletterPage(): React.ReactNode {
       )}
 
       <Stack>
+        <Text fw={600} c='red'>
+          OBS: Det här är en demo-version. Alla nyheter är påhittade.
+        </Text>
         {selected === null ? (
           reversedNews.map((nl, i) => (
             <Card
