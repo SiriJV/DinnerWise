@@ -62,7 +62,9 @@ export default function CategoryImageCarousel() {
                   src={category.cover_picture_url}
                   alt={category.name}
                 />
-                <Text className='navCarousel-label'>{category.name}</Text>
+                <Text className='link-hover' c='black'>
+                  {category.name}
+                </Text>
               </Card>
             </Link>
           </Carousel.Slide>
