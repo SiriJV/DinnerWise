@@ -1,4 +1,6 @@
-import { Container, Title, Text } from '@mantine/core';
+import { Container, Title, Text, Stack } from '@mantine/core';
+import { APP_CONFIG } from '../../config/appConfig';
+import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
 
 export default function PrivacyPage(): React.ReactNode {
   return (
@@ -7,21 +9,22 @@ export default function PrivacyPage(): React.ReactNode {
         <Title order={2} mb='md'>
           Integritetspolicy{' '}
         </Title>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
-        </Text>
+        <Stack>
+          <DemoWarningText text='Integritetspolicyn är endast ett exempel.' />
+          <Text>
+            Vi respekterar din integritet och skyddar dina personliga uppgifter.
+            Din information används endast för att förbättra din upplevelse på{' '}
+            {APP_CONFIG.brandName}. Vi lagrar namn, e-postadress, telefonnummer
+            och bokningshistorik för att kunna ge dig en sömlös
+            bokningsupplevelse.
+          </Text>
+          <Text>
+            Vi delar aldrig dina personliga uppgifter med tredje part utan ditt
+            samtycke, förutom med värdar för att de ska kunna slutföra och
+            genomföra eventet du har bokat. Din data är krypterad och säker hos
+            oss.
+          </Text>
+        </Stack>
       </Container>
     </>
   );
