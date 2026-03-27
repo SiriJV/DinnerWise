@@ -9,11 +9,19 @@ import { slugify } from '../../../utils/slugify';
 import { fetchUsers, type User } from '../../../api/users';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
+interface Participant {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
+
 interface ConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenPayment: () => void;
   event?: EventType | null;
+  participant: Participant;
 }
 
 export default function ConfirmationModal({
@@ -21,6 +29,7 @@ export default function ConfirmationModal({
   onClose,
   onOpenPayment,
   event,
+  participant,
 }: ConfirmationModalProps) {
   const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
     useDisclosure(false);
@@ -122,6 +131,65 @@ export default function ConfirmationModal({
                 },
               }}
             />{' '}
+          </Grid.Col>
+        </Grid>
+      </Box>
+
+      <Box mt='lg'>
+        <Text size='lg' fw={600} mb='xs'>
+          Dina uppgifter
+        </Text>
+
+        <Grid gutter='md'>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label='Namn'
+              value={`${participant.firstName} ${participant.lastName}`}
+              variant='filled'
+              readOnly
+              radius='xs'
+              mb={{ base: 0, sm: 'md' }}
+              styles={{
+                input: {
+                  backgroundColor: 'var(--mantine-color-gray-0)',
+                  cursor: 'default',
+                  pointerEvents: 'none',
+                },
+              }}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label='E-post'
+              value={participant.email}
+              variant='filled'
+              readOnly
+              radius='xs'
+              mb='md'
+              styles={{
+                input: {
+                  backgroundColor: 'var(--mantine-color-gray-0)',
+                  cursor: 'default',
+                  pointerEvents: 'none',
+                },
+              }}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label='Telefon'
+              value={participant.phone}
+              variant='filled'
+              readOnly
+              radius='xs'
+              styles={{
+                input: {
+                  backgroundColor: 'var(--mantine-color-gray-0)',
+                  cursor: 'default',
+                  pointerEvents: 'none',
+                },
+              }}
+            />
           </Grid.Col>
         </Grid>
       </Box>

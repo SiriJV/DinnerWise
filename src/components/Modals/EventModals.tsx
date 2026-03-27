@@ -1,5 +1,7 @@
 import type { EventType } from '../../types/EventType';
 import { generateEventSlug } from '../../utils/slugify';
+import { useState } from 'react';
+import { APP_CONFIG } from '../../config/appConfig';
 import ConfirmationModal from './ConfirmationModal/ConfirmationModal';
 import PaymentModal from './PaymentModal/PaymentModal';
 import RegisteringModal from './RegisteringModal/RegisteringModal';
@@ -15,6 +17,13 @@ type Props = {
   share: any;
 };
 
+interface Participant {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
+
 export default function EventModals({
   event,
   register,
@@ -23,6 +32,13 @@ export default function EventModals({
   waitlist,
   share,
 }: Props) {
+  const [participant, setParticipant] = useState<Participant>({
+    firstName: APP_CONFIG.exampleUserFirstName || 'Förnamn',
+    lastName: APP_CONFIG.exampleUserLastName || 'Efternamn',
+    phone: APP_CONFIG.exampleUserTelephone || '+46701234567',
+    email: APP_CONFIG.exampleUserEmail || 'exempel@epost.se',
+  });
+
   return (
     <>
       <RegisteringModal
@@ -31,6 +47,8 @@ export default function EventModals({
         onOpenPayment={payment.open}
         onOpenWaitlist={waitlist.open}
         event={event!}
+        participant={participant}
+        setParticipant={setParticipant}
       />
 
       <PaymentModal
@@ -39,6 +57,7 @@ export default function EventModals({
         onOpenConfirmation={confirmation.open}
         onOpenRegistration={register.open}
         event={event}
+        participant={participant}
       />
 
       <ConfirmationModal
@@ -46,6 +65,7 @@ export default function EventModals({
         onClose={confirmation.close}
         onOpenPayment={payment.open}
         event={event}
+        participant={participant}
       />
 
       <ShareModal

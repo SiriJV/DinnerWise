@@ -19,17 +19,20 @@ import './PaymentModal.scss';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 import { generateEventSlug } from '../../../utils/slugify';
 
+interface Participant {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
+
 interface PaymentModalProps {
   opened: boolean;
   onClose: () => void;
   onOpenConfirmation: () => void;
   onOpenRegistration: () => void;
   event?: EventType | null;
-  // participant: {
-  //   name: string;
-  //   email: string;
-  //   phone?: string;
-  // };
+  participant: Participant;
 }
 
 export default function PaymentModal({
@@ -38,15 +41,9 @@ export default function PaymentModal({
   onOpenConfirmation,
   onOpenRegistration,
   event,
-  // participant,
+  participant,
 }: PaymentModalProps) {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
-
-  const participant = {
-    name: 'Förnamn Efternamn',
-    email: 'exempel@email.com',
-    phone: '+46701234567',
-  };
 
   async function sendBookingEmails() {
     if (!event) return;
@@ -60,7 +57,7 @@ export default function PaymentModal({
         startTime: event.start_time,
         event: event.title,
         path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
-        name: participant.name,
+        name: `${participant.firstName} ${participant.lastName}`,
       }),
     });
 
@@ -73,7 +70,7 @@ export default function PaymentModal({
         date: event.date,
         event: event.title,
         startTime: event.start_time,
-        // to: participant.email,
+        to: participant.email,
         path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
       }),
     });
@@ -138,7 +135,7 @@ export default function PaymentModal({
         <Box bg='gray.0' p='md' bdrs='sm'>
           <Text size='sm'>
             <Text span fw={600}>
-              {participant.name}
+              {participant.firstName} {participant.lastName}
             </Text>
           </Text>
           <Text size='sm'>

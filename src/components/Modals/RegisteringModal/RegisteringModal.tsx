@@ -14,7 +14,13 @@ import type { EventType } from '../../../types/EventType';
 import './RegisteringModal.scss';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 import { generateEventSlug } from '../../../utils/slugify';
-import { APP_CONFIG } from '../../../config/appConfig';
+
+interface Participant {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
 
 interface RegisteringModalProps {
   opened: boolean;
@@ -22,6 +28,8 @@ interface RegisteringModalProps {
   onOpenPayment: () => void;
   onOpenWaitlist: () => void;
   event?: EventType | null;
+  participant: Participant;
+  setParticipant: (participant: Participant) => void;
 }
 
 export default function RegisteringModal({
@@ -30,19 +38,9 @@ export default function RegisteringModal({
   onOpenPayment,
   onOpenWaitlist,
   event,
+  participant,
+  setParticipant,
 }: RegisteringModalProps) {
-  const [firstName, setFirstName] = useState(
-    APP_CONFIG.exampleUserFirstName || 'Förnamn',
-  );
-  const [lastName, setLastName] = useState(
-    APP_CONFIG.exampleUserLastName || 'Efternamn',
-  );
-  const [phone, setPhone] = useState(
-    APP_CONFIG.exampleUserTelephone || '+46701234567',
-  );
-  const [email, setEmail] = useState(
-    APP_CONFIG.exampleUserEmail || 'exempel@epost.se',
-  );
   const [message, setMessage] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const displayMaxSpots = event?.max_participants ?? 0;
@@ -50,11 +48,7 @@ export default function RegisteringModal({
     ? displayMaxSpots - (event.current_participants ?? 0) <= 0
     : false;
 
-  // Dummy participant info, replace with real data
-  const participant = {
-    name: `${firstName} ${lastName}`,
-    email: `${email}`,
-  };
+  const participantFullName = `${participant.firstName} ${participant.lastName}`;
 
   async function sendWaitlistEmails() {
     if (!event) return;
@@ -69,7 +63,7 @@ export default function RegisteringModal({
         startTime: event.start_time,
         event: event.title,
         path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
-        name: participant.name,
+        name: participantFullName,
       }),
     });
 
@@ -102,10 +96,10 @@ export default function RegisteringModal({
   };
 
   const isFormValid =
-    firstName.trim() !== '' &&
-    lastName.trim() !== '' &&
-    isValidPhone(phone) &&
-    isValidEmail(email) &&
+    participant.firstName.trim() !== '' &&
+    participant.lastName.trim() !== '' &&
+    isValidPhone(participant.phone) &&
+    isValidEmail(participant.email) &&
     termsAccepted;
 
   return (
@@ -129,10 +123,16 @@ export default function RegisteringModal({
               required
               radius='xs'
               maxLength={40}
-              value={firstName}
-              onChange={(e) => setFirstName(e.currentTarget.value)}
+              value={participant.firstName}
+              onChange={(e) =>
+                setParticipant({
+                  ...participant,
+                  firstName: e.currentTarget.value,
+                })
+              }
               error={
-                firstName === '' && (lastName || phone || email)
+                participant.firstName === '' &&
+                (participant.lastName || participant.phone || participant.email)
                   ? 'Förnamn krävs'
                   : ''
               }
@@ -145,10 +145,18 @@ export default function RegisteringModal({
               required
               radius='xs'
               maxLength={40}
-              value={lastName}
-              onChange={(e) => setLastName(e.currentTarget.value)}
+              value={participant.lastName}
+              onChange={(e) =>
+                setParticipant({
+                  ...participant,
+                  lastName: e.currentTarget.value,
+                })
+              }
               error={
-                lastName === '' && (firstName || phone || email)
+                participant.lastName === '' &&
+                (participant.firstName ||
+                  participant.phone ||
+                  participant.email)
                   ? 'Efternamn krävs'
                   : ''
               }
@@ -165,14 +173,19 @@ export default function RegisteringModal({
               radius='xs'
               type='tel'
               maxLength={12}
-              value={phone}
+              value={participant.phone}
               onChange={(e) => {
                 const value = e.currentTarget.value;
                 const formatted = value.replace(/[^\d+]/g, '');
-                setPhone(formatted);
+                setParticipant({
+                  ...participant,
+                  phone: formatted,
+                });
               }}
               error={
-                phone && !isValidPhone(phone) ? 'Ogiltigt telefonnummer' : ''
+                participant.phone && !isValidPhone(participant.phone)
+                  ? 'Ogiltigt telefonnummer'
+                  : ''
               }
             />
           </Grid.Col>
@@ -184,10 +197,17 @@ export default function RegisteringModal({
               radius='xs'
               type='email'
               maxLength={40}
-              value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
+              value={participant.email}
+              onChange={(e) =>
+                setParticipant({
+                  ...participant,
+                  email: e.currentTarget.value,
+                })
+              }
               error={
-                email && !isValidEmail(email) ? 'Ogiltig e-postadress' : ''
+                participant.email && !isValidEmail(participant.email)
+                  ? 'Ogiltig e-postadress'
+                  : ''
               }
             />
           </Grid.Col>
@@ -224,10 +244,10 @@ export default function RegisteringModal({
             }
           />
           {!termsAccepted &&
-            firstName &&
-            lastName &&
-            isValidPhone(phone) &&
-            isValidEmail(email) && (
+            participant.firstName &&
+            participant.lastName &&
+            isValidPhone(participant.phone) &&
+            isValidEmail(participant.email) && (
               <Text size='xs' c='red'>
                 Du måste godkänna anmälningsvillkoren för att fortsätta
               </Text>
