@@ -70,7 +70,6 @@ export default function ContactPage(): React.ReactNode {
                   label='Namn'
                   placeholder='Ditt namn'
                   required
-                  radius='xs'
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.currentTarget.value })
@@ -81,7 +80,6 @@ export default function ContactPage(): React.ReactNode {
                   placeholder='Din e-postadress'
                   type='email'
                   required
-                  radius='xs'
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.currentTarget.value })
@@ -94,7 +92,6 @@ export default function ContactPage(): React.ReactNode {
                   minRows={4}
                   maxRows={6}
                   autosize
-                  radius='xs'
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.currentTarget.value })
