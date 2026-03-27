@@ -237,7 +237,6 @@ router.post('/send-booking-email', async (req, res) => {
     const data = await resend.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
-      // to: devEmail,
       subject: `Bokningsbekräftelse för ${event}`,
       html,
     });
