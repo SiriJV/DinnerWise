@@ -15,30 +15,30 @@ export default function PaymentInfoPage(): React.ReactNode {
             <Title order={3} mb='xs'>
               Betalningsmetoder
             </Title>
-            <Text>
-              Vi accepterar flera olika betalningsmetoder för att göra det
-              enkelt för dig:
-            </Text>
-            <ul>
-              <li>
+            <Stack gap='xs'>
+              <Text>
+                Vi accepterar flera olika betalningsmetoder för att göra det
+                enkelt för dig:
+              </Text>
+              <Text>
                 <Text span fw={600}>
                   Swish
                 </Text>{' '}
                 - Direkt betalning via mobilt BankID
-              </li>
-              <li>
+              </Text>
+              <Text>
                 <Text span fw={600}>
                   Kreditkort
                 </Text>{' '}
                 - Visa & Mastercard
-              </li>
-              <li>
+              </Text>
+              <Text>
                 <Text span fw={600}>
                   Klarna
                 </Text>{' '}
                 - Köp nu, betala sen
-              </li>
-            </ul>
+              </Text>
+            </Stack>
           </Box>
 
           <Box>
