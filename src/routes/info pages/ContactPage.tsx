@@ -12,6 +12,7 @@ import {
 import { APP_CONFIG } from '../../config/appConfig';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
 
 export default function ContactPage(): React.ReactNode {
   const [formData, setFormData] = useState({
@@ -32,10 +33,7 @@ export default function ContactPage(): React.ReactNode {
           Kontakt{' '}
         </Title>
         <Stack>
-          <Text fw={600} c='red'>
-            OBS: Det här är en demo-version. Kontaktuppgifterna är endast
-            exempel.
-          </Text>
+          <DemoWarningText text='Kontaktuppgifterna är endast exempel.' />
           <Text>
             Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
             oss! Vi finns här för att hjälpa dig och göra din upplevelse på{' '}

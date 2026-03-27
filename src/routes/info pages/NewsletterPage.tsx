@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
+import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
 
 export default function NewsletterPage(): React.ReactNode {
   const [params, setParams] = useSearchParams();
@@ -78,9 +79,7 @@ export default function NewsletterPage(): React.ReactNode {
       )}
 
       <Stack>
-        <Text fw={600} c='red'>
-          OBS: Det här är en demo-version. Alla nyheter är påhittade.
-        </Text>
+        <DemoWarningText text='Alla nyheter är påhittade.' />
         {selected === null ? (
           reversedNews.map((nl, i) => (
             <Card

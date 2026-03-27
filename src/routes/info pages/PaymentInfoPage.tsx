@@ -1,4 +1,5 @@
 import { Container, Title, Text, Stack, Box } from '@mantine/core';
+import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
 
 export default function PaymentInfoPage(): React.ReactNode {
   return (
@@ -8,10 +9,7 @@ export default function PaymentInfoPage(): React.ReactNode {
           Betalning
         </Title>
         <Stack gap='md'>
-          <Text fw={600} c='red'>
-            OBS: Det här är en demo-version. Faktiska betalningar är inte
-            aktiverade.
-          </Text>
+          <DemoWarningText text='Faktiska betalningar är inte aktiverade.' />
 
           <Box>
             <Title order={3} mb='xs'>
