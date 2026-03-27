@@ -1,6 +1,5 @@
 import AboutPage from '../routes/info pages/AboutPage';
 import FAQPage from '../routes/info pages/FAQPage';
-import HelpPage from '../routes/info pages/HelpPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
 import SupportPage from '../routes/info pages/SupportPage';
 import TermsPage from '../routes/info pages/TermsPage';
@@ -15,7 +14,6 @@ export const infoPages = [
   { path: '/kontakt', component: ContactPage },
   { path: '/cookies', component: CookiesPage },
   { path: '/faq', component: FAQPage },
-  { path: '/hjalp', component: HelpPage },
   { path: '/att-skapa-event', component: HowToPage },
   { path: '/nyhetsbrev', component: NewsletterPage },
   { path: '/betalning', component: PaymentInfoPage },
