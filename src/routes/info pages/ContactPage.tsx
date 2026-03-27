@@ -32,6 +32,10 @@ export default function ContactPage(): React.ReactNode {
           Kontakt{' '}
         </Title>
         <Stack>
+          <Text fw={600} c='red'>
+            OBS: Det här är en demo-version. Kontaktuppgifterna är endast
+            exempel.
+          </Text>
           <Text>
             Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
             oss! Vi finns här för att hjälpa dig och göra din upplevelse på{' '}
@@ -50,11 +54,11 @@ export default function ContactPage(): React.ReactNode {
             Annars når du oss via e-post på
             <Text span c='red'>
               {' '}
-              {APP_CONFIG.contactEmail} (demo){' '}
+              {APP_CONFIG.contactEmail}{' '}
             </Text>
             eller via telefon på{' '}
             <Text span c='red'>
-              {APP_CONFIG.telephone} (demo)
+              {APP_CONFIG.telephone}
             </Text>
             . Du kan även skicka ett meddelande direkt till oss nedan. Vi ser
             fram emot att höra från dig!
