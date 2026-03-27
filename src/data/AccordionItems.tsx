@@ -5,7 +5,6 @@ import FAQPage from '../routes/info pages/FAQPage';
 import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
-import SupportPage from '../routes/info pages/SupportPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import ProfilePage from '../routes/ProfilePage/ProfilePage';
 import HowToPage from '../routes/info pages/HowToPage/HowToPage';
@@ -74,12 +73,8 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     label: 'Hjälp & Support',
     panels: [
       { label: 'FAQ', path: '/faq', element: <FAQPage /> },
+      { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
       { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
-      {
-        label: 'Kundservice',
-        path: '/kundservice',
-        element: <SupportPage />,
-      },
     ],
   },
   {
@@ -99,10 +94,9 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     ],
   },
   {
-    value: 'contact',
-    label: 'Kontakt',
+    value: 'social-media',
+    label: 'Sociala medier',
     panels: [
-      { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
       { label: 'Instagram', path: '', element: <div>Instagram</div> },
       { label: 'Facebook', path: '', element: <div>Facebook</div> },
       { label: 'X', path: '', element: <div>X</div> },

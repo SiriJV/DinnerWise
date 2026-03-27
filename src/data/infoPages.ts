@@ -1,7 +1,6 @@
 import AboutPage from '../routes/info pages/AboutPage';
 import FAQPage from '../routes/info pages/FAQPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
-import SupportPage from '../routes/info pages/SupportPage';
 import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
@@ -18,6 +17,5 @@ export const infoPages = [
   { path: '/nyhetsbrev', component: NewsletterPage },
   { path: '/betalning', component: PaymentInfoPage },
   { path: '/integritetspolicy', component: PrivacyPage },
-  { path: '/kundservice', component: SupportPage },
   { path: '/kopvillkor', component: TermsPage },
 ];
