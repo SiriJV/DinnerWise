@@ -1,12 +1,12 @@
-import type { EventType } from '../../types/EventType';
-import { generateEventSlug } from '../../utils/slugify';
+import type { EventType } from '../../../types/EventType';
+import { generateEventSlug } from '../../../utils/slugify';
 import { useState } from 'react';
-import { APP_CONFIG } from '../../config/appConfig';
-import ConfirmationModal from './EventModals/ConfirmationModal/ConfirmationModal';
-import PaymentModal from './EventModals/PaymentModal/PaymentModal';
-import RegisteringModal from './EventModals/RegisteringModal/RegisteringModal';
-import ShareModal from './ShareModal/ShareModal';
-import WaitlistConfirmationModal from './EventModals/WaitlistConfirmationModal/WaitlistConfirmationModal';
+import { APP_CONFIG } from '../../../config/appConfig';
+import ConfirmationModal from './ConfirmationModal/ConfirmationModal';
+import PaymentModal from './PaymentModal/PaymentModal';
+import RegisteringModal from './RegisteringModal/RegisteringModal';
+import ShareModal from '../ShareModal/ShareModal';
+import WaitlistConfirmationModal from './WaitlistConfirmationModal/WaitlistConfirmationModal';
 
 type Props = {
   event: EventType | null;

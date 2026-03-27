@@ -1,13 +1,13 @@
 import { Box, Text, Flex, Group, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
-import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
-import ShareModal from '../ShareModal/ShareModal';
+import ModalEventInfo from '../../ModalEventInfo/ModalEventInfo';
+import ShareModal from '../../ShareModal/ShareModal';
 import { Share } from 'lucide-react';
-import type { EventType } from '../../../types/EventType';
-import { slugify } from '../../../utils/slugify';
-import { fetchUsers, type User } from '../../../api/users';
-import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
+import type { EventType } from '../../../../types/EventType';
+import { slugify } from '../../../../utils/slugify';
+import { fetchUsers, type User } from '../../../../api/users';
+import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModal';
 
 interface WaitlistConfirmationModalProps {
   opened: boolean;

@@ -1,15 +1,18 @@
 import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
-import { CircleHelp, ChevronLeft } from 'lucide-react';
+import { CircleHelp } from 'lucide-react';
 import './RegisteringBaseModal.scss';
 import { APP_CONFIG } from '../../../config/appConfig';
+
+const HEADER_HEIGHT = 60;
+const HEADER_OFFSET = 10;
 
 interface RegisteringBaseModalProps {
   opened: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  onBack?: () => void;
   isFull?: boolean;
+  helpText?: React.ReactNode;
 }
 
 export default function RegisteringBaseModal({
@@ -17,15 +20,15 @@ export default function RegisteringBaseModal({
   onClose,
   title,
   children,
-  onBack,
   isFull,
+  helpText,
 }: RegisteringBaseModalProps) {
   return (
     <Modal
-      size='lg'
+      size='xl'
       opened={opened}
       onClose={onClose}
-      yOffset='140'
+      centered
       closeButtonProps={{
         color: 'gray',
         size: 'md',
@@ -35,7 +38,12 @@ export default function RegisteringBaseModal({
         <Group gap='md' wrap='nowrap' className='modal-title-group'>
           <Text fw={600}>{title}</Text>
           <Group gap={0} className='modal-icons-group'>
-            <Popover width={300} position='bottom' withArrow shadow='md'>
+            <Popover
+              width={300}
+              position='bottom'
+              withArrow
+              shadow='md'
+              zIndex={2000}>
               <Popover.Target>
                 <ActionIcon
                   variant='subtle'
@@ -51,7 +59,9 @@ export default function RegisteringBaseModal({
                   Hjälp (DEMO){' '}
                 </Text>
                 <Stack gap='xs'>
-                  {isFull ? (
+                  {helpText ? (
+                    <Text size='sm'>{helpText}</Text>
+                  ) : isFull ? (
                     <>
                       <Text size='sm'>
                         Eventet är fullt. Om du ställer dig på väntelistan blir
@@ -85,22 +95,15 @@ export default function RegisteringBaseModal({
                 </Stack>
               </Popover.Dropdown>
             </Popover>
-            {onBack && (
-              <ActionIcon
-                variant='subtle'
-                color='gray'
-                size='md'
-                radius='sm'
-                className='modal-back-icon'
-                onClick={onBack}>
-                <ChevronLeft size={20} />
-              </ActionIcon>
-            )}
           </Group>
         </Group>
       }
-      centered
       styles={{
+        content: {
+          maxHeight: `calc(100vh - ${HEADER_HEIGHT + HEADER_OFFSET}px)`,
+          display: 'flex',
+          flexDirection: 'column',
+        },
         header: {
           display: 'flex',
           alignItems: 'center',
@@ -110,14 +113,19 @@ export default function RegisteringBaseModal({
           display: 'flex',
         },
         body: {
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
           overflowY: 'auto',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
+          overflowX: 'hidden',
+          padding: '24px',
         },
       }}
       classNames={{
         body: 'modal-scrollable-body',
-      }}>
+      }}
+      zIndex={1000}
+      withinPortal={true}>
       {children}
     </Modal>
   );

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Modal,
   Button,
   Stepper,
   TextInput,
@@ -30,9 +29,7 @@ import { fetchCategories, type Category } from '../../../api/categories';
 import { fetchTags, type Tag } from '../../../api/tags';
 import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
 import { useAuth } from '../../../contexts/AuthContext';
-
-const HEADER_HEIGHT = 60;
-const HEADER_OFFSET = 10;
+import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 
 interface EventDetails {
   title: string;
@@ -599,130 +596,109 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
   };
 
   return (
-    <Modal
+    <RegisteringBaseModal
       opened={opened}
       onClose={() => {
         resetModal();
         onClose();
       }}
       title='Skapa Event'
-      size='xl'
-      centered
-      styles={{
-        content: {
-          maxHeight: `calc(100vh - ${HEADER_HEIGHT + HEADER_OFFSET}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-        },
-        body: {
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          overflow: 'hidden',
-          padding: '24px',
-        },
-      }}
-      zIndex={1000}
-      withinPortal={true}>
-      {!isVerySmall ? (
-        <Box style={{ marginBottom: '24px', flex: '0 0 auto' }}>
-          <Stepper
-            active={currentStep}
-            onStepClick={setCurrentStep}
-            size={getStepperSize()}
-            styles={{
-              stepIcon: {
-                fontSize: '14px',
-                fontWeight: 500,
-              },
-              step: {
-                padding: '8px 4px',
-              },
-            }}>
-            <Stepper.Step label='Detaljer' description='Eventinfo' />
-            <Stepper.Step label='Restaurang' description='Välj plats' />
-            <Stepper.Step label='Tid' description='Välj tid' />
-            <Stepper.Step label='Bekräfta' description='Granska' />
-          </Stepper>
-        </Box>
-      ) : null}
+      helpText='Fyll i alla eventdetaljer, välj en restaurang och tidslot. Granska allt innan du skapar eventet. Bekräftelse skickas till dig (värden) och restaurangen.'>
+      <Box style={{ flex: 1, overflowY: 'auto' }}>
+        {!isVerySmall ? (
+          <Box style={{ marginBottom: '24px' }}>
+            <Stepper
+              active={currentStep}
+              onStepClick={setCurrentStep}
+              size={getStepperSize()}
+              styles={{
+                stepIcon: {
+                  fontSize: '14px',
+                  fontWeight: 500,
+                },
+                step: {
+                  padding: '8px 4px',
+                },
+              }}>
+              <Stepper.Step label='Detaljer' description='Eventinfo' />
+              <Stepper.Step label='Restaurang' description='Välj plats' />
+              <Stepper.Step label='Tid' description='Välj tid' />
+              <Stepper.Step label='Bekräfta' description='Granska' />
+            </Stepper>
+          </Box>
+        ) : null}
 
-      <Box
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'visible',
-          marginBottom: '16px',
-          position: 'relative',
-        }}>
-        {currentStep === 0 && renderStep1()}
-        {currentStep === 1 && renderStep2()}
-        {currentStep === 2 && renderStep3()}
-        {currentStep === 3 && renderStep4()}
+        <Box style={{ marginBottom: '20px' }}>
+          {currentStep === 0 && renderStep1()}
+          {currentStep === 1 && renderStep2()}
+          {currentStep === 2 && renderStep3()}
+          {currentStep === 3 && renderStep4()}
+        </Box>
       </Box>
 
       <Box
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: '12px',
-          paddingTop: '16px',
-          borderTop: '1px solid #e9ecef',
           flex: '0 0 auto',
+          borderTop: '1px solid #e9ecef',
+          paddingTop: '16px',
         }}>
-        <Button
-          variant='default'
-          onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-          disabled={currentStep === 0}>
-          Tillbaka
-        </Button>
-        <Group gap='12px'>
-          <Button variant='default' onClick={onClose}>
-            Avbryt
+        <Group gap='12px' justify='space-between'>
+          <Button
+            variant='default'
+            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+            disabled={currentStep === 0}>
+            Tillbaka
           </Button>
-          {currentStep < 3 ? (
-            <Button
-              onClick={() => {
-                const newErrors: string[] = [];
-
-                if (currentStep === 0) {
-                  if (!eventDetails.title.trim())
-                    newErrors.push('Eventtitel krävs');
-                  if (!eventDetails.category) newErrors.push('Kategori krävs');
-                  if (!eventDetails.description.trim())
-                    newErrors.push('Beskrivning krävs');
-                } else if (currentStep === 1) {
-                  if (!selectedRestaurant)
-                    newErrors.push('Vänligen välj en restaurang');
-                } else if (currentStep === 2) {
-                  if (!selectedTime) newErrors.push('Vänligen välj en tidslot');
-                }
-
-                if (newErrors.length > 0) {
-                  setErrors(newErrors);
-                  return;
-                }
-
-                setErrors([]);
-                setCurrentStep(currentStep + 1);
-              }}>
-              Nästa
+          <Group gap='12px'>
+            <Button variant='default' onClick={onClose}>
+              Avbryt
             </Button>
-          ) : (
-            <Button
-              onClick={async () => {
-                alert('Event skapat!');
-                resetModal();
-                onClose();
-                await sendBookingEmails();
-              }}
-              color='red'>
-              Skapa
-            </Button>
-          )}
+            {currentStep < 3 ? (
+              <Button
+                onClick={() => {
+                  const newErrors: string[] = [];
+
+                  if (currentStep === 0) {
+                    if (!eventDetails.title.trim())
+                      newErrors.push('Eventtitel krävs');
+                    if (!eventDetails.category)
+                      newErrors.push('Kategori krävs');
+                    if (!eventDetails.description.trim())
+                      newErrors.push('Beskrivning krävs');
+                  } else if (currentStep === 1) {
+                    if (!selectedRestaurant)
+                      newErrors.push('Vänligen välj en restaurang');
+                  } else if (currentStep === 2) {
+                    if (!selectedTime)
+                      newErrors.push('Vänligen välj en tidslot');
+                  }
+
+                  if (newErrors.length > 0) {
+                    setErrors(newErrors);
+                    return;
+                  }
+
+                  setErrors([]);
+                  setCurrentStep(currentStep + 1);
+                }}>
+                Nästa
+              </Button>
+            ) : (
+              <Button
+                onClick={async () => {
+                  alert('Event skapat!');
+                  resetModal();
+                  onClose();
+                  await sendBookingEmails();
+                }}
+                color='red'>
+                Skapa
+              </Button>
+            )}
+          </Group>
         </Group>
       </Box>
-    </Modal>
+    </RegisteringBaseModal>
   );
 };
 
