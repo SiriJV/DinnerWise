@@ -70,6 +70,7 @@ export default function ContactPage(): React.ReactNode {
                   label='Namn'
                   placeholder='Ditt namn'
                   required
+                  maxLength={40}
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.currentTarget.value })
@@ -80,14 +81,16 @@ export default function ContactPage(): React.ReactNode {
                   placeholder='Din e-postadress'
                   type='email'
                   required
+                  maxLength={40}
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.currentTarget.value })
                   }
                 />
                 <Textarea
-                  label='Meddelande'
+                  label='Meddelande (max 600 tecken)'
                   placeholder='Berätta vad vi kan hjälpa dig med...'
+                  maxLength={600}
                   required
                   minRows={4}
                   maxRows={6}
