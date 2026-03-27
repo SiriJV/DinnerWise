@@ -6,7 +6,6 @@ import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
 import SupportPage from '../routes/info pages/SupportPage';
-import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import ProfilePage from '../routes/ProfilePage/ProfilePage';
 import HowToPage from '../routes/info pages/HowToPage/HowToPage';
@@ -74,7 +73,6 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     value: 'help',
     label: 'Hjälp & Support',
     panels: [
-      { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
       { label: 'FAQ', path: '/faq', element: <FAQPage /> },
       { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
       {
