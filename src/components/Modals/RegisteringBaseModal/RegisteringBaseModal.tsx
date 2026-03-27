@@ -2,6 +2,7 @@ import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
 import { CircleHelp } from 'lucide-react';
 import './RegisteringBaseModal.scss';
 import { APP_CONFIG } from '../../../config/appConfig';
+import DemoWarningText from '../../DemoWarningText/DemoWarningText';
 
 const HEADER_HEIGHT = 60;
 const HEADER_OFFSET = 10;
@@ -56,9 +57,10 @@ export default function RegisteringBaseModal({
               </Popover.Target>
               <Popover.Dropdown>
                 <Text size='sm' fw={600} mb='xs'>
-                  Hjälp (DEMO){' '}
+                  Hjälp{' '}
                 </Text>
                 <Stack gap='xs'>
+                  <DemoWarningText text='Informationen är endast exempel.' />
                   {helpText ? (
                     <Text size='sm'>{helpText}</Text>
                   ) : isFull ? (
@@ -85,12 +87,9 @@ export default function RegisteringBaseModal({
                     </Text>{' '}
                     eller ring oss på{' '}
                     <Text span fw={600}>
-                      {APP_CONFIG.telephone}{' '}
+                      {APP_CONFIG.telephone}
                     </Text>
                     .
-                  </Text>
-                  <Text c='red' size='sm'>
-                    (E-post och telefon är bara exempel för demo.)
                   </Text>
                 </Stack>
               </Popover.Dropdown>
