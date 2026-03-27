@@ -101,9 +101,7 @@ export default function ContactPage(): React.ReactNode {
                   }
                 />
                 <Group justify='flex-start'>
-                  <Button type='submit' radius='xs'>
-                    Skicka meddelande
-                  </Button>
+                  <Button type='submit'>Skicka meddelande</Button>
                 </Group>
               </Stack>
             </form>
