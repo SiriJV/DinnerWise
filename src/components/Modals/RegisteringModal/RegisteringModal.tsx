@@ -4,7 +4,7 @@ import {
   TextInput,
   Checkbox,
   Textarea,
-  Grid,
+  Group,
   Stack,
   Button,
 } from '@mantine/core';
@@ -115,103 +115,97 @@ export default function RegisteringModal({
           Deltagare
         </Text>
 
-        <Grid gutter='md' pt='md'>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Förnamn'
-              placeholder='Förnamn'
-              required
-              radius='xs'
-              maxLength={40}
-              value={participant.firstName}
-              onChange={(e) =>
-                setParticipant({
-                  ...participant,
-                  firstName: e.currentTarget.value,
-                })
-              }
-              error={
-                participant.firstName === '' &&
-                (participant.lastName || participant.phone || participant.email)
-                  ? 'Förnamn krävs'
-                  : ''
-              }
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Efternamn'
-              placeholder='Efternamn'
-              required
-              radius='xs'
-              maxLength={40}
-              value={participant.lastName}
-              onChange={(e) =>
-                setParticipant({
-                  ...participant,
-                  lastName: e.currentTarget.value,
-                })
-              }
-              error={
-                participant.lastName === '' &&
-                (participant.firstName ||
-                  participant.phone ||
-                  participant.email)
-                  ? 'Efternamn krävs'
-                  : ''
-              }
-            />
-          </Grid.Col>
-        </Grid>
+        <Group grow wrap='wrap' gap='md' pt='md'>
+          <TextInput
+            label='Förnamn'
+            placeholder='Förnamn'
+            required
+            radius='xs'
+            maxLength={40}
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            value={participant.firstName}
+            onChange={(e) =>
+              setParticipant({
+                ...participant,
+                firstName: e.currentTarget.value,
+              })
+            }
+            error={
+              participant.firstName === '' &&
+              (participant.lastName || participant.phone || participant.email)
+                ? 'Förnamn krävs'
+                : ''
+            }
+          />
+          <TextInput
+            label='Efternamn'
+            placeholder='Efternamn'
+            required
+            radius='xs'
+            maxLength={40}
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            value={participant.lastName}
+            onChange={(e) =>
+              setParticipant({
+                ...participant,
+                lastName: e.currentTarget.value,
+              })
+            }
+            error={
+              participant.lastName === '' &&
+              (participant.firstName || participant.phone || participant.email)
+                ? 'Efternamn krävs'
+                : ''
+            }
+          />
+        </Group>
 
-        <Grid gutter='md' pt='md'>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Telefon'
-              placeholder='+46 70 123 45 67'
-              required
-              radius='xs'
-              type='tel'
-              maxLength={12}
-              value={participant.phone}
-              onChange={(e) => {
-                const value = e.currentTarget.value;
-                const formatted = value.replace(/[^\d+]/g, '');
-                setParticipant({
-                  ...participant,
-                  phone: formatted,
-                });
-              }}
-              error={
-                participant.phone && !isValidPhone(participant.phone)
-                  ? 'Ogiltigt telefonnummer'
-                  : ''
-              }
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='E-post'
-              placeholder='exempel@email.com'
-              required
-              radius='xs'
-              type='email'
-              maxLength={40}
-              value={participant.email}
-              onChange={(e) =>
-                setParticipant({
-                  ...participant,
-                  email: e.currentTarget.value,
-                })
-              }
-              error={
-                participant.email && !isValidEmail(participant.email)
-                  ? 'Ogiltig e-postadress'
-                  : ''
-              }
-            />
-          </Grid.Col>
-        </Grid>
+        <Group grow wrap='wrap' gap='md' pt='md'>
+          <TextInput
+            label='Telefon'
+            placeholder='+46 70 123 45 67'
+            required
+            radius='xs'
+            type='tel'
+            maxLength={12}
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            value={participant.phone}
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              const formatted = value.replace(/[^\d+]/g, '');
+              setParticipant({
+                ...participant,
+                phone: formatted,
+              });
+            }}
+            error={
+              participant.phone && !isValidPhone(participant.phone)
+                ? 'Ogiltigt telefonnummer'
+                : ''
+            }
+          />
+          <TextInput
+            label='E-post'
+            placeholder='exempel@email.com'
+            required
+            radius='xs'
+            type='email'
+            maxLength={40}
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            value={participant.email}
+            onChange={(e) =>
+              setParticipant({
+                ...participant,
+                email: e.currentTarget.value,
+              })
+            }
+            error={
+              participant.email && !isValidEmail(participant.email)
+                ? 'Ogiltig e-postadress'
+                : ''
+            }
+          />
+        </Group>
 
         <Textarea
           label='Meddelande (valfritt)'

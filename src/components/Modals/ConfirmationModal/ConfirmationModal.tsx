@@ -1,4 +1,4 @@
-import { Box, Text, TextInput, Grid, Flex, Group, Button } from '@mantine/core';
+import { Box, Text, TextInput, Flex, Group, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import ModalEventInfo from '../ModalEventInfo/ModalEventInfo';
@@ -29,7 +29,7 @@ export default function ConfirmationModal({
   onClose,
   onOpenPayment,
   event,
-  participant,
+  // participant,
 }: ConfirmationModalProps) {
   const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
     useDisclosure(false);
@@ -97,102 +97,93 @@ export default function ConfirmationModal({
           Kontaktuppgifter till värden{' '}
         </Text>
 
-        <Grid gutter='md'>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Telefonnummer'
-              value='+46703123456'
-              variant='filled'
-              readOnly
-              radius='xs'
-              mb={{ base: 0, sm: 'md' }}
-              styles={{
-                input: {
-                  backgroundColor: 'var(--mantine-color-gray-0)',
-                  cursor: 'default',
-                  pointerEvents: 'none',
-                },
-              }}
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='E-post'
-              value={`${host?.name.toLowerCase().replace(/ /g, '.') || 'varden'}@email.se`}
-              variant='filled'
-              readOnly
-              radius='xs'
-              mb='md'
-              styles={{
-                input: {
-                  backgroundColor: 'var(--mantine-color-gray-0)',
-                  cursor: 'default',
-                  pointerEvents: 'none',
-                },
-              }}
-            />{' '}
-          </Grid.Col>
-        </Grid>
+        <Group grow wrap='wrap' gap='md'>
+          <TextInput
+            label='Telefonnummer'
+            value='+46703123456'
+            variant='filled'
+            readOnly
+            radius='xs'
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            styles={{
+              input: {
+                backgroundColor: 'var(--mantine-color-gray-0)',
+                cursor: 'default',
+                pointerEvents: 'none',
+              },
+            }}
+          />
+          <TextInput
+            label='E-post'
+            value={`${host?.name.toLowerCase().replace(/ /g, '.') || 'varden'}@email.se`}
+            variant='filled'
+            readOnly
+            radius='xs'
+            style={{ flex: '1 1 calc(50% - 6px)' }}
+            styles={{
+              input: {
+                backgroundColor: 'var(--mantine-color-gray-0)',
+                cursor: 'default',
+                pointerEvents: 'none',
+              },
+            }}
+          />
+        </Group>
       </Box>
 
-      <Box mt='lg'>
+      {/* <Box mt='lg'>
         <Text size='lg' fw={600} mb='xs'>
           Dina uppgifter
         </Text>
 
-        <Grid gutter='md'>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Namn'
-              value={`${participant.firstName} ${participant.lastName}`}
-              variant='filled'
-              readOnly
-              radius='xs'
-              mb={{ base: 0, sm: 'md' }}
-              styles={{
-                input: {
-                  backgroundColor: 'var(--mantine-color-gray-0)',
-                  cursor: 'default',
-                  pointerEvents: 'none',
-                },
-              }}
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='E-post'
-              value={participant.email}
-              variant='filled'
-              readOnly
-              radius='xs'
-              mb='md'
-              styles={{
-                input: {
-                  backgroundColor: 'var(--mantine-color-gray-0)',
-                  cursor: 'default',
-                  pointerEvents: 'none',
-                },
-              }}
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
-              label='Telefon'
-              value={participant.phone}
-              variant='filled'
-              readOnly
-              radius='xs'
-              styles={{
-                input: {
-                  backgroundColor: 'var(--mantine-color-gray-0)',
-                  cursor: 'default',
-                  pointerEvents: 'none',
-                },
-              }}
-            />
-          </Grid.Col>
-        </Grid>
-      </Box>
+        <Group wrap='wrap' gap='md'>
+          <TextInput
+            label='Namn'
+            value={`${participant.firstName} ${participant.lastName}`}
+            variant='filled'
+            readOnly
+            radius='xs'
+            w='calc(50% - 6px)'
+            styles={{
+              input: {
+                backgroundColor: 'var(--mantine-color-gray-0)',
+                cursor: 'default',
+                pointerEvents: 'none',
+              },
+            }}
+          />
+          <TextInput
+            label='E-post'
+            value={participant.email}
+            variant='filled'
+            readOnly
+            radius='xs'
+            w='calc(50% - 6px)'
+            styles={{
+              input: {
+                backgroundColor: 'var(--mantine-color-gray-0)',
+                cursor: 'default',
+                pointerEvents: 'none',
+              },
+            }}
+          />
+          <TextInput
+            label='Telefon'
+            value={participant.phone}
+            variant='filled'
+            readOnly
+            radius='xs'
+            w='calc(50% - 6px)'
+            styles={{
+              input: {
+                backgroundColor: 'var(--mantine-color-gray-0)',
+                cursor: 'default',
+                pointerEvents: 'none',
+              },
+            }}
+          />
+        </Group>
+      </Box> */}
       <Group mt='lg' gap='md' align='stretch'>
         <Flex
           px='md'
