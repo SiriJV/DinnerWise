@@ -1,4 +1,12 @@
-import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
+import {
+  Modal,
+  Text,
+  Group,
+  ActionIcon,
+  Popover,
+  Stack,
+  Space,
+} from '@mantine/core';
 import { CircleHelp } from 'lucide-react';
 import './RegisteringBaseModal.scss';
 import { APP_CONFIG } from '../../../config/appConfig';
@@ -125,6 +133,8 @@ export default function RegisteringBaseModal({
       }}
       zIndex={1000}
       withinPortal={true}>
+      <DemoWarningText text='Innehållet i modalen är endast exempel.' />
+      <Space h='md' />
       {children}
     </Modal>
   );
