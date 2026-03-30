@@ -46,11 +46,7 @@ export default function WaitlistConfirmationModal({
       opened={opened}
       onClose={onClose}
       title='Bekräftelse väntelista'
-      isFull={true}
-      onBack={() => {
-        onClose();
-        onOpenWaitlist();
-      }}>
+      isFull={true}>
       <Group gap='sm' mb='md'>
         <Text size='lg'>
           Du är nu med på väntelista för{' '}
@@ -62,22 +58,30 @@ export default function WaitlistConfirmationModal({
         <Text size='sm'>
           Om en plats blir ledig kommer du att få ett mejl med instruktioner för
           hur du går vidare. Håll utkik i inkorgen!
-          {/* Hej och välkommen! Jag heter {hostFirstName} och är din värd för{' '}
-          <Text span fw={600}>
-            {event?.title}
-          </Text>{' '}
-          på{' '}
-          <Text span fw={600}>
-            {event?.restaurant_name}
-          </Text>
-          . Jag ser fram emot att träffa dig och ha en fantastisk kväll
-          tillsammans. Vi ses där! */}
         </Text>
-        {/* <Text size='sm' fw={600}>
-          Kvitto och bokningsdetaljer kommer på mejl.
-        </Text> */}
       </Group>
-
+      <Box
+        style={{
+          flex: '0 0 auto',
+          borderTop: '1px solid #e9ecef',
+          paddingTop: '16px',
+        }}>
+        <Group gap='12px' justify='space-between'>
+          <Button
+            variant='default'
+            onClick={() => {
+              onClose();
+              onOpenWaitlist();
+            }}>
+            Tillbaka
+          </Button>
+          <Group gap='12px'>
+            <Button variant='default' onClick={onClose}>
+              Stäng
+            </Button>
+          </Group>
+        </Group>
+      </Box>
       {event && (
         <Box mb='lg' mt='lg'>
           <ModalEventInfo event={event} showPrice={false} />
