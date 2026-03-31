@@ -39,9 +39,8 @@ export default function Header({
 
   return (
     <Stack justify='space-between' p='md' h='100%'>
-      {/* Top row */}
       <Group h='100%' justify='space-between' bg='red'>
-        <Group gap='sm'>
+        <Group gap='sm' style={{ flex: '0 1 auto', minWidth: 0 }}>
           <Burger
             opened={opened}
             onClick={onToggle}
@@ -63,13 +62,22 @@ export default function Header({
                 alignItems: 'center',
                 textDecoration: 'none',
               }}>
-              <Group gap='xs' align='center'>
-                <Brain color='white' />
+              <Group gap='xs' align='center' style={{ minWidth: 0 }}>
+                <Brain color='white' size={20} style={{ flexShrink: 0 }} />
                 <Title
                   order={1}
                   size='xl'
                   c='white'
-                  style={{ textDecoration: 'none' }}>
+                  style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  hiddenFrom='sm'>
+                  DW
+                </Title>
+                <Title
+                  order={1}
+                  size='xl'
+                  c='white'
+                  style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  visibleFrom='sm'>
                   {APP_CONFIG.brandName.toLocaleUpperCase()}
                 </Title>
               </Group>
