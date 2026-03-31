@@ -123,7 +123,7 @@ export default function ConfirmationModal({
             <Grid.Col span={{ base: 12, sm: 6 }}>
               <TextInput
                 label='E-post'
-                value={`${host?.name.toLowerCase().replace(/ /g, '.') || 'varden'}@email.se`}
+                value={`${host?.name.toLowerCase().replace(/ /g, '.') || 'varden'}@epost.se`}
                 variant='filled'
                 readOnly
                 radius='xs'

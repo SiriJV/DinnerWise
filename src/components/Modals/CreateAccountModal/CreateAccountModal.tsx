@@ -9,6 +9,7 @@ import {
 import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
 import { useState } from 'react';
+import { APP_CONFIG } from '../../../config/appConfig';
 
 interface CreateAccountModalProps {
   opened: boolean;
@@ -21,8 +22,8 @@ export default function CreateAccountModal({
 }: CreateAccountModalProps) {
   const { login } = useAuth();
   const { openLogin } = useModal();
-  const [email, setEmail] = useState('anna.svensson@email.se');
-  const [confirmEmail, setConfirmEmail] = useState('anna.svensson@email.se');
+  const [email, setEmail] = useState(APP_CONFIG.exampleUserEmail);
+  const [confirmEmail, setConfirmEmail] = useState(APP_CONFIG.exampleUserEmail);
   const [password, setPassword] = useState('lösenord123');
   const [confirmPassword, setConfirmPassword] = useState('lösenord123');
 
@@ -65,7 +66,7 @@ export default function CreateAccountModal({
       </Text>
       <TextInput
         label='E-post'
-        placeholder='exempel@email.com'
+        placeholder='exempel@epost.se'
         required
         radius='xs'
         type='email'
@@ -76,7 +77,7 @@ export default function CreateAccountModal({
       />
       <TextInput
         label='Bekräfta e-post'
-        placeholder='exempel@email.com'
+        placeholder='exempel@epost.se'
         required
         radius='xs'
         type='email'

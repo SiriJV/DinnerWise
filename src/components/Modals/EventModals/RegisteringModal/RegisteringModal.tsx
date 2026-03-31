@@ -205,7 +205,7 @@ export default function RegisteringModal({
             <Grid.Col span={{ base: 12, sm: 6 }}>
               <TextInput
                 label='E-post'
-                placeholder='exempel@email.com'
+                placeholder='exempel@epost.se'
                 required
                 radius='xs'
                 type='email'

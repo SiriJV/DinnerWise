@@ -48,7 +48,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
       </Text>
       <TextInput
         label='E-post'
-        placeholder='exempel@email.com'
+        placeholder='exempel@epost.se'
         required
         radius='xs'
         type='email'
