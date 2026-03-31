@@ -8,6 +8,7 @@ import usersRouter from './routes/users.js';
 import citiesRouter from './routes/cities.js';
 import tripadvisorRouter from './routes/tripadvisor.js';
 import emailRouter from './routes/email.js';
+import geminiRouter from './routes/gemini.js';
 import cors from 'cors';
 
 import dotenv from 'dotenv';
@@ -38,6 +39,7 @@ app.use('/search', searchRouter);
 app.use('/users', usersRouter);
 app.use('/cities', citiesRouter);
 app.use('/email', emailRouter);
+app.use('/gemini', geminiRouter);
 
 // Error handling middleware
 app.use((err: any, _req: any, res: any, _next: any) => {

@@ -30,6 +30,9 @@ const RestaurantAcceptancePage = lazy(
 const EventFeedback = lazy(
   () => import('./routes/EventFeedback/EventFeedback'),
 );
+const GeminiTestPage = lazy(
+  () => import('./routes/GeminiTestPage/GeminiTestPage'),
+);
 
 const router = createBrowserRouter([
   {
@@ -85,6 +88,10 @@ const router = createBrowserRouter([
       {
         path: '/bokningshantering/:slug',
         element: <RestaurantAcceptancePage />,
+      },
+      {
+        path: '/test',
+        element: <GeminiTestPage />,
       },
       ...infoPages.map(({ path, component: Comp }) => ({
         path,
