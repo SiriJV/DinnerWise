@@ -9,9 +9,10 @@ import {
   MultiSelect,
   Popover,
   ActionIcon,
+  Center,
+  Button,
 } from '@mantine/core';
 import { AlertCircle, Sparkles } from 'lucide-react';
-import { Button } from '@mantine/core';
 import { geminiApi } from '../../../api/gemini';
 
 interface EventDetails {
@@ -58,14 +59,47 @@ export default function CreateEventStep1({
   const aiTitleEnabled = titleWordCount >= 1 && descriptionWordCount >= 1;
   const aiDescriptionEnabled = descriptionWordCount >= 4;
 
+  const setupAiTimeouts = (
+    setError: (msg: string) => void,
+    setLoading: (loading: boolean) => void,
+  ): number[] => {
+    const timeoutIds: number[] = [];
+
+    timeoutIds.push(
+      setTimeout(() => setError('Vi försöker fortfarande...'), 2000),
+    );
+
+    timeoutIds.push(
+      setTimeout(
+        () => setError('Vi försöker fortfarande, detta kan ta en stund...'),
+        20000,
+      ),
+    );
+
+    timeoutIds.push(
+      setTimeout(() => {
+        setError('AI-genereringen tog för lång tid. Försök igen senare.');
+        setLoading(false);
+      }, 40000),
+    );
+
+    return timeoutIds;
+  };
+
   const handleAITitle = async () => {
     setAiTitleLoading(true);
     setAiTitleError('');
+
+    const timeoutIds = setupAiTimeouts(setAiTitleError, setAiTitleLoading);
+
     try {
       const result = await geminiApi.generateEventContent(
         eventDetails.description,
         'event_title',
       );
+
+      timeoutIds.forEach(clearTimeout);
+
       if (result.success) {
         setEventDetails({ ...eventDetails, title: result.content });
         setAiTitlePopoverOpened(false);
@@ -73,6 +107,7 @@ export default function CreateEventStep1({
         setAiTitleError(result.error || 'Något gick fel med AI-genereringen');
       }
     } catch (err) {
+      timeoutIds.forEach(clearTimeout);
       setAiTitleError(
         err instanceof Error
           ? err.message
@@ -86,11 +121,17 @@ export default function CreateEventStep1({
   const handleAIDescription = async () => {
     setAiDescLoading(true);
     setAiDescError('');
+
+    const timeoutIds = setupAiTimeouts(setAiDescError, setAiDescLoading);
+
     try {
       const result = await geminiApi.generateEventContent(
         eventDetails.description,
         'event_description',
       );
+
+      timeoutIds.forEach(clearTimeout);
+
       if (result.success) {
         setEventDetails({ ...eventDetails, description: result.content });
         setAiDescPopoverOpened(false);
@@ -98,6 +139,7 @@ export default function CreateEventStep1({
         setAiDescError(result.error || 'Något gick fel med AI-genereringen');
       }
     } catch (err) {
+      timeoutIds.forEach(clearTimeout);
       setAiDescError(
         err instanceof Error
           ? err.message
@@ -153,13 +195,7 @@ export default function CreateEventStep1({
               shadow='md'
               zIndex={9999}>
               <Popover.Target>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    paddingTop: '8px',
-                    paddingRight: '6px',
-                  }}>
+                <Center>
                   <ActionIcon
                     variant='light'
                     color='red'
@@ -170,11 +206,11 @@ export default function CreateEventStep1({
                     mr='xs'>
                     <Sparkles size={18} />
                   </ActionIcon>
-                </div>
+                </Center>
               </Popover.Target>
               <Popover.Dropdown>
                 <Stack gap='sm'>
-                  <div>
+                  <Stack gap='xs'>
                     <Text size='sm' fw={500} mb={8}>
                       AI-genererad titel
                     </Text>
@@ -182,7 +218,7 @@ export default function CreateEventStep1({
                       Är du säker på att du vill låta AI generera en ny titel?
                       Din nuvarande titel kommer att ersättas.
                     </Text>
-                  </div>
+                  </Stack>
                   {aiTitleError && (
                     <Alert
                       color='red'
@@ -198,7 +234,7 @@ export default function CreateEventStep1({
                       onClick={handleAITitle}
                       loading={aiTitleLoading}
                       fullWidth>
-                      OK
+                      {aiTitleError ? 'Försök igen' : 'OK'}
                     </Button>
                     <Button
                       variant='default'
@@ -259,13 +295,7 @@ export default function CreateEventStep1({
               shadow='md'
               zIndex={10000}>
               <Popover.Target>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    paddingTop: '8px',
-                    paddingRight: '6px',
-                  }}>
+                <Center>
                   <ActionIcon
                     variant='light'
                     color='red'
@@ -275,11 +305,11 @@ export default function CreateEventStep1({
                     title='Låt AI förfina din beskrivning'>
                     <Sparkles size={18} />
                   </ActionIcon>
-                </div>
+                </Center>
               </Popover.Target>
               <Popover.Dropdown>
                 <Stack gap='sm'>
-                  <div>
+                  <Stack gap='xs'>
                     <Text size='sm' fw={500} mb={8}>
                       AI-förfining
                     </Text>
@@ -287,7 +317,7 @@ export default function CreateEventStep1({
                       Är du säker på att du vill låta AI förfina din
                       beskrivning? Din nuvarande text kommer att ersättas.
                     </Text>
-                  </div>
+                  </Stack>
                   {aiDescError && (
                     <Alert
                       color='red'
@@ -303,7 +333,7 @@ export default function CreateEventStep1({
                       onClick={handleAIDescription}
                       loading={aiDescLoading}
                       fullWidth>
-                      OK
+                      {aiDescError ? 'Försök igen' : 'OK'}
                     </Button>
                     <Button
                       variant='default'

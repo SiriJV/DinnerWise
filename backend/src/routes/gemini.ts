@@ -63,19 +63,51 @@ Do not include any markdown formatting, just plain text.`;
     } catch (error) {
       console.error('Gemini API error:', error);
 
-      // Check if it's a quota exceeded error
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
-      const isQuotaExceeded =
-        errorMessage.includes('429') ||
-        errorMessage.includes('quota') ||
-        errorMessage.includes('exceede');
 
-      res.status(isQuotaExceeded ? 429 : 500).json({
-        error: isQuotaExceeded
-          ? 'API-gränsen har nåtts för idag. Försök igen imorgon!'
-          : 'Failed to generate content',
-        message: errorMessage,
+      // Classify the error
+      let statusCode = 500;
+      let userErrorMessage =
+        'AI-genereringen misslyckades. Försök igen senare.';
+      let errorType = 'unknown';
+
+      if (
+        errorMessage.includes('429') ||
+        errorMessage.includes('too many requests')
+      ) {
+        statusCode = 429;
+        userErrorMessage =
+          'AI-tjänsten är överbelastad just nu. Försök igen om några minuter.';
+        errorType = 'high_demand';
+      } else if (
+        errorMessage.includes('quota') ||
+        errorMessage.includes('exceede')
+      ) {
+        statusCode = 429;
+        userErrorMessage =
+          'API-gränsen har nåtts för idag. Försök igen imorgon!';
+        errorType = 'quota';
+      } else if (
+        errorMessage.includes('RESOURCE_EXHAUSTED') ||
+        errorMessage.includes('currently experiencing high demand')
+      ) {
+        statusCode = 503;
+        userErrorMessage =
+          'AI-tjänsten är väldigt belastad just nu. Försök igen senare.';
+        errorType = 'high_demand';
+      } else if (errorMessage.includes('UNAUTHENTICATED')) {
+        statusCode = 401;
+        userErrorMessage = 'Autentiseringsfel med AI-tjänsten.';
+        errorType = 'server_error';
+      }
+
+      res.status(statusCode).json({
+        success: false,
+        content: '',
+        error: userErrorMessage,
+        errorType,
+        message: errorMessage, // For debugging
       });
     }
   },
