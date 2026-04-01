@@ -1,4 +1,11 @@
-import { ActionIcon, Group, Popover, Stack, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  CloseButton,
+  Group,
+  Popover,
+  Stack,
+  Text,
+} from '@mantine/core';
 import {
   AlarmClock,
   BellIcon,
@@ -9,13 +16,26 @@ import {
   UserRound,
   UtensilsCrossed,
 } from 'lucide-react';
+import { useState } from 'react';
 import NotificationsContent from './NotificationsContent';
 
 export default function NotificationsPopup() {
+  const [opened, setOpened] = useState(false);
+
   return (
-    <Popover width={300} position='bottom' withArrow shadow='md'>
+    <Popover
+      width={300}
+      position='bottom'
+      withArrow
+      shadow='md'
+      opened={opened}
+      onClose={() => setOpened(false)}>
       <Popover.Target>
-        <ActionIcon variant='subtle' color='white' size='md'>
+        <ActionIcon
+          variant='subtle'
+          color='white'
+          size='md'
+          onClick={() => setOpened(!opened)}>
           <BellIcon size={20} />
         </ActionIcon>
       </Popover.Target>
@@ -25,7 +45,13 @@ export default function NotificationsPopup() {
             <Text size='md' fw={600}>
               Notiser
             </Text>
-            <Settings size={20} />
+            <Group gap='xs'>
+              <Settings size={20} />
+              <CloseButton
+                aria-label='Stäng'
+                onClick={() => setOpened(false)}
+              />
+            </Group>
           </Group>
           <Group justify='space-between' align='flex-end'>
             <Text size='sm' fw={600}>
