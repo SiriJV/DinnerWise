@@ -35,11 +35,19 @@ export default function NewsletterPage(): React.ReactNode {
   }
 
   const [selected, setSelected] = useState<number | null>(selectedIdx);
+  const [prevScroll, setPrevScroll] = useState<number>(0);
 
   // Sync state med URL-param
   useEffect(() => {
     setSelected(selectedIdx);
   }, [selectedIdx]);
+
+  // Scroll to top when a newsletter is selected
+  useEffect(() => {
+    if (selected !== null) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [selected]);
 
   // Hjälpfunktion för dagar sedan
   function daysAgo(dateStr: string) {
@@ -52,6 +60,7 @@ export default function NewsletterPage(): React.ReactNode {
   }
 
   function handleSelect(idx: number) {
+    setPrevScroll(window.scrollY);
     const nl = reversedNews[idx];
     const originalIdx = newsLetters.findIndex((n) => n === nl);
     const baseSlug = slugify(nl.title);
@@ -64,6 +73,9 @@ export default function NewsletterPage(): React.ReactNode {
 
   function handleBack() {
     setParams({});
+    setTimeout(() => {
+      window.scrollTo({ top: prevScroll, behavior: 'smooth' });
+    }, 0);
   }
 
   return (
