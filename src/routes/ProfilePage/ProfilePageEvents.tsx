@@ -4,7 +4,6 @@ import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import { useNavigationType } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -17,26 +16,15 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const { bookmarks, user: authUser } = useAuth();
 
   const navigationType = useNavigationType();
-  const [params, setParams] = useSearchParams();
-  const tabParam = params.get('tab');
+  const [activeTab, setActiveTab] = useState<string | null>('hosting');
 
-  const [activeTab, setActiveTab] = useState<string | null>(
-    tabParam || 'hosting',
-  );
-
+  // Always reset to first tab on new profile
   useEffect(() => {
-    if (tabParam && activeTab !== tabParam) {
-      setActiveTab(tabParam);
-    }
-  }, [tabParam]);
+    setActiveTab('hosting');
+  }, [userId]);
 
   function handleTabChange(tab: string | null) {
     setActiveTab(tab);
-    setParams({
-      ...Object.fromEntries(params.entries()),
-      tab: tab || 'hosting',
-      page: '1',
-    });
   }
 
   useEffect(() => {
