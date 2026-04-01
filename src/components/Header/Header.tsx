@@ -70,7 +70,7 @@ export default function Header({
                   c='white'
                   style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
                   hiddenFrom='sm'>
-                  DW
+                  {APP_CONFIG.shortBrandName.toLocaleUpperCase()}
                 </Title>
                 <Title
                   order={1}

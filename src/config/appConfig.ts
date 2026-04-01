@@ -1,5 +1,6 @@
 export const APP_CONFIG = {
   brandName: 'DinnerWise',
+  shortBrandName: 'DW',
   contactEmail: 'info@dinnerwise.se',
   supportEmail: 'support@dinnerwise.se',
   telephone: '+46 70 123 45 67',
