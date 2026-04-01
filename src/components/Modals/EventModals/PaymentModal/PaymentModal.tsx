@@ -11,8 +11,8 @@ import {
   Button,
 } from '@mantine/core';
 import { CreditCard } from 'lucide-react';
-import swishLogo from '../../../assets/swish-logo.png';
-import klarnaLogo from '../../../assets/klarna-logo.webp';
+import swishLogo from '../../../../assets/swish-logo.png';
+import klarnaLogo from '../../../../assets/klarna-logo.webp';
 import type { EventType } from '../../../../types/EventType';
 import './PaymentModal.scss';
 import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModal';
