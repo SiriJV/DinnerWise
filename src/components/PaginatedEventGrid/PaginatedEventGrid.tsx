@@ -37,10 +37,16 @@ export default function PaginatedEventGrid({
 
   // Sync state with URL param
   useEffect(() => {
-    if (pageParam && activePage !== parseInt(pageParam, 10)) {
-      setActivePage(parseInt(pageParam, 10));
+    if (pageParam) {
+      const newPage = parseInt(pageParam, 10);
+      if (activePage !== newPage) {
+        setActivePage(newPage);
+      }
+    } else if (activePage !== 1) {
+      // Reset to page 1 when page param is removed
+      setActivePage(1);
     }
-  }, [pageParam]);
+  }, [pageParam, activePage]);
 
   const gridRef = useRef<HTMLDivElement>(null);
 
