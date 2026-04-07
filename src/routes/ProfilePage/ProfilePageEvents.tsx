@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
-import { useNavigationType } from 'react-router-dom';
+import { useNavigationType, useSearchParams } from 'react-router-dom';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -14,6 +14,7 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { bookmarks, user: authUser } = useAuth();
+  const [params, setParams] = useSearchParams();
 
   const navigationType = useNavigationType();
   const [activeTab, setActiveTab] = useState<string | null>('hosting');
@@ -25,6 +26,10 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
 
   function handleTabChange(tab: string | null) {
     setActiveTab(tab);
+    // Clear page parameter when switching tabs
+    const newParams = new URLSearchParams(params);
+    newParams.delete('page');
+    setParams(newParams);
   }
 
   useEffect(() => {
