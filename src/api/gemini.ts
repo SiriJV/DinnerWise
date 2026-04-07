@@ -1,5 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-const REQUEST_TIMEOUT = 30000; // 30 seconds
+const REQUEST_TIMEOUT = 60000;
 
 interface GenerateContentResponse {
   success: boolean;
@@ -14,13 +14,13 @@ interface GenerateContentResponse {
     | 'unknown';
 }
 
-const timeoutPromise = (ms: number): Promise<never> => {
-  return new Promise((_, reject) => {
-    setTimeout(() => {
-      reject(new Error('timeout'));
-    }, ms);
-  });
-};
+// const timeoutPromise = (ms: number): Promise<never> => {
+//   return new Promise((_, reject) => {
+//     setTimeout(() => {
+//       reject(new Error('timeout'));
+//     }, ms);
+//   });
+// };
 
 export const geminiApi = {
   generateEventContent: async (

@@ -66,10 +66,7 @@ export default function CreateEventStep1({
     const timeoutIds: number[] = [];
 
     timeoutIds.push(
-      setTimeout(() => setError('Vi försöker fortfarande...'), 2000),
-    );
-
-    timeoutIds.push(
+      // setTimeout(() => setError('Vi försöker fortfarande...'), 10000),
       setTimeout(
         () => setError('Vi försöker fortfarande, detta kan ta en stund...'),
         20000,
@@ -80,7 +77,7 @@ export default function CreateEventStep1({
       setTimeout(() => {
         setError('AI-genereringen tog för lång tid. Försök igen senare.');
         setLoading(false);
-      }, 40000),
+      }, 60000),
     );
 
     return timeoutIds;
