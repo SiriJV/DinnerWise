@@ -95,7 +95,7 @@ export default function ProfilePage() {
             <Skeleton circle height={120} width={120} />
           </Center>
         </Box>
-        <Stack m='md' gap='xs' mt={80}>
+        <Stack mx='md' gap='xs' mt={80}>
           <Skeleton height={24} width='40%' mx='auto' />
           <Skeleton height={16} width='60%' mx='auto' />
           <Skeleton height={20} width='30%' mx='auto' />
@@ -126,7 +126,7 @@ export default function ProfilePage() {
           followingList={followingList}
         />
       </Box>
-      <Stack m='md' gap='xs'>
+      <Stack mx='md' gap='xs'>
         <Stack mb='lg'>
           <Group justify='space-between' mt='md'>
             <Title order={2} size='lg' fw='600'>
