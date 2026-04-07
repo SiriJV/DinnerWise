@@ -17,7 +17,11 @@ export default function RestaurantPhotos({ photos }: RestaurantPhotosProps) {
   if (photosArr.length === 0) return null;
   return (
     <>
-      <SimpleGrid cols={{ base: 2, md: 5 }} spacing='xs' mb='md' mt='lg'>
+      <SimpleGrid
+        cols={{ base: 2, sm: 3, md: 4, lg: 5 }}
+        spacing='xs'
+        mb='md'
+        mt='lg'>
         {photosArr.map((url, idx) => (
           <Box
             key={idx}
