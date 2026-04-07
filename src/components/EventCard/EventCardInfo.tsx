@@ -34,7 +34,7 @@ export default function EventCardInfo({
   shortDescription,
 }: EventCardInfoProps) {
   const navigate = useNavigate();
-  const truncateRestaurantName = (name?: string, maxLength = 30) => {
+  const truncateRestaurantName = (name?: string, maxLength = 20) => {
     if (!name) return 'Restaurang';
     return name.length > maxLength
       ? name.slice(0, maxLength).trim() + '…'
@@ -65,7 +65,7 @@ export default function EventCardInfo({
         </Text>
       </Text>
 
-      <Box className='eventInfo' mb='xs'>
+      <Group mb='xs' gap='xs' align='center' w='100%'>
         <Text size='xs' c='dimmed' fw={600}>
           <Text
             span
@@ -85,9 +85,16 @@ export default function EventCardInfo({
 
         <Divider orientation='vertical' size='sm' />
 
-        <Group justify='space-between' wrap='nowrap' style={{ flex: 1 }}>
+        <Group
+          justify='space-between'
+          wrap='nowrap'
+          style={{ flex: 1 }}
+          w='100%'>
           <Text size='xs' c='dimmed'>
-            {formattedDate} {timeRange}
+            {formattedDate}{' '}
+            <Text span visibleFrom='xs'>
+              {timeRange}
+            </Text>
           </Text>
           <Box hiddenFrom='sm' style={{ flexShrink: 0 }}>
             <ParticipantAvatars
@@ -99,10 +106,10 @@ export default function EventCardInfo({
             />
           </Box>
         </Group>
-      </Box>
+      </Group>
 
-      <Group justify='space-between' visibleFrom='sm' w='100%' wrap='nowrap'>
-        <Text size='sm' c='dimmed' className='eventDescription'>
+      <Group justify='space-between' visibleFrom='xs' w='100%' wrap='nowrap'>
+        <Text size='sm' c='dimmed'>
           {shortDescription}
         </Text>
 
