@@ -52,7 +52,10 @@ export default function Header({
 
           <Link
             to='/'
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             onMouseEnter={() => import('../../routes/HomePage/HomePage')}
             style={{ textDecoration: 'none' }}>
             <UnstyledButton
