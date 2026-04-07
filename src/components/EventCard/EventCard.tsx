@@ -195,7 +195,7 @@ export default function EventCard({
           </>
         )}
 
-        <EventCardHostAvatar pic_url={host?.profile_picture_url || ''} />
+        <EventCardHostAvatar host={host} />
       </Card.Section>
 
       <Box
