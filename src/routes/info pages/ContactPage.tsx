@@ -74,7 +74,10 @@ export default function ContactPage(): React.ReactNode {
             fram emot att höra från dig!
           </Text>
 
-          <Box mt='xl' pt='xl' style={{ borderTop: '1px solid #e9ecef' }}>
+          <Box
+            mt='xl'
+            pt='xl'
+            style={{ borderTop: '1px solid var(--mantine-color-gray-2)' }}>
             <Title order={3} mb='md'>
               Skicka ett meddelande
             </Title>

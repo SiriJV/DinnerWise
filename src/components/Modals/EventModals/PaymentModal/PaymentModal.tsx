@@ -256,7 +256,7 @@ export default function PaymentModal({
       <Box
         style={{
           flex: '0 0 auto',
-          borderTop: '1px solid #e9ecef',
+          borderTop: '1px solid var(--mantine-color-gray-2)',
           paddingTop: '16px',
         }}>
         <Group gap='12px' justify='space-between'>

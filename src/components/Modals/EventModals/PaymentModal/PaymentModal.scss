@@ -15,7 +15,7 @@
 .payment-options-box {
   border-width: 2px;
   border-style: solid;
-  border-color: #dee2e6;
+  border-color: var(--mantine-color-gray-3);
   background-color: white;
   padding: var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-md);
@@ -24,7 +24,7 @@
   margin-bottom: var(--mantine-spacing-xs);
 
   &.active {
-    border-color: #b21515ff;
-    background-color: #ffe7e7ff;
+    border-color: var(--mantine-color-red-6);
+    background-color: var(--mantine-color-lightred-1);
   }
 }

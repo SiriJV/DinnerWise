@@ -8,14 +8,14 @@ type ProfilePageBannerImageProps = {
 };
 
 const gradients = [
-  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-  'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-  'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-  'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+  'linear-gradient(135deg, var(--mantine-color-red-4) 0%, var(--mantine-color-darkred-5) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-lightred-3) 0%, var(--mantine-color-secondaryred-5) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-darkblue-3) 0%, var(--mantine-color-darkblue-6) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-darkgreen-2) 0%, var(--mantine-color-darkgreen-5) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-secondaryred-3) 0%, var(--mantine-color-yellow-5) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-darkblue-1) 0%, var(--mantine-color-darkred-6) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-darkgreen-0) 0%, var(--mantine-color-lightred-3) 100%)',
+  'linear-gradient(135deg, var(--mantine-color-lightred-2) 0%, var(--mantine-color-lightred-5) 100%)',
 ];
 
 export default function ProfilePageBannerImage({

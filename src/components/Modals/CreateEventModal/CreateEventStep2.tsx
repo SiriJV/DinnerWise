@@ -96,11 +96,11 @@ export default function CreateEventStep2({
                 borderWidth: 2,
                 borderColor:
                   selectedRestaurant?.id === restaurant.id
-                    ? '#b21515ff'
-                    : '#dee2e6',
+                    ? 'var(--mantine-color-red-6)'
+                    : 'var(--mantine-color-gray-3)',
                 backgroundColor:
                   selectedRestaurant?.id === restaurant.id
-                    ? '#ffe7e7ff'
+                    ? 'var(--mantine-color-lightred-1)'
                     : 'white',
                 transition: 'all 0.2s ease',
               }}
