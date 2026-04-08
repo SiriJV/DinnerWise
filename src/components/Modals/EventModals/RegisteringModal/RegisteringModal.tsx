@@ -15,6 +15,8 @@ import type { EventType } from '../../../../types/EventType';
 import './RegisteringModal.scss';
 import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModal';
 import { generateEventSlug } from '../../../../utils/slugify';
+import { validateEmail } from '../../../../utils/formValidation';
+import { useFormTouched } from '../../../../hooks/useFormTouched';
 
 interface Participant {
   firstName: string;
@@ -46,6 +48,11 @@ export default function RegisteringModal({
 }: RegisteringModalProps) {
   const [message, setMessage] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(
+    participant.email,
+  );
+
   const displayMaxSpots = event?.max_participants ?? 0;
   const isFull = event
     ? displayMaxSpots - (event.current_participants ?? 0) <= 0
@@ -102,7 +109,7 @@ export default function RegisteringModal({
     participant.firstName.trim() !== '' &&
     participant.lastName.trim() !== '' &&
     isValidPhone(participant.phone) &&
-    isValidEmail(participant.email) &&
+    isEmailValid &&
     termsAccepted;
 
   return (
@@ -211,7 +218,6 @@ export default function RegisteringModal({
                 placeholder='exempel@epost.se'
                 required
                 radius='xs'
-                type='email'
                 name='registration-email'
                 maxLength={40}
                 value={participant.email}
@@ -221,9 +227,10 @@ export default function RegisteringModal({
                     email: e.currentTarget.value,
                   })
                 }
+                onBlur={() => handleBlur('email')}
                 error={
-                  participant.email && !isValidEmail(participant.email)
-                    ? 'Ogiltig e-postadress'
+                  isTouched('email') && participant.email && !isEmailValid
+                    ? emailError
                     : ''
                 }
               />

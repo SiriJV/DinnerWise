@@ -10,6 +10,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { useModal } from '../../../contexts/ModalContext';
 import { useState } from 'react';
 import { APP_CONFIG } from '../../../config/appConfig';
+import { validateEmail, validatePassword } from '../../../utils/formValidation';
+import { useFormTouched } from '../../../hooks/useFormTouched';
 
 interface CreateAccountModalProps {
   opened: boolean;
@@ -27,27 +29,16 @@ export default function CreateAccountModal({
   const [password, setPassword] = useState('lösenord123');
   const [confirmPassword, setConfirmPassword] = useState('lösenord123');
 
-  // Track which fields have been touched/blurred
-  const [touchedFields, setTouchedFields] = useState({
-    email: false,
-    confirmEmail: false,
-    password: false,
-    confirmPassword: false,
-  });
-
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(email);
+  const { isValid: isPasswordValid, error: passwordError } =
+    validatePassword(password);
 
   const emailsMatch = email === confirmEmail;
   const passwordsMatch = password === confirmPassword;
 
   const isFormValid =
-    password.trim() !== '' &&
-    isValidEmail(email) &&
-    emailsMatch &&
-    passwordsMatch;
+    isPasswordValid && isEmailValid && emailsMatch && passwordsMatch;
 
   async function sendWelcomeEmail() {
     await fetch('http://localhost:3001/email/send-welcome-email', {
@@ -69,13 +60,6 @@ export default function CreateAccountModal({
     setPassword(value);
     // Clear confirmPassword when user starts typing in password
     setConfirmPassword('');
-  };
-
-  const handleBlur = (field: keyof typeof touchedFields) => {
-    setTouchedFields((prev) => ({
-      ...prev,
-      [field]: true,
-    }));
   };
 
   return (
@@ -103,11 +87,7 @@ export default function CreateAccountModal({
         value={email}
         onChange={(e) => handleEmailChange(e.currentTarget.value)}
         onBlur={() => handleBlur('email')}
-        error={
-          touchedFields.email && email && !isValidEmail(email)
-            ? 'Ogiltig e-postadress'
-            : ''
-        }
+        error={isTouched('email') && email && !isEmailValid ? emailError : ''}
       />
       <TextInput
         label='Bekräfta e-post'
@@ -122,7 +102,7 @@ export default function CreateAccountModal({
         onChange={(e) => setConfirmEmail(e.currentTarget.value)}
         onBlur={() => handleBlur('confirmEmail')}
         error={
-          touchedFields.confirmEmail && confirmEmail && !emailsMatch
+          isTouched('confirmEmail') && confirmEmail && !emailsMatch
             ? 'E-post matchar inte'
             : ''
         }
@@ -140,7 +120,9 @@ export default function CreateAccountModal({
         onChange={(e) => handlePasswordChange(e.currentTarget.value)}
         onBlur={() => handleBlur('password')}
         error={
-          touchedFields.password && password === '' ? 'Lösenord krävs' : ''
+          isTouched('password') && password && !isPasswordValid
+            ? passwordError
+            : ''
         }
       />
       <PasswordInput
@@ -156,7 +138,7 @@ export default function CreateAccountModal({
         onChange={(e) => setConfirmPassword(e.currentTarget.value)}
         onBlur={() => handleBlur('confirmPassword')}
         error={
-          touchedFields.confirmPassword && confirmPassword && !passwordsMatch
+          isTouched('confirmPassword') && confirmPassword && !passwordsMatch
             ? 'Lösenorden matchar inte'
             : ''
         }

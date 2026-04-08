@@ -9,62 +9,24 @@ import {
   Box,
 } from '@mantine/core';
 import { useState } from 'react';
+import { validateEmail } from '../../utils/formValidation';
+import { useFormTouched } from '../../hooks/useFormTouched';
 
 export default function NewsLetterCTA(): React.ReactNode {
   const [name, setName] = useState('');
   const [emailTo, setEmailTo] = useState('');
-
-  const [emailError, setEmailError] = useState('');
-  const [nameError, setNameError] = useState('');
-
-  // Track which fields have been touched/blurred
-  const [touchedFields, setTouchedFields] = useState({
-    name: false,
-    email: false,
-  });
-
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleBlur = (field: keyof typeof touchedFields) => {
-    setTouchedFields((prev) => ({
-      ...prev,
-      [field]: true,
-    }));
-
-    // Validate on blur
-    if (field === 'email') {
-      if (!emailTo || !isValidEmail(emailTo)) {
-        setEmailError('Ogiltig e-postadress');
-      } else {
-        setEmailError('');
-      }
-    } else if (field === 'name') {
-      if (!name.trim()) {
-        setNameError('Fyll i ditt namn');
-      } else {
-        setNameError('');
-      }
-    }
-  };
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(emailTo);
 
   const handleSendEmail = async () => {
     let hasError = false;
 
     if (!name.trim()) {
-      setNameError('Fyll i ditt namn');
       hasError = true;
-    } else {
-      setNameError('');
     }
 
-    if (!emailTo || !isValidEmail(emailTo)) {
-      setEmailError('Ogiltig e-postadress');
+    if (!emailTo || !isEmailValid) {
       hasError = true;
-    } else {
-      setEmailError('');
     }
 
     if (hasError) return;
@@ -89,7 +51,6 @@ export default function NewsLetterCTA(): React.ReactNode {
 
       setEmailTo('');
       setName('');
-      setTouchedFields({ name: false, email: false });
     } catch (err) {
       console.error('Fetch failed', err);
     }
@@ -123,7 +84,7 @@ export default function NewsLetterCTA(): React.ReactNode {
                   value={name}
                   onChange={(e) => setName(e.currentTarget.value)}
                   onBlur={() => handleBlur('name')}
-                  error={touchedFields.name ? nameError : ''}
+                  error={isTouched('name') && !name.trim() ? 'Namn krävs' : ''}
                 />
               </Box>
 
@@ -133,18 +94,21 @@ export default function NewsLetterCTA(): React.ReactNode {
                   placeholder='exempel@epost.se'
                   required
                   name='nl-signup-mail'
-                  type='text'
                   autoComplete='chrome-off'
                   value={emailTo}
                   onChange={(e) => setEmailTo(e.currentTarget.value)}
                   onBlur={() => handleBlur('email')}
-                  error={touchedFields.email ? emailError : ''}
+                  error={
+                    isTouched('email') && emailTo && !isEmailValid
+                      ? emailError
+                      : ''
+                  }
                 />
               </Box>
 
               <Button
                 onClick={handleSendEmail}
-                disabled={!name || !emailTo || !isValidEmail(emailTo)}>
+                disabled={!name || !emailTo || !isEmailValid}>
                 Registrera dig
               </Button>
             </SimpleGrid>

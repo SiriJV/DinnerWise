@@ -13,6 +13,8 @@ import { APP_CONFIG } from '../../config/appConfig';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
+import { validateEmail } from '../../utils/formValidation';
+import { useFormTouched } from '../../hooks/useFormTouched';
 
 export default function ContactPage(): React.ReactNode {
   const [formData, setFormData] = useState({
@@ -20,6 +22,11 @@ export default function ContactPage(): React.ReactNode {
     email: '',
     message: '',
   });
+
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(
+    formData.email,
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,13 +89,18 @@ export default function ContactPage(): React.ReactNode {
                 <TextInput
                   label='E-post'
                   placeholder='Din e-postadress'
-                  type='email'
                   name='contact-email'
                   required
                   maxLength={40}
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.currentTarget.value })
+                  }
+                  onBlur={() => handleBlur('email')}
+                  error={
+                    isTouched('email') && formData.email && !isEmailValid
+                      ? emailError
+                      : ''
                   }
                 />
                 <Textarea

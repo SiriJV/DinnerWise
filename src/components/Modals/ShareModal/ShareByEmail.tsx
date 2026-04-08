@@ -1,6 +1,16 @@
-import { Stack, TextInput, Text, Textarea, Group, Button } from '@mantine/core';
+import {
+  Stack,
+  TextInput,
+  Text,
+  Textarea,
+  Group,
+  Button,
+  Box,
+} from '@mantine/core';
 import { Mail } from 'lucide-react';
 import { useState } from 'react';
+import { validateEmail } from '../../../utils/formValidation';
+import { useFormTouched } from '../../../hooks/useFormTouched';
 
 type ShareByEmailProps = { eventName: string; generatedUrl: string };
 
@@ -13,6 +23,9 @@ export default function ShareByEmail({
   const [emailSent, setEmailSent] = useState(false);
   const [event, setEvent] = useState(eventName);
   const [firstName, setFirstName] = useState('');
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(emailTo);
+
   const defaultMessage = `Din vän vill gå på ${eventName} med dig!`;
   const [emailMessage, setEmailMessage] = useState(defaultMessage);
 
@@ -29,7 +42,7 @@ export default function ShareByEmail({
 
   // Funktion för att skicka share-mejl via backend
   const handleSendEmail = async () => {
-    if (!emailMessage || !isValidEmail(emailTo)) {
+    if (!emailMessage || !isEmailValid) {
       alert('Skriv in giltiga e-postadresser och meddelande');
       return;
     }
@@ -60,16 +73,10 @@ export default function ShareByEmail({
         setEmailMessage(defaultMessage);
         setEmailSent(false);
       }, 2000);
-      //   alert('Mejl skickat!'); // enkel feedback
     } catch (err) {
       console.error('Fetch failed', err);
       alert('Något gick fel med mejlet');
     }
-  };
-
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   };
 
   const handleEmailClick = () => {
@@ -107,25 +114,24 @@ export default function ShareByEmail({
             </Text>
           ) : (
             <>
-              <TextInput
-                label='Till (e-post)'
-                required
-                placeholder={'mottagare@epost.se'}
-                type='text'
-                name='share-email'
-                value={emailTo}
-                maxLength={120}
-                onChange={(e) => setEmailTo(e.currentTarget.value)}
-                // error={
-                //   emailTo &&
-                //   emailTo
-                //     .split(',')
-                //     .some((e) => e.trim() && !isValidEmail(e.trim()))
-                //     ? 'Ogiltig e-postadress'
-                //     : ''
-                // }
-                radius='xs'
-              />
+              <Box>
+                <TextInput
+                  label='Till (e-post)'
+                  required
+                  placeholder={'mottagare@epost.se'}
+                  name='share-email'
+                  value={emailTo}
+                  maxLength={120}
+                  onChange={(e) => setEmailTo(e.currentTarget.value)}
+                  onBlur={() => handleBlur('email')}
+                  error={
+                    isTouched('email') && emailTo && !isEmailValid
+                      ? emailError
+                      : ''
+                  }
+                  radius='xs'
+                />
+              </Box>
               <TextInput
                 label='Ditt namn'
                 placeholder='Ditt namn'
@@ -155,9 +161,7 @@ export default function ShareByEmail({
                 </Button>
                 <Button
                   onClick={handleSendEmail}
-                  disabled={
-                    !emailTo || !emailMessage || !isValidEmail(emailTo)
-                  }>
+                  disabled={!emailTo || !emailMessage || !isEmailValid}>
                   Skicka
                 </Button>
               </Group>
