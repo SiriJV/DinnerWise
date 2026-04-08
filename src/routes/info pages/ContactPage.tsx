@@ -72,8 +72,7 @@ export default function ContactPage(): React.ReactNode {
                   label='Namn'
                   placeholder='Ditt namn'
                   required
-                  name='name'
-                  autoComplete='name'
+                  name='contact-name'
                   maxLength={40}
                   value={formData.name}
                   onChange={(e) =>
@@ -84,8 +83,7 @@ export default function ContactPage(): React.ReactNode {
                   label='E-post'
                   placeholder='Din e-postadress'
                   type='email'
-                  name='email'
-                  autoComplete='email'
+                  name='contact-email'
                   required
                   maxLength={40}
                   value={formData.email}

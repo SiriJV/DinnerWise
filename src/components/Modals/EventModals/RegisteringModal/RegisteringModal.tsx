@@ -134,7 +134,6 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 name='first-name'
-                autoComplete='given-name'
                 maxLength={40}
                 value={participant.firstName}
                 onChange={(e) =>
@@ -160,7 +159,6 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 name='last-name'
-                autoComplete='family-name'
                 maxLength={40}
                 value={participant.lastName}
                 onChange={(e) =>
@@ -190,7 +188,6 @@ export default function RegisteringModal({
                 radius='xs'
                 type='tel'
                 name='tel'
-                autoComplete='tel'
                 maxLength={12}
                 value={participant.phone}
                 onChange={(e) => {
@@ -215,8 +212,7 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 type='email'
-                name='email'
-                autoComplete='email'
+                name='registration-email'
                 maxLength={40}
                 value={participant.email}
                 onChange={(e) =>

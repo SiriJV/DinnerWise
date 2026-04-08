@@ -112,8 +112,7 @@ export default function ShareByEmail({
                 required
                 placeholder={'mottagare@epost.se'}
                 type='text'
-                name='email'
-                autoComplete='email'
+                name='share-email'
                 value={emailTo}
                 maxLength={120}
                 onChange={(e) => setEmailTo(e.currentTarget.value)}
@@ -130,8 +129,7 @@ export default function ShareByEmail({
               <TextInput
                 label='Ditt namn'
                 placeholder='Ditt namn'
-                name='name'
-                autoComplete='name'
+                name='share-name'
                 value={firstName}
                 maxLength={30}
                 onChange={handleNameChange}
