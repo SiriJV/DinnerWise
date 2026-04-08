@@ -25,8 +25,6 @@ export default function BackToTopButton() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (!isVisible) return null;
-
   return (
     <Button
       onClick={scrollToTop}
@@ -44,6 +42,9 @@ export default function BackToTopButton() {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 999,
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? 'auto' : 'none',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
       }}
       aria-label='Tillbaka till toppen'>
       <ArrowUp size={28} />
