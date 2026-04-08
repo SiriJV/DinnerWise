@@ -97,6 +97,19 @@ export const theme = createTheme({
       '#343a40',
       '#212529',
     ],
+
+    yellow: [
+      '#fffdf5',
+      '#fffbeb',
+      '#fff7d6',
+      '#fff3c2',
+      '#ffeead',
+      '#ffeeba', // din yellow rgba(255, 238, 186, 1)
+      '#e6d5a7',
+      '#ccbc94',
+      '#a6996b',
+      '#785a0a', // din darkyellow
+    ],
   },
 
   other: {

@@ -21,16 +21,16 @@ export default function EventSpotsBadge({
   const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
 
   const backgroundColor = isFull
-    ? 'rgba(255, 204, 199, 1)'
+    ? 'var(--mantine-color-lightred-5)'
     : isAlmostFull
-      ? 'rgba(255, 238, 186, 1)'
-      : 'rgba(216, 227, 222, 1)';
+      ? 'var(--mantine-color-yellow-5)'
+      : 'var(--mantine-color-darkgreen-1)';
 
   const textColor = isFull
-    ? 'rgba(116, 39, 62, 1)'
+    ? 'var(--mantine-color-darkred-5)'
     : isAlmostFull
-      ? 'rgba(120, 90, 10, 1)'
-      : 'rgba(36, 56, 33, 1)';
+      ? 'var(--mantine-color-yellow-9)'
+      : 'var(--mantine-color-darkgreen-5)';
 
   const label = isFull
     ? `Fullt (${maxParticipants}/${maxParticipants})`
