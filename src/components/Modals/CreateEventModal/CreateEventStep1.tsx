@@ -218,13 +218,18 @@ export default function CreateEventStep1({
               shadow='md'
               zIndex={9999}
               withinPortal={true}
-              closeOnClickOutside={true}>
+              closeOnClickOutside={true}
+              closeOnEscape={true}
+              trapFocus={false}>
               <Popover.Target>
                 <ActionIcon
                   variant='light'
                   color='red'
                   size='md'
-                  onClick={() => setAiTitlePopoverOpened(!aiTitlePopoverOpened)}
+                  onClick={() => {
+                    setAiTitlePopoverOpened(!aiTitlePopoverOpened);
+                    setAiDescPopoverOpened(false);
+                  }}
                   aria-label='AI-hjälp för titel'
                   title='Låt AI skapa en titel baserad på din beskrivning'>
                   <Sparkles size={18} />
@@ -324,13 +329,18 @@ export default function CreateEventStep1({
               shadow='md'
               zIndex={10000}
               withinPortal={true}
-              closeOnClickOutside={true}>
+              closeOnClickOutside={true}
+              closeOnEscape={true}
+              trapFocus={false}>
               <Popover.Target>
                 <ActionIcon
                   variant='light'
                   color='red'
                   size='md'
-                  onClick={() => setAiDescPopoverOpened(!aiDescPopoverOpened)}
+                  onClick={() => {
+                    setAiDescPopoverOpened(!aiDescPopoverOpened);
+                    setAiTitlePopoverOpened(false);
+                  }}
                   aria-label='AI-hjälp för beskrivning'
                   title='Låt AI förfina din beskrivning'>
                   <Sparkles size={18} />
