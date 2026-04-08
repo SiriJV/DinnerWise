@@ -73,25 +73,25 @@ export default function PaginatedEventGrid({
   return (
     <>
       <Stack ref={gridRef}>
-        <SimpleGrid cols={{ base: 1, xs: 1, sm: 2, md: 3 }} spacing='lg'>
-          {loading ? (
-            Array.from({ length: pageSize }).map((_, i) => (
-              <Skeleton key={i} height={280} radius='md' />
-            ))
-          ) : pagedEvents.length === 0 ? (
-            <Text p='xl' ta='center' c='dimmed'>
-              Det finns just nu inga event som matchar dina filter.
-            </Text>
-          ) : (
-            pagedEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                {...event}
-                date={new Date(event.date)}
-              />
-            ))
-          )}
-        </SimpleGrid>
+        {loading || pagedEvents.length > 0 ? (
+          <SimpleGrid cols={{ base: 1, xs: 1, sm: 2, md: 3 }} spacing='lg'>
+            {loading
+              ? Array.from({ length: pageSize }).map((_, i) => (
+                  <Skeleton key={i} height={280} radius='md' />
+                ))
+              : pagedEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    {...event}
+                    date={new Date(event.date)}
+                  />
+                ))}
+          </SimpleGrid>
+        ) : (
+          <Text p='xl' ta='center' c='dimmed'>
+            Det finns just nu inga event som matchar dina filter.
+          </Text>
+        )}
       </Stack>
 
       {eventPages.length > 1 && (
