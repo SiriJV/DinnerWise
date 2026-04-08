@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { searchApi } from '../api/search';
 import type { SearchType } from '../api/search';
 import PaginatedEventGrid from '../components/PaginatedEventGrid/PaginatedEventGrid';
-import TagPill from '../components/TagPill/TagPill';
+import PillComponent from '../components/PillComponent/PillComponent';
 import { generateRestaurantSlug, slugify } from '../utils/slugify';
 
 const SEARCH_TYPES: { value: SearchType; label: string }[] = [
@@ -176,7 +176,7 @@ export default function SearchPage() {
                 {results
                   .filter((t: any) => t.id)
                   .map((t: any) => (
-                    <TagPill key={t.id} title={t.name} size='lg' />
+                    <PillComponent key={t.id} title={t.name} size='lg' />
                   ))}
               </Group>
             ) : t.value === 'users' ? (

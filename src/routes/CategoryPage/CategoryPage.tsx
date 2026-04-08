@@ -8,7 +8,7 @@ import { Title, Text, Group, Stack, Divider } from '@mantine/core';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
-import TagPill from '../../components/TagPill/TagPill';
+import PillComponent from '../../components/PillComponent/PillComponent';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -126,7 +126,7 @@ export default function CategoryPage() {
         {tags.length > 0 && (
           <Group gap='xs' mb='md' wrap='wrap'>
             {tags.map((tag, index) => (
-              <TagPill key={index} title={tag.name} />
+              <PillComponent key={index} title={tag.name} />
             ))}
           </Group>
         )}

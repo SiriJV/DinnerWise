@@ -18,6 +18,9 @@ export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+  const [category, setCategory] = useState<{ id: number; name: string } | null>(
+    null,
+  );
   const [registerOpened, registerHandlers] = useDisclosure(false);
   const [paymentOpened, paymentHandlers] = useDisclosure(false);
   const [confirmationOpened, confirmationHandlers] = useDisclosure(false);
@@ -71,6 +74,21 @@ export default function EventDetails(): React.ReactNode {
         if (tagsRes.ok) {
           const tagsData = await tagsRes.json();
           setTags(tagsData);
+        }
+
+        // Fetch category by category_id
+        if (eventData.category_id) {
+          const categoriesRes = await fetch(`http://localhost:3001/categories`);
+          if (categoriesRes.ok) {
+            const categoriesData = await categoriesRes.json();
+            const foundCategory = categoriesData.find(
+              (cat: { id: number; name: string }) =>
+                cat.id === eventData.category_id,
+            );
+            if (foundCategory) {
+              setCategory(foundCategory);
+            }
+          }
         }
       } catch (err: any) {
         setError(err.message);
@@ -143,7 +161,11 @@ export default function EventDetails(): React.ReactNode {
             />
 
             <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl'>
-              <EventDescription description={event.description} tags={tags} />
+              <EventDescription
+                description={event.description}
+                category={category}
+                tags={tags}
+              />
 
               <EventInfoCards
                 eventDate={eventDate}
