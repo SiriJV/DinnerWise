@@ -1,9 +1,6 @@
-@use '../../styles/mixins.scss' as *;
-@use '../../styles/variables.scss' as var;
-
 .footer {
   min-height: 3rem;
-  @include gray-border(border-top);
+  border-top: 1px solid rgba(173, 181, 189, 1);
   margin-top: var(--mantine-spacing-xl);
   background: var(--mantine-color-gray-0);
   border-top: 1px solid var(--mantine-color-gray-2);

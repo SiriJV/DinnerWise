@@ -1,10 +1,9 @@
-@use '../../styles/mixins.scss' as *;
-@use '../../styles/variables.scss' as var;
-
 .mantine-Carousel-control {
   width: 44px;
   height: 44px;
-  @include flex-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: translateY(-50%);
 }
 
