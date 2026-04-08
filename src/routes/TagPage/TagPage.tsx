@@ -61,8 +61,6 @@ export default function TagPage() {
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
-        console.log('Fetching events for tag page:', url.toString());
-
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();

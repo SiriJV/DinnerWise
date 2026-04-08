@@ -93,8 +93,6 @@ export default function CategoryPage() {
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
-        console.log('Fetching events for category page:', url.toString());
-
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
@@ -164,8 +162,8 @@ export default function CategoryPage() {
               Laddar events…
             </Text>
           ) : events.length === 0 ? (
-            <Text p='md' ta='center'>
-              Inga events för denna kategori.
+            <Text p='xl' ta='center' c='dimmed'>
+              Det finns just nu inga event som matchar dina filter.
             </Text>
           ) : (
             <PaginatedEventGrid events={events} loading={loading} />
