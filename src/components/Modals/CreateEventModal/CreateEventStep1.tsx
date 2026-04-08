@@ -10,8 +10,9 @@ import {
   Popover,
   ActionIcon,
   Button,
+  CloseButton,
 } from '@mantine/core';
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Sparkles, Check } from 'lucide-react';
 import { geminiApi } from '../../../api/gemini';
 
 interface EventDetails {
@@ -300,7 +301,12 @@ export default function CreateEventStep1({
         searchable
         clearable
         nothingFoundMessage='Ingen kategori hittades'
-        styles={{ dropdown: { zIndex: 9999 } }}
+        maxDropdownHeight={200}
+        comboboxProps={{
+          zIndex: 1100,
+          withinPortal: true,
+          position: 'bottom-start',
+        }}
       />
 
       <Textarea
@@ -398,16 +404,47 @@ export default function CreateEventStep1({
       <MultiSelect
         w='100%'
         label='Taggar (valfritt)'
-        placeholder='Sök och välj passande taggar'
+        placeholder={
+          eventDetails.category
+            ? 'Sök och välj passande taggar'
+            : 'Välj kategori först'
+        }
         name='event-tags'
         autoComplete='off'
-        data={tagOptions}
+        data={[
+          ...tagOptions.filter((opt) => eventDetails.tags.includes(opt.value)),
+          ...tagOptions.filter((opt) => !eventDetails.tags.includes(opt.value)),
+        ]}
         value={eventDetails.tags}
         onChange={(values) =>
           setEventDetails({ ...eventDetails, tags: values })
         }
         searchable
-        clearable
+        disabled={!eventDetails.category}
+        maxDropdownHeight={200}
+        withCheckIcon={false}
+        rightSection={
+          eventDetails.tags.length > 0 ? (
+            <CloseButton
+              size='sm'
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setEventDetails({ ...eventDetails, tags: [] })}
+              aria-label='Rensa taggar'
+            />
+          ) : null
+        }
+        rightSectionPointerEvents='all'
+        renderOption={({ option }) => (
+          <Group gap='sm' justify='space-between' w='100%'>
+            <Text size='sm'>{option.label}</Text>
+            {eventDetails.tags.includes(option.value) && <Check size={16} />}
+          </Group>
+        )}
+        comboboxProps={{
+          zIndex: 1100,
+          withinPortal: true,
+          position: 'bottom-start',
+        }}
       />
     </Stack>
   );

@@ -3,7 +3,7 @@ import { Button, Stepper, Group, Box } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { fetchRestaurants, type Restaurant } from '../../../api/restaurants';
 import { fetchCategories, type Category } from '../../../api/categories';
-import { fetchTags, type Tag } from '../../../api/tags';
+import { fetchTags, fetchTagsByCategory, type Tag } from '../../../api/tags';
 import { useAuth } from '../../../contexts/AuthContext';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
 import CreateEventStep1 from './CreateEventStep1';
@@ -96,6 +96,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   const [restaurantSearch, setRestaurantSearch] = useState('');
@@ -140,14 +141,43 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     loadData();
   }, [opened]);
 
+  useEffect(() => {
+    const loadTagsByCategory = async () => {
+      if (eventDetails.category) {
+        const categoryId = parseInt(eventDetails.category);
+        const tags = await fetchTagsByCategory(categoryId);
+        setFilteredTags(tags);
+        // Clear selected tags that don't belong to the new category
+        const validTagIds = tags.map((t) => t.id.toString());
+        const updatedTags = eventDetails.tags.filter((tagId) =>
+          validTagIds.includes(tagId),
+        );
+        if (updatedTags.length !== eventDetails.tags.length) {
+          setEventDetails({ ...eventDetails, tags: updatedTags });
+        }
+      } else {
+        setFilteredTags([]);
+        // Clear tags when category is removed
+        if (eventDetails.tags.length > 0) {
+          setEventDetails({ ...eventDetails, tags: [] });
+        }
+      }
+    };
+
+    loadTagsByCategory();
+  }, [eventDetails.category]);
+
   const categoryOptions =
     categories.length > 0
       ? categories.map((cat) => ({ value: cat.id.toString(), label: cat.name }))
       : [];
 
   const tagOptions =
-    allTags.length > 0
-      ? allTags.map((tag) => ({ value: tag.id.toString(), label: tag.name }))
+    filteredTags.length > 0
+      ? filteredTags.map((tag) => ({
+          value: tag.id.toString(),
+          label: tag.name,
+        }))
       : [];
 
   const [cityFilters, setCityFilters] = useState<number[]>([]);
@@ -220,6 +250,23 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     setRestaurantSearch('');
     setCurrentWeekOffset(0);
     setErrors([]);
+  };
+
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          eventDetails.title.trim() !== '' &&
+          eventDetails.category !== null &&
+          eventDetails.description.trim() !== ''
+        );
+      case 1:
+        return selectedRestaurant !== null;
+      case 2:
+        return selectedTime !== null;
+      default:
+        return true;
+    }
   };
 
   const renderStep = () => {
@@ -331,6 +378,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
             </Button>
             {currentStep < 3 ? (
               <Button
+                disabled={!isStepValid()}
                 onClick={() => {
                   const newErrors: string[] = [];
 
