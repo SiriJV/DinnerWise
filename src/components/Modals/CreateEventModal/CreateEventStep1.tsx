@@ -9,7 +9,6 @@ import {
   MultiSelect,
   Popover,
   ActionIcon,
-  Center,
   Button,
 } from '@mantine/core';
 import { AlertCircle, Sparkles } from 'lucide-react';
