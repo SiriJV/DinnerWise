@@ -28,6 +28,11 @@ export default function ContactPage(): React.ReactNode {
     formData.email,
   );
 
+  const isFormValid =
+    formData.name.trim() !== '' &&
+    isEmailValid &&
+    formData.message.trim() !== '';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Add functionality
@@ -119,7 +124,9 @@ export default function ContactPage(): React.ReactNode {
                   }
                 />
                 <Group justify='flex-start'>
-                  <Button type='submit'>Skicka meddelande</Button>
+                  <Button type='submit' disabled={!isFormValid}>
+                    Skicka meddelande
+                  </Button>
                 </Group>
               </Stack>
             </form>
