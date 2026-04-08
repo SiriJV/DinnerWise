@@ -172,15 +172,28 @@ export default function SearchBar({
         rightSection={
           <SearchIcon
             size={18}
-            className='searchBar-icon'
             onClick={handleClick}
             cursor='pointer'
+            color='var(--mantine-color-darkred-5)'
           />
         }
         data={data}
         value={value}
         onChange={setValue}
         maxDropdownHeight={200}
+        styles={{
+          input: {
+            border: '1px solid var(--mantine-color-gray-5)',
+            borderRadius: 'var(--mantine-radius-xl)',
+            backgroundColor: 'white',
+            height: '40px',
+            fontSize: '14px',
+            color: 'var(--mantine-color-darkred-5)',
+            '&:focus': {
+              borderColor: 'var(--mantine-color-darkred-5)',
+            },
+          },
+        }}
       />
     );
   }
@@ -212,15 +225,28 @@ export default function SearchBar({
         rightSection={
           <SearchIcon
             size={18}
-            className='searchBar-icon'
             onClick={handleClick}
             cursor='pointer'
+            color='var(--mantine-color-darkred-5)'
           />
         }
         data={data}
         value={value}
         onChange={setValue}
         maxDropdownHeight={200}
+        styles={{
+          input: {
+            border: '1px solid var(--mantine-color-gray-5)',
+            borderRadius: 'var(--mantine-radius-xl)',
+            backgroundColor: 'white',
+            height: '40px',
+            fontSize: '14px',
+            color: 'var(--mantine-color-darkred-5)',
+            '&:focus': {
+              borderColor: 'var(--mantine-color-darkred-5)',
+            },
+          },
+        }}
       />
     );
   }
