@@ -43,7 +43,7 @@ export default function CreateEventStep4({
     .map((tag) => tag.name);
 
   return (
-    <Stack gap='md'>
+    <Stack gap='md' w='100%'>
       <Alert
         icon={<AlertCircle size={16} />}
         color='red'

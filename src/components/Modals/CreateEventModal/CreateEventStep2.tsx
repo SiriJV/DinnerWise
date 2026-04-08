@@ -47,7 +47,7 @@ export default function CreateEventStep2({
   );
 
   return (
-    <Stack gap='md'>
+    <Stack gap='md' w='100%'>
       {errors.length > 0 && (
         <Alert
           icon={<AlertCircle size={16} />}
@@ -57,6 +57,7 @@ export default function CreateEventStep2({
         </Alert>
       )}
       <TextInput
+        w='100%'
         placeholder='Sök restaurang...'
         leftSection={<Search size={16} />}
         value={restaurantSearch}

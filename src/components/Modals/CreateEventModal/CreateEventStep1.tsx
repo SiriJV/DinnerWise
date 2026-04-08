@@ -176,7 +176,7 @@ export default function CreateEventStep1({
   }
 
   return (
-    <Stack gap='md'>
+    <Stack gap='md' w='100%'>
       {errors.length > 0 && (
         <Alert
           icon={<AlertCircle size={16} />}
@@ -191,6 +191,7 @@ export default function CreateEventStep1({
       )}
 
       <Textarea
+        w='100%'
         label='Titel'
         placeholder='Ge ditt event en titel'
         value={eventDetails.title}
@@ -201,6 +202,11 @@ export default function CreateEventStep1({
         autosize
         minRows={1}
         maxRows={2}
+        rightSectionProps={{
+          style: {
+            pointerEvents: 'auto',
+          },
+        }}
         rightSection={
           aiTitleEnabled ? (
             <Popover
@@ -210,20 +216,19 @@ export default function CreateEventStep1({
               position='bottom'
               withArrow
               shadow='md'
-              zIndex={9999}>
+              zIndex={9999}
+              withinPortal={true}
+              closeOnClickOutside={true}>
               <Popover.Target>
-                <Center>
-                  <ActionIcon
-                    variant='light'
-                    color='red'
-                    size='md'
-                    onClick={() => setAiTitlePopoverOpened(true)}
-                    aria-label='AI-hjälp för titel'
-                    title='Låt AI skapa en titel baserad på din beskrivning'
-                    mr='xs'>
-                    <Sparkles size={18} />
-                  </ActionIcon>
-                </Center>
+                <ActionIcon
+                  variant='light'
+                  color='red'
+                  size='md'
+                  onClick={() => setAiTitlePopoverOpened(!aiTitlePopoverOpened)}
+                  aria-label='AI-hjälp för titel'
+                  title='Låt AI skapa en titel baserad på din beskrivning'>
+                  <Sparkles size={18} />
+                </ActionIcon>
               </Popover.Target>
               <Popover.Dropdown>
                 <Stack gap='sm'>
@@ -275,6 +280,7 @@ export default function CreateEventStep1({
       />
 
       <Select
+        w='100%'
         label='Kategori'
         placeholder='Välj en passande kategori'
         data={categoryOptions}
@@ -290,6 +296,7 @@ export default function CreateEventStep1({
       />
 
       <Textarea
+        w='100%'
         label='Beskrivning'
         placeholder='Beskriv ditt event...'
         value={eventDetails.description}
@@ -301,6 +308,11 @@ export default function CreateEventStep1({
         }
         rows={4}
         required
+        rightSectionProps={{
+          style: {
+            pointerEvents: 'auto',
+          },
+        }}
         rightSection={
           aiDescriptionEnabled ? (
             <Popover
@@ -310,19 +322,19 @@ export default function CreateEventStep1({
               position='bottom'
               withArrow
               shadow='md'
-              zIndex={10000}>
+              zIndex={10000}
+              withinPortal={true}
+              closeOnClickOutside={true}>
               <Popover.Target>
-                <Center>
-                  <ActionIcon
-                    variant='light'
-                    color='red'
-                    size='md'
-                    onClick={() => setAiDescPopoverOpened(true)}
-                    aria-label='AI-hjälp för beskrivning'
-                    title='Låt AI förfina din beskrivning'>
-                    <Sparkles size={18} />
-                  </ActionIcon>
-                </Center>
+                <ActionIcon
+                  variant='light'
+                  color='red'
+                  size='md'
+                  onClick={() => setAiDescPopoverOpened(!aiDescPopoverOpened)}
+                  aria-label='AI-hjälp för beskrivning'
+                  title='Låt AI förfina din beskrivning'>
+                  <Sparkles size={18} />
+                </ActionIcon>
               </Popover.Target>
               <Popover.Dropdown>
                 <Stack gap='sm'>
@@ -369,6 +381,7 @@ export default function CreateEventStep1({
       />
 
       <MultiSelect
+        w='100%'
         label='Taggar (valfritt)'
         placeholder='Sök och välj passande taggar'
         data={tagOptions}

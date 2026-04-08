@@ -53,7 +53,7 @@ export default function CreateEventStep3({
   const canGoNext = currentWeekOffset < 3;
 
   return (
-    <Stack gap='md'>
+    <Stack gap='md' w='100%'>
       {errors.length > 0 && (
         <Alert
           icon={<AlertCircle size={16} />}
@@ -86,7 +86,7 @@ export default function CreateEventStep3({
           rightSection={<ChevronRight size={16} />}></Button>
       </Group>
 
-      <Stack gap='lg' pr='md'>
+      <Stack gap='lg' w='100%'>
         {visibleDates.length > 0 ? (
           visibleDates.map((slot, idx) => (
             <Card key={idx} padding='md' radius='md' withBorder>
