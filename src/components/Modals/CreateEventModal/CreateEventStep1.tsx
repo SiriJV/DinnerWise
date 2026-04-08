@@ -22,6 +22,14 @@ interface EventDetails {
   tags: string[];
 }
 
+type ErrorType =
+  | 'timeout'
+  | 'quota'
+  | 'high_demand'
+  | 'server_error'
+  | 'network'
+  | 'unknown';
+
 interface CreateEventStep1Props {
   eventDetails: EventDetails;
   setEventDetails: (details: EventDetails) => void;
@@ -30,6 +38,23 @@ interface CreateEventStep1Props {
   errors: string[];
   isLoading: boolean;
 }
+
+const getErrorMessage = (errorType?: ErrorType): string => {
+  switch (errorType) {
+    case 'quota':
+      return 'API-gränsen för idag är nådd. Försök igen imorgon!';
+    case 'high_demand':
+      return 'AI-tjänsten är överbelastad just nu. Försök igen om några minuter.';
+    case 'timeout':
+      return 'Genereringen tog för lång tid. Försök igen, eller testa en kortare beskrivning.';
+    case 'network':
+      return 'Nätverksfel. Kontrollera din internetanslutning och försök igen.';
+    case 'server_error':
+      return 'Serverfel. Försök igen senare.';
+    default:
+      return 'Något gick fel med AI-genereringen. Försök igen.';
+  }
+};
 
 export default function CreateEventStep1({
   eventDetails,
@@ -66,16 +91,15 @@ export default function CreateEventStep1({
     const timeoutIds: number[] = [];
 
     timeoutIds.push(
-      // setTimeout(() => setError('Vi försöker fortfarande...'), 10000),
       setTimeout(
         () => setError('Vi försöker fortfarande, detta kan ta en stund...'),
-        20000,
+        15000,
       ),
     );
 
     timeoutIds.push(
       setTimeout(() => {
-        setError('AI-genereringen tog för lång tid. Försök igen senare.');
+        setError(getErrorMessage('timeout'));
         setLoading(false);
       }, 60000),
     );
@@ -101,14 +125,12 @@ export default function CreateEventStep1({
         setEventDetails({ ...eventDetails, title: result.content });
         setAiTitlePopoverOpened(false);
       } else {
-        setAiTitleError(result.error || 'Något gick fel med AI-genereringen');
+        setAiTitleError(result.error || getErrorMessage(result.errorType));
       }
     } catch (err) {
       timeoutIds.forEach(clearTimeout);
       setAiTitleError(
-        err instanceof Error
-          ? err.message
-          : 'Något gick fel med AI-genereringen',
+        err instanceof Error ? err.message : getErrorMessage('network'),
       );
     } finally {
       setAiTitleLoading(false);
@@ -133,14 +155,12 @@ export default function CreateEventStep1({
         setEventDetails({ ...eventDetails, description: result.content });
         setAiDescPopoverOpened(false);
       } else {
-        setAiDescError(result.error || 'Något gick fel med AI-genereringen');
+        setAiDescError(result.error || getErrorMessage(result.errorType));
       }
     } catch (err) {
       timeoutIds.forEach(clearTimeout);
       setAiDescError(
-        err instanceof Error
-          ? err.message
-          : 'Något gick fel med AI-genereringen',
+        err instanceof Error ? err.message : getErrorMessage('network'),
       );
     } finally {
       setAiDescLoading(false);
