@@ -6,6 +6,7 @@ import {
   TextInput,
   Button,
   Center,
+  Box,
 } from '@mantine/core';
 import { useState } from 'react';
 
@@ -16,9 +17,37 @@ export default function NewsLetterCTA(): React.ReactNode {
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
 
+  // Track which fields have been touched/blurred
+  const [touchedFields, setTouchedFields] = useState({
+    name: false,
+    email: false,
+  });
+
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const handleBlur = (field: keyof typeof touchedFields) => {
+    setTouchedFields((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+
+    // Validate on blur
+    if (field === 'email') {
+      if (!emailTo || !isValidEmail(emailTo)) {
+        setEmailError('Ogiltig e-postadress');
+      } else {
+        setEmailError('');
+      }
+    } else if (field === 'name') {
+      if (!name.trim()) {
+        setNameError('Fyll i ditt namn');
+      } else {
+        setNameError('');
+      }
+    }
   };
 
   const handleSendEmail = async () => {
@@ -60,6 +89,7 @@ export default function NewsLetterCTA(): React.ReactNode {
 
       setEmailTo('');
       setName('');
+      setTouchedFields({ name: false, email: false });
     } catch (err) {
       console.error('Fetch failed', err);
     }
@@ -82,27 +112,35 @@ export default function NewsLetterCTA(): React.ReactNode {
             <SimpleGrid
               cols={{ base: 1, xs: 2 }}
               spacing='xs'
-              style={{ alignItems: 'flex-end' }}>
-              <TextInput
-                label='Namn'
-                placeholder='Anna Svensson'
-                required
-                name='nl-signup-fname'
-                autoComplete='chrome-off'
-                value={name}
-                onChange={(e) => setName(e.currentTarget.value)}
-              />
+              style={{ alignItems: 'stretch' }}>
+              <Box>
+                <TextInput
+                  label='Namn'
+                  placeholder='Anna Svensson'
+                  required
+                  name='nl-signup-fname'
+                  autoComplete='chrome-off'
+                  value={name}
+                  onChange={(e) => setName(e.currentTarget.value)}
+                  onBlur={() => handleBlur('name')}
+                  error={touchedFields.name ? nameError : ''}
+                />
+              </Box>
 
-              <TextInput
-                label='E-post'
-                placeholder='exempel@epost.se'
-                required
-                name='nl-signup-mail'
-                type='text'
-                autoComplete='chrome-off'
-                value={emailTo}
-                onChange={(e) => setEmailTo(e.currentTarget.value)}
-              />
+              <Box>
+                <TextInput
+                  label='E-post'
+                  placeholder='exempel@epost.se'
+                  required
+                  name='nl-signup-mail'
+                  type='text'
+                  autoComplete='chrome-off'
+                  value={emailTo}
+                  onChange={(e) => setEmailTo(e.currentTarget.value)}
+                  onBlur={() => handleBlur('email')}
+                  error={touchedFields.email ? emailError : ''}
+                />
+              </Box>
 
               <Button
                 onClick={handleSendEmail}
