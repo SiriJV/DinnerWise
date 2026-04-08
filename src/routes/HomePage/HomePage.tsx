@@ -19,12 +19,36 @@ export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [availableTags, setAvailableTags] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [categoryFilters, setCategoryFilters] = useState<number[]>([]);
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
+
+  // Fetch tags based on selected category, or all tags if no category selected
+  useEffect(() => {
+    async function loadTags() {
+      try {
+        let url: string;
+        if (categoryFilters.length > 0) {
+          url = `http://localhost:3001/tags/category/${categoryFilters[0]}`;
+        } else {
+          url = 'http://localhost:3001/tags';
+        }
+        const res = await fetch(url);
+        const data = await res.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error loading tags:', err);
+        setAvailableTags([]);
+      }
+    }
+    loadTags();
+  }, [categoryFilters]);
 
   useEffect(() => {
     async function loadEvents() {
@@ -98,8 +122,8 @@ export default function HomePage() {
             />
 
             <SearchableFilterDropdown
-              label='Ämne'
-              fetchUrl='http://localhost:3001/tags'
+              label='Taggar'
+              items={availableTags}
               onApply={(selected) =>
                 setTagFilters(selected.map((item) => item.id))
               }

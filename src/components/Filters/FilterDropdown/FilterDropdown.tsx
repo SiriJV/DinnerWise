@@ -13,7 +13,11 @@ interface FilterDropdownProps {
   onApply?: (selected: FilterItem[]) => void;
 }
 
-export default function FilterDropdown({ fetchUrl, label, onApply }: FilterDropdownProps) {
+export default function FilterDropdown({
+  fetchUrl,
+  label,
+  onApply,
+}: FilterDropdownProps) {
   const [opened, setOpened] = useState(false);
   const [options, setOptions] = useState<FilterItem[]>([]);
   const [draft, setDraft] = useState<FilterItem[]>([]);
@@ -33,10 +37,10 @@ export default function FilterDropdown({ fetchUrl, label, onApply }: FilterDropd
   }, [fetchUrl]);
 
   const toggleDraft = (item: FilterItem) => {
-    setDraft(current =>
-      current.some(i => i.id === item.id)
-        ? current.filter(i => i.id !== item.id)
-        : [...current, item]
+    setDraft((current) =>
+      current.some((i) => i.id === item.id)
+        ? current.filter((i) => i.id !== item.id)
+        : [...current, item],
     );
   };
 
@@ -51,16 +55,15 @@ export default function FilterDropdown({ fetchUrl, label, onApply }: FilterDropd
   return (
     <Menu
       opened={opened}
-      onChange={o => {
+      onChange={(o) => {
         setOpened(o);
         if (o) setDraft(applied);
       }}
       closeOnItemClick={false}
-      shadow="md"
+      shadow='md'
       width={220}
-      position="bottom-start"
-      styles={{ dropdown: { zIndex: 10000 } }}
-    >
+      position='bottom-start'
+      styles={{ dropdown: { zIndex: 10000 } }}>
       <Menu.Target>
         <Button rightSection={<ChevronDown size={20} />}>
           {label} {applied.length > 0 ? `(${applied.length})` : ''}
@@ -70,23 +73,33 @@ export default function FilterDropdown({ fetchUrl, label, onApply }: FilterDropd
       <Menu.Dropdown>
         <Menu.Label>{label}</Menu.Label>
 
-        {options.map(option => {
-          const checked = draft.some(i => i.id === option.id);
-          return (
-            <Menu.Item
-              key={option.id}
-              onClick={() => toggleDraft(option)}
-              rightSection={checked ? <Check size={20} /> : null}
-            >
-              {option.name}
-            </Menu.Item>
-          );
-        })}
+        {options
+          .sort((a, b) => {
+            const aSelected = draft.some((i) => i.id === a.id);
+            const bSelected = draft.some((i) => i.id === b.id);
+            if (aSelected && !bSelected) return -1;
+            if (!aSelected && bSelected) return 1;
+            return 0;
+          })
+          .map((option) => {
+            const checked = draft.some((i) => i.id === option.id);
+            return (
+              <Menu.Item
+                key={option.id}
+                onClick={() => toggleDraft(option)}
+                rightSection={checked ? <Check size={20} /> : null}>
+                {option.name}
+              </Menu.Item>
+            );
+          })}
 
         <Menu.Divider />
 
-        <Group grow preventGrowOverflow={false} wrap="nowrap" gap="4">
-          <Button variant="subtle" disabled={draft.length === 0} onClick={clearDraft}>
+        <Group grow preventGrowOverflow={false} wrap='nowrap' gap='4'>
+          <Button
+            variant='subtle'
+            disabled={draft.length === 0}
+            onClick={clearDraft}>
             Rensa alla
           </Button>
           <Button onClick={handleSave}>Spara</Button>

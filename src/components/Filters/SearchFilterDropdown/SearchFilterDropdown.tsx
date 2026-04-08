@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu, Button, TextInput, Group, ScrollArea,} from '@mantine/core';
+import { Menu, Button, TextInput, Group, ScrollArea } from '@mantine/core';
 import { Check, Search, ChevronDown } from 'lucide-react';
 
 type FilterItem = {
@@ -9,11 +9,17 @@ type FilterItem = {
 
 type Props = {
   label: string;
-  fetchUrl: string;
+  fetchUrl?: string;
+  items?: FilterItem[];
   onApply: (selected: FilterItem[]) => void;
 };
 
-export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: Props) {
+export default function SearchableFilterDropdown({
+  label,
+  fetchUrl,
+  items: externalItems,
+  onApply,
+}: Props) {
   const [opened, setOpened] = useState(false);
   const [items, setItems] = useState<FilterItem[]>([]);
   const [draft, setDraft] = useState<FilterItem[]>([]);
@@ -21,6 +27,15 @@ export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: 
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    // If items are provided directly, use them
+    if (externalItems) {
+      setItems(externalItems);
+      return;
+    }
+
+    // Otherwise, fetch from URL
+    if (!fetchUrl) return;
+
     const controller = new AbortController();
 
     fetch(`${fetchUrl}?q=${encodeURIComponent(search)}`, {
@@ -31,13 +46,13 @@ export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: 
       .catch(() => {});
 
     return () => controller.abort();
-  }, [fetchUrl, search]);
+  }, [fetchUrl, search, externalItems]);
 
   const toggle = (item: FilterItem) => {
     setDraft((current) =>
       current.some((i) => i.id === item.id)
         ? current.filter((i) => i.id !== item.id)
-        : [...current, item]
+        : [...current, item],
     );
   };
 
@@ -50,13 +65,15 @@ export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: 
   return (
     <Menu
       opened={opened}
-      onChange={(o) => { setOpened(o); if (o) setDraft(applied); }}
+      onChange={(o) => {
+        setOpened(o);
+        if (o) setDraft(applied);
+      }}
       closeOnItemClick={false}
       width={260}
-      shadow="md"
-      position="bottom-start"
-      styles={{ dropdown: { zIndex: 10000 } }}
-    >
+      shadow='md'
+      position='bottom-start'
+      styles={{ dropdown: { zIndex: 10000 } }}>
       <Menu.Target>
         <Button rightSection={<ChevronDown size={18} />}>
           {label}
@@ -70,23 +87,39 @@ export default function SearchableFilterDropdown({ label, fetchUrl, onApply, }: 
           leftSection={<Search size={16} />}
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
-          mb="xs"
+          mb='xs'
         />
 
-        <ScrollArea h={240} type="auto">
-          {items.map((item) => {
-            const checked = draft.some((i) => i.id === item.id);
+        <ScrollArea h={240} type='auto'>
+          {items
+            .sort((a, b) => {
+              const aSelected = draft.some((i) => i.id === a.id);
+              const bSelected = draft.some((i) => i.id === b.id);
+              if (aSelected && !bSelected) return -1;
+              if (!aSelected && bSelected) return 1;
+              return 0;
+            })
+            .map((item) => {
+              const checked = draft.some((i) => i.id === item.id);
 
-            return (
-              <Menu.Item key={item.id} onClick={() => toggle(item)} rightSection={checked ? <Check size={18} /> : null}>
-                {item.name}
-              </Menu.Item>
-            );
-          })}
+              return (
+                <Menu.Item
+                  key={item.id}
+                  onClick={() => toggle(item)}
+                  rightSection={checked ? <Check size={18} /> : null}>
+                  {item.name}
+                </Menu.Item>
+              );
+            })}
         </ScrollArea>
 
-        <Group grow preventGrowOverflow={false} wrap="nowrap" gap="4">
-          <Button variant="subtle" disabled={draft.length === 0} onClick={() => setDraft([])}>Rensa alla</Button>
+        <Group grow preventGrowOverflow={false} wrap='nowrap' gap='4'>
+          <Button
+            variant='subtle'
+            disabled={draft.length === 0}
+            onClick={() => setDraft([])}>
+            Rensa alla
+          </Button>
           <Button onClick={handleSave}>Spara</Button>
         </Group>
       </Menu.Dropdown>

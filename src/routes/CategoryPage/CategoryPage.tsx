@@ -141,12 +141,6 @@ export default function CategoryPage() {
               onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
             />
 
-            <SearchableFilterDropdown
-              label='Ämne'
-              fetchUrl='http://localhost:3001/tags'
-              onApply={(selected) => setTagFilters(selected.map((s) => s.id))}
-            />
-
             <PriceDropdown
               label='Pris'
               onApply={(selected) => setPriceFilters(selected.map((s) => s.id))}

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Menu, Button } from '@mantine/core';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 
 export type SortValue = 'price' | 'availability' | 'date';
-
 
 interface SortProps {
   onSortChange?: (value: SortValue) => void;
@@ -13,11 +12,10 @@ const Sort = ({ onSortChange }: SortProps) => {
   const [selected, setSelected] = useState<SortValue | null>(null);
 
   const sortOptions: { value: SortValue; label: string }[] = [
-  { value: 'date', label: 'Närmast i tid' },
-  { value: 'price', label: 'Pris' },
-  { value: 'availability', label: 'Platser kvar' },
+    { value: 'date', label: 'Närmast i tid' },
+    { value: 'price', label: 'Pris' },
+    { value: 'availability', label: 'Platser kvar' },
   ];
-
 
   const handleSelect = (value: SortValue) => {
     setSelected(value);
@@ -28,16 +26,21 @@ const Sort = ({ onSortChange }: SortProps) => {
     sortOptions.find((opt) => opt.value === selected)?.label || 'A-Ö';
 
   return (
-    <Menu shadow="md" width={200}>
+    <Menu shadow='md' width={200}>
       <Menu.Target>
-        <Button variant="subtle" rightSection={<ChevronDown size={16} />}>
+        <Button variant='subtle' rightSection={<ChevronDown size={16} />}>
           Sorterar på: {selectedLabel}
         </Button>
       </Menu.Target>
 
       <Menu.Dropdown>
         {sortOptions.map((option) => (
-          <Menu.Item key={option.value} onClick={() => handleSelect(option.value)}>
+          <Menu.Item
+            key={option.value}
+            onClick={() => handleSelect(option.value)}
+            rightSection={
+              selected === option.value ? <Check size={18} /> : null
+            }>
             {option.label}
           </Menu.Item>
         ))}

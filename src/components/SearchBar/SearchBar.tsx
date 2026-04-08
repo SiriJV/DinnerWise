@@ -62,7 +62,7 @@ export default function SearchBar({
           })),
           ...tags.map((t: any) => ({
             value: `tag-${slugify(t.name)}`,
-            label: `🏷️${t.name} (ämne)`,
+            label: `🏷️${t.name} (tagg)`,
           })),
           ...categories.map((cat: any) => ({
             value: `category-${slugify(cat.name)}`,
