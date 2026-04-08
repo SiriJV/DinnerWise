@@ -103,6 +103,8 @@ export default function ShareByEmail({
             cursor: 'pointer',
             minHeight: '50px',
             paddingBlock: 'var(--mantine-spacing-md)',
+            border: 'none',
+            '--input-bd-focus': 'transparent',
           },
         }}
       />
