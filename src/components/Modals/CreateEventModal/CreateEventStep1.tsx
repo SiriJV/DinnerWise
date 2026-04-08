@@ -195,6 +195,7 @@ export default function CreateEventStep1({
         label='Titel'
         placeholder='Ge ditt event en titel'
         name='event-title'
+        autoComplete='off'
         value={eventDetails.title}
         onChange={(e) =>
           setEventDetails({ ...eventDetails, title: e.currentTarget.value })
@@ -290,6 +291,7 @@ export default function CreateEventStep1({
         label='Kategori'
         placeholder='Välj en passande kategori'
         name='event-category'
+        autoComplete='off'
         data={categoryOptions}
         value={eventDetails.category}
         onChange={(value) =>
@@ -307,6 +309,7 @@ export default function CreateEventStep1({
         label='Beskrivning'
         placeholder='Beskriv ditt event...'
         name='event-description'
+        autoComplete='off'
         value={eventDetails.description}
         onChange={(e) =>
           setEventDetails({
@@ -398,6 +401,7 @@ export default function CreateEventStep1({
         label='Taggar (valfritt)'
         placeholder='Sök och välj passande taggar'
         name='event-tags'
+        autoComplete='off'
         data={tagOptions}
         value={eventDetails.tags}
         onChange={(values) =>

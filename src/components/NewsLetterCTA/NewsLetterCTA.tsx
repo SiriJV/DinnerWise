@@ -88,6 +88,7 @@ export default function NewsLetterCTA(): React.ReactNode {
                 placeholder='Anna Svensson'
                 required
                 name='name'
+                autoComplete='name'
                 value={name}
                 onChange={(e) => setName(e.currentTarget.value)}
               />
@@ -97,6 +98,7 @@ export default function NewsLetterCTA(): React.ReactNode {
                 placeholder='exempel@epost.se'
                 required
                 name='email'
+                autoComplete='email'
                 value={emailTo}
                 onChange={(e) => setEmailTo(e.currentTarget.value)}
               />

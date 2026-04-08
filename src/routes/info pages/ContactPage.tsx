@@ -73,6 +73,7 @@ export default function ContactPage(): React.ReactNode {
                   placeholder='Ditt namn'
                   required
                   name='name'
+                  autoComplete='name'
                   maxLength={40}
                   value={formData.name}
                   onChange={(e) =>
@@ -84,6 +85,7 @@ export default function ContactPage(): React.ReactNode {
                   placeholder='Din e-postadress'
                   type='email'
                   name='email'
+                  autoComplete='email'
                   required
                   maxLength={40}
                   value={formData.email}
@@ -95,6 +97,7 @@ export default function ContactPage(): React.ReactNode {
                   label='Meddelande (max 600 tecken)'
                   placeholder='Berätta vad vi kan hjälpa dig med...'
                   name='message'
+                  autoComplete='off'
                   maxLength={600}
                   required
                   minRows={4}

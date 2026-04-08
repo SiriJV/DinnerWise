@@ -171,6 +171,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='accurate-feedback'
+                  autoComplete='off'
                   placeholder='T.ex. upplägg, innehåll, tidsplan eller något annat som inte motsvarade dina förväntningar.'
                   value={accurateFeedback}
                   onChange={(e) => setAccurateFeedback(e.target.value)}
@@ -226,6 +227,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='restaurant-feedback'
+                  autoComplete='off'
                   placeholder='T.ex. maten, servicen, ljudnivån eller miljön.'
                   value={restaurantFeedback}
                   onChange={(e) => setRestaurantFeedback(e.target.value)}
@@ -253,6 +255,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='event-feedback'
+                  autoComplete='off'
                   placeholder='T.ex. samtalsämnet, stämningen, tempot eller upplägg.'
                   value={eventFeedback}
                   onChange={(e) => setEventFeedback(e.target.value)}
@@ -280,6 +283,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='host-feedback'
+                  autoComplete='off'
                   placeholder='T.ex. information, bemötande, engagemang eller organisering.'
                   value={hostFeedback}
                   onChange={(e) => setHostFeedback(e.target.value)}
@@ -324,6 +328,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='recommend-feedback'
+                  autoComplete='off'
                   placeholder='Vad skulle behöva förbättras eller ändras för att du skulle rekommendera eventet till en vän?'
                   value={recommendFeedback}
                   onChange={(e) => setRecommendFeedback(e.target.value)}
@@ -340,6 +345,7 @@ export default function EventFeedback(): React.ReactNode {
                     </Text>
                   }
                   name='positive-feedback'
+                  autoComplete='off'
                   placeholder='T.ex. något som överraskade dig, något du uppskattade extra mycket eller något som gjorde att du kände dig glad under eventet.'
                   value={positiveFeedback}
                   onChange={(e) => setPositiveFeedback(e.target.value)}

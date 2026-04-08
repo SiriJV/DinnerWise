@@ -26,12 +26,25 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
   );
   const [password, setPassword] = useState('lösenord123');
 
+  // Track which fields have been touched/blurred
+  const [touchedFields, setTouchedFields] = useState({
+    email: false,
+    password: false,
+  });
+
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const isFormValid = password.trim() !== '' && isValidEmail(email);
+
+  const handleBlur = (field: keyof typeof touchedFields) => {
+    setTouchedFields((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+  };
 
   return (
     <Modal opened={opened} onClose={onClose} title='Logga in' centered>
@@ -53,10 +66,16 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         radius='xs'
         type='email'
         name='email'
+        autoComplete='email'
         maxLength={40}
         value={email}
         onChange={(e) => setEmail(e.currentTarget.value)}
-        error={email && !isValidEmail(email) ? 'Ogiltig e-postadress' : ''}
+        onBlur={() => handleBlur('email')}
+        error={
+          touchedFields.email && email && !isValidEmail(email)
+            ? 'Ogiltig e-postadress'
+            : ''
+        }
       />
       <PasswordInput
         label='Lösenord'
@@ -65,13 +84,13 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         mt='md'
         radius='xs'
         name='password'
+        autoComplete='current-password'
         maxLength={40}
         value={password}
         onChange={(e) => setPassword(e.currentTarget.value)}
+        onBlur={() => handleBlur('password')}
         error={
-          password === '' && email !== '' && password !== ''
-            ? 'Lösenord krävs'
-            : ''
+          touchedFields.password && password === '' ? 'Lösenord krävs' : ''
         }
       />
       <Group justify='space-between' mt='lg'>

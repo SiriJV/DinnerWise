@@ -27,6 +27,14 @@ export default function CreateAccountModal({
   const [password, setPassword] = useState('lösenord123');
   const [confirmPassword, setConfirmPassword] = useState('lösenord123');
 
+  // Track which fields have been touched/blurred
+  const [touchedFields, setTouchedFields] = useState({
+    email: false,
+    confirmEmail: false,
+    password: false,
+    confirmPassword: false,
+  });
+
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -51,6 +59,25 @@ export default function CreateAccountModal({
     });
   }
 
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    // Clear confirmEmail when user starts typing in email
+    setConfirmEmail('');
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    // Clear confirmPassword when user starts typing in password
+    setConfirmPassword('');
+  };
+
+  const handleBlur = (field: keyof typeof touchedFields) => {
+    setTouchedFields((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+  };
+
   return (
     <Modal opened={opened} onClose={onClose} title='Skapa konto' centered>
       <Text ta='center'>
@@ -71,10 +98,16 @@ export default function CreateAccountModal({
         radius='xs'
         type='email'
         name='email'
+        autoComplete='email'
         maxLength={40}
         value={email}
-        onChange={(e) => setEmail(e.currentTarget.value)}
-        error={email && !isValidEmail(email) ? 'Ogiltig e-postadress' : ''}
+        onChange={(e) => handleEmailChange(e.currentTarget.value)}
+        onBlur={() => handleBlur('email')}
+        error={
+          touchedFields.email && email && !isValidEmail(email)
+            ? 'Ogiltig e-postadress'
+            : ''
+        }
       />
       <TextInput
         label='Bekräfta e-post'
@@ -83,10 +116,16 @@ export default function CreateAccountModal({
         radius='xs'
         type='email'
         name='email-confirm'
+        autoComplete='email'
         maxLength={40}
         value={confirmEmail}
         onChange={(e) => setConfirmEmail(e.currentTarget.value)}
-        error={confirmEmail && !emailsMatch ? 'E-post matchar inte' : ''}
+        onBlur={() => handleBlur('confirmEmail')}
+        error={
+          touchedFields.confirmEmail && confirmEmail && !emailsMatch
+            ? 'E-post matchar inte'
+            : ''
+        }
       />
       <PasswordInput
         label='Lösenord'
@@ -95,13 +134,13 @@ export default function CreateAccountModal({
         mt='md'
         radius='xs'
         name='password'
+        autoComplete='new-password'
         maxLength={40}
         value={password}
-        onChange={(e) => setPassword(e.currentTarget.value)}
+        onChange={(e) => handlePasswordChange(e.currentTarget.value)}
+        onBlur={() => handleBlur('password')}
         error={
-          password === '' && email !== '' && password !== ''
-            ? 'Lösenord krävs'
-            : ''
+          touchedFields.password && password === '' ? 'Lösenord krävs' : ''
         }
       />
       <PasswordInput
@@ -111,11 +150,15 @@ export default function CreateAccountModal({
         mt='md'
         radius='xs'
         name='password-confirm'
+        autoComplete='new-password'
         maxLength={40}
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+        onBlur={() => handleBlur('confirmPassword')}
         error={
-          confirmPassword && !passwordsMatch ? 'Lösenorden matchar inte' : ''
+          touchedFields.confirmPassword && confirmPassword && !passwordsMatch
+            ? 'Lösenorden matchar inte'
+            : ''
         }
       />
       <Button

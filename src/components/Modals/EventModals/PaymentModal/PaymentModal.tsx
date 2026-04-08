@@ -168,6 +168,7 @@ export default function PaymentModal({
               placeholder='Kampanjkod'
               radius='xs'
               name='promo-code'
+              autoComplete='off'
               style={{ maxWidth: '150px' }}
             />
           </Group>

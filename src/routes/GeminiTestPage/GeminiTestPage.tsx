@@ -92,6 +92,7 @@ export default function GeminiTestPage() {
                   : 'Din fråga'
             }
             name='prompt'
+            autoComplete='off'
             placeholder={
               contentType === 'event_description'
                 ? 'T.ex. yoga, meditation, natur, mindfulness'

@@ -134,6 +134,7 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 name='first-name'
+                autoComplete='given-name'
                 maxLength={40}
                 value={participant.firstName}
                 onChange={(e) =>
@@ -159,6 +160,7 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 name='last-name'
+                autoComplete='family-name'
                 maxLength={40}
                 value={participant.lastName}
                 onChange={(e) =>
@@ -188,6 +190,7 @@ export default function RegisteringModal({
                 radius='xs'
                 type='tel'
                 name='tel'
+                autoComplete='tel'
                 maxLength={12}
                 value={participant.phone}
                 onChange={(e) => {
@@ -213,6 +216,7 @@ export default function RegisteringModal({
                 radius='xs'
                 type='email'
                 name='email'
+                autoComplete='email'
                 maxLength={40}
                 value={participant.email}
                 onChange={(e) =>
@@ -234,6 +238,7 @@ export default function RegisteringModal({
             label='Meddelande (valfritt)'
             description='Max 300 tecken'
             name='message'
+            autoComplete='off'
             placeholder='...'
             autosize
             minRows={2}
@@ -249,7 +254,9 @@ export default function RegisteringModal({
             <Checkbox
               size='xs'
               checked={termsAccepted}
-              required              name='terms-accepted'              onChange={(e) => setTermsAccepted(e.currentTarget.checked)}
+              required
+              name='terms-accepted'
+              onChange={(e) => setTermsAccepted(e.currentTarget.checked)}
               styles={{
                 label: { display: 'flex', alignItems: 'center' },
               }}

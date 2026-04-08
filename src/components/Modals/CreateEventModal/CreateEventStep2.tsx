@@ -60,6 +60,7 @@ export default function CreateEventStep2({
         w='100%'
         placeholder='Sök restaurang...'
         name='restaurant-search'
+        autoComplete='off'
         leftSection={<Search size={16} />}
         value={restaurantSearch}
         onChange={(e) => setRestaurantSearch(e.currentTarget.value)}
