@@ -7,6 +7,8 @@ import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop';
 import SearchBar from '../SearchBar/SearchBar';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
+import BackToTopButton from '../BackToTopButton/BackToTopButton';
+import FloatingActionButton from '../FAB/FAB';
 import { Suspense } from 'react';
 
 export default function AppShell() {
@@ -43,6 +45,8 @@ export default function AppShell() {
               <SearchBar />
             </Box>
             <ScrollToTop />
+            <BackToTopButton />
+            <FloatingActionButton />
             <Suspense fallback={null}>
               <Outlet />
             </Suspense>

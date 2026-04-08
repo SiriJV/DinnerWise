@@ -6,7 +6,6 @@ import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropd
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
-import FloatingActionButton from '../../components/FAB/FAB';
 
 import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
@@ -69,7 +68,6 @@ export default function HomePage() {
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-      <FloatingActionButton />
 
       <Stack p='md' mb='lg'>
         <CategoryImageCarousel />

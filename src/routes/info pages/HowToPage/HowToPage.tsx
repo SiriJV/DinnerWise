@@ -9,7 +9,6 @@ import {
   ThemeIcon,
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
-import FloatingActionButton from '../../../components/FAB/FAB';
 import './HowToPage.scss';
 import { CircleCheckBig, OctagonX } from 'lucide-react';
 import { APP_CONFIG } from '../../../config/appConfig';
@@ -56,8 +55,6 @@ export default function HowToPage() {
 
   return (
     <Container size='lg' pt='md'>
-      <FloatingActionButton />
-
       <Title order={2} mb='md'>
         Att tänka på när du skapar ett event
       </Title>
