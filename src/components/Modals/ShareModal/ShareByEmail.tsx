@@ -112,6 +112,7 @@ export default function ShareByEmail({
                 required
                 placeholder={'mottagare@epost.se'}
                 type='text'
+                name='email'
                 value={emailTo}
                 maxLength={120}
                 onChange={(e) => setEmailTo(e.currentTarget.value)}
@@ -128,6 +129,7 @@ export default function ShareByEmail({
               <TextInput
                 label='Ditt namn'
                 placeholder='Ditt namn'
+                name='name'
                 value={firstName}
                 maxLength={30}
                 onChange={handleNameChange}
@@ -136,6 +138,7 @@ export default function ShareByEmail({
               <Textarea
                 label='Meddelande'
                 placeholder='Skriv ditt meddelande här...'
+                name='message'
                 value={emailMessage}
                 onChange={(e) => setEmailMessage(e.currentTarget.value)}
                 minRows={2}

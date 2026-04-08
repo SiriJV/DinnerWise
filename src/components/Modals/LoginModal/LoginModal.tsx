@@ -52,6 +52,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         required
         radius='xs'
         type='email'
+        name='email'
         maxLength={40}
         value={email}
         onChange={(e) => setEmail(e.currentTarget.value)}
@@ -63,6 +64,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         required
         mt='md'
         radius='xs'
+        name='password'
         maxLength={40}
         value={password}
         onChange={(e) => setPassword(e.currentTarget.value)}
@@ -73,7 +75,7 @@ export default function LoginModal({ opened, onClose }: LoginModalProps) {
         }
       />
       <Group justify='space-between' mt='lg'>
-        <Checkbox label='Kom ihåg mig' />
+        <Checkbox label='Kom ihåg mig' name='remember' />
         <Anchor component='button' size='sm'>
           Glömt lösenord?
         </Anchor>

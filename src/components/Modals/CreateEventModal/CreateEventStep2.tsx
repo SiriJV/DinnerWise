@@ -59,6 +59,7 @@ export default function CreateEventStep2({
       <TextInput
         w='100%'
         placeholder='Sök restaurang...'
+        name='restaurant-search'
         leftSection={<Search size={16} />}
         value={restaurantSearch}
         onChange={(e) => setRestaurantSearch(e.currentTarget.value)}

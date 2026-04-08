@@ -167,6 +167,7 @@ export default function PaymentModal({
             <TextInput
               placeholder='Kampanjkod'
               radius='xs'
+              name='promo-code'
               style={{ maxWidth: '150px' }}
             />
           </Group>

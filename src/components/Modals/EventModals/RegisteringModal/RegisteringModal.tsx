@@ -133,6 +133,7 @@ export default function RegisteringModal({
                 placeholder='Förnamn'
                 required
                 radius='xs'
+                name='first-name'
                 maxLength={40}
                 value={participant.firstName}
                 onChange={(e) =>
@@ -157,6 +158,7 @@ export default function RegisteringModal({
                 placeholder='Efternamn'
                 required
                 radius='xs'
+                name='last-name'
                 maxLength={40}
                 value={participant.lastName}
                 onChange={(e) =>
@@ -185,6 +187,7 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 type='tel'
+                name='tel'
                 maxLength={12}
                 value={participant.phone}
                 onChange={(e) => {
@@ -209,6 +212,7 @@ export default function RegisteringModal({
                 required
                 radius='xs'
                 type='email'
+                name='email'
                 maxLength={40}
                 value={participant.email}
                 onChange={(e) =>
@@ -229,6 +233,7 @@ export default function RegisteringModal({
           <Textarea
             label='Meddelande (valfritt)'
             description='Max 300 tecken'
+            name='message'
             placeholder='...'
             autosize
             minRows={2}
@@ -244,8 +249,7 @@ export default function RegisteringModal({
             <Checkbox
               size='xs'
               checked={termsAccepted}
-              required
-              onChange={(e) => setTermsAccepted(e.currentTarget.checked)}
+              required              name='terms-accepted'              onChange={(e) => setTermsAccepted(e.currentTarget.checked)}
               styles={{
                 label: { display: 'flex', alignItems: 'center' },
               }}
@@ -268,6 +272,7 @@ export default function RegisteringModal({
             <Checkbox
               size='xs'
               label='Jag vill gärna få nyhetsbrev och andra uppdateringar.'
+              name='newsletter-subscription'
               defaultChecked={true}
             />
           </Stack>

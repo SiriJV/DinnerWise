@@ -151,6 +151,7 @@ export default function SearchBar({
       <Autocomplete
         className='searchBar'
         placeholder='Sök...'
+        name='search'
         onOptionSubmit={(val) => {
           handleNavigate(val);
         }}
@@ -189,6 +190,7 @@ export default function SearchBar({
         className='searchBar'
         style={{ width: '100%', ...style }}
         placeholder='Sök...'
+        name='search'
         onOptionSubmit={(val) => {
           handleNavigate(val);
         }}

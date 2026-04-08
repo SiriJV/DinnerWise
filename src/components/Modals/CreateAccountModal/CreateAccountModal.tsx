@@ -70,6 +70,7 @@ export default function CreateAccountModal({
         required
         radius='xs'
         type='email'
+        name='email'
         maxLength={40}
         value={email}
         onChange={(e) => setEmail(e.currentTarget.value)}
@@ -81,6 +82,7 @@ export default function CreateAccountModal({
         required
         radius='xs'
         type='email'
+        name='email-confirm'
         maxLength={40}
         value={confirmEmail}
         onChange={(e) => setConfirmEmail(e.currentTarget.value)}
@@ -92,6 +94,7 @@ export default function CreateAccountModal({
         required
         mt='md'
         radius='xs'
+        name='password'
         maxLength={40}
         value={password}
         onChange={(e) => setPassword(e.currentTarget.value)}
@@ -107,6 +110,7 @@ export default function CreateAccountModal({
         required
         mt='md'
         radius='xs'
+        name='password-confirm'
         maxLength={40}
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.currentTarget.value)}

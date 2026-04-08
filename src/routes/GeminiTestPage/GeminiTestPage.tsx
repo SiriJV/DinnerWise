@@ -91,6 +91,7 @@ export default function GeminiTestPage() {
                   ? 'Event-idé'
                   : 'Din fråga'
             }
+            name='prompt'
             placeholder={
               contentType === 'event_description'
                 ? 'T.ex. yoga, meditation, natur, mindfulness'
