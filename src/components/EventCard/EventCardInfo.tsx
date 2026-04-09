@@ -62,7 +62,8 @@ export default function EventCardInfo({
         <Anchor
           component={Link}
           to={`/profil/${host?.alias}`}
-          onClick={(e) => e.stopPropagation()}>
+          onClick={(e) => e.stopPropagation()}
+          c='black'>
           {host?.name || 'Anders Blom'}
         </Anchor>
       </Text>
