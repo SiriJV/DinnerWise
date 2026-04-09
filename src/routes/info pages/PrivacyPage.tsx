@@ -20,9 +20,7 @@ export default function PrivacyPage(): React.ReactNode {
           </Text>
           <Text>
             Vi delar aldrig dina personliga uppgifter med tredje part utan ditt
-            samtycke, förutom med värdar för att de ska kunna slutföra och
-            genomföra eventet du har bokat. Din data är krypterad och säker hos
-            oss.
+            samtycke. Din data är krypterad och säker hos oss.
           </Text>
         </Stack>
       </Container>
