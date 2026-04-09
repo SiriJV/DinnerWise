@@ -26,7 +26,9 @@ export default function PillComponent({
       }
       style={{ cursor: 'pointer', transition: '0.2s ease' }}>
       <Pill size={size ?? 'md'} bg={isCategory ? 'dimmed' : ''}>
-        <Text c={isCategory ? 'white' : 'black'}>{title}</Text>
+        <Text span c={isCategory ? 'white' : 'black'}>
+          {title}
+        </Text>
       </Pill>
     </Box>
   );
