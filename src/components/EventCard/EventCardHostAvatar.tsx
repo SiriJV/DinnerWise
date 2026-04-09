@@ -1,5 +1,5 @@
-import { Avatar, Box } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { Avatar } from '@mantine/core';
+import { Link } from 'react-router-dom';
 
 type User = {
   id: number;
@@ -15,24 +15,16 @@ interface EventCardHostAvatarProps {
 export default function EventCardHostAvatar({
   host,
 }: EventCardHostAvatarProps) {
-  const navigate = useNavigate();
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (host) {
-      navigate(`/profil/${host.alias}`);
-    }
-  };
-
   return (
-    <Box onClick={handleClick} style={{ cursor: 'pointer' }}>
-      <Avatar
-        src={host?.profile_picture_url}
-        alt='Host'
-        radius='xl'
-        size={56}
-        className='hostAvatar'
-      />
-    </Box>
+    <Avatar
+      component={Link}
+      src={host?.profile_picture_url}
+      to={`/profil/${host?.alias}`}
+      alt='Host'
+      radius='xl'
+      size={56}
+      className='hostAvatar'
+      onClick={(e) => e.stopPropagation()}
+    />
   );
 }
