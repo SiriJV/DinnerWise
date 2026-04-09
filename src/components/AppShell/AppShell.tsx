@@ -48,7 +48,7 @@ export default function AppShell() {
                   flex: 1,
                   display: 'flex',
                   flexDirection: 'column',
-                  minHeight: `calc(60dvh - ${window.matchMedia('(max-width: 48em)').matches ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}px)`,
+                  minHeight: `calc(80dvh - ${window.matchMedia('(max-width: 48em)').matches ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}px)`,
                 }}>
                 <Outlet />
               </Box>
