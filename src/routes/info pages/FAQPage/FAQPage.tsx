@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import { useModal } from '../../../contexts/ModalContext';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getFAQdata } from './FAQdata';
 import { slugify } from '../../../utils/slugify';
+import { getFAQdata } from './FAQdata';
 
 export default function FAQPage(): React.ReactNode {
   const { openCreate } = useModal();
