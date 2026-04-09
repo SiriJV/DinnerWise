@@ -5,15 +5,3 @@
   background: var(--mantine-color-gray-0);
   border-top: 1px solid var(--mantine-color-gray-2);
 }
-
-.footer-link {
-  text-decoration: none;
-  color: var(--mantine-color-dimmed);
-  font-size: 14px;
-  line-height: 1.6;
-
-  &:hover {
-    color: var(--mantine-color-black);
-    text-decoration: underline;
-  }
-}

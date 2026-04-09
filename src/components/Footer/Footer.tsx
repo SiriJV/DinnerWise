@@ -88,7 +88,7 @@ export default function Footer() {
                         return (
                           <Text
                             key={key}
-                            className='footer-link'
+                            className='link-hover'
                             onClick={logout}
                             style={{ cursor: 'pointer' }}>
                             {link.label}
