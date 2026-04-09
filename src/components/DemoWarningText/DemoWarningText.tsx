@@ -7,7 +7,7 @@ export default function DemoWarningText({
 }: DemoWarningTextProps): React.ReactNode {
   return (
     <Text fw={600} c='red'>
-      OBS: Det här är en demo-version. {text}
+      OBS! Det här är en demo-version. {text}
     </Text>
   );
 }
