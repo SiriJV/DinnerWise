@@ -57,7 +57,6 @@ export default function CategoryImageCarousel() {
             <Anchor
               component={Link}
               to={`/kategori/${slugify(category.name)}`}
-              className='navCarousel-link'
               c='black'>
               <Card radius='0' padding={0} className='navCarousel-card'>
                 <CategoryImage
