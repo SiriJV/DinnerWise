@@ -5,6 +5,7 @@ import {
   Space,
   Group,
   Drawer,
+  Button,
 } from '@mantine/core';
 import { Link, NavLink } from 'react-router-dom';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
@@ -15,6 +16,8 @@ import { slugify } from '../../utils/slugify';
 import { Brain } from 'lucide-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { APP_CONFIG } from '../../config/appConfig';
+import { useModal } from '../../contexts/ModalContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Category = {
   id: number;
@@ -33,6 +36,8 @@ interface NavBarProps {
 export default function NavBar({ opened, onClose }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const isMobile = useMediaQuery('(max-width: 48em)');
+  const { openCreateEvent } = useModal();
+  const { isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
     async function loadCategories() {
@@ -76,8 +81,21 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
               </NavLink>
             ))}
           </Stack>
+          {isLoggedIn && (
+            <Button
+              my='md'
+              variant='filled'
+              fullWidth
+              onClick={() => {
+                openCreateEvent();
+                onClose();
+              }}>
+              Skapa event
+            </Button>
+          )}
           {/* <Divider my='sm' /> */}
-          <Space h='xs' />
+
+          {!isLoggedIn && <Space h='xs' />}
 
           <NavBarAccordion onClose={onClose} />
           <Space h='xs' />
