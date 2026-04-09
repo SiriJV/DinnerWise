@@ -32,13 +32,8 @@ export default function AppShell() {
           <Header opened={opened} onToggle={toggle} onClose={close} />
         </MantineAppShell.Header>
 
-        <MantineAppShell.Main
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-          }}>
-          <Box style={{ flex: 1 }}>
+        <MantineAppShell.Main>
+          <Box style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Breadcrumb />
 
             <Box hiddenFrom='sm' px='md' pt='xs' pb='xs'>
@@ -48,7 +43,15 @@ export default function AppShell() {
             <BackToTopButton />
             <FloatingActionButton />
             <Suspense fallback={null}>
-              <Outlet />
+              <Box
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: `calc(60dvh - ${window.matchMedia('(max-width: 48em)').matches ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}px)`,
+                }}>
+                <Outlet />
+              </Box>
             </Suspense>
           </Box>
           <Footer />
