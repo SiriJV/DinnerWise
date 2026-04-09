@@ -1,5 +1,13 @@
-import { Avatar, Tooltip, Box, Popover, Text } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import {
+  Avatar,
+  Tooltip,
+  Box,
+  Popover,
+  Text,
+  Anchor,
+  Stack,
+} from '@mantine/core';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -25,7 +33,6 @@ export default function ParticipantAvatars({
   currentParticipants,
   maxParticipants,
 }: ParticipantAvatarsProps) {
-  const navigate = useNavigate();
   const [popoverOpened, setPopoverOpened] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const avatarSize = size === 'responsive' ? (isMobile ? 'md' : 'lg') : size;
@@ -35,20 +42,16 @@ export default function ParticipantAvatars({
       <Avatar.Group spacing={size === 'lg' ? 'sm' : 'xs'}>
         {participants.slice(0, maxVisible).map((user) => (
           <Tooltip key={user.id} label={user.name} withArrow>
-            <Box
-              className='link-hover'
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/profil/${user.alias}`);
-              }}
-              style={{ cursor: 'pointer' }}>
-              <Avatar
-                src={user.profile_picture_url}
-                radius='xl'
-                size={avatarSize}
-                className='hover-style'
-              />
-            </Box>
+            <Avatar
+              component={Link}
+              src={user?.profile_picture_url}
+              to={`/profil/${user?.alias}`}
+              alt={user.name}
+              radius='xl'
+              size={avatarSize}
+              onClick={(e) => e.stopPropagation()}
+              className='hover-style'
+            />
           </Tooltip>
         ))}
         {participants.length > maxVisible && (
@@ -88,23 +91,18 @@ export default function ParticipantAvatars({
                     {currentParticipants}/{maxParticipants} deltagare
                   </Text>
                 )}
-              {participants.slice(maxVisible).map((user) => (
-                <Box
-                  key={user.id}
-                  className='link-hover'
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/profil/${user.alias}`);
-                  }}
-                  style={{
-                    display: 'block',
-                    padding: '2px 0',
-                    color: 'var(--mantine-color-white)',
-                    cursor: 'pointer',
-                  }}>
-                  {user.name}
-                </Box>
-              ))}
+              <Stack gap='0'>
+                {participants.slice(maxVisible).map((user) => (
+                  <Anchor
+                    c='white'
+                    size='sm'
+                    component={Link}
+                    to={`/profil/${user.alias}`}
+                    onClick={(e) => e.stopPropagation()}>
+                    {user.name}
+                  </Anchor>
+                ))}
+              </Stack>
             </Popover.Dropdown>
           </Popover>
         )}
