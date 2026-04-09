@@ -1,5 +1,5 @@
-import { Text } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { Anchor, Text } from '@mantine/core';
+import { Link } from 'react-router-dom';
 import { generateRestaurantSlug, slugify } from '../../utils/slugify';
 
 type EventDetailsMetadataProps = {
@@ -18,52 +18,22 @@ export default function EventDetailsMetadata({
   restaurantId,
   restaurantCity,
 }: EventDetailsMetadataProps) {
-  const navigate = useNavigate();
   return (
     <Text w='fit-content'>
       med{' '}
-      <Text
-        span
-        c='red'
-        className='link-hover'
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate(host ? `/profil/${host.alias}` : '/profil/');
-        }}
-        style={{ cursor: 'pointer' }}>
-        {host?.name || 'Anders Blom'}
-      </Text>{' '}
+      <Anchor component={Link} to={`/profil/${host?.alias}`}>
+        {host?.name}
+      </Anchor>{' '}
       på{' '}
-      <Text
-        span
-        c='red'
-        className='link-hover'
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate(
-            restaurantName && restaurantId
-              ? `/restaurang/${generateRestaurantSlug(
-                  restaurantName,
-                  restaurantId,
-                )}`
-              : `/restaurang/${restaurantId}`,
-          );
-        }}
-        style={{ cursor: 'pointer' }}>
+      <Anchor
+        component={Link}
+        to={`/restaurang/${generateRestaurantSlug(restaurantName ?? '', restaurantId)}`}>
         {restaurantName}
-      </Text>{' '}
+      </Anchor>{' '}
       i{' '}
-      <Text
-        span
-        c='red'
-        className='link-hover'
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate(`/stad/${slugify(restaurantCity)}`);
-        }}
-        style={{ cursor: 'pointer' }}>
+      <Anchor component={Link} to={`/stad/${slugify(restaurantCity ?? '')}`}>
         {restaurantCity}
-      </Text>
+      </Anchor>
     </Text>
   );
 }

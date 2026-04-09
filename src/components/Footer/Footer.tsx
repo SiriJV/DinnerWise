@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   Box,
   Grid,
+  Anchor,
 } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
 import './Footer.scss';
@@ -59,7 +60,9 @@ export default function Footer() {
                         return (
                           <Text
                             key={key}
-                            className='footer-link'
+                            size='sm'
+                            c='dimmed'
+                            className='link-hover'
                             onClick={() => openLogin()}
                             style={{ cursor: 'pointer' }}>
                             {link.label}
@@ -71,7 +74,9 @@ export default function Footer() {
                         return (
                           <Text
                             key={key}
-                            className='footer-link'
+                            size='sm'
+                            c='dimmed'
+                            className='link-hover'
                             onClick={openCreate}
                             style={{ cursor: 'pointer' }}>
                             {link.label}
@@ -92,9 +97,14 @@ export default function Footer() {
                       }
 
                       return (
-                        <Link key={key} to={link.path} className='footer-link'>
+                        <Anchor
+                          component={Link}
+                          to={link.path}
+                          c='dimmed'
+                          key={key}
+                          size='sm'>
                           {link.label}
-                        </Link>
+                        </Anchor>
                       );
                     })}
                   </Stack>
@@ -112,21 +122,21 @@ export default function Footer() {
             </Text>
 
             <Group gap='md'>
-              <Link to='/kopvillkor' style={{ textDecoration: 'none' }}>
-                <Text size='xs' c='red' className='link-hover'>
+              <Group gap='md'>
+                <Anchor component={Link} to='/kopvillkor' c='dimmed' size='xs'>
                   Köpvillkor
-                </Text>
-              </Link>
-              <Link to='/integritetspolicy' style={{ textDecoration: 'none' }}>
-                <Text size='xs' c='red' className='link-hover'>
+                </Anchor>
+                <Anchor
+                  component={Link}
+                  to='/integritetspolicy'
+                  c='dimmed'
+                  size='xs'>
                   Integritetspolicy
-                </Text>
-              </Link>
-              <Link to='/cookies' style={{ textDecoration: 'none' }}>
-                <Text size='xs' c='red' className='link-hover'>
+                </Anchor>
+                <Anchor component={Link} to='/cookies' c='dimmed' size='xs'>
                   Cookies
-                </Text>
-              </Link>
+                </Anchor>
+              </Group>
             </Group>
           </Group>
         </Container>

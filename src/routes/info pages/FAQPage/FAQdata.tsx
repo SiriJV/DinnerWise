@@ -1,4 +1,4 @@
-import { Text, Button } from '@mantine/core';
+import { Text, Button, Anchor } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { APP_CONFIG } from '../../../config/appConfig';
 
@@ -22,13 +22,10 @@ export const getFAQdata = (
           {APP_CONFIG.brandName} är en plattform där du kan upptäcka och delta i
           middagsevent som skapas av andra användare, kallade värdar. Du kan
           bläddra bland olika event baserat på plats, ämne eller datum, och
-          anmäla dig till de som lockar dig. Läs mer om oss
-          <Link to={'/om-oss'} style={{ textDecoration: 'none' }}>
-            {' '}
-            <Text span c='red' className='link-hover'>
-              här
-            </Text>
-          </Link>
+          anmäla dig till de som lockar dig. Läs mer om oss{' '}
+          <Anchor component={Link} to={'/om-oss'}>
+            här
+          </Anchor>
           .
         </Text>
       </>
@@ -142,13 +139,10 @@ export const getFAQdata = (
           Vi tar din säkerhet på allvar. Alla användare verifieras via e-post
           och telefonnummer. Efter varje event kan deltagare lämna omdömen, både
           på värd och eventet i sig. Upptäcker du något som inte stämmer eller
-          känner dig osäker så kan du alltid
-          <Link to={'/kontakt'} style={{ textDecoration: 'none' }}>
-            {' '}
-            <Text span c='red' className='link-hover'>
-              kontakta oss
-            </Text>
-          </Link>{' '}
+          känner dig osäker så kan du alltid{' '}
+          <Anchor component={Link} to={'/kontakt'}>
+            kontakta oss
+          </Anchor>{' '}
           eller gå direkt till en profil eller ett event för att rapportera
           problemet.
         </Text>

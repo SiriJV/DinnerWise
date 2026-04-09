@@ -8,6 +8,7 @@ import {
   Button,
   Box,
   Group,
+  Anchor,
 } from '@mantine/core';
 import { APP_CONFIG } from '../../config/appConfig';
 import { Link } from 'react-router-dom';
@@ -53,11 +54,9 @@ export default function ContactPage(): React.ReactNode {
           </Text>
           <Text>
             Läs gärna vår{' '}
-            <Link to='/faq' style={{ textDecoration: 'none' }}>
-              <Text span c='red' className='link-hover'>
-                FAQ
-              </Text>
-            </Link>{' '}
+            <Anchor component={Link} to={'/faq'}>
+              FAQ
+            </Anchor>{' '}
             först för att se om du kan få svar på dina frågor där.
           </Text>
           <Text>
