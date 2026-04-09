@@ -1,4 +1,4 @@
-import { Button } from '@mantine/core';
+import { Affix, ActionIcon } from '@mantine/core';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
@@ -18,29 +18,20 @@ export default function FloatingActionButton({
 
   return (
     <>
-      <Button
-        onClick={
-          onClick ||
-          (() => (isLoggedIn ? openCreateEvent() : setLoginModalOpened(true)))
-        }
-        radius='xl'
-        size='lg'
-        style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          borderRadius: '50%',
-          padding: 0,
-          width: 56,
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-        }}
-        aria-label='Skapa'>
-        <Plus size={28} />
-      </Button>
+      <Affix position={{ bottom: 20, right: 20 }} zIndex={1000}>
+        <ActionIcon
+          onClick={
+            onClick ||
+            (() => (isLoggedIn ? openCreateEvent() : setLoginModalOpened(true)))
+          }
+          variant='filled'
+          color='red'
+          radius='xl'
+          size={56}
+          aria-label='Skapa'>
+          <Plus size={28} />
+        </ActionIcon>
+      </Affix>
 
       <CreateEventLoginModal
         opened={loginModalOpened}
