@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import AboutPage from '../routes/info pages/AboutPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
-import FAQPage from '../routes/info pages/FAQPage';
+import FAQPage from '../routes/info pages/FAQPage/FAQPage';
 import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';

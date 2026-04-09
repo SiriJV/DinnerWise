@@ -1,5 +1,5 @@
 import AboutPage from '../routes/info pages/AboutPage';
-import FAQPage from '../routes/info pages/FAQPage';
+import FAQPage from '../routes/info pages/FAQPage/FAQPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
 import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
