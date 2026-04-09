@@ -146,9 +146,9 @@ export const getFAQdata = (
           <Link to={'/kontakt'} style={{ textDecoration: 'none' }}>
             {' '}
             <Text span c='red' className='link-hover'>
-              kontakta oss{' '}
+              kontakta oss
             </Text>
-          </Link>
+          </Link>{' '}
           eller gå direkt till en profil eller ett event för att rapportera
           problemet.
         </Text>
