@@ -1,7 +1,7 @@
 import { Card, Badge, Box, Skeleton } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import './EventCard.scss';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { generateEventSlug } from '../../utils/slugify';
 import { fetchRestaurantById, type Restaurant } from '../../api/restaurants';
 import { useAuth } from '../../contexts/AuthContext';
@@ -75,7 +75,6 @@ export default function EventCard({
   restaurant_city,
   maxDescriptionLength = 100,
 }: EventCardProps) {
-  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [restaurantLoaded, setRestaurantLoaded] = useState(false);
   const [imagePreloaded, setImagePreloaded] = useState(false);
@@ -157,16 +156,13 @@ export default function EventCard({
 
   return (
     <Card
+      component={Link}
+      to={`/event/${generateEventSlug(title, id)}`}
       className='eventCard'
       shadow='sm'
       radius='md'
       pb='0'
       withBorder
-      onClick={() =>
-        navigate(`/event/${generateEventSlug(title, id)}`, {
-          state: { id, restaurantPhoto },
-        })
-      }
       style={{
         cursor: 'pointer',
         height: '100%',

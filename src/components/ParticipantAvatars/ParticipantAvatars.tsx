@@ -1,13 +1,5 @@
-import {
-  Avatar,
-  Tooltip,
-  Box,
-  Popover,
-  Text,
-  Anchor,
-  Stack,
-} from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { Avatar, Tooltip, Box, Popover, Text, Stack } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -36,6 +28,7 @@ export default function ParticipantAvatars({
   const [popoverOpened, setPopoverOpened] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const avatarSize = size === 'responsive' ? (isMobile ? 'md' : 'lg') : size;
+  const navigate = useNavigate();
 
   return (
     <Tooltip.Group openDelay={300} closeDelay={100}>
@@ -43,14 +36,18 @@ export default function ParticipantAvatars({
         {participants.slice(0, maxVisible).map((user) => (
           <Tooltip key={user.id} label={user.name} withArrow>
             <Avatar
-              component={Link}
+              key={user.id}
               src={user?.profile_picture_url}
-              to={`/profil/${user?.alias}`}
               alt={user.name}
               radius='xl'
               size={avatarSize}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate(`/profil/${user?.alias}`);
+              }}
               className='hover-style'
+              style={{ cursor: 'pointer' }}
             />
           </Tooltip>
         ))}
@@ -93,14 +90,20 @@ export default function ParticipantAvatars({
                 )}
               <Stack gap='0'>
                 {participants.slice(maxVisible).map((user) => (
-                  <Anchor
-                    c='white'
-                    size='sm'
-                    component={Link}
-                    to={`/profil/${user.alias}`}
-                    onClick={(e) => e.stopPropagation()}>
-                    {user.name}
-                  </Anchor>
+                  <Avatar
+                    key={user.id}
+                    src={user?.profile_picture_url}
+                    alt={user.name}
+                    radius='xl'
+                    size={avatarSize}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigate(`/profil/${user?.alias}`);
+                    }}
+                    className='hover-style'
+                    style={{ cursor: 'pointer' }}
+                  />
                 ))}
               </Stack>
             </Popover.Dropdown>

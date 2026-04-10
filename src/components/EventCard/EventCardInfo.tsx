@@ -2,7 +2,7 @@ import { Box, Group, Text, Divider, Anchor } from '@mantine/core';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { slugify } from '../../utils/slugify';
 import type { User } from '../../api/users';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mantine/hooks';
 
 interface EventCardInfoProps {
@@ -34,6 +34,8 @@ export default function EventCardInfo({
   displayMaxSpots,
   shortDescription,
 }: EventCardInfoProps) {
+  const navigate = useNavigate();
+
   const isLargeScreen = useMediaQuery('(min-width: 768px)');
   const maxRestaurantNameLength = isLargeScreen ? 30 : 20;
   const truncateRestaurantName = (
@@ -59,26 +61,51 @@ export default function EventCardInfo({
 
       <Text size='sm' mb='xs'>
         med{' '}
-        <Anchor
-          component={Link}
-          to={`/profil/${host?.alias}`}
-          onClick={(e) => e.stopPropagation()}
-          c='black'>
-          {host?.name || 'Anders Blom'}
-        </Anchor>
+        <Text
+          span
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(`/profil/${host?.alias}`);
+          }}
+          className='link-hover'>
+          {host?.name}
+        </Text>
       </Text>
 
       <Group mb='xs' gap='xs' align='center' w='100%'>
-        <Anchor
-          component={Link}
-          to={`/restaurang/${slugify(
-            restaurant_name,
-          )}${restaurant_id ? '-' + restaurant_id : ''}`}
+        <Text
+          span
+          className='link-hover'
           size='xs'
           c='dimmed'
-          onClick={(e) => e.stopPropagation()}>
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(
+              `/restaurang/${slugify(
+                restaurant_name,
+              )}${restaurant_id ? '-' + restaurant_id : ''}`,
+            );
+          }}
+          style={{ cursor: 'pointer' }}>
+          {' '}
           {truncateRestaurantName(restaurant_name)}
-        </Anchor>
+        </Text>
+        {/* <Anchor
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(
+              `/restaurang/${slugify(
+                restaurant_name,
+              )}${restaurant_id ? '-' + restaurant_id : ''}`,
+            );
+          }}
+          size='xs'
+          c='dimmed'>
+          {truncateRestaurantName(restaurant_name)}
+        </Anchor> */}
         <Divider orientation='vertical' />
         <Group
           justify='space-between'

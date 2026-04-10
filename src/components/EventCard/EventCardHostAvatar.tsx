@@ -1,5 +1,5 @@
 import { Avatar } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: number;
@@ -15,16 +15,20 @@ interface EventCardHostAvatarProps {
 export default function EventCardHostAvatar({
   host,
 }: EventCardHostAvatarProps) {
+  const navigate = useNavigate();
   return (
     <Avatar
-      component={Link}
       src={host?.profile_picture_url}
-      to={`/profil/${host?.alias}`}
       alt='Host'
       radius='xl'
       size={56}
       className='hostAvatar'
-      onClick={(e) => e.stopPropagation()}
+      style={{ cursor: 'pointer' }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigate(`/profil/${host?.alias}`);
+      }}
     />
   );
 }
