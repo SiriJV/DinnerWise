@@ -1,4 +1,4 @@
-import { Box, Pill, Text } from '@mantine/core';
+import { Button, Pill, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
 
@@ -14,22 +14,26 @@ export default function PillComponent({
   isCategory = false,
 }: PillComponentProps) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(
+      isCategory ? `/kategori/${slugify(title)}` : `/tagg/${slugify(title)}`,
+    );
+  };
+
   return (
-    <Box
-      className='hover-style'
-      onClick={() =>
-        navigate(
-          isCategory
-            ? `/kategori/${slugify(title)}`
-            : `/tagg/${slugify(title)}`,
-        )
-      }
-      style={{ cursor: 'pointer', transition: '0.2s ease' }}>
-      <Pill size={size ?? 'md'} bg={isCategory ? 'dimmed' : ''}>
-        <Text span c={isCategory ? 'white' : 'black'}>
-          {title}
-        </Text>
-      </Pill>
-    </Box>
+    <Pill
+      size={size ?? 'md'}
+      bg={isCategory ? 'dimmed' : undefined}
+      onClick={handleClick}
+      style={{
+        cursor: 'pointer',
+        transition: '0.2s ease',
+      }}
+      className='hover-style'>
+      <Text span c={isCategory ? 'white' : 'black'}>
+        {title}
+      </Text>
+    </Pill>
   );
 }
