@@ -11,17 +11,10 @@ import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { useSearchParams } from 'react-router-dom';
 
-function chunk<T>(array: T[], size: number): T[][] {
-  if (!array.length) return [];
-  const head = array.slice(0, size);
-  const tail = array.slice(size);
-  return [head, ...chunk(tail, size)];
-}
-
 type PaginatedEventGridProps = {
   events: EventType[];
   pageSize?: number;
-  loading?: Boolean;
+  loading?: boolean;
 };
 
 export default function PaginatedEventGrid({
@@ -30,51 +23,60 @@ export default function PaginatedEventGrid({
   loading = false,
 }: PaginatedEventGridProps) {
   const [params, setParams] = useSearchParams();
-  const pageParam = params.get('page');
-  const [activePage, setActivePage] = useState<number>(
-    pageParam ? parseInt(pageParam, 10) : 1,
-  );
-
-  // Sync state with URL param
-  useEffect(() => {
-    if (pageParam) {
-      const newPage = parseInt(pageParam, 10);
-      if (activePage !== newPage) {
-        setActivePage(newPage);
-      }
-    } else if (activePage !== 1) {
-      // Reset to page 1 when page param is removed
-      setActivePage(1);
-    }
-  }, [pageParam, activePage]);
-
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const eventPages = chunk(events, pageSize);
-  const pagedEvents = eventPages[activePage - 1] || [];
+  const pageFromUrl = Number(params.get('page')) || 1;
+  const [activePage, setActivePage] = useState(pageFromUrl);
+
+  const totalPages = Math.max(1, Math.ceil(events.length / pageSize));
+
+  // Sync URL → state (utan loopar)
+  useEffect(() => {
+    if (pageFromUrl !== activePage) {
+      setActivePage(pageFromUrl);
+    }
+  }, [pageFromUrl]);
+
+  // Clamp page om data ändras (t.ex. filter)
+  useEffect(() => {
+    if (activePage > totalPages) {
+      handlePageChange(1);
+    }
+  }, [events]);
+
+  const start = (activePage - 1) * pageSize;
+  const pagedEvents = events.slice(start, start + pageSize);
 
   const handlePageChange = (page: number) => {
     setActivePage(page);
-    setParams({
-      ...Object.fromEntries(params.entries()),
-      page: page.toString(),
-    });
-    // Scrolla upp till toppen av eventlistan
+
+    const newParams = new URLSearchParams(params);
+    newParams.set('page', page.toString());
+    setParams(newParams);
+
+    // Smooth scroll
     if (gridRef.current) {
-      const yOffset = -130; // justera om du har sticky header
+      const yOffset = -130;
       const y =
         gridRef.current.getBoundingClientRect().top +
         window.pageYOffset +
         yOffset;
+
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
+  const showEmpty = !loading && pagedEvents.length === 0;
+
   return (
     <>
       <Stack ref={gridRef}>
-        {loading || pagedEvents.length > 0 ? (
-          <SimpleGrid cols={{ base: 1, xs: 1, sm: 2, md: 3 }} spacing='lg'>
+        {showEmpty ? (
+          <Text p='xl' ta='center' c='dimmed'>
+            Det finns just nu inga event som matchar dina filter.
+          </Text>
+        ) : (
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing='lg'>
             {loading
               ? Array.from({ length: pageSize }).map((_, i) => (
                   <Skeleton key={i} height={280} radius='md' />
@@ -87,17 +89,13 @@ export default function PaginatedEventGrid({
                   />
                 ))}
           </SimpleGrid>
-        ) : (
-          <Text p='xl' ta='center' c='dimmed'>
-            Det finns just nu inga event som matchar dina filter.
-          </Text>
         )}
       </Stack>
 
-      {eventPages.length > 1 && (
+      {totalPages > 1 && (
         <Group justify='center' mt='md'>
           <Pagination
-            total={eventPages.length}
+            total={totalPages}
             value={activePage}
             onChange={handlePageChange}
             size='md'
