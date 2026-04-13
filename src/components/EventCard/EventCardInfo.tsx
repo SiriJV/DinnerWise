@@ -1,4 +1,4 @@
-import { Box, Group, Text, Divider, Anchor } from '@mantine/core';
+import { Box, Group, Text, Divider } from '@mantine/core';
 import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { slugify } from '../../utils/slugify';
 import type { User } from '../../api/users';
