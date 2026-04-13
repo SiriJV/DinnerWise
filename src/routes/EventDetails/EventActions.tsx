@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Button, Grid, Group, Text } from '@mantine/core';
+import { ActionIcon, Button, Grid, Group, Text } from '@mantine/core';
 import { FlagIcon, Share } from 'lucide-react';
 import BookmarkButton from '../../components/BookmarkIcon/BookmarkIcon';
 
