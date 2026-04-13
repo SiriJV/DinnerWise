@@ -1,4 +1,4 @@
-import { Box } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { BookmarkIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -14,7 +14,7 @@ export default function BookmarkButton({
   const { bookmarks, removeBookmark, addBookmark } = useAuth();
   const isBookmarked = bookmarks.includes(eventId);
 
-  const handleBookmarkClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -22,53 +22,30 @@ export default function BookmarkButton({
     else addBookmark(eventId);
   };
 
-  if (variant === 'sm') {
-    return (
-      <Box
-        onClick={handleBookmarkClick}
-        style={{
-          position: 'absolute',
-          top: 12,
-          right: 12,
-          cursor: 'pointer',
-          background: 'white',
-          borderRadius: '50%',
-          width: 34,
-          height: 34,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        }}>
-        <BookmarkIcon
-          size={18}
-          color='black'
-          fill={isBookmarked ? 'black' : 'none'}
-          style={{ display: 'block' }}
-        />
-      </Box>
-    );
-  }
+  const isSmall = variant === 'sm';
 
   return (
-    <Box
-      onClick={handleBookmarkClick}
-      bg='gray.3'
-      w='44px'
-      h='44px'
-      style={{
-        cursor: 'pointer',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+    <ActionIcon
+      onClick={handleClick}
+      radius='xl'
+      size={isSmall ? 34 : 44}
+      variant='filled'
+      color='gray.3'
+      style={
+        isSmall
+          ? {
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            }
+          : undefined
+      }>
       <BookmarkIcon
-        size={22}
+        size={isSmall ? 18 : 22}
         color='black'
         fill={isBookmarked ? 'black' : 'none'}
-        style={{ display: 'block' }}
       />
-    </Box>
+    </ActionIcon>
   );
 }
