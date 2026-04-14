@@ -14,49 +14,60 @@ export default function Breadcrumb() {
 
   if (pathnames[0] === 'profil') return null;
 
-  const items = pathnames
-    .map((value, index) => {
-      const prev = pathnames[index - 1];
+  const items: React.ReactNode[] = [];
 
-      if (prev === 'event' && eventName) {
-        return <Text key={index}>{eventName}</Text>;
-      }
+  pathnames.forEach((value, index) => {
+    const prev = pathnames[index - 1];
 
-      if (prev === 'restaurang' && restaurantName) {
-        return <Text key={index}>{restaurantName}</Text>;
-      }
+    if (isHiddenSegment(value)) return;
 
-      if (prev === 'kategori' && categoryName) {
-        return <Text key={index}>{categoryName}</Text>;
-      }
+    if (prev === 'event' && eventName) {
+      items.push(<Text key={`event-${index}`}>{eventName}</Text>);
+      return;
+    }
 
-      if (prev === 'tagg' && tagName) {
-        return (
-          <>
-            {tagCategoryName && (
-              <Anchor
-                key={`cat-${index}`}
-                component={Link}
-                to={`/kategori/${slugify(tagCategoryName)}`}>
-                {tagCategoryName}
-              </Anchor>
-            )}
-            <Text key={`tag-${index}`}>{tagName}</Text>
-          </>
+    if (prev === 'restaurang' && restaurantName) {
+      items.push(<Text key={`rest-${index}`}>{restaurantName}</Text>);
+      return;
+    }
+
+    if (prev === 'kategori' && categoryName) {
+      items.push(<Text key={`cat-${index}`}>{categoryName}</Text>);
+      return;
+    }
+
+    if (prev === 'tagg' && tagName) {
+      if (tagCategoryName) {
+        items.push(
+          <Anchor
+            key={`tag-cat-${index}`}
+            component={Link}
+            to={`/kategori/${slugify(tagCategoryName)}`}>
+            {tagCategoryName}
+          </Anchor>,
         );
       }
 
-      if (isHiddenSegment(value)) return null;
+      items.push(<Text key={`tag-${index}`}>{tagName}</Text>);
+      return;
+    }
 
-      return <Text key={index}>{formatLabel(value)}</Text>;
-    })
-    .flat()
-    .filter(Boolean);
+    items.push(<Text key={`seg-${index}`}>{formatLabel(value)}</Text>);
+  });
 
   if (!items.length) return null;
 
   return (
-    <Breadcrumbs className='breadcrumb' mt='md' ml='md'>
+    <Breadcrumbs
+      className='breadcrumb'
+      mt='md'
+      ml='md'
+      separator='/'
+      styles={{
+        separator: {
+          margin: '0 6px',
+        },
+      }}>
       <Anchor component={Link} to='/'>
         Startsida
       </Anchor>
