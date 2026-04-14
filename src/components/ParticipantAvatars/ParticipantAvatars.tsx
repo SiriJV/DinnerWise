@@ -99,6 +99,7 @@ export default function ParticipantAvatars({
               <Stack gap='xs'>
                 {participants.slice(maxVisible).map((user) => (
                   <Group
+                    key={user.id}
                     className='link-hover'
                     style={{ cursor: 'pointer' }}
                     onClick={(e) => {
@@ -107,7 +108,6 @@ export default function ParticipantAvatars({
                       navigate(`/profil/${user?.alias}`);
                     }}>
                     <Avatar
-                      key={user.id}
                       src={user?.profile_picture_url}
                       alt={user.name}
                       radius='xl'
