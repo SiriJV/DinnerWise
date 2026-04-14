@@ -30,7 +30,7 @@ export default function BookmarkButton({
       radius='xl'
       size={isSmall ? 34 : 44}
       variant='filled'
-      color='gray.3'
+      color={isSmall ? 'gray.0' : 'gray.3'}
       style={
         isSmall
           ? {
