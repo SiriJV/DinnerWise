@@ -7,7 +7,6 @@ import {
   Button,
   Center,
   Box,
-  Tooltip,
 } from '@mantine/core';
 import { useState } from 'react';
 import { validateEmail } from '../../utils/formValidation';
