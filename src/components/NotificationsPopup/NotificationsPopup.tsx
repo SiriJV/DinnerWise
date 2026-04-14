@@ -2,6 +2,7 @@ import {
   ActionIcon,
   CloseButton,
   Group,
+  Indicator,
   Popover,
   Stack,
   Text,
@@ -14,6 +15,7 @@ import { mockNotifications } from './mocknotifications';
 export default function NotificationsPopup() {
   const [opened, setOpened] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
+  const [read, setRead] = useState(false);
 
   const todayNotifications = notifications.filter(
     (n) => n.minutes !== undefined || n.hours !== undefined,
@@ -34,13 +36,18 @@ export default function NotificationsPopup() {
       opened={opened}
       onChange={setOpened}>
       <Popover.Target>
-        <ActionIcon
-          variant='subtle'
-          color='white'
-          size='md'
-          onClick={() => setOpened((o) => !o)}>
-          <BellIcon size={20} />
-        </ActionIcon>
+        <Indicator color='white' size={9} disabled={read}>
+          <ActionIcon
+            variant='subtle'
+            color='white'
+            size='md'
+            onClick={() => {
+              setOpened((o) => !o);
+              setRead(true);
+            }}>
+            <BellIcon size={20} />
+          </ActionIcon>
+        </Indicator>
       </Popover.Target>
 
       <Popover.Dropdown>
