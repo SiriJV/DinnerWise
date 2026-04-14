@@ -1,20 +1,27 @@
 import type { User } from '../api/users';
 
 /**
+ * SIMPLE CACHE (in-memory)
+ */
+const eventUsersCache = new Map<
+  string,
+  {
+    host: User | null;
+    participants: User[];
+  }
+>();
+
+/**
  * Beräkna host-index deterministiskt baserat på event ID
- * Använder en bättre hash-funktion för mer variation mellan events
  */
 export function getHostIndex(eventId: number, userCount: number): number {
   if (userCount === 0) return -1;
-  // Multiplicera med olika primtal för bättre distribution
-  // Använd bitwise AND för att hålla tal inom range
   const hash = Math.abs(((eventId * 73856093) ^ (eventId * 19349663)) >>> 0);
   return hash % userCount;
 }
 
 /**
- * Beräkna participant-index för ett specifikt deltagare-nummer
- * Använder en mer random-känsla distribution
+ * Participant index
  */
 export function getParticipantIndex(
   eventId: number,
@@ -22,51 +29,52 @@ export function getParticipantIndex(
   userCount: number,
 ): number {
   if (userCount === 0) return -1;
-  // Kombinera event ID och participant nummer för unik index
+
   const hash = Math.abs(
     ((eventId * 73856093) ^ (participantNumber * 19349663)) >>> 0,
   );
+
   return hash % userCount;
 }
 
 /**
- * Få deterministisk värd baserat på event ID
+ * Host
  */
 export function getDeterministicHost(
   eventId: number,
   users: User[],
 ): User | null {
-  if (!users || users.length === 0) return null;
+  if (!users?.length) return null;
+
   const hostIndex = getHostIndex(eventId, users.length);
   if (hostIndex < 0 || hostIndex >= users.length) return null;
-  return users[hostIndex] || null;
+
+  return users[hostIndex] ?? null;
 }
 
 /**
- * Få deterministiska deltagare för ett event
- * (exkluderar automatiskt värden så hen inte kan vara deltagare också)
+ * Participants
  */
 export function getDeterministicParticipants(
   eventId: number,
   participantCount: number,
   users: User[],
 ): User[] {
-  if (!users || users.length === 0) return [];
+  if (!users?.length) return [];
 
   const hostIndex = getHostIndex(eventId, users.length);
   const numParticipants = Math.min(participantCount || 0, users.length);
+
   const participantsList: User[] = [];
 
   for (let i = 0; i < numParticipants; i++) {
     const participantIndex = getParticipantIndex(eventId, i, users.length);
 
-    // Validera index
     if (participantIndex < 0 || participantIndex >= users.length) continue;
-
-    // Skip if this is the host
     if (participantIndex === hostIndex) continue;
 
     const participant = users[participantIndex];
+
     if (participant && !participantsList.find((p) => p.id === participant.id)) {
       participantsList.push(participant);
     }
@@ -76,14 +84,19 @@ export function getDeterministicParticipants(
 }
 
 /**
- * Få både värd och deltagare för ett event
+ * 🔥 CACHED VERSION (MAIN FIX)
  */
 export function getEventUsers(
   eventId: number,
   users: User[],
   participantCount: number,
 ) {
-  return {
+  const key = `${eventId}-${users.length}-${participantCount}`;
+
+  const cached = eventUsersCache.get(key);
+  if (cached) return cached;
+
+  const result = {
     host: getDeterministicHost(eventId, users),
     participants: getDeterministicParticipants(
       eventId,
@@ -91,25 +104,30 @@ export function getEventUsers(
       users,
     ),
   };
+
+  eventUsersCache.set(key, result);
+
+  return result;
 }
 
 /**
- * Kontrollera om användare är värd för ett event
+ * host check
  */
 export function isUserHosting(
   userId: number,
   eventId: number,
   users: User[],
 ): boolean {
-  if (!users || users.length === 0) return false;
+  if (!users?.length) return false;
+
   const hostIndex = getHostIndex(eventId, users.length);
   if (hostIndex < 0 || hostIndex >= users.length) return false;
-  const host = users[hostIndex];
-  return host?.id === userId;
+
+  return users[hostIndex]?.id === userId;
 }
 
 /**
- * Kontrollera om användare är deltagare i ett event
+ * participant check
  */
 export function isUserParticipating(
   userId: number,
@@ -117,8 +135,8 @@ export function isUserParticipating(
   participantCount: number,
   users: User[],
 ): boolean {
-  if (!users || users.length === 0) return false;
-  // Värd kan inte vara deltagare också
+  if (!users?.length) return false;
+
   if (isUserHosting(userId, eventId, users)) return false;
 
   const participants = getDeterministicParticipants(
@@ -126,5 +144,6 @@ export function isUserParticipating(
     participantCount,
     users,
   );
+
   return participants.some((p) => p.id === userId);
 }

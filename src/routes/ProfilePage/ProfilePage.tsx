@@ -84,7 +84,7 @@ export default function ProfilePage() {
     return (
       <>
         <Box pos='relative'>
-          <Skeleton height={250} />
+          <Skeleton height={250} />g
           <Center
             style={{
               position: 'absolute',
