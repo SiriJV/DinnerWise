@@ -7,16 +7,19 @@ import {
   Button,
   Center,
   Box,
+  Tooltip,
 } from '@mantine/core';
 import { useState } from 'react';
 import { validateEmail } from '../../utils/formValidation';
 import { useFormTouched } from '../../hooks/useFormTouched';
+import DisabledTooltipButton from '../DisabledTooltipButton/DisabledTooltipButton';
 
 export default function NewsLetterCTA(): React.ReactNode {
   const [name, setName] = useState('');
   const [emailTo, setEmailTo] = useState('');
   const { isTouched, handleBlur } = useFormTouched();
   const { isValid: isEmailValid, error: emailError } = validateEmail(emailTo);
+  const isDisabled = !name || !emailTo || !isEmailValid;
 
   const handleSendEmail = async () => {
     let hasError = false;
@@ -106,11 +109,11 @@ export default function NewsLetterCTA(): React.ReactNode {
                 />
               </Box>
 
-              <Button
-                onClick={handleSendEmail}
-                disabled={!name || !emailTo || !isEmailValid}>
-                Registrera dig
-              </Button>
+              <DisabledTooltipButton
+                disabled={isDisabled}
+                tooltip={'Fyll i alla fält korrekt'}
+                children={<Button disabled={isDisabled}>Registrera dig</Button>}
+              />
             </SimpleGrid>
           </SimpleGrid>
         </Container>
