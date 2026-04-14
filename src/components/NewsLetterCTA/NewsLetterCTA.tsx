@@ -110,9 +110,10 @@ export default function NewsLetterCTA(): React.ReactNode {
 
               <DisabledTooltipButton
                 disabled={isDisabled}
-                tooltip={'Fyll i alla fält korrekt'}
-                children={<Button disabled={isDisabled}>Registrera dig</Button>}
-              />
+                tooltip='Fyll i alla fält korrekt'
+                onClick={handleSendEmail}>
+                Registrera dig
+              </DisabledTooltipButton>
             </SimpleGrid>
           </SimpleGrid>
         </Container>

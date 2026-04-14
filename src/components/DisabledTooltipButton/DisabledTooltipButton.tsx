@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@mantine/core';
+import { Tooltip, Button } from '@mantine/core';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -6,6 +6,7 @@ type Props = {
   tooltip: string;
   children: ReactNode;
   onClick?: () => void;
+  variant?: string;
 };
 
 export default function DisabledTooltipButton({
@@ -13,14 +14,19 @@ export default function DisabledTooltipButton({
   tooltip,
   children,
   onClick,
+  variant,
 }: Props) {
   const button = (
-    <Button disabled={disabled} onClick={onClick}>
+    <Button disabled={disabled} onClick={onClick} variant={variant as any}>
       {children}
     </Button>
   );
 
   if (!disabled) return button;
 
-  return <Tooltip label={tooltip}>{button}</Tooltip>;
+  return (
+    <Tooltip label={tooltip} withArrow>
+      {button}
+    </Tooltip>
+  );
 }
