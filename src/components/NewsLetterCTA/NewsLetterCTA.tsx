@@ -4,14 +4,13 @@ import {
   SimpleGrid,
   Stack,
   TextInput,
-  Button,
   Center,
   Box,
 } from '@mantine/core';
 import { useState } from 'react';
 import { validateEmail } from '../../utils/formValidation';
 import { useFormTouched } from '../../hooks/useFormTouched';
-import DisabledTooltipButton from '../DisabledTooltipButton/DisabledTooltipButton';
+import TooltipButton from '../DisabledTooltipButton/TooltipButton';
 
 export default function NewsLetterCTA(): React.ReactNode {
   const [name, setName] = useState('');
@@ -108,12 +107,12 @@ export default function NewsLetterCTA(): React.ReactNode {
                 />
               </Box>
 
-              <DisabledTooltipButton
+              <TooltipButton
                 disabled={isDisabled}
                 tooltip='Fyll i alla fält korrekt'
                 onClick={handleSendEmail}>
                 Registrera dig
-              </DisabledTooltipButton>
+              </TooltipButton>
             </SimpleGrid>
           </SimpleGrid>
         </Container>

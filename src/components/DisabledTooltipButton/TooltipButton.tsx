@@ -1,7 +1,7 @@
 import { Tooltip, Button } from '@mantine/core';
 import type { ReactNode } from 'react';
 
-type Props = {
+type TooltipButtonProps = {
   disabled: boolean;
   tooltip: string;
   children: ReactNode;
@@ -9,13 +9,13 @@ type Props = {
   variant?: string;
 };
 
-export default function DisabledTooltipButton({
+export default function TooltipButton({
   disabled,
   tooltip,
   children,
   onClick,
   variant,
-}: Props) {
+}: TooltipButtonProps) {
   const button = (
     <Button disabled={disabled} onClick={onClick} variant={variant as any}>
       {children}
