@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchUsers, type User } from '../api/users';
+import { getEventUsers } from '../utils/deterministicUsers';
 
 export default function useEventUsers(
   id: number,
@@ -13,21 +14,13 @@ export default function useEventUsers(
     async function loadUsers() {
       setLoading(true);
       const data = await fetchUsers();
-
-      // Deterministic host based on event ID
-      const hostIndex = id % data.length;
-      setHost(data[hostIndex]);
-
-      // Deterministic participants based on event ID and current_participants
-      const numParticipants = Math.min(current_participants || 0, data.length);
-      const participantsList: User[] = [];
-      for (let i = 0; i < numParticipants; i++) {
-        const participantIndex = (id * 7 + i * 13) % data.length;
-        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
-          participantsList.push(data[participantIndex]);
-        }
-      }
-      setParticipants(participantsList);
+      const { host, participants } = getEventUsers(
+        id,
+        data,
+        current_participants,
+      );
+      setHost(host);
+      setParticipants(participants);
       setLoading(false);
     }
 

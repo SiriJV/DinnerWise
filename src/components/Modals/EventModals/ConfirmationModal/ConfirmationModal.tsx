@@ -7,6 +7,7 @@ import { Share } from 'lucide-react';
 import type { EventType } from '../../../../types/EventType';
 import { slugify } from '../../../../utils/slugify';
 import { fetchUsers, type User } from '../../../../api/users';
+import { getDeterministicHost } from '../../../../utils/deterministicUsers';
 import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModal';
 
 interface Participant {
@@ -45,8 +46,8 @@ export default function ConfirmationModal({
 
       try {
         const users = await fetchUsers();
-        const hostIndex = event.id % users.length;
-        setHost(users[hostIndex]);
+        const hostUser = getDeterministicHost(event.id, users);
+        setHost(hostUser);
       } catch (err) {
         console.error('Failed to load host:', err);
       }

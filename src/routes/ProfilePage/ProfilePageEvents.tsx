@@ -4,6 +4,10 @@ import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import { useNavigationType, useSearchParams } from 'react-router-dom';
+import {
+  isUserHosting,
+  isUserParticipating,
+} from '../../utils/deterministicUsers';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -60,24 +64,17 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     }
   }, [activeTab, navigationType]);
 
-  const userIndex = allUsers.findIndex((u) => u.id === userId);
-
   const hostingEvents = allEvents.filter((event) => {
-    if (!allUsers.length) return false;
-    const hostIndex = event.id % allUsers.length;
-    return hostIndex === userIndex;
+    return isUserHosting(userId, event.id, allUsers);
   });
 
   const participatingEvents = allEvents.filter((event) => {
-    if (!allUsers.length) return false;
-    const hostIndex = event.id % allUsers.length;
-    if (hostIndex === userIndex) return false;
-    const numParticipants = Math.min(3 + (event.id % 3), allUsers.length);
-    for (let i = 0; i < numParticipants; i++) {
-      const participantIndex = (event.id * 7 + i * 13) % allUsers.length;
-      if (participantIndex === userIndex) return true;
-    }
-    return false;
+    return isUserParticipating(
+      userId,
+      event.id,
+      event.current_participants,
+      allUsers,
+    );
   });
 
   const savedEvents = allEvents.filter((e) => bookmarks.includes(e.id));

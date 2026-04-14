@@ -1,12 +1,8 @@
 import { Alert, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
-
-type User = {
-  id: number;
-  name: string;
-  alias: string;
-};
+import { getDeterministicHost } from '../../../utils/deterministicUsers';
+import type { User } from '../../../api/users';
 
 interface ModalEventInfoProps {
   event: EventType;
@@ -28,10 +24,8 @@ export default function ModalEventInfo({
       try {
         const res = await fetch('http://localhost:3001/users');
         const data: User[] = await res.json();
-
-        // Deterministic host based on event ID (same as EventCard/EventDetails)
-        const hostIndex = event.id % data.length;
-        setHost(data[hostIndex]);
+        const hostUser = getDeterministicHost(event.id, data);
+        setHost(hostUser);
       } catch (err) {
         console.error('Failed to load host:', err);
       }
