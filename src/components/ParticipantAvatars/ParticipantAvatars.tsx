@@ -1,4 +1,12 @@
-import { Avatar, Tooltip, Box, Popover, Text, Stack } from '@mantine/core';
+import {
+  Avatar,
+  Tooltip,
+  Box,
+  Popover,
+  Text,
+  Stack,
+  Group,
+} from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
@@ -88,22 +96,26 @@ export default function ParticipantAvatars({
                     {currentParticipants}/{maxParticipants} deltagare
                   </Text>
                 )}
-              <Stack gap='0'>
+              <Stack gap='xs'>
                 {participants.slice(maxVisible).map((user) => (
-                  <Avatar
-                    key={user.id}
-                    src={user?.profile_picture_url}
-                    alt={user.name}
-                    radius='xl'
-                    size={avatarSize}
+                  <Group
+                    className='link-hover'
+                    style={{ cursor: 'pointer' }}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       navigate(`/profil/${user?.alias}`);
-                    }}
-                    className='hover-style'
-                    style={{ cursor: 'pointer' }}
-                  />
+                    }}>
+                    <Avatar
+                      key={user.id}
+                      src={user?.profile_picture_url}
+                      alt={user.name}
+                      radius='xl'
+                      size={avatarSize}
+                      bd='none'
+                    />
+                    {user.name}
+                  </Group>
                 ))}
               </Stack>
             </Popover.Dropdown>
