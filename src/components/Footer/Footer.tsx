@@ -16,6 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
 import NewsLetterCTA from '../NewsLetterCTA/NewsLetterCTA';
 import { APP_CONFIG } from '../../config/appConfig';
+import FooterLink from './FooterLink';
 
 export default function Footer() {
   const { isLoggedIn, logout } = useAuth();
@@ -56,57 +57,19 @@ export default function Footer() {
                     {group.panels.map((link, linkIdx) => {
                       const key = `${link.label}-${linkIdx}`;
 
-                      if (link.modal === 'login') {
-                        return (
-                          <Text
-                            key={key}
-                            size='sm'
-                            c='dimmed'
-                            className='link-hover'
-                            onClick={() => openLogin()}
-                            style={{ cursor: 'pointer' }}>
-                            {link.label}
-                          </Text>
-                        );
-                      }
+                      let onClick;
 
-                      if (link.modal === 'create') {
-                        return (
-                          <Text
-                            key={key}
-                            size='sm'
-                            c='dimmed'
-                            className='link-hover'
-                            onClick={openCreate}
-                            style={{ cursor: 'pointer' }}>
-                            {link.label}
-                          </Text>
-                        );
-                      }
-
-                      if (link.modal === 'logout') {
-                        return (
-                          <Text
-                            key={key}
-                            className='link-hover'
-                            size='sm'
-                            c='dimmed'
-                            onClick={logout}
-                            style={{ cursor: 'pointer' }}>
-                            {link.label}
-                          </Text>
-                        );
-                      }
+                      if (link.modal === 'login') onClick = openLogin;
+                      if (link.modal === 'create') onClick = openCreate;
+                      if (link.modal === 'logout') onClick = logout;
 
                       return (
-                        <Anchor
-                          component={Link}
-                          to={link.path}
-                          c='dimmed'
+                        <FooterLink
                           key={key}
-                          size='sm'>
-                          {link.label}
-                        </Anchor>
+                          label={link.label}
+                          to={!link.modal ? link.path : undefined}
+                          onClick={onClick}
+                        />
                       );
                     })}
                   </Stack>
