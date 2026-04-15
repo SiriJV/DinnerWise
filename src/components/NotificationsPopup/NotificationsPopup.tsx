@@ -89,7 +89,7 @@ export default function NotificationsPopup() {
               )}
 
               <CloseButton
-                onClick={(o) => {
+                onClick={() => {
                   setOpened(false);
                   setTimeout(() => setView('notifications'), 300);
                 }}
