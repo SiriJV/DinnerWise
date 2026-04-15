@@ -7,15 +7,20 @@ import {
   Grid,
   List,
   ThemeIcon,
+  UnstyledButton,
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import './HowToPage.scss';
 import { CircleCheckBig, OctagonX } from 'lucide-react';
 import { APP_CONFIG } from '../../../config/appConfig';
 import SkeletonImageComponent from '../../../components/SkeletonImageComponent/SkeletonImageComponent';
+import { useModal } from '../../../contexts/ModalContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function HowToPage() {
   const [active, setActive] = useState(0);
+  const { openLogin, openCreate } = useModal();
+  const { isLoggedIn } = useAuth();
 
   const stepRefs = [
     useRef<HTMLDivElement>(null),
@@ -155,10 +160,36 @@ export default function HowToPage() {
             <Grid.Col span={8}>
               <Stack h='100%' justify='space-between'>
                 <Text ref={stepRefs[0]}>
-                  Skapa eller logga in på ett konto. Det behövs för att du ska
-                  kunna hantera dina event, kommunicera med deltagare och få
-                  notifieringar om bokningar. Att ha ett konto gör också att
-                  deltagarna kan känna sig trygga.
+                  {isLoggedIn ? (
+                    <>Skapa eller logga in på ett konto.</>
+                  ) : (
+                    <>
+                      <UnstyledButton onClick={openCreate}>
+                        <Text
+                          span
+                          c='red'
+                          className='link-hover'
+                          style={{ cursor: 'pointer' }}>
+                          Skapa
+                        </Text>
+                      </UnstyledButton>{' '}
+                      eller{' '}
+                      <UnstyledButton onClick={() => openLogin()}>
+                        <Text
+                          span
+                          c='red'
+                          className='link-hover'
+                          style={{ cursor: 'pointer' }}>
+                          logga in
+                        </Text>
+                      </UnstyledButton>{' '}
+                      på ett konto.
+                    </>
+                  )}{' '}
+                  Det behövs för att du ska kunna hantera dina event,
+                  kommunicera med deltagare och få notifieringar om bokningar.
+                  Att ha ett konto gör också att deltagarna kan känna sig
+                  trygga.
                 </Text>
 
                 <Text ref={stepRefs[1]} style={{ alignSelf: 'center' }}>
