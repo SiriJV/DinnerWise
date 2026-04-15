@@ -85,7 +85,7 @@ export default function NewsLetterCTA(): React.ReactNode {
                   value={name}
                   onChange={(e) => setName(e.currentTarget.value)}
                   onBlur={() => handleBlur('name')}
-                  error={isTouched('name') && !name.trim() ? 'Namn krävs' : ''}
+                  // error={isTouched('name') && !name.trim() ? 'Namn krävs' : ''}
                 />
               </Box>
 
