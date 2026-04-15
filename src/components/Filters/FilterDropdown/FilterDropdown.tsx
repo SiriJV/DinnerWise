@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, Button, Group } from '@mantine/core';
 import { Check, ChevronDown } from 'lucide-react';
-import TooltipButton from '../../DisabledTooltipButton/TooltipButton';
 
 interface FilterItem {
   id: number;
@@ -97,13 +96,12 @@ export default function FilterDropdown({
         <Menu.Divider />
 
         <Group grow preventGrowOverflow={false} wrap='nowrap' gap='4'>
-          <TooltipButton
+          <Button
             disabled={draft.length === 0}
-            tooltip='Du måste lägga till minst ett val innan du kan rensa'
             onClick={clearDraft}
             variant='subtle'>
             Rensa alla
-          </TooltipButton>
+          </Button>
 
           <Button onClick={handleSave}>Spara</Button>
         </Group>
