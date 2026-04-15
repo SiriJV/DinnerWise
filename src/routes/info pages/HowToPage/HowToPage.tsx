@@ -78,6 +78,11 @@ export default function HowToPage() {
             spacing='md'
             size='sm'
             center
+            styles={{
+              itemLabel: {
+                lineHeight: 1.6,
+              },
+            }}
             icon={
               <ThemeIcon size={24} radius='xl' color='darkgreen'>
                 <CircleCheckBig size={16} />
