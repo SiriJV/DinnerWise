@@ -25,7 +25,7 @@ export default function TooltipButton({
   if (!disabled) return button;
 
   return (
-    <Tooltip label={tooltip} withArrow>
+    <Tooltip label={tooltip} withArrow openDelay={500}>
       {button}
     </Tooltip>
   );
