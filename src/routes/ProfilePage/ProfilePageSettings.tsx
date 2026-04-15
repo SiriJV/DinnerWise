@@ -123,7 +123,7 @@ export default function ProfilePageSettings() {
               {' '}
               <Stack gap='lg'>
                 <Stack gap='xs'>
-                  <Text size='xs' c='dimmed' tt='uppercase'>
+                  <Text size='xs' fw={600} tt='uppercase'>
                     Profil
                   </Text>
                   <MenuItem label='Personuppgifter' value='profile' />
@@ -132,7 +132,7 @@ export default function ProfilePageSettings() {
                 </Stack>
 
                 <Stack gap='xs'>
-                  <Text size='xs' c='dimmed' tt='uppercase'>
+                  <Text size='xs' fw={600} tt='uppercase'>
                     Preferenser
                   </Text>
                   <MenuItem label='Inställningar' value='preferences' />
@@ -140,7 +140,7 @@ export default function ProfilePageSettings() {
                 </Stack>
 
                 <Stack gap='xs'>
-                  <Text size='xs' c='dimmed' tt='uppercase'>
+                  <Text size='xs' fw={600} tt='uppercase'>
                     Interaktion
                   </Text>
                   <MenuItem label='Blockerade' value='blocked' />
