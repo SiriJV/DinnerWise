@@ -19,7 +19,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 export default function HowToPage() {
   const [active, setActive] = useState(0);
-  const { openLogin, openCreate } = useModal();
+  const { openLogin, openCreate, openCreateEvent } = useModal();
   const { isLoggedIn } = useAuth();
 
   const stepRefs = [
@@ -193,10 +193,23 @@ export default function HowToPage() {
                 </Text>
 
                 <Text ref={stepRefs[1]} style={{ alignSelf: 'center' }}>
-                  Skapa ditt event. Välj ett namn, beskrivning och antal
-                  platser. Ange restaurang eller lokal, datum och tid. Glöm inte
-                  att lägga till tydliga instruktioner för deltagarna om vad de
-                  behöver ta med sig eller förbereda.
+                  {!isLoggedIn ? (
+                    <>Skapa ditt event</>
+                  ) : (
+                    <UnstyledButton onClick={() => openCreateEvent()}>
+                      <Text
+                        span
+                        c='red'
+                        className='link-hover'
+                        style={{ cursor: 'pointer' }}>
+                        Skapa ditt event
+                      </Text>
+                    </UnstyledButton>
+                  )}
+                  . Välj ett namn, beskrivning och antal platser. Ange
+                  restaurang eller lokal, datum och tid. Glöm inte att lägga
+                  till tydliga instruktioner för deltagarna om vad de behöver ta
+                  med sig eller förbereda.
                 </Text>
 
                 <Text ref={stepRefs[2]}>
