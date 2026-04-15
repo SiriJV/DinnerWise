@@ -12,8 +12,8 @@ import {
 } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
-import { FlagIcon, PenIcon, SettingsIcon } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { FlagIcon, SettingsIcon } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import { useAuth } from '../../contexts/AuthContext';
@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const [followersList, setFollowersList] = useState<User[]>([]);
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadUser() {
@@ -134,8 +135,13 @@ export default function ProfilePage() {
             </Title>
             {isLoggedIn && user.id === 1 && (
               <Group gap='xs'>
-                <PenIcon size='20px' />
-                <SettingsIcon size='20px' />
+                <SettingsIcon
+                  size='20px'
+                  cursor={'pointer'}
+                  onClick={() =>
+                    navigate(`/profil/${user.alias}/installningar`)
+                  }
+                />
                 <Button variant='transparent' onClick={logout}>
                   Logga ut
                 </Button>
