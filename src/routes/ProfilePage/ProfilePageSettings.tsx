@@ -5,7 +5,6 @@ import {
   Container,
   FileButton,
   Group,
-  Input,
   Stack,
   Text,
   TextInput,
@@ -19,7 +18,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 export default function ProfilePageSettings() {
   const { alias } = useParams<{ alias: string }>();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,9 +38,6 @@ export default function ProfilePageSettings() {
     setFile(null);
     resetRef.current?.();
   };
-
-  const getVariant = (field: string, value: string) =>
-    focusedField === field || value ? 'default' : 'filled';
 
   const navigate = useNavigate();
 
