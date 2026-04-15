@@ -36,7 +36,7 @@ export default function NotificationsPopup() {
       opened={opened}
       onChange={setOpened}>
       <Popover.Target>
-        <Indicator color='white' size={9} disabled={read}>
+        <Indicator color='white' size={7} disabled={read}>
           <ActionIcon
             variant='subtle'
             color='white'
