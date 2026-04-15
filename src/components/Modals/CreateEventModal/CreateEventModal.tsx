@@ -366,12 +366,16 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
           paddingTop: '16px',
         }}>
         <Group gap='12px' justify='space-between'>
-          <Button
-            variant='default'
-            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}>
-            Tillbaka
-          </Button>
+          {currentStep !== 0 ? (
+            <Button
+              variant='default'
+              onClick={() => setCurrentStep((s) => s - 1)}>
+              Tillbaka
+            </Button>
+          ) : (
+            <div /> // placeholder så layout inte hoppar
+          )}
+
           <Group gap='12px'>
             <Button variant='default' onClick={onClose}>
               Avbryt
