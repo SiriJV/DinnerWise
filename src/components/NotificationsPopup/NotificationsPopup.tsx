@@ -54,6 +54,7 @@ export default function NotificationsPopup() {
             onClick={() => {
               setOpened((o) => !o);
               setRead(true);
+              setTimeout(() => setView('notifications'), 300);
             }}>
             <BellIcon size={20} />
           </ActionIcon>
