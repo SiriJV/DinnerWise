@@ -26,8 +26,10 @@ export default function CreateAccountModal({
   const { openLogin } = useModal();
   const [email, setEmail] = useState(APP_CONFIG.exampleUserEmail);
   const [confirmEmail, setConfirmEmail] = useState(APP_CONFIG.exampleUserEmail);
-  const [password, setPassword] = useState('lösenord123');
-  const [confirmPassword, setConfirmPassword] = useState('lösenord123');
+  const [password, setPassword] = useState(APP_CONFIG.exampleUserPassword);
+  const [confirmPassword, setConfirmPassword] = useState(
+    APP_CONFIG.exampleUserPassword,
+  );
 
   const { isTouched, handleBlur } = useFormTouched();
   const { isValid: isEmailValid, error: emailError } = validateEmail(email);
