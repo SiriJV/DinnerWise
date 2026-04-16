@@ -8,4 +8,5 @@ export const APP_CONFIG = {
   exampleUserLastName: 'Svensson',
   exampleUserEmail: 'anna.svensson@epost.se',
   exampleUserTelephone: '+46 70 987 65 43',
+  exampleUserPassword: 'Lösenord123!',
 };
