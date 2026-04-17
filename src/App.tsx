@@ -12,7 +12,7 @@ import CreateEventModal from './components/Modals/CreateEventModal/CreateEventMo
 import { useModal } from './contexts/ModalContext';
 import { infoPages } from './data/infoPages';
 import { lazy, useEffect, useState } from 'react';
-import ProfilePageSettings from './routes/ProfilePage/ProfilePageSettings';
+import Settings from './routes/ProfilePage/Settings/Settings';
 
 // Lazy load alla route-komponenter för bättre initial laddning
 const HomePage = lazy(() => import('./routes/HomePage/HomePage'));
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/profil/:alias/installningar',
-        element: <ProfilePageSettings />,
+        element: <Settings />,
       },
       {
         path: '/event/:slug',
