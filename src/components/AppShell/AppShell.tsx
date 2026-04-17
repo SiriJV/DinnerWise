@@ -1,5 +1,5 @@
 import { AppShell as MantineAppShell, Box } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import Header from '../Header/Header';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
@@ -10,21 +10,21 @@ import Breadcrumb from '../Breadcrumb/Breadcrumb';
 import BackToTopButton from '../BackToTopButton/BackToTopButton';
 import FloatingActionButton from '../FAB/FAB';
 import { Suspense } from 'react';
+import { HEADER_CONFIG } from '../../config/headerConfig';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
-
-  // Responsive header height: 100px desktop, 60px mobile
-  const HEADER_HEIGHT = 120;
-  const HEADER_HEIGHT_MOBILE = 80;
+  const isSmallScreen = useMediaQuery('(max-width: 48em)');
+  const headerHeight = isSmallScreen
+    ? HEADER_CONFIG.MOBILE
+    : HEADER_CONFIG.DESKTOP;
 
   return (
     <>
       <MantineAppShell
         header={{
-          // height: HEADER_HEIGHT,
-          height: { base: HEADER_HEIGHT_MOBILE, sm: HEADER_HEIGHT },
+          height: { base: HEADER_CONFIG.MOBILE, sm: HEADER_CONFIG.DESKTOP },
         }}
         padding='0'
         withBorder={false}>
@@ -48,7 +48,7 @@ export default function AppShell() {
                   flex: 1,
                   display: 'flex',
                   flexDirection: 'column',
-                  minHeight: `calc(80dvh - ${window.matchMedia('(max-width: 48em)').matches ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT}px)`,
+                  minHeight: `calc(80dvh - ${headerHeight}px)`,
                 }}>
                 <Outlet />
               </Box>
@@ -58,15 +58,7 @@ export default function AppShell() {
         </MantineAppShell.Main>
       </MantineAppShell>
 
-      <NavBar
-        opened={opened}
-        onClose={close}
-        offset={
-          window.matchMedia('(max-width: 48em)').matches
-            ? HEADER_HEIGHT_MOBILE
-            : HEADER_HEIGHT
-        }
-      />
+      <NavBar opened={opened} onClose={close} offset={headerHeight} />
     </>
   );
 }

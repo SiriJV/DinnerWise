@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   SimpleGrid,
   Group,
@@ -10,6 +11,7 @@ import {
 import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
 import { useSearchParams } from 'react-router-dom';
+import { HEADER_CONFIG } from '../../config/headerConfig';
 
 type PaginatedEventGridProps = {
   events: EventType[];
@@ -24,6 +26,10 @@ export default function PaginatedEventGrid({
 }: PaginatedEventGridProps) {
   const [params, setParams] = useSearchParams();
   const gridRef = useRef<HTMLDivElement>(null);
+  const isSmallScreen = useMediaQuery('(max-width: 48em)');
+  const headerHeight = isSmallScreen
+    ? HEADER_CONFIG.MOBILE
+    : HEADER_CONFIG.DESKTOP;
 
   const pageFromUrl = Number(params.get('page')) || 1;
   const [activePage, setActivePage] = useState(pageFromUrl);
@@ -54,13 +60,12 @@ export default function PaginatedEventGrid({
     newParams.set('page', page.toString());
     setParams(newParams);
 
-    // Smooth scroll
+    // Smooth scroll with header offset
     if (gridRef.current) {
-      const yOffset = -130;
-      const y =
-        gridRef.current.getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
+      const elementPosition =
+        gridRef.current.getBoundingClientRect().top + window.pageYOffset;
+      const yOffset = -(headerHeight + 20);
+      const y = elementPosition + yOffset;
 
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
