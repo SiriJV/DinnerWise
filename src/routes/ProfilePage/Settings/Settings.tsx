@@ -1,10 +1,12 @@
 import { Box, Button, Group, Stack, Text, Title } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { fetchUserByAlias, type User } from '../../../api/users';
 import { useAuth } from '../../../contexts/AuthContext';
 import DemoWarningText from '../../../components/DemoWarningText/DemoWarningText';
 import type { Category } from '../../../api/categories';
+import { HEADER_CONFIG } from '../../../config/headerConfig';
 
 import ProfileSection from './sections/ProfileSection';
 import LoginSection from './sections/LoginSection';
@@ -22,6 +24,7 @@ export default function Settings() {
   const { alias } = useParams<{ alias: string }>();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width: 48em)');
 
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +48,7 @@ export default function Settings() {
 
   const [file, setFile] = useState<File | null>(null);
   const resetRef = useRef<() => void>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const [activeSection, setActiveSection] = useState('profile');
 
@@ -56,6 +60,18 @@ export default function Settings() {
     setFile(null);
     resetRef.current?.();
   };
+
+  useEffect(() => {
+    if (isSmallScreen && contentRef.current) {
+      const headerHeight = HEADER_CONFIG.MOBILE;
+      const elementPosition =
+        contentRef.current.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - headerHeight - 20,
+        behavior: 'smooth',
+      });
+    }
+  }, [activeSection, isSmallScreen]);
 
   useEffect(() => {
     async function loadUser() {
@@ -148,7 +164,7 @@ export default function Settings() {
               setActiveSection={setActiveSection}
             />
             {/* CONTENT */}
-            <Box style={{ flex: 1 }}>
+            <Box style={{ flex: 1 }} ref={contentRef}>
               <Box p='md' bdrs='sm' bd='1px solid gray.4'>
                 <Stack gap='lg'>
                   <Group justify='space-between'>
