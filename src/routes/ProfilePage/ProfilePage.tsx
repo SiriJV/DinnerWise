@@ -135,14 +135,23 @@ export default function ProfilePage() {
             </Title>
             {isLoggedIn && user.id === 1 && (
               <Group gap='xs'>
-                <SettingsIcon
+                <Button
+                  c='black'
+                  color='gray'
+                  variant='subtle'
+                  onClick={() =>
+                    navigate(`/profil/${user.alias}/installningar`)
+                  }>
+                  Inställningar{' '}
+                </Button>
+                {/* <SettingsIcon
                   size='20px'
                   cursor={'pointer'}
                   onClick={() =>
                     navigate(`/profil/${user.alias}/installningar`)
                   }
-                />
-                <Button variant='transparent' onClick={logout}>
+                /> */}
+                <Button variant='subtle' onClick={logout}>
                   Logga ut
                 </Button>
               </Group>
