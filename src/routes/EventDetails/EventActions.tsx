@@ -8,6 +8,7 @@ type Props = {
   eventId: number;
   register: any;
   share: any;
+  reportModal: { open: () => void };
 };
 
 export default function EventActions({
@@ -16,16 +17,19 @@ export default function EventActions({
   eventId,
   register,
   share,
+  reportModal,
 }: Props) {
   return (
     <Grid gutter='xl' mt='xl' align='flex-end'>
       <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
-        <Group gap='xs'>
-          <FlagIcon color='rgba(211, 4, 59, 1)' />
+        <Button
+          variant='subtle'
+          leftSection={<FlagIcon color='rgba(211, 4, 59, 1)' />}
+          onClick={reportModal.open}>
           <Text size='sm' c='red'>
             Rapportera event
           </Text>
-        </Group>
+        </Button>
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 1, md: 2 }}>

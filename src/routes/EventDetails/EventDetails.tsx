@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Text, Stack, Box, Container, SimpleGrid } from '@mantine/core';
+import {
+  Text,
+  Stack,
+  Box,
+  Container,
+  SimpleGrid,
+  Modal,
+  Select,
+  Textarea,
+  Button,
+  Group,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
@@ -27,6 +38,9 @@ export default function EventDetails(): React.ReactNode {
   const [waitlistOpened, waitlistHandlers] = useDisclosure(false);
   const [shareOpened, shareHandlers] = useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportReason, setReportReason] = useState<string | null>(null);
+  const [reportDescription, setReportDescription] = useState('');
   const { isLoggedIn } = useAuth();
 
   const { host, participants } = useEventUsers(
@@ -195,6 +209,7 @@ export default function EventDetails(): React.ReactNode {
               eventId={event.id}
               register={registerHandlers}
               share={shareHandlers}
+              reportModal={{ open: () => setReportModalOpen(true) }}
             />
           </Stack>
         </Container>
@@ -208,6 +223,66 @@ export default function EventDetails(): React.ReactNode {
         waitlist={{ opened: waitlistOpened, ...waitlistHandlers }}
         share={{ opened: shareOpened, ...shareHandlers }}
       />
+
+      <Modal
+        opened={reportModalOpen}
+        onClose={() => {
+          setReportModalOpen(false);
+          setReportReason(null);
+          setReportDescription('');
+        }}
+        title='Rapportera event'
+        size='sm'
+        centered>
+        <Stack gap='md'>
+          <Select
+            label='Välj anledning'
+            placeholder='Välj en anledning...'
+            data={[
+              'Vilseledande beskrivning',
+              'Otrevligt eller olämpligt event',
+              'Spam eller bedrägeri',
+              'Felaktig plats eller tid',
+              'Olämpligt innehåll',
+              'Tekniska fel',
+              'Annat (ange i beskrivning)',
+            ]}
+            value={reportReason}
+            onChange={setReportReason}
+            required
+          />
+          <Textarea
+            label='Beskrivning (max 400 tecken)'
+            placeholder='Beskriv anledningen till rapporteringen så tydligt du kan.'
+            autosize
+            minRows={3}
+            maxRows={5}
+            maxLength={400}
+            value={reportDescription}
+            onChange={(e) => setReportDescription(e.currentTarget.value)}
+          />
+          <Group justify='flex-end'>
+            <Button
+              variant='light'
+              onClick={() => {
+                setReportModalOpen(false);
+                setReportReason(null);
+                setReportDescription('');
+              }}>
+              Avbryt
+            </Button>
+            <Button
+              disabled={!reportReason}
+              onClick={() => {
+                setReportModalOpen(false);
+                setReportReason(null);
+                setReportDescription('');
+              }}>
+              Skicka rapport
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </>
   );
 }

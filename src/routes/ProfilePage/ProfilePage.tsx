@@ -5,14 +5,17 @@ import {
   Button,
   Center,
   Group,
+  Modal,
+  Select,
   Skeleton,
   Stack,
   Text,
+  Textarea,
   Title,
 } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
-import { FlagIcon, SettingsIcon } from 'lucide-react';
+import { FlagIcon } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
@@ -31,6 +34,9 @@ export default function ProfilePage() {
   const [followersList, setFollowersList] = useState<User[]>([]);
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportReason, setReportReason] = useState<string | null>(null);
+  const [reportDescription, setReportDescription] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -157,12 +163,77 @@ export default function ProfilePage() {
               </Group>
             )}
             {isLoggedIn && user.id !== 1 && (
-              <Group gap='xs'>
-                <FlagIcon color='rgba(211, 4, 59, 1)' />
-                <Text size='sm' c='red'>
+              <>
+                <Button
+                  variant='subtle'
+                  leftSection={<FlagIcon />}
+                  onClick={() => setReportModalOpen(true)}>
                   Rapportera användare
-                </Text>
-              </Group>
+                </Button>
+
+                <Modal
+                  opened={reportModalOpen}
+                  onClose={() => {
+                    setReportModalOpen(false);
+                    setReportReason(null);
+                    setReportDescription('');
+                  }}
+                  title='Rapportera användare'
+                  size='sm'
+                  centered>
+                  <Stack gap='md'>
+                    <Select
+                      label='Välj anledning'
+                      placeholder='Välj en anledning...'
+                      data={[
+                        'Stötande eller kränkande beteende',
+                        'Falsk profil eller identitet',
+                        'Spam eller bedrägeri',
+                        'Oönskad kontakt eller trakasserier',
+                        'Olämpligt innehåll',
+                        'Minderårig användare',
+                        'Annat (ange i beskrivning)',
+                      ]}
+                      value={reportReason}
+                      onChange={setReportReason}
+                      required
+                    />
+                    <Textarea
+                      label='Beskrivning (max 400 tecken)'
+                      placeholder='Beskriv anledningen till rapporteringen så tydligt du kan.'
+                      autosize
+                      minRows={3}
+                      maxRows={5}
+                      maxLength={400}
+                      value={reportDescription}
+                      onChange={(e) =>
+                        setReportDescription(e.currentTarget.value)
+                      }
+                    />
+                    <Group justify='flex-end'>
+                      <Button
+                        variant='light'
+                        onClick={() => {
+                          setReportModalOpen(false);
+                          setReportReason(null);
+                          setReportDescription('');
+                        }}>
+                        Avbryt
+                      </Button>
+                      <Button
+                        disabled={!reportReason}
+                        onClick={() => {
+                          // Här skulle man kunna skicka rapporten
+                          setReportModalOpen(false);
+                          setReportReason(null);
+                          setReportDescription('');
+                        }}>
+                        Skicka rapport
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Modal>
+              </>
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
