@@ -7,20 +7,15 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { BellIcon, ChevronLeft, Settings } from 'lucide-react';
+import { BellIcon } from 'lucide-react';
 import { useState } from 'react';
 import NotificationsContent from './NotificationsContent';
 import { mockNotifications } from './mocknotifications';
-import NotificationsSettingsContent from './NotificationsSettingsContent';
 
 export default function NotificationsPopup() {
   const [opened, setOpened] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
   const [read, setRead] = useState(false);
-
-  const [view, setView] = useState<'notifications' | 'settings'>(
-    'notifications',
-  );
 
   const todayNotifications = notifications.filter(
     (n) => n.minutes !== undefined || n.hours !== undefined,
@@ -41,9 +36,6 @@ export default function NotificationsPopup() {
       opened={opened}
       onChange={(o) => {
         setOpened(o);
-        if (!o) {
-          setTimeout(() => setView('notifications'), 300);
-        }
       }}>
       <Popover.Target>
         <Indicator color='white' size={7} disabled={read}>
@@ -54,7 +46,6 @@ export default function NotificationsPopup() {
             onClick={() => {
               setOpened((o) => !o);
               setRead(true);
-              setTimeout(() => setView('notifications'), 300);
             }}>
             <BellIcon size={20} />
           </ActionIcon>
@@ -69,76 +60,51 @@ export default function NotificationsPopup() {
         <Stack>
           <Group justify='space-between' align='flex-end'>
             <Text size='md' fw={600}>
-              {view === 'notifications' ? 'Notiser' : 'Notisinställningar'}
+              Notiser
             </Text>
 
-            <Group gap='xs'>
-              {view === 'settings' && (
-                <ChevronLeft
-                  size={20}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => setView('notifications')}
-                />
-              )}
-
-              {view === 'notifications' && (
-                <Settings
-                  size={20}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => setView('settings')}
-                />
-              )}
-
-              <CloseButton
-                onClick={() => {
-                  setOpened(false);
-                  setTimeout(() => setView('notifications'), 300);
-                }}
-              />
-            </Group>
+            <CloseButton
+              onClick={() => {
+                setOpened(false);
+              }}
+            />
           </Group>
 
-          {/* NOTIFICATIONS VIEW */}
-          {view === 'notifications' ? (
-            notifications.length === 0 ? (
-              <Text size='sm' c='dimmed' ta='center' py='md'>
-                Inga nya notiser
-              </Text>
-            ) : (
-              <>
-                <Group justify='space-between' align='flex-end'>
-                  <Text size='sm' fw={600}>
-                    Idag
-                  </Text>
-
-                  <Text
-                    size='xs'
-                    onClick={handleClearAll}
-                    style={{ cursor: 'pointer' }}>
-                    Rensa alla
-                  </Text>
-                </Group>
-
-                <Stack gap='md'>
-                  {todayNotifications.map((n, i) => (
-                    <NotificationsContent key={n.title + i} {...n} />
-                  ))}
-                </Stack>
-
-                <Text size='sm' fw={600} mt='md'>
-                  Senaste 30 dagarna
+          {notifications.length === 0 ? (
+            <Text size='sm' c='dimmed' ta='center' py='md'>
+              Inga nya notiser
+            </Text>
+          ) : (
+            <>
+              <Group justify='space-between' align='flex-end'>
+                <Text size='sm' fw={600}>
+                  Idag
                 </Text>
 
-                <Stack gap='md' mb='xs'>
-                  {olderNotifications.map((n, i) => (
-                    <NotificationsContent key={n.title + i} {...n} />
-                  ))}
-                </Stack>
-              </>
-            )
-          ) : (
-            // SETTINGS VIEW
-            <NotificationsSettingsContent />
+                <Text
+                  size='xs'
+                  onClick={handleClearAll}
+                  style={{ cursor: 'pointer' }}>
+                  Rensa alla
+                </Text>
+              </Group>
+
+              <Stack gap='md'>
+                {todayNotifications.map((n, i) => (
+                  <NotificationsContent key={n.title + i} {...n} />
+                ))}
+              </Stack>
+
+              <Text size='sm' fw={600} mt='md'>
+                Senaste 30 dagarna
+              </Text>
+
+              <Stack gap='md' mb='xs'>
+                {olderNotifications.map((n, i) => (
+                  <NotificationsContent key={n.title + i} {...n} />
+                ))}
+              </Stack>
+            </>
           )}
         </Stack>
       </Popover.Dropdown>

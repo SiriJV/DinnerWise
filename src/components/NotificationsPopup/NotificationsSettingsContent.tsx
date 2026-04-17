@@ -4,8 +4,6 @@ import { useState } from 'react';
 export default function NotificationsSettingsContent() {
   const [allSettings, setAllSettings] = useState({
     all: true,
-    email: true,
-    sms: false,
     eventUpdates: true,
     recommendedEvents: true,
     newFollowers: false,
@@ -28,8 +26,6 @@ export default function NotificationsSettingsContent() {
   };
 
   const [prevSettings, setPrevSettings] = useState({
-    email: true,
-    sms: false,
     eventUpdates: true,
     recommendedEvents: true,
     newFollowers: false,
@@ -45,8 +41,6 @@ export default function NotificationsSettingsContent() {
 
         return {
           all: false,
-          email: false,
-          sms: false,
           eventUpdates: false,
           recommendedEvents: false,
           newFollowers: false,
@@ -87,17 +81,6 @@ export default function NotificationsSettingsContent() {
         <Text size='sm'>Alla notiser</Text>{' '}
         <Switch checked={allSettings.all} onChange={handleToggleAll} />
       </Group>
-      <SwitchGroup
-        label='E-postaviseringar'
-        value={allSettings.email}
-        settingKey='email'
-      />
-
-      <SwitchGroup
-        label='SMS-aviseringar'
-        value={allSettings.sms}
-        settingKey='sms'
-      />
 
       <SwitchGroup
         label='Eventuppdateringar'
