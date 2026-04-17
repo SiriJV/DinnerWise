@@ -15,6 +15,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 import EventDetailsHeroImage from './EventDetailsHeroImage';
 import useEventUsers from '../../hooks/useEventUsers';
 import Map from '../../components/Map/Map';
@@ -38,10 +39,16 @@ export default function EventDetails(): React.ReactNode {
   const [waitlistOpened, waitlistHandlers] = useDisclosure(false);
   const [shareOpened, shareHandlers] = useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [reportReason, setReportReason] = useState<string | null>(null);
-  const [reportDescription, setReportDescription] = useState('');
   const { isLoggedIn } = useAuth();
+  const {
+    reportEventOpen,
+    reportEventReason,
+    reportEventDescription,
+    openReportEvent,
+    closeReportEvent,
+    setReportEventReason,
+    setReportEventDescription,
+  } = useModal();
 
   const { host, participants } = useEventUsers(
     event?.id || 0,
@@ -209,7 +216,7 @@ export default function EventDetails(): React.ReactNode {
               eventId={event.id}
               register={registerHandlers}
               share={shareHandlers}
-              reportModal={{ open: () => setReportModalOpen(true) }}
+              reportModal={{ open: openReportEvent }}
             />
           </Stack>
         </Container>
@@ -225,12 +232,8 @@ export default function EventDetails(): React.ReactNode {
       />
 
       <Modal
-        opened={reportModalOpen}
-        onClose={() => {
-          setReportModalOpen(false);
-          setReportReason(null);
-          setReportDescription('');
-        }}
+        opened={reportEventOpen}
+        onClose={closeReportEvent}
         title='Rapportera event'
         size='sm'
         centered>
@@ -247,8 +250,8 @@ export default function EventDetails(): React.ReactNode {
               'Tekniska fel',
               'Annat (ange i beskrivning)',
             ]}
-            value={reportReason}
-            onChange={setReportReason}
+            value={reportEventReason}
+            onChange={setReportEventReason}
             required
           />
           <Textarea
@@ -258,26 +261,14 @@ export default function EventDetails(): React.ReactNode {
             minRows={3}
             maxRows={5}
             maxLength={400}
-            value={reportDescription}
-            onChange={(e) => setReportDescription(e.currentTarget.value)}
+            value={reportEventDescription}
+            onChange={(e) => setReportEventDescription(e.currentTarget.value)}
           />
           <Group justify='flex-end'>
-            <Button
-              variant='light'
-              onClick={() => {
-                setReportModalOpen(false);
-                setReportReason(null);
-                setReportDescription('');
-              }}>
+            <Button variant='light' onClick={closeReportEvent}>
               Avbryt
             </Button>
-            <Button
-              disabled={!reportReason}
-              onClick={() => {
-                setReportModalOpen(false);
-                setReportReason(null);
-                setReportDescription('');
-              }}>
+            <Button disabled={!reportEventReason} onClick={closeReportEvent}>
               Skicka rapport
             </Button>
           </Group>

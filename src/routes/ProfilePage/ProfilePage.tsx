@@ -20,12 +20,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 import RatingComponent from '../../components/RatingComponent/RatingComponent';
 import { getRating } from '../../utils/getRating';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
   const { isLoggedIn, logout } = useAuth();
+  const {
+    reportUserOpen,
+    reportUserReason,
+    reportUserDescription,
+    openReportUser,
+    closeReportUser,
+    setReportUserReason,
+    setReportUserDescription,
+  } = useModal();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +44,6 @@ export default function ProfilePage() {
   const [followersList, setFollowersList] = useState<User[]>([]);
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [reportReason, setReportReason] = useState<string | null>(null);
-  const [reportDescription, setReportDescription] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -135,49 +142,64 @@ export default function ProfilePage() {
       </Box>
       <Stack mx='md' gap='xs'>
         <Stack mb='lg'>
-          <Group justify='space-between' mt='md'>
+          <Group justify='space-between' align='flex-start' mt='md'>
             <Title order={2} size='lg' fw='600'>
               {user.name}
             </Title>
             {isLoggedIn && user.id === 1 && (
-              <Group gap='xs'>
-                <Button
-                  c='black'
-                  color='gray'
-                  variant='subtle'
-                  onClick={() =>
-                    navigate(`/profil/${user.alias}/installningar`)
-                  }>
-                  Inställningar{' '}
-                </Button>
-                {/* <SettingsIcon
-                  size='20px'
-                  cursor={'pointer'}
-                  onClick={() =>
-                    navigate(`/profil/${user.alias}/installningar`)
-                  }
-                /> */}
-                <Button variant='subtle' onClick={logout}>
-                  Logga ut
-                </Button>
-              </Group>
+              <>
+                <Stack
+                  gap='xs'
+                  align='flex-end'
+                  display={{ base: 'flex', sm: 'none' }}>
+                  <Button
+                    c='black'
+                    color='gray'
+                    variant='subtle'
+                    onClick={() =>
+                      navigate(`/profil/${user.alias}/installningar`)
+                    }>
+                    Inställningar{' '}
+                  </Button>
+                  <Button variant='subtle' onClick={logout}>
+                    Logga ut
+                  </Button>
+                </Stack>
+                <Group gap='xs' display={{ base: 'none', sm: 'flex' }}>
+                  <Button
+                    c='black'
+                    color='gray'
+                    variant='subtle'
+                    onClick={() =>
+                      navigate(`/profil/${user.alias}/installningar`)
+                    }>
+                    Inställningar{' '}
+                  </Button>
+                  {/* <SettingsIcon
+                    size='20px'
+                    cursor={'pointer'}
+                    onClick={() =>
+                      navigate(`/profil/${user.alias}/installningar`)
+                    }
+                  /> */}
+                  <Button variant='subtle' onClick={logout}>
+                    Logga ut
+                  </Button>
+                </Group>
+              </>
             )}
             {isLoggedIn && user.id !== 1 && (
               <>
                 <Button
                   variant='subtle'
                   leftSection={<FlagIcon />}
-                  onClick={() => setReportModalOpen(true)}>
+                  onClick={openReportUser}>
                   Rapportera användare
                 </Button>
 
                 <Modal
-                  opened={reportModalOpen}
-                  onClose={() => {
-                    setReportModalOpen(false);
-                    setReportReason(null);
-                    setReportDescription('');
-                  }}
+                  opened={reportUserOpen}
+                  onClose={closeReportUser}
                   title='Rapportera användare'
                   size='sm'
                   centered>
@@ -194,8 +216,8 @@ export default function ProfilePage() {
                         'Minderårig användare',
                         'Annat (ange i beskrivning)',
                       ]}
-                      value={reportReason}
-                      onChange={setReportReason}
+                      value={reportUserReason}
+                      onChange={setReportUserReason}
                       required
                     />
                     <Textarea
@@ -205,28 +227,20 @@ export default function ProfilePage() {
                       minRows={3}
                       maxRows={5}
                       maxLength={400}
-                      value={reportDescription}
+                      value={reportUserDescription}
                       onChange={(e) =>
-                        setReportDescription(e.currentTarget.value)
+                        setReportUserDescription(e.currentTarget.value)
                       }
                     />
                     <Group justify='flex-end'>
-                      <Button
-                        variant='light'
-                        onClick={() => {
-                          setReportModalOpen(false);
-                          setReportReason(null);
-                          setReportDescription('');
-                        }}>
+                      <Button variant='light' onClick={closeReportUser}>
                         Avbryt
                       </Button>
                       <Button
-                        disabled={!reportReason}
+                        disabled={!reportUserReason}
                         onClick={() => {
                           // Här skulle man kunna skicka rapporten
-                          setReportModalOpen(false);
-                          setReportReason(null);
-                          setReportDescription('');
+                          closeReportUser();
                         }}>
                         Skicka rapport
                       </Button>
