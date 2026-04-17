@@ -94,10 +94,12 @@ export default function Settings() {
     }
   }, [user]);
 
-  const hasChanged = JSON.stringify(form) !== JSON.stringify(originalForm);
+  const hasChanged =
+    JSON.stringify(form) !== JSON.stringify(originalForm) || file !== null;
 
   const handleResetChanges = () => {
     if (originalForm) setForm(originalForm);
+    setFile(null);
   };
 
   const [categories, setCategories] = useState<Category[]>([]);
