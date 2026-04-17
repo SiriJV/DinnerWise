@@ -23,6 +23,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
 import RatingComponent from '../../components/RatingComponent/RatingComponent';
 import { getRating } from '../../utils/getRating';
+import {
+  isUserHosting,
+  isUserParticipating,
+} from '../../utils/deterministicUsers';
+import type { EventType } from '../../types/EventType';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -86,7 +91,29 @@ export default function ProfilePage() {
         setFollowersList(followers);
         setFollowersCount(followersCount);
 
-        // Calculate events count using deterministic formulas from EventCard
+        // Calculate events count - hosting + participating
+        try {
+          const eventsRes = await fetch('http://localhost:3001/events');
+          const allEvents: EventType[] = await eventsRes.json();
+
+          const hostingCount = allEvents.filter((event) =>
+            isUserHosting(data.id, event.id, allUsers),
+          ).length;
+
+          const participatingCount = allEvents.filter((event) =>
+            isUserParticipating(
+              data.id,
+              event.id,
+              event.current_participants,
+              allUsers,
+            ),
+          ).length;
+
+          setEventsCount(hostingCount + participatingCount);
+        } catch (err) {
+          console.error('Failed to load events count:', err);
+          setEventsCount(0);
+        }
       }
       setLoading(false);
     }
