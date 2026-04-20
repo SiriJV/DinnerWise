@@ -3,7 +3,7 @@ import ParticipantAvatars from '../ParticipantAvatars/ParticipantAvatars';
 import { slugify } from '../../utils/slugify';
 import type { User } from '../../api/users';
 import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsDesktop } from '../../hooks/useResponsive';
 
 interface EventCardInfoProps {
   title: string;
@@ -36,7 +36,7 @@ export default function EventCardInfo({
 }: EventCardInfoProps) {
   const navigate = useNavigate();
 
-  const isLargeScreen = useMediaQuery('(min-width: 768px)');
+  const isLargeScreen = useIsDesktop();
   const maxRestaurantNameLength = isLargeScreen ? 30 : 20;
   const truncateRestaurantName = (
     name?: string,
@@ -131,7 +131,7 @@ export default function EventCardInfo({
         </Group>
       </Group>
 
-      <Group justify='space-between' visibleFrom='xs' w='100%' wrap='nowrap'>
+      <Group justify='space-between' visibleFrom='sm' w='100%' wrap='nowrap'>
         <Text size='sm' c='dimmed'>
           {shortDescription}
         </Text>
