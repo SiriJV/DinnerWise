@@ -1,5 +1,5 @@
 import { Badge } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 
 type EventSpotsBadgeProps = {
   currentParticipants: number;
@@ -14,7 +14,7 @@ export default function EventSpotsBadge({
   className,
   size,
 }: EventSpotsBadgeProps) {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   const badgeSize = size === 'responsive' ? (isMobile ? 'lg' : 'xl') : size;
   const remainingSpots = maxParticipants - currentParticipants;
   const isFull = remainingSpots <= 0;
