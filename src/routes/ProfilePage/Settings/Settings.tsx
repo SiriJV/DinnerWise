@@ -1,5 +1,5 @@
 import { Box, Button, Group, Stack, Text, Title } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../../hooks/useResponsive';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { fetchUserByAlias, type User } from '../../../api/users';
@@ -24,7 +24,7 @@ export default function Settings() {
   const { alias } = useParams<{ alias: string }>();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width: 48em)');
+  const isSmallScreen = useIsMobile();
 
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
