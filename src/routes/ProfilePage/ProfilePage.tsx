@@ -5,12 +5,9 @@ import {
   Button,
   Center,
   Group,
-  Modal,
-  Select,
   Skeleton,
   Stack,
   Text,
-  Textarea,
   Title,
 } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
@@ -28,6 +25,7 @@ import {
   isUserParticipating,
 } from '../../utils/deterministicUsers';
 import type { EventType } from '../../types/EventType';
+import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -224,56 +222,24 @@ export default function ProfilePage() {
                   Rapportera användare
                 </Button>
 
-                <Modal
+                <ReportModal
                   opened={reportUserOpen}
                   onClose={closeReportUser}
                   title='Rapportera användare'
-                  size='sm'
-                  centered>
-                  <Stack gap='md'>
-                    <Select
-                      label='Välj anledning'
-                      placeholder='Välj en anledning...'
-                      data={[
-                        'Stötande eller kränkande beteende',
-                        'Falsk profil eller identitet',
-                        'Spam eller bedrägeri',
-                        'Oönskad kontakt eller trakasserier',
-                        'Olämpligt innehåll',
-                        'Minderårig användare',
-                        'Annat (ange i beskrivning)',
-                      ]}
-                      value={reportUserReason}
-                      onChange={setReportUserReason}
-                      required
-                    />
-                    <Textarea
-                      label='Beskrivning (max 400 tecken)'
-                      placeholder='Beskriv anledningen till rapporteringen så tydligt du kan.'
-                      autosize
-                      minRows={3}
-                      maxRows={5}
-                      maxLength={400}
-                      value={reportUserDescription}
-                      onChange={(e) =>
-                        setReportUserDescription(e.currentTarget.value)
-                      }
-                    />
-                    <Group justify='flex-end'>
-                      <Button variant='light' onClick={closeReportUser}>
-                        Avbryt
-                      </Button>
-                      <Button
-                        disabled={!reportUserReason}
-                        onClick={() => {
-                          // Här skulle man kunna skicka rapporten
-                          closeReportUser();
-                        }}>
-                        Skicka rapport
-                      </Button>
-                    </Group>
-                  </Stack>
-                </Modal>
+                  reasons={[
+                    'Stötande eller kränkande beteende',
+                    'Falsk profil eller identitet',
+                    'Spam eller bedrägeri',
+                    'Oönskad kontakt eller trakasserier',
+                    'Olämpligt innehåll',
+                    'Minderårig användare',
+                    'Annat (ange i beskrivning)',
+                  ]}
+                  reason={reportUserReason}
+                  onReasonChange={setReportUserReason}
+                  description={reportUserDescription}
+                  onDescriptionChange={setReportUserDescription}
+                />
               </>
             )}
           </Group>
