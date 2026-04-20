@@ -5,6 +5,8 @@ import ShareOnFacebook from './ShareOnFacebook';
 import ShareOnInstagram from './ShareOnInstagram';
 import ShareOnTwitter from './ShareOnTwitter';
 import ShareByEmail from './ShareByEmail';
+import { getHeaderHeight } from '../../../config/headerConfig';
+import { useIsMobile } from '../../../hooks/useResponsive';
 
 interface ShareModalProps {
   opened: boolean;
@@ -26,20 +28,23 @@ export default function ShareModal({
       ? `http://localhost:5173/event/${generateEventSlug(eventName, Number(eventId))}`
       : eventUrl;
 
+  const isMobile = useIsMobile();
+  const headerHeight = getHeaderHeight(isMobile);
+
   return (
     <Modal
       size='sm'
       opened={opened}
       onClose={onClose}
+      centered={false}
+      yOffset={headerHeight + 20}
       title={
-        <Group gap='md' wrap='nowrap' className='modal-title-group'>
+        <Group gap='md' wrap='nowrap'>
           <Text fw={600}>Dela event</Text>
         </Group>
       }
-      centered
       styles={{
         content: {
-          maxHeight: 'calc(100vh - 300px)',
           overflowY: 'auto',
         },
       }}>
