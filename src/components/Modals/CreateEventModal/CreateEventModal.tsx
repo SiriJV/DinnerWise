@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Button, Stepper, Group, Box } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import {
+  useIsDesktop,
+  useIsMobile,
+  useIsVerySmall,
+} from '../../../hooks/useResponsive';
 import { fetchRestaurants, type Restaurant } from '../../../api/restaurants';
 import { fetchCategories, type Category } from '../../../api/categories';
 import { fetchTags, fetchTagsByCategory, type Tag } from '../../../api/tags';
@@ -104,16 +108,14 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const isTablet = useMediaQuery('(min-width: 480px) and (max-width: 767px)');
-  const isMobile = useMediaQuery('(max-width: 479px)');
-  const isVerySmall = useMediaQuery('(max-width: 399px)');
+  const isDesktop = useIsDesktop();
+  const isMobile = useIsMobile();
+  const isVerySmall = useIsVerySmall();
 
   const getStepperSize = () => {
     if (isDesktop) return 'md';
-    if (isTablet) return 'sm';
     if (isMobile) return 'xs';
-    return 'md';
+    return 'sm';
   };
 
   useEffect(() => {
