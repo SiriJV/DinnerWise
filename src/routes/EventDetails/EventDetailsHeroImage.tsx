@@ -1,5 +1,5 @@
 import { AspectRatio, Skeleton, Box } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 import { useState } from 'react';
 
 type EventDetailsHeroImageProps = {
@@ -9,7 +9,7 @@ type EventDetailsHeroImageProps = {
 export default function EventDetailsHeroImage({
   image,
 }: EventDetailsHeroImageProps) {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   const [loaded, setLoaded] = useState(false);
 
   return (
