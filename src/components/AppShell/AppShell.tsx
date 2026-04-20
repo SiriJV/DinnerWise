@@ -1,5 +1,6 @@
 import { AppShell as MantineAppShell, Box } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 import Header from '../Header/Header';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
@@ -15,8 +16,8 @@ import { HEADER_CONFIG } from '../../config/headerConfig';
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
-  const isSmallScreen = useMediaQuery('(max-width: 48em)');
-  const headerHeight = isSmallScreen
+  const isMobileScreen = useIsMobile();
+  const headerHeight = isMobileScreen
     ? HEADER_CONFIG.MOBILE
     : HEADER_CONFIG.DESKTOP;
 
