@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 import {
   SimpleGrid,
   Group,
@@ -26,8 +26,8 @@ export default function PaginatedEventGrid({
 }: PaginatedEventGridProps) {
   const [params, setParams] = useSearchParams();
   const gridRef = useRef<HTMLDivElement>(null);
-  const isSmallScreen = useMediaQuery('(max-width: 48em)');
-  const headerHeight = isSmallScreen
+  const isMobileScreen = useIsMobile();
+  const headerHeight = isMobileScreen
     ? HEADER_CONFIG.MOBILE
     : HEADER_CONFIG.DESKTOP;
 
