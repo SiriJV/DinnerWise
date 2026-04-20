@@ -1,17 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  Text,
-  Stack,
-  Box,
-  Container,
-  SimpleGrid,
-  Modal,
-  Select,
-  Textarea,
-  Button,
-  Group,
-} from '@mantine/core';
+import { Text, Stack, Box, Container, SimpleGrid } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,6 +14,7 @@ import EventDescription from './EventDescription';
 import EventInfoCards from './EventInfoCard';
 import EventParticipantsAndHost from './EventParticipantsAndHost';
 import EventActions from './EventActions';
+import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
@@ -231,49 +221,24 @@ export default function EventDetails(): React.ReactNode {
         share={{ opened: shareOpened, ...shareHandlers }}
       />
 
-      <Modal
+      <ReportModal
         opened={reportEventOpen}
         onClose={closeReportEvent}
         title='Rapportera event'
-        size='sm'
-        centered>
-        <Stack gap='md'>
-          <Select
-            label='Välj anledning'
-            placeholder='Välj en anledning...'
-            data={[
-              'Vilseledande beskrivning',
-              'Otrevligt eller olämpligt event',
-              'Spam eller bedrägeri',
-              'Felaktig plats eller tid',
-              'Olämpligt innehåll',
-              'Tekniska fel',
-              'Annat (ange i beskrivning)',
-            ]}
-            value={reportEventReason}
-            onChange={setReportEventReason}
-            required
-          />
-          <Textarea
-            label='Beskrivning (max 400 tecken)'
-            placeholder='Beskriv anledningen till rapporteringen så tydligt du kan.'
-            autosize
-            minRows={3}
-            maxRows={5}
-            maxLength={400}
-            value={reportEventDescription}
-            onChange={(e) => setReportEventDescription(e.currentTarget.value)}
-          />
-          <Group justify='flex-end'>
-            <Button variant='light' onClick={closeReportEvent}>
-              Avbryt
-            </Button>
-            <Button disabled={!reportEventReason} onClick={closeReportEvent}>
-              Skicka rapport
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
+        reasons={[
+          'Vilseledande beskrivning',
+          'Otrevligt eller olämpligt event',
+          'Spam eller bedrägeri',
+          'Felaktig plats eller tid',
+          'Olämpligt innehåll',
+          'Tekniska fel',
+          'Annat (ange i beskrivning)',
+        ]}
+        reason={reportEventReason}
+        onReasonChange={setReportEventReason}
+        description={reportEventDescription}
+        onDescriptionChange={setReportEventDescription}
+      />
     </>
   );
 }
