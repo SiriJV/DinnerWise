@@ -14,7 +14,7 @@ import './NavBar.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import { Brain } from 'lucide-react';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 import { APP_CONFIG } from '../../config/appConfig';
 import { useModal } from '../../contexts/ModalContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -35,7 +35,7 @@ interface NavBarProps {
 
 export default function NavBar({ opened, onClose }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const isMobile = useMediaQuery('(max-width: 48em)');
+  const isMobile = useIsMobile();
   const { openCreateEvent } = useModal();
   const { isLoggedIn, logout } = useAuth();
 
