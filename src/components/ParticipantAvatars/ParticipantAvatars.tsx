@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useMediaQuery } from '@mantine/hooks';
+import { useIsMobile } from '../../hooks/useResponsive';
 
 type User = {
   id: number;
@@ -34,7 +34,7 @@ export default function ParticipantAvatars({
   maxParticipants,
 }: ParticipantAvatarsProps) {
   const [popoverOpened, setPopoverOpened] = useState(false);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   const avatarSize = size === 'responsive' ? (isMobile ? 'md' : 'lg') : size;
   const navigate = useNavigate();
 
