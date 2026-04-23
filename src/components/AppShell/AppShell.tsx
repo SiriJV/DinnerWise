@@ -16,10 +16,8 @@ import { HEADER_CONFIG } from '../../config/headerConfig';
 export default function AppShell() {
   // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
-  const isMobileScreen = useIsMobile();
-  const headerHeight = isMobileScreen
-    ? HEADER_CONFIG.MOBILE
-    : HEADER_CONFIG.DESKTOP;
+  const isMobile = useIsMobile();
+  const headerHeight = isMobile ? HEADER_CONFIG.MOBILE : HEADER_CONFIG.DESKTOP;
 
   return (
     <>
@@ -49,7 +47,7 @@ export default function AppShell() {
                   flex: 1,
                   display: 'flex',
                   flexDirection: 'column',
-                  minHeight: `calc(80dvh - ${headerHeight}px)`,
+                  minHeight: `calc(100dvh - ${headerHeight}px)`,
                 }}>
                 <Outlet />
               </Box>
