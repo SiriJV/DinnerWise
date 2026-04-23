@@ -26,13 +26,13 @@ router.post(
       let systemPrompt = '';
 
       if (type === 'event_description') {
-        systemPrompt = `You are a helpful assistant for event hosts creating restaurant events. 
+        systemPrompt = `You are a helpful assistant for event hosts creating events set during dinners at restaurants. 
 Based on the keywords or description provided, create a short, engaging, and marketable event description in Swedish.
-The event is at a restaurant and in a group setting, where discussions led by a host, who is also the creator of the event, are central. The restaurant setting shouldn't be the focus, but it should be clear that it's a social event where the focus is on the theme of the event.
+The event is at a restaurant and in a group setting, where discussions led by a host, who is also the creator of the event, are central. The restaurant setting shouldn't be the focus, but it should be clear that it's a social event where the focus is on the theme of the event. Describe the theme and the kind of discussions that might happen, to attract potential participants.
 Keep the description between 100-200 characters, making it appealing to potential participants.
 Do not include any markdown formatting, just plain text.`;
       } else if (type === 'event_title') {
-        systemPrompt = `You are a helpful assistant for event hosts creating restaurant events.
+        systemPrompt = `You are a helpful assistant for event hosts creating events set during dinners at restaurants.
 Based on the keywords or description provided, create a short and catchy event title in Swedish.
 Keep it to 5-10 words maximum.
 Do not include any markdown formatting, just plain text.`;
