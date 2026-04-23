@@ -171,27 +171,32 @@ export default function NotificationsSettings({
   }
 
   return (
-    <Stack gap='lg' mt='xs'>
-      <NotificationSection
-        title='Aviseringar på hemsidan'
-        settings={notificationSettings.app}
-        onToggleAll={() => handleToggleAll('app')}
-        onToggle={(key) => handleNestedChange('app', key)}
-      />
+    <>
+      <Text size='sm' c='dimmed'>
+        Ändra inställningar för notiser.
+      </Text>
+      <Stack gap='lg' mt='xs'>
+        <NotificationSection
+          title='Aviseringar på hemsidan'
+          settings={notificationSettings.app}
+          onToggleAll={() => handleToggleAll('app')}
+          onToggle={(key) => handleNestedChange('app', key)}
+        />
 
-      <NotificationSection
-        title='E-postaviseringar'
-        settings={notificationSettings.email}
-        onToggleAll={() => handleToggleAll('email')}
-        onToggle={(key) => handleNestedChange('email', key)}
-      />
+        <NotificationSection
+          title='E-postaviseringar'
+          settings={notificationSettings.email}
+          onToggleAll={() => handleToggleAll('email')}
+          onToggle={(key) => handleNestedChange('email', key)}
+        />
 
-      <NotificationSection
-        title='SMS-aviseringar'
-        settings={notificationSettings.sms}
-        onToggleAll={() => handleToggleAll('sms')}
-        onToggle={(key) => handleNestedChange('sms', key)}
-      />
-    </Stack>
+        <NotificationSection
+          title='SMS-aviseringar'
+          settings={notificationSettings.sms}
+          onToggleAll={() => handleToggleAll('sms')}
+          onToggle={(key) => handleNestedChange('sms', key)}
+        />
+      </Stack>
+    </>
   );
 }
