@@ -37,7 +37,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const isMobile = useIsMobile();
   const { openCreateEvent } = useModal();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function loadCategories() {
