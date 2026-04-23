@@ -77,7 +77,7 @@ export default function WatchSection({
       </Stack>
 
       {/* Taggar organiserade per kategori */}
-      <Stack gap='xs'>
+      <Stack gap='lg' mt='lg'>
         <Text fw={600}>Taggar</Text>
         {tagsByCategory.map((item) =>
           item.tags.length > 0 ? (
