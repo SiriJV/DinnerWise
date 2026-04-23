@@ -10,7 +10,7 @@ import {
 import { useState } from 'react';
 import { validateEmail } from '../../utils/formValidation';
 import { useFormTouched } from '../../hooks/useFormTouched';
-import TooltipButton from '../DisabledTooltipButton/TooltipButton';
+import TooltipButton from '../Buttons/DisabledTooltipButton/TooltipButton';
 
 export default function NewsLetterCTA(): React.ReactNode {
   const [name, setName] = useState('');
