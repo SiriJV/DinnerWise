@@ -1,5 +1,5 @@
 import { Container, Title, Text, Stack, Box } from '@mantine/core';
-import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 
 export default function PaymentInfoPage(): React.ReactNode {
   return (

@@ -1,4 +1,4 @@
-import { getStaticLabel } from '../../utils/slugify';
+import { getStaticLabel } from '../../../utils/slugify';
 
 export function formatLabel(value: string) {
   const decoded = decodeURIComponent(value);

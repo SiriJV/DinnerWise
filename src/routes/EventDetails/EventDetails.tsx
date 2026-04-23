@@ -9,7 +9,7 @@ import EventDetailsHeroImage from './EventDetailsHeroImage';
 import useEventUsers from '../../hooks/useEventUsers';
 import Map from '../../components/Map/Map';
 import EventDetailsHeader from './EventDetailsHeader';
-import EventModals from '../../components/Modals/EventModals/EventModals';
+import EventModals from '../../components/Modals/EventModals/EventRegistrationModal';
 import EventDescription from './EventDescription';
 import EventInfoCards from './EventInfoCard';
 import EventParticipantsAndHost from './EventParticipantsAndHost';

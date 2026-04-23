@@ -13,7 +13,7 @@ import {
 import { APP_CONFIG } from '../../config/appConfig';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 import { validateEmail } from '../../utils/formValidation';
 import { useFormTouched } from '../../hooks/useFormTouched';
 

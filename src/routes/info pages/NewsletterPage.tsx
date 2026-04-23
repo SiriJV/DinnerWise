@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
-import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 
 export default function NewsletterPage(): React.ReactNode {
   const [params, setParams] = useSearchParams();

@@ -1,6 +1,6 @@
 import { Container, Title, Text, Stack } from '@mantine/core';
 import { APP_CONFIG } from '../../config/appConfig';
-import DemoWarningText from '../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 
 export default function TermsPage(): React.ReactNode {
   return (

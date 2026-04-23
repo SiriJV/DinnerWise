@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { extractIdFromSlug, slugify } from '../../utils/slugify';
-import { fetchEventById } from '../../api/events';
-import { fetchRestaurantById } from '../../api/restaurants';
-import { fetchCategories } from '../../api/categories';
-import { fetchTags } from '../../api/tags';
+import { extractIdFromSlug, slugify } from '../../../utils/slugify';
+import { fetchEventById } from '../../../api/events';
+import { fetchRestaurantById } from '../../../api/restaurants';
+import { fetchCategories } from '../../../api/categories';
+import { fetchTags } from '../../../api/tags';
 
 export function useBreadcrumbData(pathnames: string[]) {
   const [eventName, setEventName] = useState<string | null>(null);

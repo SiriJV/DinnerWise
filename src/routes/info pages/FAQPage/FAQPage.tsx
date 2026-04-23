@@ -12,7 +12,7 @@ import { useModal } from '../../../contexts/ModalContext';
 import { useAuth } from '../../../contexts/AuthContext';
 import { slugify } from '../../../utils/slugify';
 import { getFAQdata } from './FAQdata';
-import DemoWarningText from '../../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../../components/common/DemoWarningText/DemoWarningText';
 
 export default function FAQPage(): React.ReactNode {
   const { openCreate } = useModal();

@@ -5,13 +5,13 @@ import Header from '../Header/Header';
 import NavBar from '../NavBar/NavBar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer/Footer';
-import ScrollToTop from '../ScrollToTop';
+import ScrollToTop from '../common/ScrollToTop';
 import SearchBar from '../SearchBar/SearchBar';
-import Breadcrumb from '../Breadcrumb/Breadcrumb';
-import BackToTopButton from '../BackToTopButton/BackToTopButton';
-import FloatingActionButton from '../FAB/FAB';
+import Breadcrumb from '../common/Breadcrumb/Breadcrumb';
+import BackToTopButton from '../common/BackToTopButton/BackToTopButton';
 import { Suspense } from 'react';
 import { HEADER_CONFIG } from '../../config/headerConfig';
+import FloatingActionButton from '../common/FAB/FAB';
 
 export default function AppShell() {
   // { children }: { children: React.ReactNode }

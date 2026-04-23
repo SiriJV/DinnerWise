@@ -1,9 +1,9 @@
 import { Affix, ActionIcon } from '@mantine/core';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
-import { useAuth } from '../../contexts/AuthContext';
-import { useModal } from '../../contexts/ModalContext';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useModal } from '../../../contexts/ModalContext';
+import CreateEventLoginModal from '../../Modals/CreateEventModal/CreateEventLoginModal';
 
 type FloatingActionButtonProps = {
   onClick?: () => void;

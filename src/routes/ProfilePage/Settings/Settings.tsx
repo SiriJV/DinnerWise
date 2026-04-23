@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { fetchUserByAlias, type User } from '../../../api/users';
 import { useAuth } from '../../../contexts/AuthContext';
-import DemoWarningText from '../../../components/DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../../components/common/DemoWarningText/DemoWarningText';
 import type { Category } from '../../../api/categories';
 import { HEADER_CONFIG } from '../../../config/headerConfig';
 

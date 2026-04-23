@@ -1,7 +1,7 @@
 import { Breadcrumbs, Anchor, Text, Divider } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import './Breadcrumb.scss';
-import { slugify } from '../../utils/slugify';
+import { slugify } from '../../../utils/slugify';
 import { useBreadcrumbData } from './useBreadcrumbData';
 import { formatLabel, isHiddenSegment } from './breadcrumbUtils';
 
