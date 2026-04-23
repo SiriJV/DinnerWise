@@ -1,4 +1,4 @@
-import { Breadcrumbs, Anchor, Text } from '@mantine/core';
+import { Breadcrumbs, Anchor, Text, Divider } from '@mantine/core';
 import { useLocation, Link } from 'react-router-dom';
 import './Breadcrumb.scss';
 import { slugify } from '../../utils/slugify';
@@ -58,20 +58,23 @@ export default function Breadcrumb() {
   if (!items.length) return null;
 
   return (
-    <Breadcrumbs
-      className='breadcrumb'
-      mt='md'
-      ml='md'
-      separator='/'
-      styles={{
-        separator: {
-          margin: '0 6px',
-        },
-      }}>
-      <Anchor component={Link} to='/'>
-        Startsida
-      </Anchor>
-      {items}
-    </Breadcrumbs>
+    <>
+      <Breadcrumbs
+        className='breadcrumb'
+        mt='md'
+        ml='md'
+        separator='/'
+        styles={{
+          separator: {
+            margin: '0 6px',
+          },
+        }}>
+        <Anchor component={Link} to='/'>
+          Startsida
+        </Anchor>
+        {items}
+      </Breadcrumbs>
+      <Divider mt='md' />
+    </>
   );
 }
