@@ -252,7 +252,7 @@ export default function CreateEventStep1({
                     <Alert
                       color='red'
                       icon={<AlertCircle size={16} />}
-                      title='Fel'
+                      title='Problem'
                       mt={8}>
                       {aiTitleError}
                     </Alert>
