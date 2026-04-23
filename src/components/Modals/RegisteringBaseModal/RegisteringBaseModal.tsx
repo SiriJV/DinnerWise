@@ -10,7 +10,7 @@ import {
 import { CircleHelp } from 'lucide-react';
 import './RegisteringBaseModal.scss';
 import { APP_CONFIG } from '../../../config/appConfig';
-import DemoWarningText from '../../DemoWarningText/DemoWarningText';
+import DemoWarningText from '../../common/DemoWarningText/DemoWarningText';
 
 const HEADER_HEIGHT = 60;
 const HEADER_OFFSET = 10;

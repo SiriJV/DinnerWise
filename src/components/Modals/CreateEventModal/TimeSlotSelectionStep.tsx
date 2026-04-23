@@ -21,7 +21,7 @@ interface Availability {
   }>;
 }
 
-interface CreateEventStep3Props {
+interface TimeSlotSelectionStepProps {
   selectedRestaurant: Restaurant | null;
   selectedTime: SelectedTime | null;
   setSelectedTime: (time: SelectedTime) => void;
@@ -31,7 +31,7 @@ interface CreateEventStep3Props {
   errors: string[];
 }
 
-export default function CreateEventStep3({
+export default function TimeSlotSelectionStep({
   selectedRestaurant,
   selectedTime,
   setSelectedTime,
@@ -39,7 +39,7 @@ export default function CreateEventStep3({
   setCurrentWeekOffset,
   mockAvailability,
   errors,
-}: CreateEventStep3Props) {
+}: TimeSlotSelectionStepProps) {
   if (!selectedRestaurant) return null;
 
   const availability =

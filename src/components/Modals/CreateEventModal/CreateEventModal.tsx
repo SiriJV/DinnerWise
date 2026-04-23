@@ -10,10 +10,10 @@ import { fetchCategories, type Category } from '../../../api/categories';
 import { fetchTags, fetchTagsByCategory, type Tag } from '../../../api/tags';
 import { useAuth } from '../../../contexts/AuthContext';
 import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
-import CreateEventStep1 from './CreateEventStep1';
-import CreateEventStep2 from './CreateEventStep2';
-import CreateEventStep3 from './CreateEventStep3';
-import CreateEventStep4 from './CreateEventStep4';
+import EventBasicsStep from './EventBasicsStep';
+import RestaurantSelectionStep from './RestaurantSelectionStep';
+import TimeSlotSelectionStep from './TimeSlotSelectionStep';
+import ConfirmationStep from './ConfirmationStep';
 
 interface EventDetails {
   title: string;
@@ -275,7 +275,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     switch (currentStep) {
       case 0:
         return (
-          <CreateEventStep1
+          <EventBasicsStep
             eventDetails={eventDetails}
             setEventDetails={setEventDetails}
             categoryOptions={categoryOptions}
@@ -286,7 +286,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         );
       case 1:
         return (
-          <CreateEventStep2
+          <RestaurantSelectionStep
             selectedRestaurant={selectedRestaurant}
             setSelectedRestaurant={setSelectedRestaurant}
             restaurants={restaurants}
@@ -300,7 +300,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         );
       case 2:
         return (
-          <CreateEventStep3
+          <TimeSlotSelectionStep
             selectedRestaurant={selectedRestaurant}
             selectedTime={selectedTime}
             setSelectedTime={setSelectedTime}
@@ -312,7 +312,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
         );
       case 3:
         return (
-          <CreateEventStep4
+          <ConfirmationStep
             eventDetails={eventDetails}
             selectedRestaurant={selectedRestaurant}
             selectedTime={selectedTime}

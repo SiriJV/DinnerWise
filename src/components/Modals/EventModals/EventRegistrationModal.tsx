@@ -8,7 +8,7 @@ import RegisteringModal from './RegisteringModal/RegisteringModal';
 import ShareModal from '../ShareModal/ShareModal';
 import WaitlistConfirmationModal from './WaitlistConfirmationModal/WaitlistConfirmationModal';
 
-type Props = {
+type EventRegistrationModalProps = {
   event: EventType | null;
   register: any;
   payment: any;
@@ -24,14 +24,14 @@ interface Participant {
   email: string;
 }
 
-export default function EventModals({
+export default function EventRegistrationModal({
   event,
   register,
   payment,
   confirmation,
   waitlist,
   share,
-}: Props) {
+}: EventRegistrationModalProps) {
   const [participant, setParticipant] = useState<Participant>({
     firstName: APP_CONFIG.exampleUserFirstName || 'Förnamn',
     lastName: APP_CONFIG.exampleUserLastName || 'Efternamn',

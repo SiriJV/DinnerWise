@@ -30,7 +30,7 @@ type ErrorType =
   | 'network'
   | 'unknown';
 
-interface CreateEventStep1Props {
+interface EventBasicsStepProps {
   eventDetails: EventDetails;
   setEventDetails: (details: EventDetails) => void;
   categoryOptions: Array<{ value: string; label: string }>;
@@ -56,14 +56,14 @@ const getErrorMessage = (errorType?: ErrorType): string => {
   }
 };
 
-export default function CreateEventStep1({
+export default function EventBasicsStep({
   eventDetails,
   setEventDetails,
   categoryOptions,
   tagOptions,
   errors,
   isLoading,
-}: CreateEventStep1Props) {
+}: EventBasicsStepProps) {
   const [aiTitlePopoverOpened, setAiTitlePopoverOpened] = useState(false);
   const [aiDescPopoverOpened, setAiDescPopoverOpened] = useState(false);
   const [aiTitleLoading, setAiTitleLoading] = useState(false);

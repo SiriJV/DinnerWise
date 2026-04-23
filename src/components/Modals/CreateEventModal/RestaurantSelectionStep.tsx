@@ -11,7 +11,7 @@ import { AlertCircle, Search } from 'lucide-react';
 import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
 import type { Restaurant } from '../../../api/restaurants';
 
-interface CreateEventStep2Props {
+interface RestaurantSelectionStepProps {
   selectedRestaurant: Restaurant | null;
   setSelectedRestaurant: (restaurant: Restaurant | null) => void;
   restaurants: Restaurant[];
@@ -23,7 +23,7 @@ interface CreateEventStep2Props {
   errors: string[];
 }
 
-export default function CreateEventStep2({
+export default function RestaurantSelectionStep({
   selectedRestaurant,
   setSelectedRestaurant,
   restaurants,
@@ -33,7 +33,7 @@ export default function CreateEventStep2({
   restaurantSearch,
   setRestaurantSearch,
   errors,
-}: CreateEventStep2Props) {
+}: RestaurantSelectionStepProps) {
   const filteredByCity =
     cityFilters.length > 0
       ? restaurants.filter((r) => {

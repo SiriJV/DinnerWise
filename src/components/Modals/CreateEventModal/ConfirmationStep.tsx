@@ -20,7 +20,7 @@ interface Tag {
   name: string;
 }
 
-interface CreateEventStep4Props {
+interface ConfirmationStepProps {
   eventDetails: EventDetails;
   selectedRestaurant: Restaurant | null;
   selectedTime: SelectedTime | null;
@@ -28,13 +28,13 @@ interface CreateEventStep4Props {
   allTags: Tag[];
 }
 
-export default function CreateEventStep4({
+export default function ConfirmationStep({
   eventDetails,
   selectedRestaurant,
   selectedTime,
   categories,
   allTags,
-}: CreateEventStep4Props) {
+}: ConfirmationStepProps) {
   const categoryName = categories.find(
     (c) => c.id.toString() === eventDetails.category,
   )?.name;
