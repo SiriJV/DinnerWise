@@ -118,7 +118,7 @@ export default function NewsletterPage(): React.ReactNode {
           ))
         ) : (
           <>
-            <Card withBorder shadow='sm' radius='md' className='hover-style'>
+            <Card withBorder shadow='sm' radius='md'>
               <Card.Section withBorder inheritPadding py='xs'>
                 <Group justify='space-between'>
                   <Text fw={600}>{reversedNews[selected].title}</Text>
