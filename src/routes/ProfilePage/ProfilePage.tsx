@@ -26,6 +26,7 @@ import {
 } from '../../utils/deterministicUsers';
 import type { EventType } from '../../types/EventType';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
+import { useIsMobile } from '../../hooks/useResponsive';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -48,6 +49,7 @@ export default function ProfilePage() {
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     async function loadUser() {
@@ -219,7 +221,7 @@ export default function ProfilePage() {
                   variant='subtle'
                   leftSection={<FlagIcon />}
                   onClick={openReportUser}>
-                  Rapportera användare
+                  {isMobile ? 'Rapportera' : 'Rapportera användare'}
                 </Button>
 
                 <ReportModal
