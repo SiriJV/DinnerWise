@@ -23,6 +23,9 @@ export default function EventDetails(): React.ReactNode {
   const [category, setCategory] = useState<{ id: number; name: string } | null>(
     null,
   );
+  const [restaurantPhoto, setRestaurantPhoto] = useState<string | undefined>(
+    undefined,
+  );
   const [registerOpened, registerHandlers] = useDisclosure(false);
   const [paymentOpened, paymentHandlers] = useDisclosure(false);
   const [confirmationOpened, confirmationHandlers] = useDisclosure(false);
@@ -45,7 +48,6 @@ export default function EventDetails(): React.ReactNode {
     event?.current_participants || 0,
   );
 
-  let restaurantPhoto = undefined;
   const location = useLocation();
   const state = location.state as
     | { id?: string; restaurantPhoto?: string }
@@ -58,10 +60,6 @@ export default function EventDetails(): React.ReactNode {
     if (slugMatch) {
       eventId = slugMatch[1];
     }
-  }
-
-  if (state?.restaurantPhoto) {
-    restaurantPhoto = state.restaurantPhoto;
   }
 
   useEffect(() => {
@@ -78,6 +76,28 @@ export default function EventDetails(): React.ReactNode {
         const eventData = await res.json();
 
         setEvent(eventData);
+
+        // Set restaurantPhoto from state if available, otherwise fetch from restaurant
+        if (state?.restaurantPhoto) {
+          setRestaurantPhoto(state.restaurantPhoto);
+        } else if (eventData.restaurant_id) {
+          try {
+            const restaurantRes = await fetch(
+              `http://localhost:3001/restaurants/${eventData.restaurant_id}`,
+            );
+            if (restaurantRes.ok) {
+              const restaurantData = await restaurantRes.json();
+              if (restaurantData.photos) {
+                try {
+                  const photosArr = JSON.parse(restaurantData.photos);
+                  if (Array.isArray(photosArr) && photosArr.length > 0) {
+                    setRestaurantPhoto(photosArr[0]);
+                  }
+                } catch (e) {}
+              }
+            }
+          } catch (err) {}
+        }
 
         const tagsRes = await fetch(
           `http://localhost:3001/events/${eventId}/tags`,
@@ -109,7 +129,7 @@ export default function EventDetails(): React.ReactNode {
     }
 
     loadEvent();
-  }, [state]);
+  }, [eventId, state]);
 
   if (loading) {
     return (
