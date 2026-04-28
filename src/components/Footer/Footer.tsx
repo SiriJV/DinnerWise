@@ -17,6 +17,7 @@ import { useModal } from '../../contexts/ModalContext';
 import NewsLetterCTA from '../NewsLetterCTA/NewsLetterCTA';
 import { APP_CONFIG } from '../../config/appConfig';
 import FooterLink from './FooterLink';
+import FooterFULogo from './FooterFULogo';
 
 export default function Footer() {
   const { isLoggedIn, logout } = useAuth();
@@ -42,6 +43,7 @@ export default function Footer() {
                 <Text size='xs' c='dimmed'>
                   Små event, stora upplevelser.
                 </Text>
+                <FooterFULogo hiddenFromSmall={false} />
                 <Box hiddenFrom='sm'>
                   <NavBarAccordion />
                 </Box>
@@ -81,6 +83,8 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <Container size='lg'>
+          <FooterFULogo hiddenFromSmall={true} />
+
           <Group justify='space-between' py='md' wrap='wrap'>
             <Text size='xs' c='dimmed'>
               © 2026 {APP_CONFIG.brandName}. All rights reserved.
