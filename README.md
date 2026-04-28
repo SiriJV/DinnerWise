@@ -22,5 +22,6 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 - Express
 - TypeScript
 - MySQL
+- Tripadvisor API
 - Resend
 - Gemini API
