@@ -33,7 +33,7 @@ export default function FooterFULogo({
         visibleFrom='sm'
         src={FUlogoKVGbgsmaller}
         alt='Folkuniversitetet logo'
-        w={'220'}
+        w={'200'}
         fit='contain'
       />
     </Link>
