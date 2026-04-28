@@ -10,31 +10,17 @@ export default function FooterFULogo({
   hiddenFromSmall = true,
 }: FooterFULogoProps) {
   const FULink = 'https://www.folkuniversitetet.se/';
-  if (hiddenFromSmall) {
-    return (
-      <Link to={FULink}>
-        <Image
-          mt={'md'}
-          hiddenFrom='sm'
-          src={FUlogoKVGbgsmaller}
-          alt='Folkuniversitetet logo'
-          w={'200'}
-          mah={30}
-          fit='contain'
-        />
-      </Link>
-    );
-  }
 
   return (
     <Link to={FULink}>
       <Image
-        mt={'md'}
-        visibleFrom='sm'
+        mt='md'
         src={FUlogoKVGbgsmaller}
         alt='Folkuniversitetet logo'
-        w={'200'}
+        w={200}
         fit='contain'
+        hiddenFrom={hiddenFromSmall ? 'sm' : undefined}
+        visibleFrom={!hiddenFromSmall ? 'sm' : undefined}
       />
     </Link>
   );
