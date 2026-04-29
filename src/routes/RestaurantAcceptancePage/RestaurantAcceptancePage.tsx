@@ -1,6 +1,6 @@
 import { Container, Title, Text, Button, Stack, Group } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchEventById } from '../../api/events';
 import type { Event } from '../../api/events';
 import { generateEventSlug } from '../../utils/slugify';
@@ -9,8 +9,8 @@ import { APP_CONFIG } from '../../config/appConfig';
 export default function RestaurantAcceptancePage(): React.ReactNode {
   const [approved, setApproved] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
-  const [searchParams] = useSearchParams();
-  const eventId = Number(searchParams.get('eventId'));
+  const { slug } = useParams();
+  const eventId = Number(slug);
 
   function formatDate(date: string | Date): string {
     const d = typeof date === 'string' ? new Date(date) : date;
