@@ -1,6 +1,6 @@
 import ProfilePageImage from './ProfilePageBannerImage';
 import ProfilePageAvatar from './ProfilePageAvatar';
-import { Box, Group, Stack, Text, Title } from '@mantine/core';
+import { Alert, Box, Button, Group, Stack, Text, Title } from '@mantine/core';
 import ProfilePageStats from './ProfilePageStats';
 import ProfilePageEvents from './ProfilePageEvents';
 import { PenIcon, SettingsIcon } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { fetchUserByAlias, fetchUsers, type User } from '../../api/users';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
 import { useAuth } from '../../contexts/AuthContext';
+import { reportUser } from '../../api/accountUsers';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -21,6 +22,12 @@ export default function ProfilePage() {
   const [followersList, setFollowersList] = useState<User[]>([]);
   const [followingList, setFollowingList] = useState<User[]>([]);
   const [eventsCount, setEventsCount] = useState(0);
+  const [reportStatus, setReportStatus] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+  const [hasReported, setHasReported] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -70,6 +77,45 @@ export default function ProfilePage() {
     loadUser();
   }, [alias]);
 
+  useEffect(() => {
+    setReportStatus(null);
+    setHasReported(false);
+  }, [alias]);
+
+  async function handleReportUser(viewedUser: User) {
+    if (reportLoading || hasReported) return;
+
+    console.log('[user-report frontend] handleReportUser called');
+    console.log('[user-report frontend] viewedUser.id (legacy users.id from profile page):', viewedUser.id);
+
+    const userId = viewedUser.id;
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      console.error('[user-report frontend] Invalid userId:', userId);
+      setReportStatus({ type: 'error', message: 'Kunde inte rapportera användaren' });
+      return;
+    }
+
+    console.log('[user-report frontend] sending legacy userId:', userId);
+    console.log('[user-report frontend] endpoint: POST /users/{userId}/report');
+
+    setReportLoading(true);
+    setReportStatus(null);
+
+    try {
+      const data = await reportUser(userId, null);
+      console.log('[user-report frontend] success:', data);
+
+      setHasReported(true);
+      setReportStatus({ type: 'success', message: 'Användaren har rapporterats' });
+    } catch (error) {
+      console.error('[user-report frontend] report error:', error);
+      setReportStatus({ type: 'error', message: 'Kunde inte rapportera användaren' });
+    } finally {
+      setReportLoading(false);
+    }
+  }
+
   if (loading) {
     return (
       <Text p='xl' ta='center' c='dimmed'>
@@ -85,6 +131,13 @@ export default function ProfilePage() {
       </Text>
     );
   }
+
+  const viewedUser = user;
+
+  console.log('[profile report button]', {
+    viewedUser,
+    viewedUserId: viewedUser?.id,
+  });
 
   return (
     <>
@@ -122,6 +175,25 @@ export default function ProfilePage() {
             )}
           </Group>
           <Text>{user.bio || 'Ingen biografi ännu.'}</Text>
+          {viewedUser && (
+            <Group mt='xs'>
+              <Button
+                color='red'
+                variant='outline'
+                size='xs'
+                onClick={() => handleReportUser(viewedUser)}
+                loading={reportLoading}
+                disabled={hasReported}
+              >
+                {hasReported ? 'Rapporterad' : 'Rapportera användare'}
+              </Button>
+            </Group>
+          )}
+          {reportStatus && (
+            <Alert mt='xs' color={reportStatus.type === 'success' ? 'green' : 'red'}>
+              {reportStatus.message}
+            </Alert>
+          )}
         </Stack>
         <ProfilePageEvents userId={user.id} />
       </Stack>

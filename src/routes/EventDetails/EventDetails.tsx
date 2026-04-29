@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSession } from '@clerk/clerk-react';
 import { slugify, generateRestaurantSlug } from '../../utils/slugify';
 import {
   Text,
@@ -12,6 +13,7 @@ import {
   Flex,
   Title,
   Pill,
+  Alert,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
@@ -21,6 +23,8 @@ import {
   FlagIcon,
   MapPin,
   Share,
+  AlertCircle,
+  CheckCircle,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
@@ -32,6 +36,7 @@ import ShareModal from '../../components/Modals/ShareModal/ShareModal';
 import WaitlistConfirmationModal from '../../components/Modals/WaitlistConfirmationModal/WaitlistConfirmationModal';
 import type { EventType } from '../../types/EventType';
 import { fetchUsers, type User } from '../../api/users';
+import { reportEvent } from '../../api/events';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function EventDetails(): React.ReactNode {
@@ -40,6 +45,7 @@ export default function EventDetails(): React.ReactNode {
   const [host, setHost] = useState<User | null>(null);
   const [participants, setParticipants] = useState<User[]>([]);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+  const { session } = useSession();
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
   const [
@@ -58,6 +64,8 @@ export default function EventDetails(): React.ReactNode {
   ] = useDisclosure(false);
   const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportMessage, setReportMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { isLoggedIn } = useAuth();
   const hostFirstName = host?.name.split(' ')[0] || 'värden';
 
@@ -129,6 +137,36 @@ export default function EventDetails(): React.ReactNode {
 
     loadEvent();
   }, [state]);
+
+  async function handleReport() {
+    if (!event) {
+      setReportMessage({
+        type: 'error',
+        message: 'Eventet kunde inte rapporteras',
+      });
+      return;
+    }
+
+    setReportLoading(true);
+    setReportMessage(null);
+    try {
+      const token = session ? await session.getToken() : null;
+
+      const result = await reportEvent(event.id, token);
+      setReportMessage({
+        type: 'success',
+        message: result.message,
+      });
+      setTimeout(() => setReportMessage(null), 3000);
+    } catch (err: any) {
+      setReportMessage({
+        type: 'error',
+        message: err.message || 'Kunde inte rapportera eventet',
+      });
+    } finally {
+      setReportLoading(false);
+    }
+  }
 
   useEffect(() => {
     let timeoutId: number;
@@ -406,10 +444,48 @@ export default function EventDetails(): React.ReactNode {
           </Grid.Col>
         </Grid>
 
-        <Group gap='xs' mt='lg'>
+        <Flex
+          gap='xs'
+          mt='lg'
+          p='md'
+          style={{ 
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            borderRadius: '8px',
+            opacity: reportLoading ? 0.6 : 1,
+          }}
+          onClick={handleReport}
+          title=''
+          onMouseEnter={(e) => {
+            if (!reportLoading) {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}>
           <FlagIcon className='report-event-icon' />
-          <Text className='report-event-text'>Rapportera event</Text>
-        </Group>
+          <Text 
+            className='report-event-text'>
+            {reportLoading ? 'Rapporterar...' : 'Rapportera event'}
+          </Text>
+        </Flex>
+
+        {reportMessage && (
+          <Alert
+            mt='md'
+            color={reportMessage.type === 'success' ? 'green' : 'red'}
+            icon={
+              reportMessage.type === 'success' ? (
+                <CheckCircle size={16} />
+              ) : (
+                <AlertCircle size={16} />
+              )
+            }
+            withCloseButton
+            onClose={() => setReportMessage(null)}>
+            {reportMessage.message}
+          </Alert>
+        )}
       </Box>
 
       <RegisteringModal
