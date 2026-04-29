@@ -11,6 +11,9 @@
     "seed": "node dist/scripts/seedAll.js"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.3",
+    "@clerk/localizations": "^4.2.1",
+    "@clerk/react": "^6.0.1",
     "@mantine/carousel": "^8.3.12",
     "@mantine/core": "^8.3.12",
     "@mantine/dates": "^8.3.12",
