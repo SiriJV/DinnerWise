@@ -1,0 +1,19 @@
+.auth-layout {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #f1f3f5 0%, #dee2e6 100%);
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  padding: 2rem 1rem;
+
+  &__inner {
+    width: 100%;
+    margin: auto;
+  }
+}

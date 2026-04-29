@@ -8,8 +8,11 @@ import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop';
 import SearchBar from '../SearchBar/SearchBar';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
+import { useAccountSync } from '../../hooks/useAccountSync';
 
 export default function AppShell() {
+  // Sync the signed-in Clerk user into account_users on first visit
+  useAccountSync();
   // { children }: { children: React.ReactNode }
   const [opened, { toggle, close }] = useDisclosure(false);
 
