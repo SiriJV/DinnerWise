@@ -1,19 +1,6 @@
-export type Event = {
-  id: number;
-  title: string;
-  description: string;
-  date: Date;
-  start_time: string;
-  end_time: string;
-  price: number;
-  current_participants: number;
-  max_participants?: number;
-  restaurant_id: number;
-  restaurant_name?: string;
-  restaurant_address?: string;
-  category_id: number;
-  category_name?: string;
-};
+import type { EventType } from '../types/EventType';
+
+export type Event = EventType;
 
 export async function fetchEvents(params?: {
   category_id?: number;
@@ -23,10 +10,10 @@ export async function fetchEvents(params?: {
     if (params?.category_id) {
       queryParams.append('category_id', params.category_id.toString());
     }
-    
+
     const url = `http://localhost:3001/events${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     const res = await fetch(url);
-    
+
     if (!res.ok) {
       throw new Error('Failed to fetch events');
     }
