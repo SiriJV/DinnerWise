@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSession } from '@clerk/clerk-react';
-import { slugify, generateRestaurantSlug } from '../../utils/slugify';
+import { generateRestaurantSlug } from '../../utils/slugify';
 import {
   Text,
   Image,
@@ -9,37 +9,17 @@ import {
   Stack,
   Box,
   Group,
-  Badge,
-  Flex,
-  Title,
-  Pill,
-  Alert,
+  Container,
+  SimpleGrid,
 } from '@mantine/core';
-// import { useDisclosure } from '@mantine/hooks';
-import './EventDetails.scss';
+import { useDisclosure } from '@mantine/hooks';
 import {
   BookmarkIcon,
   ChevronRight,
-  FlagIcon,
   MapPin,
-  Share,
-  AlertCircle,
-  CheckCircle,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import BaseButton from '../../components/Buttons/BaseButton/BaseButton';
-import ParticipantAvatars from '../../components/ParticipantAvatars/ParticipantAvatars';
-import RegisteringModal from '../../components/Modals/RegisteringModal/RegisteringModal';
-import PaymentModal from '../../components/Modals/PaymentModal/PaymentModal';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal/ConfirmationModal';
-import ShareModal from '../../components/Modals/ShareModal/ShareModal';
-import WaitlistConfirmationModal from '../../components/Modals/WaitlistConfirmationModal/WaitlistConfirmationModal';
-import type { EventType } from '../../types/EventType';
-import { fetchUsers, type User } from '../../api/users';
-import { reportEvent } from '../../api/events';
-import { Container, SimpleGrid } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-// import type { EventType } from '../../types/EventType';
+
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
 import EventDetailsHeroImage from './EventDetailsHeroImage';
@@ -52,32 +32,16 @@ import EventInfoCards from './EventInfoCard';
 import EventParticipantsAndHost from './EventParticipantsAndHost';
 import EventActions from './EventActions';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
+import type { EventType } from '../../types/EventType';
+import ParticipantAvatars from '../../components/ParticipantAvatars/ParticipantAvatars';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
   const { session } = useSession();
-  const [modalOpened, { open: openModal, close: closeModal }] =
-    useDisclosure(false);
-  const [
-    paymentModalOpened,
-    { open: openPaymentModal, close: closePaymentModal },
-  ] = useDisclosure(false);
-  const [
-    confirmationModalOpened,
-    { open: openConfirmationModal, close: closeConfirmationModal },
-  ] = useDisclosure(false);
-  const [shareModalOpened, { open: openShareModal, close: closeShareModal }] =
-    useDisclosure(false);
-  const [
-    waitlistModalOpened,
-    { open: openWaitlistModal, close: closeWaitlistModal },
-  ] = useDisclosure(false);
-  const [error, setError] = useState<string | null>(null);
   const [isNearFooter, setIsNearFooter] = useState(false);
-  const [reportLoading, setReportLoading] = useState(false);
-  const [reportMessage, setReportMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [category, setCategory] = useState<{ id: number; name: string } | null>(
     null,
   );
@@ -89,7 +53,6 @@ export default function EventDetails(): React.ReactNode {
   const [confirmationOpened, confirmationHandlers] = useDisclosure(false);
   const [waitlistOpened, waitlistHandlers] = useDisclosure(false);
   const [shareOpened, shareHandlers] = useDisclosure(false);
-  const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
   const {
     reportEventOpen,
@@ -189,35 +152,7 @@ export default function EventDetails(): React.ReactNode {
     loadEvent();
   }, [state]);
 
-  async function handleReport() {
-    if (!event) {
-      setReportMessage({
-        type: 'error',
-        message: 'Eventet kunde inte rapporteras',
-      });
-      return;
-    }
 
-    setReportLoading(true);
-    setReportMessage(null);
-    try {
-      const token = session ? await session.getToken() : null;
-
-      const result = await reportEvent(event.id, token);
-      setReportMessage({
-        type: 'success',
-        message: result.message,
-      });
-      setTimeout(() => setReportMessage(null), 3000);
-    } catch (err: any) {
-      setReportMessage({
-        type: 'error',
-        message: err.message || 'Kunde inte rapportera eventet',
-      });
-    } finally {
-      setReportLoading(false);
-    }
-  }
 
   useEffect(() => {
     let timeoutId: number;
@@ -333,181 +268,16 @@ export default function EventDetails(): React.ReactNode {
               />
             </SimpleGrid>
 
-            <Stack gap='xs'>
-              <Text fw={600}>Om värden {hostFirstName}</Text>
-              <NavLink
-                to={host ? `/profil/${host.alias}` : '/profil/'}
-                style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Group gap='0' wrap='nowrap' className='host-row'>
-                  <Image
-                    src={
-                      host?.profile_picture_url ||
-                      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
-                    }
-                    w={{ base: 80, md: 100 }}
-                    className='host-image'
-                  />
-
-                  <Group
-                    p='md'
-                    wrap='nowrap'
-                    className='host-image-information'>
-                    <Text className='host-text' lineClamp={4}>
-                      {host?.bio || `Se mer`}
-                    </Text>
-                    <ChevronRight className='host-chevron' />
-                  </Group>
-                </Group>
-              </NavLink>
-
-              <Box visibleFrom='sm' pt='xl' pb='xl'>
-                <Text fw={600}>Deltagare</Text>
-                <ParticipantAvatars
-                  participants={participants}
-                  maxVisible={100}
-                  size='lg'
-                  currentParticipants={event.current_participants}
-                  maxParticipants={displayMaxSpots}
-                />
-              </Box>
-            </Stack>
-          </Grid.Col>
-
-          <Grid.Col span={{ base: 12, md: 6 }} className='event-second-column'>
-            <Stack gap='lg'>
-              <Stack gap='xs'>
-                <Text fw={600}>Om platsen</Text>
-                <Box
-                  component={NavLink}
-                  to={
-                    event.restaurant_name && event.restaurant_id
-                      ? `/restaurang/${generateRestaurantSlug(event.restaurant_name, event.restaurant_id)}`
-                      : `/restaurang/${event.restaurant_id}`
-                  }
-                  className='restaurant-image-box'
-                  style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Image
-                    src={
-                      restaurantPhoto ||
-                      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
-                    }
-                    className='restaurant-image'
-                    height={140}
-                  />
-                  <Box p='md' className='restaurant-information'>
-                    <Group
-                      wrap='nowrap'
-                      className='restaurant-image-information'
-                      justify='space-between'>
-                      <Text td='none' tt='none' size='sm' fw={600}>
-                        {event.restaurant_name || 'Restaurang'}
-                        {event.restaurant_city && `, ${event.restaurant_city}`}
-                      </Text>
-
-                      <ChevronRight className='restaurant-chevron' />
-                    </Group>
-                  </Box>
-                </Box>
-              </Stack>
-
-              <Stack gap='xs'>
-                {/* Google Maps iframe using address if lat/lng are missing */}
-                {event.restaurant_address && event.restaurant_city ? (
-                  <iframe
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                      `${event.restaurant_address} ${event.restaurant_city}`.trim(),
-                    )}&z=15&output=embed`}
-                    title='Google map'
-                    width='100%'
-                    height={200}
-                    style={{ border: 0, display: 'block', borderRadius: '8px' }}
-                    loading='lazy'
-                  />
-                ) : (
-                  <Text c='dimmed' p='md'>
-                    Ingen karta tillgänglig
-                  </Text>
-                )}
-                <Group gap='xs'>
-                  <MapPin size='16px' />
-                  <Text>{event.restaurant_address || 'Adress saknas'}</Text>
-                </Group>
-              </Stack>
-
-              {/* Action Buttons */}
-              <Box
-                bg='white'
-                p={isNearFooter ? 0 : 'md'}
-                className={`sticky-action-buttons ${isNearFooter ? 'near-footer' : ''}`}>
-                <Group gap='xs' className='join-event-group'>
-                  <BaseButton
-                    size='md'
-                    className='join-event-button'
-                    style={{ width: 'auto' }}
-                    onClick={openModal}>
-                    {isFull ? 'Skriv upp dig på väntelista' : 'Anmäl dig här'}
-                  </BaseButton>
-                  {isLoggedIn && (
-                    <Flex px='md' py='sm' className='action-icon-button'>
-                      <BookmarkIcon size={22} />
-                    </Flex>
-                  )}
-                  <Flex
-                    px='md'
-                    py='sm'
-                    className='action-icon-button'
-                    onClick={openShareModal}
-                    style={{ cursor: 'pointer' }}>
-                    <Share size={22} />
-                  </Flex>
-                </Group>
-              </Box>
-            </Stack>
-          </Grid.Col>
-        </Grid>
-
-        <Flex
-          gap='xs'
-          mt='lg'
-          p='md'
-          style={{ 
-            cursor: reportLoading ? 'not-allowed' : 'pointer',
-            borderRadius: '8px',
-            opacity: reportLoading ? 0.6 : 1,
-          }}
-          onClick={handleReport}
-          title=''
-          onMouseEnter={(e) => {
-            if (!reportLoading) {
-              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}>
-          <FlagIcon className='report-event-icon' />
-          <Text 
-            className='report-event-text'>
-            {reportLoading ? 'Rapporterar...' : 'Rapportera event'}
-          </Text>
-        </Flex>
-
-        {reportMessage && (
-          <Alert
-            mt='md'
-            color={reportMessage.type === 'success' ? 'green' : 'red'}
-            icon={
-              reportMessage.type === 'success' ? (
-                <CheckCircle size={16} />
-              ) : (
-                <AlertCircle size={16} />
-              )
-            }
-            withCloseButton
-            onClose={() => setReportMessage(null)}>
-            {reportMessage.message}
-          </Alert>
-        )}
+            <EventActions
+              isFull={isFull}
+              isLoggedIn={isLoggedIn}
+              eventId={event.id}
+              register={registerHandlers}
+              share={shareHandlers}
+              reportModal={{ open: openReportEvent }}
+            />
+          </Stack>
+        </Container>
       </Box>
 
       <EventModals
@@ -525,10 +295,10 @@ export default function EventDetails(): React.ReactNode {
         title='Rapportera event'
         reasons={[
           'Vilseledande beskrivning',
-          'Otrevligt eller olämpligt event',
-          'Spam eller bedrägeri',
+          'Otrevligt eller ol채mpligt event',
+          'Spam eller bedr채geri',
           'Felaktig plats eller tid',
-          'Olämpligt innehåll',
+          'Ol채mpligt inneh책ll',
           'Tekniska fel',
           'Annat (ange i beskrivning)',
         ]}
