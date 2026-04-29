@@ -1,5 +1,7 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { db } from '../db.js';
+import { getAuth, clerkClient } from '@clerk/express';
+import * as accountService from '../services/accountUserService.js';
 
 const router = Router();
 
@@ -169,6 +171,104 @@ router.get('/:id/tags', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Kunde inte hämta taggar för eventet' });
+  }
+});
+
+/**
+ * POST /events/:id/report
+ * Report an event
+ */
+router.post('/:id/report', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { reason } = req.body;
+
+  let reporterId: number | null = null;
+
+  try {
+    const auth = getAuth(req);
+    const clerkUserId = auth?.userId;
+
+      let email = 'unknown@example.com';
+      let firstName: string | undefined;
+      let lastName: string | undefined;
+
+      try {
+        const clerkUser = await clerkClient.users.getUser(clerkUserId);
+        email = clerkUser.emailAddresses?.[0]?.emailAddress || email;
+        firstName = clerkUser.firstName || undefined;
+        lastName = clerkUser.lastName || undefined;
+      } catch (err) {
+        console.warn('Could not fetch Clerk user profile:', err);
+      }
+
+      const account = await accountService.findOrCreateLocalAccount(
+        clerkUserId,
+        email,
+        firstName,
+        lastName
+      );
+
+      reporterId = account?.id ?? null;
+    }
+  } catch (e) {
+    console.warn('Failed to resolve reporter:', e);
+    reporterId = null;
+  }
+
+  try {
+    const [eventRows] = await db.query('SELECT id FROM events WHERE id = ?', [id]);
+    if ((eventRows as any[]).length === 0) {
+      return res.status(404).json({ error: 'Eventet hittades inte' });
+    }
+  } catch (err) {
+    console.error('Error checking event existence:', err);
+    return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
+  }
+
+  if (reporterId !== null) {
+    try {
+      const [existingReports] = await db.query(
+        `SELECT id FROM event_reports 
+         WHERE event_id = ? AND reported_by_account_user_id = ? AND status = 'open'`,
+        [id, reporterId]
+      );
+
+      if ((existingReports as any[]).length > 0) {
+        return res.status(200).json({
+          success: true,
+          message: 'Du har redan rapporterat detta event',
+          isDuplicate: true,
+        });
+      }
+    } catch (err) {
+      console.error('Error checking for duplicate reports:', err);
+      return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
+    }
+  }
+
+  try {
+    await db.execute(
+      `INSERT INTO event_reports (event_id, reported_by_account_user_id, reason, status)
+       VALUES (?, ?, ?, 'open')`,
+      [id, reporterId, reason || null]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Eventet har rapporterats',
+      isDuplicate: false,
+    });
+  } catch (err: any) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(200).json({
+        success: true,
+        message: 'Du har redan rapporterat detta event',
+        isDuplicate: true,
+      });
+    }
+
+    console.error('Error creating report:', err);
+    return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
   }
 });
 
