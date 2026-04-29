@@ -2,6 +2,8 @@ import '@mantine/core/styles.css';
 import './App.scss';
 import { MantineProvider } from '@mantine/core';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ClerkProvider } from '@clerk/clerk-react';
+import { svSE } from '@clerk/localizations';
 import { theme } from './theme';
 import AppShell from './components/AppShell/AppShell';
 import { AuthProvider } from './contexts/AuthContext';
@@ -21,6 +23,11 @@ import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurant
 import CategoryPage from './routes/CategoryPage/CategoryPage';
 import TagPage from './routes/TagPage/TagPage';
 import CityPage from './routes/CityPage/CityPage';
+import TestAuthPage from './routes/TestAuthPage/TestAuthPage';
+import TestAccountPage from './routes/TestAccountPage/TestAccountPage';
+import AdminLoginPage from './routes/AdminLoginPage/AdminLoginPage';
+import AdminPanelPage from './routes/AdminPanelPage/AdminPanelPage';
+import AcceptInvitationPage from './routes/AcceptInvitationPage/AcceptInvitationPage';
 import { infoPages } from './data/infoPages';
 
 const router = createBrowserRouter([
@@ -82,11 +89,35 @@ const router = createBrowserRouter([
         path: '/tagg/:slug',
         element: <TagPage />,
       },
+      {
+        path: '/test-auth',
+        element: <TestAuthPage />,
+      },
+      {
+        path: '/test-account',
+        element: <TestAccountPage />,
+      },
+      {
+        path: '/admin-login',
+        element: <AdminLoginPage />,
+      },
+      {
+        path: '/accept-invitation',
+        element: <AcceptInvitationPage />,
+      },
       ...infoPages.map(({ path, component: Comp }) => ({
         path,
         element: <Comp />,
       })),
     ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <MantineProvider theme={theme}>
+        <AdminPanelPage />
+      </MantineProvider>
+    ),
   },
 ]);
 
@@ -111,5 +142,24 @@ function GlobalModals() {
 }
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+  if (!clerkPubKey) {
+    console.warn(
+      '⚠️  VITE_CLERK_PUBLISHABLE_KEY is not set in .env.local\n' +
+      '   Add it to enable the Clerk authentication test page (/test-auth).\n' +
+      '   Key should start with pk_test_'
+    );
+  }
+
+  return (
+    <ClerkProvider
+      publishableKey={clerkPubKey || ''}
+      localization={svSE}
+      signUpFallbackRedirectUrl="/"
+      signInFallbackRedirectUrl="/"
+    >
+      <RouterProvider router={router} />
+    </ClerkProvider>
+  );
 }
