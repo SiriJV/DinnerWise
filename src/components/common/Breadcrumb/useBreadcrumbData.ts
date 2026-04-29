@@ -11,6 +11,8 @@ export function useBreadcrumbData(pathnames: string[]) {
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [tagName, setTagName] = useState<string | null>(null);
   const [tagCategoryName, setTagCategoryName] = useState<string | null>(null);
+  const [bookingEventName, setBookingEventName] = useState<string | null>(null);
+  const [bookingEventId, setBookingEventId] = useState<number | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -18,6 +20,25 @@ export function useBreadcrumbData(pathnames: string[]) {
       const restaurantIndex = pathnames.indexOf('restaurang');
       const categoryIndex = pathnames.indexOf('kategori');
       const tagIndex = pathnames.indexOf('tagg');
+      const bokningshanteringIndex = pathnames.indexOf('bokningshantering');
+
+      // Booking Management
+      if (
+        bokningshanteringIndex !== -1 &&
+        pathnames[bokningshanteringIndex + 1]
+      ) {
+        const id = Number(pathnames[bokningshanteringIndex + 1]);
+        if (id) {
+          try {
+            const data = await fetchEventById(id);
+            setBookingEventName(data?.title || `Event ${id}`);
+            setBookingEventId(data?.id || id);
+          } catch {
+            setBookingEventName(`Event ${id}`);
+            setBookingEventId(id);
+          }
+        }
+      }
 
       // Event
       if (eventIndex !== -1 && pathnames[eventIndex + 1]) {
@@ -84,5 +105,7 @@ export function useBreadcrumbData(pathnames: string[]) {
     categoryName,
     tagName,
     tagCategoryName,
+    bookingEventName,
+    bookingEventId,
   };
 }

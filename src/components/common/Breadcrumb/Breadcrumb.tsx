@@ -9,8 +9,15 @@ export default function Breadcrumb() {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(Boolean);
 
-  const { eventName, restaurantName, categoryName, tagName, tagCategoryName } =
-    useBreadcrumbData(pathnames);
+  const {
+    eventName,
+    restaurantName,
+    categoryName,
+    tagName,
+    tagCategoryName,
+    bookingEventName,
+    bookingEventId,
+  } = useBreadcrumbData(pathnames);
 
   if (pathnames[0] === 'profil') return null;
 
@@ -23,6 +30,15 @@ export default function Breadcrumb() {
 
     if (prev === 'event' && eventName) {
       items.push(<Text key={`event-${index}`}>{eventName}</Text>);
+      return;
+    }
+
+    if (prev === 'bokningshantering' && bookingEventName && bookingEventId) {
+      items.push(
+        <Text key={`booking-${index}`}>
+          {bookingEventName} (Event-ID: {bookingEventId})
+        </Text>,
+      );
       return;
     }
 
