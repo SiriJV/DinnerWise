@@ -1,27 +1,79 @@
-import { Container, Title, Text } from '@mantine/core';
+import { Container, Title, Text, Stack, Box } from '@mantine/core';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 
 export default function PaymentInfoPage(): React.ReactNode {
   return (
     <>
-      <Container size='lg'>
+      <Container size='lg' pt='md'>
         <Title order={2} mb='md'>
           Betalning
         </Title>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
-        </Text>
+        <Stack gap='md'>
+          <DemoWarningText text='Faktiska betalningar är inte aktiverade.' />
+
+          <Box>
+            <Title order={3} mb='xs'>
+              Betalningsmetoder
+            </Title>
+            <Stack gap='xs'>
+              <Text>
+                Vi accepterar flera olika betalningsmetoder för att göra det
+                enkelt för dig:
+              </Text>
+              <Text>
+                <Text span fw={600}>
+                  Swish
+                </Text>{' '}
+                - Direkt betalning via mobilt BankID
+              </Text>
+              <Text>
+                <Text span fw={600}>
+                  Kreditkort
+                </Text>{' '}
+                - Visa & Mastercard
+              </Text>
+              <Text>
+                <Text span fw={600}>
+                  Klarna
+                </Text>{' '}
+                - Köp nu, betala sen
+              </Text>
+            </Stack>
+          </Box>
+
+          <Box>
+            <Title order={3} mb='xs'>
+              Prissättning
+            </Title>
+            <Text>
+              Priset för varje event varierar beroende på värd och restaurang.
+              Du kommer att se det exakta priset innan du slutför din bokning
+              och kan välja den betalningsmetod som passar dig bäst.
+            </Text>
+          </Box>
+
+          <Box>
+            <Title order={3} mb='xs'>
+              Säkerhet
+            </Title>
+            <Text>
+              Din betalningsinformation är alltid säker hos oss. Vi använder
+              kryptering och följer högsta säkerhetsstandarder för att skydda
+              dina personliga uppgifter.
+            </Text>
+          </Box>
+
+          <Box>
+            <Title order={3} mb='xs'>
+              Bekräftelse
+            </Title>
+            <Text>
+              När din betalning är genomförd kommer du att få en bekräftelse via
+              e-post med alla detaljer om ditt event. Du kan också se din
+              bokning i din profil.
+            </Text>
+          </Box>
+        </Stack>
       </Container>
     </>
   );

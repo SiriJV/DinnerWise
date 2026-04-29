@@ -1,5 +1,3 @@
-@use '../../styles/variables.scss' as var;
-
 .searchBar-container {
   display: flex;
   align-items: center;
@@ -22,25 +20,6 @@
 .searchBar {
   width: 100%;
   animation: slideIn 0.3s ease;
-
-  & input {
-    border: 1px solid var.$gray5;
-    border-radius: var(--mantine-radius-xl);
-    background-color: white;
-
-    height: 40px;
-    font-size: 14px;
-    color: var.$darkred;
-
-    &:focus {
-      border-color: var.$darkred;
-    }
-  }
-}
-
-.searchBar-icon {
-  color: var.$darkred;
-  cursor: pointer;
 }
 
 @keyframes slideIn {

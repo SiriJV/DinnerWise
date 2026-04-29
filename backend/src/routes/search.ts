@@ -7,7 +7,9 @@ router.get('/', async (req, res) => {
   const { q, type, limit = 10 } = req.query;
 
   if (!q || typeof q !== 'string') {
-    return res.status(400).json({ error: 'Sökparameter "q" saknas eller är ogiltig' });
+    return res
+      .status(400)
+      .json({ error: 'Sökparameter "q" saknas eller är ogiltig' });
   }
 
   const search = `%${q}%`;
@@ -16,12 +18,27 @@ router.get('/', async (req, res) => {
   try {
     if (!type || type === 'all') {
       const [events] = await db.query(
-        `SELECT id, title, description, date, start_time, end_time, price
-         FROM events
-         WHERE title LIKE ? OR description LIKE ?
-         ORDER BY date ASC
-         LIMIT ?`,
-        [search, search, maxLimit]
+        `SELECT 
+  e.id,
+  e.title,
+  e.description,
+  e.category_id,
+  e.restaurant_id,
+  e.current_participants,
+  e.max_participants,
+  e.price,
+  e.date,
+  e.start_time,
+  e.end_time,
+  r.name AS restaurant_name,
+  r.address_string AS restaurant_address,
+  r.city AS restaurant_city
+FROM events e
+JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
+WHERE e.title LIKE ? OR e.description LIKE ?
+ORDER BY e.date ASC
+LIMIT ?`,
+        [search, search, maxLimit],
       );
 
       const [cities] = await db.query(
@@ -30,7 +47,7 @@ router.get('/', async (req, res) => {
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
-        [search, maxLimit]
+        [search, maxLimit],
       );
 
       const [restaurants] = await db.query(
@@ -39,7 +56,7 @@ router.get('/', async (req, res) => {
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
-        [search, maxLimit]
+        [search, maxLimit],
       );
 
       const [users] = await db.query(
@@ -48,7 +65,7 @@ router.get('/', async (req, res) => {
         WHERE name LIKE ? OR alias LIKE ?
         ORDER BY name ASC
         LIMIT ?`,
-        [search, search, maxLimit]
+        [search, search, maxLimit],
       );
 
       const [tags] = await db.query(
@@ -57,7 +74,7 @@ router.get('/', async (req, res) => {
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
-        [search, maxLimit]
+        [search, maxLimit],
       );
 
       const [categories] = await db.query(
@@ -66,7 +83,7 @@ router.get('/', async (req, res) => {
          WHERE name LIKE ?
          ORDER BY name ASC
          LIMIT ?`,
-        [search, maxLimit]
+        [search, maxLimit],
       );
 
       return res.json({
@@ -85,12 +102,27 @@ router.get('/', async (req, res) => {
     switch (type) {
       case 'events': {
         const [rows] = await db.query(
-          `SELECT id, title, description, date, start_time, end_time, price
-           FROM events
-           WHERE title LIKE ? OR description LIKE ?
-           ORDER BY date ASC
-           LIMIT ?`,
-          [search, search, maxLimit]
+          `SELECT 
+  e.id,
+  e.title,
+  e.description,
+  e.category_id,
+  e.restaurant_id,
+  e.current_participants,
+  e.max_participants,
+  e.price,
+  e.date,
+  e.start_time,
+  e.end_time,
+  r.name AS restaurant_name,
+  r.address_string AS restaurant_address,
+  r.city AS restaurant_city
+FROM events e
+JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
+WHERE e.title LIKE ? OR e.description LIKE ?
+ORDER BY e.date ASC
+LIMIT ?`,
+          [search, search, maxLimit],
         );
         return res.json({ type: 'events', results: rows });
       }
@@ -102,7 +134,7 @@ router.get('/', async (req, res) => {
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,
-          [search, maxLimit]
+          [search, maxLimit],
         );
         return res.json({ type: 'cities', results: rows });
       }
@@ -114,7 +146,7 @@ router.get('/', async (req, res) => {
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,
-          [search, maxLimit]
+          [search, maxLimit],
         );
         return res.json({ type: 'restaurants', results: rows });
       }
@@ -126,7 +158,7 @@ router.get('/', async (req, res) => {
            WHERE name LIKE ? OR alias LIKE ?
            ORDER BY name ASC
            LIMIT ?`,
-          [search, search, maxLimit]
+          [search, search, maxLimit],
         );
         return res.json({ type: 'users', results: rows });
       }
@@ -138,7 +170,7 @@ router.get('/', async (req, res) => {
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,
-          [search, maxLimit]
+          [search, maxLimit],
         );
         return res.json({ type: 'tags', results: rows });
       }
@@ -150,14 +182,15 @@ router.get('/', async (req, res) => {
            WHERE name LIKE ?
            ORDER BY name ASC
            LIMIT ?`,
-          [search, maxLimit]
+          [search, maxLimit],
         );
         return res.json({ type: 'categories', results: rows });
       }
 
       default:
         return res.status(400).json({
-          error: 'Ogiltig söktyp. Tillåtna värden: all, events, cities, restaurants, users, tags, categories',
+          error:
+            'Ogiltig söktyp. Tillåtna värden: all, events, cities, restaurants, users, tags, categories',
         });
     }
   } catch (err) {

@@ -1,0 +1,28 @@
+.mantine-Carousel-control {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-50%);
+}
+
+.navCarousel-card {
+  overflow: hidden;
+
+  img {
+    overflow: hidden;
+    transition:
+      transform 0.3s ease,
+      border-radius 0.3s ease;
+    border-radius: var(--mantine-radius-md);
+  }
+
+  &:hover {
+    img {
+      overflow: hidden;
+      border-radius: 0;
+      transform: scale(1.1);
+    }
+  }
+}

@@ -1,37 +1,19 @@
 import { useState, useEffect } from 'react';
+import { Button, Stepper, Group, Box } from '@mantine/core';
 import {
-  Modal,
-  Button,
-  Stepper,
-  TextInput,
-  Textarea,
-  Select,
-  Group,
-  Stack,
-  Text,
-  Badge,
-  Card,
-  Alert,
-  MultiSelect,
-  Box,
-  Center,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import {
-  Calendar,
-  Clock,
-  AlertCircle,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-} from 'lucide-react';
+  useIsDesktop,
+  useIsMobile,
+  useIsVerySmall,
+} from '../../../hooks/useResponsive';
 import { fetchRestaurants, type Restaurant } from '../../../api/restaurants';
 import { fetchCategories, type Category } from '../../../api/categories';
-import { fetchTags, type Tag } from '../../../api/tags';
-import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
-
-const HEADER_HEIGHT = 60;
-const HEADER_OFFSET = 10;
+import { fetchTags, fetchTagsByCategory, type Tag } from '../../../api/tags';
+import { useAuth } from '../../../contexts/AuthContext';
+import RegisteringBaseModal from '../RegisteringBaseModal/RegisteringBaseModal';
+import EventBasicsStep from './EventBasicsStep';
+import RestaurantSelectionStep from './RestaurantSelectionStep';
+import TimeSlotSelectionStep from './TimeSlotSelectionStep';
+import ConfirmationStep from './ConfirmationStep';
 
 interface EventDetails {
   title: string;
@@ -101,6 +83,8 @@ const generateAvailability = () => {
 const MOCK_AVAILABILITY = generateAvailability();
 
 const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
+  const { user } = useAuth();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [eventDetails, setEventDetails] = useState<EventDetails>({
     title: '',
@@ -108,6 +92,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     description: '',
     tags: [],
   });
+
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
   const [selectedTime, setSelectedTime] = useState<SelectedTime | null>(null);
@@ -115,6 +100,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   const [restaurantSearch, setRestaurantSearch] = useState('');
@@ -122,16 +108,14 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const isTablet = useMediaQuery('(min-width: 480px) and (max-width: 767px)');
-  const isMobile = useMediaQuery('(max-width: 479px)');
-  const isVerySmall = useMediaQuery('(max-width: 399px)');
+  const isDesktop = useIsDesktop();
+  const isMobile = useIsMobile();
+  const isVerySmall = useIsVerySmall();
 
   const getStepperSize = () => {
     if (isDesktop) return 'md';
-    if (isTablet) return 'sm';
     if (isMobile) return 'xs';
-    return 'md';
+    return 'sm';
   };
 
   useEffect(() => {
@@ -159,13 +143,43 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     loadData();
   }, [opened]);
 
+  useEffect(() => {
+    const loadTagsByCategory = async () => {
+      if (eventDetails.category) {
+        const categoryId = parseInt(eventDetails.category);
+        const tags = await fetchTagsByCategory(categoryId);
+        setFilteredTags(tags);
+        // Clear selected tags that don't belong to the new category
+        const validTagIds = tags.map((t) => t.id.toString());
+        const updatedTags = eventDetails.tags.filter((tagId) =>
+          validTagIds.includes(tagId),
+        );
+        if (updatedTags.length !== eventDetails.tags.length) {
+          setEventDetails({ ...eventDetails, tags: updatedTags });
+        }
+      } else {
+        setFilteredTags([]);
+        // Clear tags when category is removed
+        if (eventDetails.tags.length > 0) {
+          setEventDetails({ ...eventDetails, tags: [] });
+        }
+      }
+    };
+
+    loadTagsByCategory();
+  }, [eventDetails.category]);
+
   const categoryOptions =
     categories.length > 0
       ? categories.map((cat) => ({ value: cat.id.toString(), label: cat.name }))
       : [];
+
   const tagOptions =
-    allTags.length > 0
-      ? allTags.map((tag) => ({ value: tag.id.toString(), label: tag.name }))
+    filteredTags.length > 0
+      ? filteredTags.map((tag) => ({
+          value: tag.id.toString(),
+          label: tag.name,
+        }))
       : [];
 
   const [cityFilters, setCityFilters] = useState<number[]>([]);
@@ -188,359 +202,47 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     setUniqueCities(uniqueCityList);
   }, [restaurants]);
 
-  const filteredByCity =
-    cityFilters.length > 0
-      ? restaurants.filter((r) => {
-          const cityIndex = uniqueCities.findIndex((c) => c.name === r.city);
-          return cityIndex !== -1 && cityFilters.includes(cityIndex);
-        })
-      : restaurants;
-  const filteredBySearch = filteredByCity.filter((r) =>
-    r.name.toLowerCase().includes(restaurantSearch.toLowerCase()),
-  );
-
-  const renderStep1 = () => {
-    if (isLoading) {
-      return (
-        <Stack gap='md'>
-          <Text c='dimmed'>Laddar kategorier...</Text>
-        </Stack>
-      );
+  async function sendBookingEmails() {
+    if (!selectedRestaurant || !selectedTime || !eventDetails.title) {
+      console.error('Missing event, restaurant, or time info');
+      return;
     }
-    return (
-      <Stack gap='md'>
-        {errors.length > 0 && (
-          <Alert
-            icon={<AlertCircle size={16} />}
-            color='red'
-            title='Valideringsfel'>
-            <ul style={{ marginLeft: 20 }}>
-              {errors.map((error, idx) => (
-                <li key={idx}>{error}</li>
-              ))}
-            </ul>
-          </Alert>
-        )}
-        <TextInput
-          label='Titel'
-          placeholder='Ge ditt event en titel'
-          value={eventDetails.title}
-          onChange={(e) =>
-            setEventDetails({ ...eventDetails, title: e.currentTarget.value })
-          }
-          required
-        />
-        <Select
-          label='Kategori'
-          placeholder='Välj en passande kategori'
-          data={categoryOptions}
-          value={eventDetails.category}
-          onChange={(value) =>
-            setEventDetails({ ...eventDetails, category: value })
-          }
-          required
-          searchable
-          clearable
-          nothingFoundMessage='Ingen kategori hittades'
-          styles={{ dropdown: { zIndex: 9999 } }}
-        />
-        <Textarea
-          label='Beskrivning'
-          placeholder='Beskriv ditt event...'
-          value={eventDetails.description}
-          onChange={(e) =>
-            setEventDetails({
-              ...eventDetails,
-              description: e.currentTarget.value,
-            })
-          }
-          rows={4}
-          required
-        />
-        <MultiSelect
-          label='Taggar (valfritt)'
-          placeholder='Sök och välj passande taggar'
-          data={tagOptions}
-          value={eventDetails.tags}
-          onChange={(values) =>
-            setEventDetails({ ...eventDetails, tags: values })
-          }
-          searchable
-          clearable
-        />
-      </Stack>
-    );
-  };
+    if (!user || !user.name) {
+      console.error(
+        'Missing user or user name, cannot send booking emails:',
+        user,
+      );
+      return;
+    }
 
-  const renderStep2 = () => {
-    return (
-      <Stack gap='md'>
-        {errors.length > 0 && (
-          <Alert
-            icon={<AlertCircle size={16} />}
-            color='red'
-            title='Valideringsfel'>
-            {errors[0]}
-          </Alert>
-        )}
-        <TextInput
-          placeholder='Sök restaurang...'
-          leftSection={<Search size={16} />}
-          value={restaurantSearch}
-          onChange={(e) => setRestaurantSearch(e.currentTarget.value)}
-        />
+    await fetch('http://localhost:3001/email/send-host-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: selectedRestaurant.name,
+        date: selectedTime.date,
+        event: eventDetails.title,
+        participants: 8,
+        eventId: 1,
+        name: user.name,
+        slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
+      }),
+    });
 
-        <Stack gap='xs'>
-          <SearchableFilterDropdown
-            fetchUrl='http://localhost:3001/cities'
-            label='Stad'
-            onApply={(selected: Array<{ id: number; name: string }>) => {
-              const selectedIds = selected.map(
-                (city: { id: number; name: string }) => {
-                  const idx = uniqueCities.findIndex(
-                    (c: { id: number; name: string }) => c.name === city.name,
-                  );
-                  return idx;
-                },
-              );
-              setCityFilters(selectedIds.filter((id: number) => id !== -1));
-            }}
-          />
-        </Stack>
-        <Stack gap='sm'>
-          {filteredBySearch.length > 0 ? (
-            filteredBySearch.map((restaurant) => (
-              <Card
-                key={restaurant.id}
-                padding='md'
-                radius='md'
-                withBorder
-                style={{
-                  cursor: 'pointer',
-                  borderWidth: 2,
-                  borderColor:
-                    selectedRestaurant?.id === restaurant.id
-                      ? '#b21515ff'
-                      : '#dee2e6',
-                  backgroundColor:
-                    selectedRestaurant?.id === restaurant.id
-                      ? '#ffe7e7ff'
-                      : 'white',
-                  transition: 'all 0.2s ease',
-                }}
-                onClick={() => {
-                  setSelectedRestaurant(restaurant);
-                  setErrors([]);
-                }}>
-                <Group justify='space-between' mb='xs'>
-                  <div>
-                    <Text fw={500}>{restaurant.name}</Text>
-                    <Text size='sm' c='dimmed'>
-                      {restaurant.city}
-                    </Text>
-                  </div>
-                </Group>
-                <Text size='sm'>{restaurant.address_string}</Text>
-              </Card>
-            ))
-          ) : (
-            <Center py='xl'>
-              <Text size='sm' c='dimmed'>
-                Inga restauranger hittades
-              </Text>
-            </Center>
-          )}
-        </Stack>
-      </Stack>
-    );
-  };
-
-  const renderStep3 = () => {
-    if (!selectedRestaurant) return null;
-    const availability =
-      MOCK_AVAILABILITY[
-        selectedRestaurant.id as keyof typeof MOCK_AVAILABILITY
-      ] || [];
-    const visibleDates = availability.slice(
-      currentWeekOffset * 7,
-      currentWeekOffset * 7 + 7,
-    );
-    const canGoPrev = currentWeekOffset > 0;
-    const canGoNext = currentWeekOffset < 3;
-    return (
-      <Stack gap='md'>
-        {errors.length > 0 && (
-          <Alert
-            icon={<AlertCircle size={16} />}
-            color='red'
-            title='Valideringsfel'>
-            {errors[0]}
-          </Alert>
-        )}
-
-        <Group justify='space-between' align='center' gap='md'>
-          <Button
-            variant='light'
-            size='sm'
-            onClick={() => setCurrentWeekOffset((p) => p - 1)}
-            disabled={!canGoPrev}
-            leftSection={<ChevronLeft size={16} />}></Button>
-
-          <Text
-            fw={500}
-            size='sm'
-            style={{ minWidth: '120px', textAlign: 'center' }}>
-            Vecka {currentWeekOffset + 1} av 4
-          </Text>
-
-          <Button
-            variant='light'
-            size='sm'
-            onClick={() => setCurrentWeekOffset((p) => p + 1)}
-            disabled={!canGoNext}
-            rightSection={<ChevronRight size={16} />}></Button>
-        </Group>
-
-        <Stack gap='lg' pr='md'>
-          {visibleDates.length > 0 ? (
-            visibleDates.map((slot, idx) => (
-              <Card key={idx} padding='md' radius='md' withBorder>
-                <Stack gap='xs'>
-                  <Text
-                    fw={500}
-                    size='sm'
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                    }}>
-                    <Calendar size={16} />
-                    {slot.date}
-                  </Text>
-                  <Group gap='xs' wrap='wrap'>
-                    {slot.slots.map((slotData) => (
-                      <Button
-                        key={slotData.time}
-                        variant={
-                          selectedTime?.date === slot.date &&
-                          selectedTime?.time === slotData.time
-                            ? 'filled'
-                            : 'light'
-                        }
-                        onClick={() => {
-                          if (slotData.available) {
-                            setSelectedTime({
-                              date: slot.date,
-                              time: slotData.time,
-                            });
-                            setErrors([]);
-                          }
-                        }}
-                        size='xs'
-                        disabled={!slotData.available}
-                        leftSection={<Clock size={14} />}
-                        style={{
-                          opacity: slotData.available ? 1 : 0.5,
-                        }}
-                        title={!slotData.available ? 'Inte tillgänglig' : ''}>
-                        {slotData.time}
-                      </Button>
-                    ))}
-                  </Group>
-                </Stack>
-              </Card>
-            ))
-          ) : (
-            <Center py='xl'>
-              <Text size='sm' c='dimmed'>
-                Inga tillgängliga datum denna vecka
-              </Text>
-            </Center>
-          )}
-        </Stack>
-      </Stack>
-    );
-  };
-
-  const renderStep4 = () => {
-    const categoryName = categories.find(
-      (c) => c.id.toString() === eventDetails.category,
-    )?.name;
-    const selectedTagNames = allTags
-      .filter((tag) => eventDetails.tags.includes(tag.id.toString()))
-      .map((tag) => tag.name);
-
-    return (
-      <Stack gap='md'>
-        <Alert
-          icon={<AlertCircle size={16} />}
-          color='red'
-          title='Granska ditt event'>
-          Vänligen bekräfta alla detaljer innan du skapar ditt event.
-        </Alert>
-
-        <Card padding='md' radius='md' withBorder>
-          <Text fw={500} mb='md'>
-            Eventdetaljer
-          </Text>
-          <Stack gap='xs' ml='md'>
-            <Text size='sm'>
-              <strong>Titel:</strong> {eventDetails.title}
-            </Text>
-            <Text size='sm'>
-              <strong>Kategori:</strong> {categoryName}
-            </Text>
-            <Text size='sm'>
-              <strong>Beskrivning:</strong> {eventDetails.description}
-            </Text>
-            {selectedTagNames.length > 0 && (
-              <div>
-                <Text size='sm' mb='xs'>
-                  <strong>Taggar:</strong>
-                </Text>
-                <Group gap='xs' ml='md'>
-                  {selectedTagNames.map((tag) => (
-                    <Badge key={tag}>{tag}</Badge>
-                  ))}
-                </Group>
-              </div>
-            )}
-          </Stack>
-        </Card>
-
-        <Card padding='md' radius='md' withBorder>
-          <Text fw={500} mb='md'>
-            Restaurang
-          </Text>
-          <Stack gap='xs' ml='md'>
-            <Text size='sm'>
-              <strong>Namn:</strong> {selectedRestaurant?.name}
-            </Text>
-            <Text size='sm'>
-              <strong>Stad:</strong> {selectedRestaurant?.city}
-            </Text>
-            <Text size='sm'>
-              <strong>Adress:</strong> {selectedRestaurant?.address_string}
-            </Text>
-          </Stack>
-        </Card>
-
-        <Card padding='md' radius='md' withBorder>
-          <Text fw={500} mb='md'>
-            Datum & Tid
-          </Text>
-          <Stack gap='xs' ml='md'>
-            <Text size='sm'>
-              <strong>Datum:</strong> {selectedTime?.date}
-            </Text>
-            <Text size='sm'>
-              <strong>Tid:</strong> {selectedTime?.time}
-            </Text>
-          </Stack>
-        </Card>
-      </Stack>
-    );
-  };
+    await fetch('http://localhost:3001/email/send-restaurant-booking-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurant: selectedRestaurant.name,
+        date: selectedTime.date,
+        event: eventDetails.title,
+        participants: 8,
+        eventId: 1,
+        name: user.name,
+        slug: eventDetails.title.replace(/\s+/g, '-').toLowerCase(),
+      }),
+    });
+  }
 
   const resetModal = () => {
     setCurrentStep(0);
@@ -552,130 +254,181 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
     setErrors([]);
   };
 
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          eventDetails.title.trim() !== '' &&
+          eventDetails.category !== null &&
+          eventDetails.description.trim() !== ''
+        );
+      case 1:
+        return selectedRestaurant !== null;
+      case 2:
+        return selectedTime !== null;
+      default:
+        return true;
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <EventBasicsStep
+            eventDetails={eventDetails}
+            setEventDetails={setEventDetails}
+            categoryOptions={categoryOptions}
+            tagOptions={tagOptions}
+            errors={errors}
+            isLoading={isLoading}
+          />
+        );
+      case 1:
+        return (
+          <RestaurantSelectionStep
+            selectedRestaurant={selectedRestaurant}
+            setSelectedRestaurant={setSelectedRestaurant}
+            restaurants={restaurants}
+            uniqueCities={uniqueCities}
+            cityFilters={cityFilters}
+            setCityFilters={setCityFilters}
+            restaurantSearch={restaurantSearch}
+            setRestaurantSearch={setRestaurantSearch}
+            errors={errors}
+          />
+        );
+      case 2:
+        return (
+          <TimeSlotSelectionStep
+            selectedRestaurant={selectedRestaurant}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+            currentWeekOffset={currentWeekOffset}
+            setCurrentWeekOffset={setCurrentWeekOffset}
+            mockAvailability={MOCK_AVAILABILITY}
+            errors={errors}
+          />
+        );
+      case 3:
+        return (
+          <ConfirmationStep
+            eventDetails={eventDetails}
+            selectedRestaurant={selectedRestaurant}
+            selectedTime={selectedTime}
+            categories={categories}
+            allTags={allTags}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Modal
+    <RegisteringBaseModal
       opened={opened}
       onClose={() => {
         resetModal();
         onClose();
       }}
       title='Skapa Event'
-      size='xl'
-      centered
-      styles={{
-        content: {
-          maxHeight: `calc(100vh - ${HEADER_HEIGHT + HEADER_OFFSET}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-        },
-        body: {
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          overflow: 'hidden',
-          padding: '24px',
-        },
-      }}
-      zIndex={1000}
-      withinPortal={true}>
-      {!isVerySmall ? (
-        <Box style={{ marginBottom: '24px', flex: '0 0 auto' }}>
-          <Stepper
-            active={currentStep}
-            onStepClick={setCurrentStep}
-            size={getStepperSize()}
-            styles={{
-              stepIcon: {
-                fontSize: '14px',
-                fontWeight: 500,
-              },
-              step: {
-                padding: '8px 4px',
-              },
-            }}>
-            <Stepper.Step label='Detaljer' description='Eventinfo' />
-            <Stepper.Step label='Restaurang' description='Välj plats' />
-            <Stepper.Step label='Tid' description='Välj tid' />
-            <Stepper.Step label='Bekräfta' description='Granska' />
-          </Stepper>
-        </Box>
-      ) : null}
+      helpText='Fyll i alla eventdetaljer, välj en restaurang och tidslot. Granska allt innan du skapar eventet. Bekräftelse skickas till dig (värden) och restaurangen.'>
+      <Box style={{ flex: 1, overflowY: 'auto' }}>
+        {!isVerySmall ? (
+          <Box style={{ marginBottom: '24px' }}>
+            <Stepper
+              active={currentStep}
+              onStepClick={setCurrentStep}
+              size={getStepperSize()}
+              styles={{
+                stepIcon: {
+                  fontSize: '14px',
+                  fontWeight: 500,
+                },
+                step: {
+                  padding: '8px 4px',
+                },
+              }}>
+              <Stepper.Step label='Detaljer' description='Eventinfo' />
+              <Stepper.Step label='Restaurang' description='Välj plats' />
+              <Stepper.Step label='Tid' description='Välj tid' />
+              <Stepper.Step label='Bekräfta' description='Granska' />
+            </Stepper>
+          </Box>
+        ) : null}
 
-      <Box
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'visible',
-          marginBottom: '16px',
-          position: 'relative',
-        }}>
-        {currentStep === 0 && renderStep1()}
-        {currentStep === 1 && renderStep2()}
-        {currentStep === 2 && renderStep3()}
-        {currentStep === 3 && renderStep4()}
+        <Box style={{ marginBottom: '20px' }}>{renderStep()}</Box>
       </Box>
 
       <Box
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: '12px',
-          paddingTop: '16px',
-          borderTop: '1px solid #e9ecef',
           flex: '0 0 auto',
+          borderTop: '1px solid var(--mantine-color-gray-2)',
+          paddingTop: '16px',
         }}>
-        <Button
-          variant='default'
-          onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-          disabled={currentStep === 0}>
-          Tillbaka
-        </Button>
-        <Group gap='12px'>
-          <Button variant='default' onClick={onClose}>
-            Avbryt
-          </Button>
-          {currentStep < 3 ? (
+        <Group gap='12px' justify='space-between'>
+          {currentStep !== 0 ? (
             <Button
-              onClick={() => {
-                const newErrors: string[] = [];
-
-                if (currentStep === 0) {
-                  if (!eventDetails.title.trim())
-                    newErrors.push('Eventtitel krävs');
-                  if (!eventDetails.category) newErrors.push('Kategori krävs');
-                  if (!eventDetails.description.trim())
-                    newErrors.push('Beskrivning krävs');
-                } else if (currentStep === 1) {
-                  if (!selectedRestaurant)
-                    newErrors.push('Vänligen välj en restaurang');
-                } else if (currentStep === 2) {
-                  if (!selectedTime) newErrors.push('Vänligen välj en tidslot');
-                }
-
-                if (newErrors.length > 0) {
-                  setErrors(newErrors);
-                  return;
-                }
-
-                setErrors([]);
-                setCurrentStep(currentStep + 1);
-              }}>
-              Nästa
+              variant='default'
+              onClick={() => setCurrentStep((s) => s - 1)}>
+              Tillbaka
             </Button>
           ) : (
-            <Button
-              onClick={() => {
-                alert('Event skapat!');
-                resetModal();
-                onClose();
-              }}
-              color='red'>
-              Skapa
-            </Button>
+            <div /> // placeholder så layout inte hoppar
           )}
+
+          <Group gap='12px'>
+            <Button variant='default' onClick={onClose}>
+              Avbryt
+            </Button>
+            {currentStep < 3 ? (
+              <Button
+                disabled={!isStepValid()}
+                onClick={() => {
+                  const newErrors: string[] = [];
+
+                  if (currentStep === 0) {
+                    if (!eventDetails.title.trim())
+                      newErrors.push('Eventtitel krävs');
+                    if (!eventDetails.category)
+                      newErrors.push('Kategori krävs');
+                    if (!eventDetails.description.trim())
+                      newErrors.push('Beskrivning krävs');
+                  } else if (currentStep === 1) {
+                    if (!selectedRestaurant)
+                      newErrors.push('Vänligen välj en restaurang');
+                  } else if (currentStep === 2) {
+                    if (!selectedTime)
+                      newErrors.push('Vänligen välj en tidslot');
+                  }
+
+                  if (newErrors.length > 0) {
+                    setErrors(newErrors);
+                    return;
+                  }
+
+                  setErrors([]);
+                  setCurrentStep(currentStep + 1);
+                }}>
+                Nästa
+              </Button>
+            ) : (
+              <Button
+                onClick={async () => {
+                  alert('Event skapat!');
+                  resetModal();
+                  onClose();
+                  await sendBookingEmails();
+                }}
+                color='red'>
+                Skapa
+              </Button>
+            )}
+          </Group>
         </Group>
       </Box>
-    </Modal>
+    </RegisteringBaseModal>
   );
 };
 

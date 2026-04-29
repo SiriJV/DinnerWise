@@ -13,6 +13,7 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 - React
 - TypeScript
 - Mantine UI
+- Sass
 - React Router
 - Vite
 
@@ -22,3 +23,6 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 - Express
 - TypeScript
 - MySQL
+- Tripadvisor API
+- Resend
+- Gemini API

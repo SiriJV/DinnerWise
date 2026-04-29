@@ -4,22 +4,20 @@ import {
   UnstyledButton,
   Space,
   Group,
-  Anchor,
   Drawer,
+  Button,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
 import LoginButtons from '../Buttons/LoginButtons/LoginButtons';
 import './NavBar.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import { Brain } from 'lucide-react';
-import { useMediaQuery } from '@mantine/hooks';
-import { useAuth } from '../../contexts/AuthContext';
-import BaseButton from '../Buttons/BaseButton/BaseButton';
+import { useIsMobile } from '../../hooks/useResponsive';
+import { APP_CONFIG } from '../../config/appConfig';
 import { useModal } from '../../contexts/ModalContext';
-import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
-import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Category = {
   id: number;
@@ -35,14 +33,10 @@ interface NavBarProps {
   onClickCreate?: () => void;
 }
 
-export default function NavBar({
-  opened,
-  onClose,
-  onClickCreate,
-}: NavBarProps) {
+export default function NavBar({ opened, onClose }: NavBarProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const isMobile = useMediaQuery('(max-width: 48em)');
-  const [modalOpened, setModalOpened] = useState(false);
+  const isMobile = useIsMobile();
+  const { openCreateEvent } = useModal();
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
@@ -78,39 +72,30 @@ export default function NavBar({
                 key={category.id}
                 to={`/kategori/${slugify(category.name)}`}
                 className={({ isActive }) =>
-                  `sideNavLink ${isActive ? 'active' : ''}`
+                  `sideNavLink link-hover ${isActive ? 'active' : ''}`
                 }
                 onClick={onClose}>
-                <UnstyledButton className='sideNavButton'>
+                <UnstyledButton className='sideNavButton link-hover'>
                   {category.name}
                 </UnstyledButton>
               </NavLink>
             ))}
           </Stack>
-          {/* <Divider my='sm' /> */}
-          <Space h='xs' />
-
-          {/* <BaseButton variant='primary' onClick={openCreate}>
-          Skapa event
-        </BaseButton>
-        <Space h='xs' /> */}
-
-          {/* <Anchor
-            variant='subtle'
-            c='red'
-            size='md'
-            onClick={() => {
-              // först öppna modal
-              setModalOpened(true);
-
-              // sedan stäng drawer nästa tick
-              setTimeout(() => {
+          {isLoggedIn && (
+            <Button
+              my='md'
+              variant='filled'
+              fullWidth
+              onClick={() => {
+                openCreateEvent();
                 onClose();
-              }, 0);
-            }}
-            style={{ cursor: 'pointer' }}>
-            Skapa event
-          </Anchor> */}
+              }}>
+              Skapa event
+            </Button>
+          )}
+          {/* <Divider my='sm' /> */}
+
+          {!isLoggedIn && <Space h='xs' />}
 
           <NavBarAccordion onClose={onClose} />
           <Space h='xs' />
@@ -124,55 +109,41 @@ export default function NavBar({
             className='footer-bottom'
             style={{ width: '100%' }}>
             <Text size='xs' c='dimmed'>
-              © 2026 DinnerWise. All rights reserved.
+              © 2026 {APP_CONFIG.brandName}. All rights reserved.
             </Text>
 
             <Group gap='md' w='100%' justify='space-around'>
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/kopvillkor'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Köpvillkor
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Köpvillkor
+                </Text>
+              </Link>
 
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/integritetspolicy'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Integritetspolicy
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Integritetspolicy
+                </Text>
+              </Link>
 
-              <Anchor
-                component={NavLink}
+              <Link
                 to='/cookies'
-                size='xs'
-                c='dimmed'
-                underline='hover'
+                style={{ textDecoration: 'none' }}
                 onClick={onClose}>
-                Cookies
-              </Anchor>
+                <Text size='xs' c='dimmed' className='link-hover'>
+                  Cookies
+                </Text>
+              </Link>
             </Group>
           </Stack>
           {/* </Container> */}
         </Stack>
       </Drawer>
-      {/* {isLoggedIn ? (
-        <CreateEventModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      ) : (
-        <CreateEventLoginModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      )} */}
     </>
   );
 }

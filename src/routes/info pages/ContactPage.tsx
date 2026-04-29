@@ -1,27 +1,139 @@
-import { Container, Title, Text } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Stack,
+  TextInput,
+  Textarea,
+  Button,
+  Box,
+  Group,
+  Anchor,
+} from '@mantine/core';
+import { APP_CONFIG } from '../../config/appConfig';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
+import { validateEmail } from '../../utils/formValidation';
+import { useFormTouched } from '../../hooks/useFormTouched';
 
 export default function ContactPage(): React.ReactNode {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const { isTouched, handleBlur } = useFormTouched();
+  const { isValid: isEmailValid, error: emailError } = validateEmail(
+    formData.email,
+  );
+
+  const isFormValid =
+    formData.name.trim() !== '' &&
+    isEmailValid &&
+    formData.message.trim() !== '';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Add functionality
+    console.log('Form submitted:', formData);
+  };
   return (
     <>
-      <Container size='lg'>
+      <Container size='lg' pt='md'>
         <Title order={2} mb='md'>
           Kontakt{' '}
         </Title>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
-        </Text>
+        <Stack>
+          <DemoWarningText text='Kontaktuppgifterna är endast exempel.' />
+          <Text>
+            Har du frågor, feedback eller behöver hjälp? Tveka inte att kontakta
+            oss! Vi finns här för att hjälpa dig och göra din upplevelse på{' '}
+            {APP_CONFIG.brandName} så smidig som möjligt.{' '}
+          </Text>
+          <Text>
+            Läs gärna vår{' '}
+            <Anchor component={Link} to={'/faq'}>
+              FAQ
+            </Anchor>{' '}
+            först för att se om du kan få svar på dina frågor där.
+          </Text>
+          <Text>
+            Annars når du oss via e-post på
+            <Text span c='red'>
+              {' '}
+              {APP_CONFIG.contactEmail}{' '}
+            </Text>
+            eller via telefon på{' '}
+            <Text span c='red'>
+              {APP_CONFIG.telephone}
+            </Text>
+            . Du kan även skicka ett meddelande direkt till oss nedan. Vi ser
+            fram emot att höra från dig!
+          </Text>
+
+          <Box
+            mt='xl'
+            pt='xl'
+            style={{ borderTop: '1px solid var(--mantine-color-gray-2)' }}>
+            <Title order={3} mb='md'>
+              Skicka ett meddelande
+            </Title>
+            <form onSubmit={handleSubmit} style={{ maxWidth: '500px' }}>
+              <Stack>
+                <TextInput
+                  label='Namn'
+                  placeholder='Ditt namn'
+                  required
+                  name='contact-name'
+                  maxLength={40}
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.currentTarget.value })
+                  }
+                />
+                <TextInput
+                  label='E-post'
+                  placeholder='Din e-postadress'
+                  name='contact-email'
+                  required
+                  maxLength={40}
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.currentTarget.value })
+                  }
+                  onBlur={() => handleBlur('email')}
+                  error={
+                    isTouched('email') && formData.email && !isEmailValid
+                      ? emailError
+                      : ''
+                  }
+                />
+                <Textarea
+                  label='Meddelande (max 600 tecken)'
+                  placeholder='Berätta vad vi kan hjälpa dig med...'
+                  name='message'
+                  autoComplete='off'
+                  maxLength={600}
+                  required
+                  minRows={4}
+                  maxRows={6}
+                  autosize
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.currentTarget.value })
+                  }
+                />
+                <Group justify='flex-start'>
+                  <Button type='submit' disabled={!isFormValid}>
+                    Skicka meddelande
+                  </Button>
+                </Group>
+              </Stack>
+            </form>
+          </Box>
+        </Stack>
       </Container>
     </>
   );

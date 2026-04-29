@@ -1,5 +1,4 @@
-import { Text, Modal, Anchor } from '@mantine/core';
-import BaseButton from '../../Buttons/BaseButton/BaseButton';
+import { Text, Modal, Anchor, Group, Button } from '@mantine/core';
 import { useModal } from '../../../contexts/ModalContext';
 
 interface CreateEventLoginModalProps {
@@ -13,6 +12,11 @@ export default function CreateEventLoginModal({
 }: CreateEventLoginModalProps) {
   const { openLogin } = useModal();
 
+  const handleLogin = () => {
+    onClose();
+    openLogin('createEvent');
+  };
+
   return (
     <Modal
       opened={opened}
@@ -21,26 +25,22 @@ export default function CreateEventLoginModal({
       size='md'
       centered>
       <Text ta='center' mb='md'>
-        Du måste{' '}
-        <Anchor
+        Du måste <Anchor onClick={handleLogin}>logga in</Anchor> för att skapa
+        ett event.
+      </Text>
+      <Group grow mt='lg'>
+        <Button
+          variant='outline'
           onClick={() => {
             onClose();
-            openLogin();
-          }}>
-          logga in
-        </Anchor>{' '}
-        för att skapa ett event.
-      </Text>
-
-      <BaseButton
-        variantType='primary'
-        fullWidth
-        onClick={() => {
-          onClose();
-        }}
-        mt='lg'>
-        Jag förstår
-      </BaseButton>
+          }}
+          fullWidth>
+          Jag förstår
+        </Button>
+        <Button onClick={handleLogin} fullWidth>
+          Logga in
+        </Button>
+      </Group>
     </Modal>
   );
 }

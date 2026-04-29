@@ -39,8 +39,9 @@ export default function ProfilePageFollowersModal({
         centered
         size='sm'
         styles={{
-          body: {
-            maxHeight: '70vh',
+          content: {
+            maxHeight: 'calc(100vh - 300px)',
+            overflowY: 'auto',
           },
         }}>
         <Stack pb='md'>

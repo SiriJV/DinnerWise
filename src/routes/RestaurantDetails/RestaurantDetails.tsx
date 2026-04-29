@@ -1,20 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
-import { useLocation, useNavigationType, useParams } from 'react-router-dom';
-import {
-  Box,
-  Stack,
-  Text,
-  Image,
-  Group,
-  Anchor,
-  Divider,
-  Title,
-} from '@mantine/core';
-import { MapPin, ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { Text, Group, Anchor, Title, SimpleGrid } from '@mantine/core';
+import { ExternalLink } from 'lucide-react';
 import type { EventType } from '../../types/EventType';
 import { extractIdFromSlug } from '../../utils/slugify';
-import { Carousel } from '@mantine/carousel';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import Map from '../../components/Map/Map';
+import EventDetailsHeroImage from '../EventDetails/EventDetailsHeroImage';
+import { Box, Container, Stack } from '@mantine/core';
+import RestaurantPhotos from './RestaurantPhotos';
 
 type Restaurant = {
   id: number;
@@ -33,10 +27,7 @@ type Restaurant = {
 };
 
 export default function RestaurangDetails(): React.ReactNode {
-  // const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const emblaApiRef = useRef<any>(null);
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +35,18 @@ export default function RestaurangDetails(): React.ReactNode {
   const location = useLocation();
   const state = location.state as { id?: string } | undefined;
   const { slug } = useParams<{ slug: string }>();
-  const navigationType = useNavigationType();
+
+  let restaurantPhoto = undefined;
+  if (restaurant?.photos) {
+    try {
+      const arr = JSON.parse(restaurant.photos);
+      if (Array.isArray(arr) && arr.length > 0) {
+        restaurantPhoto = arr[0];
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
 
   useEffect(() => {
     async function loadRestaurant() {
@@ -73,7 +75,6 @@ export default function RestaurangDetails(): React.ReactNode {
         }
 
         setRestaurant(restaurantData);
-
         const eventsRes = await fetch(`http://localhost:3001/events`);
         const allEvents: EventType[] = await eventsRes.json();
 
@@ -92,37 +93,13 @@ export default function RestaurangDetails(): React.ReactNode {
     if (slug) loadRestaurant();
   }, [slug, state]);
 
-  // Parse TripAdvisor photos if available (alltid deklarera och parsa, även om restaurant är null)
-  let photos: string[] = [];
-  if (restaurant && restaurant.photos) {
-    try {
-      const parsed = JSON.parse(restaurant.photos);
-      if (Array.isArray(parsed)) {
-        photos = parsed;
-      }
-    } catch {}
+  if (error || !restaurant) {
+    return (
+      <Text p='xl' ta='center' c='red'>
+        {error || 'Restaurang hittades inte'}
+      </Text>
+    );
   }
-
-  // Enkel autoplay för karusellen
-  useEffect(() => {
-    if (!photos || photos.length <= 1) return;
-    setCurrentSlide(0); // starta alltid från första bilden när nya bilder laddas
-    const max = Math.min(photos.length, 5);
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % max);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [photos.length]);
-
-  // Synka embla-carousel till rätt slide när currentSlide ändras
-  useEffect(() => {
-    if (
-      emblaApiRef.current &&
-      typeof emblaApiRef.current.scrollTo === 'function'
-    ) {
-      emblaApiRef.current.scrollTo(currentSlide);
-    }
-  }, [currentSlide]);
 
   if (loading) {
     return (
@@ -132,145 +109,86 @@ export default function RestaurangDetails(): React.ReactNode {
     );
   }
 
-  if (error || !restaurant) {
-    return (
-      <Text p='xl' ta='center' c='red'>
-        {error || 'Restaurang hittades inte'}
-      </Text>
-    );
-  }
-
   return (
-    <Stack m='md' gap='xl'>
-      <Stack gap={0}>
-        <Title order={2}>{restaurant.name}</Title>
-        <Text c='dimmed'>
-          {restaurant.address_string
-            ? restaurant.address_string
-            : 'Adress saknas'}
-          {restaurant.city ? `, ${restaurant.city}` : ''}
-        </Text>
-        {restaurant.website_url && (
-          <Anchor
-            href={restaurant.website_url}
-            target='_blank'
-            style={{ textDecoration: 'none' }}>
-            <Group gap='xs' mt='xs'>
-              <ExternalLink size={16} color='black' />
-              <Text size='sm' c='dark'>
-                {restaurant.website_url.replace(/^https?:\/\/(www\.)?/, '')}
-              </Text>
-            </Group>
-          </Anchor>
-        )}
-      </Stack>
+    <>
+      <Box
+        p='md'
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}
+        pos='relative'>
+        <EventDetailsHeroImage
+          image={
+            restaurantPhoto ||
+            'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+          }
+        />
 
-      {restaurant.phone_number && (
-        <Box>
-          <Text fw={600} mb='xs'>
-            Kontakt
-          </Text>
-          <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
-        </Box>
-      )}
+        <Container
+          fluid
+          pos='relative'
+          w={{ base: '100%', sm: '90%', lg: '75%' }}
+          bg='white'
+          bdrs='xs'
+          bd='1px solid gray.4'
+          py='xl'
+          px={{ base: 'md', sm: 'lg', lg: 'xl' }}
+          mt={{ base: 'md', md: '-60px', lg: '-90px' }}
+          style={{ zIndex: 2 }}>
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl'>
+            <Stack gap='xl'>
+              <Stack gap={0}>
+                <Title order={2}>{restaurant.name}</Title>
+                <Text c='dimmed'>
+                  {restaurant.address_string
+                    ? restaurant.address_string
+                    : 'Adress saknas'}
+                  {restaurant.city ? `, ${restaurant.city}` : ''}
+                </Text>
+                {restaurant.website_url && (
+                  <Anchor
+                    href={restaurant.website_url}
+                    target='_blank'
+                    w='fit-content'
+                    style={{ textDecoration: 'none' }}>
+                    <Group gap='xs' mt='xs'>
+                      <ExternalLink size={16} color='red' />
+                      <Text size='sm' c='red'>
+                        {restaurant.website_url.replace(
+                          /^https?:\/\/(www\.)?/,
+                          '',
+                        )}
+                      </Text>
+                    </Group>
+                  </Anchor>
+                )}
+              </Stack>
 
-      <Group align='flex-start' gap='md' wrap='wrap'>
-        <Box style={{ flex: 1, minWidth: '300px' }}>
-          {photos.length > 1 ? (
-            <Stack>
-              <Carousel
-                withIndicators
-                height={250}
-                slideSize='100%'
-                styles={{ indicator: { background: '#333' } }}
-                withControls={false}
-                emblaOptions={{ loop: true }}
-                getEmblaApi={(api) => {
-                  emblaApiRef.current = api;
-                }}
-                onSlideChange={setCurrentSlide}>
-                {photos.slice(0, 5).map((photo, idx) => (
-                  <Carousel.Slide key={idx}>
-                    <Image
-                      src={photo}
-                      className='restaurant-image'
-                      height={250}
-                      fit='cover'
-                      bdrs='md'
-                    />
-                  </Carousel.Slide>
-                ))}
-              </Carousel>
+              {restaurant.phone_number && (
+                <Box>
+                  <Text fw={600} mb='xs'>
+                    Kontakt
+                  </Text>
+                  <Text size='sm'>Telefon: {restaurant.phone_number}</Text>
+                </Box>
+              )}
             </Stack>
-          ) : (
-            <Image
-              src={
-                photos[0] ||
-                restaurant.cover_picture_url ||
-                'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
-              }
-              className='restaurant-image'
-              height={250}
-              fit='cover'
-              bdrs='md'
+            <Map
+              restaurant_address={restaurant.address_string}
+              restaurant_city={restaurant.city}
             />
-          )}
-        </Box>
-
-        <Stack gap='xs' style={{ flex: 1, minWidth: '300px' }}>
-          <Box bdrs='md' style={{ overflow: 'hidden' }}>
-            {/* Google Maps iframe using address if lat/lng are missing */}
-            {restaurant.latitude && restaurant.longitude ? (
-              <iframe
-                src={`https://maps.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}&z=15&output=embed`}
-                title='Google map'
-                width='100%'
-                height={250}
-                style={{ border: 0, display: 'block' }}
-                loading='lazy'
-              />
-            ) : restaurant.address_string || restaurant.city ? (
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                  `${restaurant.address_string || ''} ${restaurant.city || ''}`.trim(),
-                )}&z=15&output=embed`}
-                title='Google map'
-                width='100%'
-                height={250}
-                style={{ border: 0, display: 'block' }}
-                loading='lazy'
-              />
-            ) : (
-              <Text c='dimmed' p='md'>
-                Ingen karta tillgänglig
-              </Text>
-            )}
-          </Box>
-          <Group gap='xs'>
-            <MapPin size='16px' />
-            <Text>
-              {restaurant.address_string
-                ? restaurant.address_string
-                : 'Adress saknas'}
-              {restaurant.city ? `, ${restaurant.city}` : ''}
-            </Text>
-          </Group>
-        </Stack>
-      </Group>
-
-      <Divider />
-
-      {events.length > 0 && (
-        <Stack gap='md'>
-          <Title order={3}>Kommande event på {restaurant.name}</Title>
-          <PaginatedEventGrid
-            events={events}
-            pageSize={9}
-            paginationKey='restaurantdetailspage_activePage'
-            navigationType={navigationType}
+          </SimpleGrid>
+          <RestaurantPhotos
+            photos={restaurant ? restaurant.photos : undefined}
           />
+        </Container>
+      </Box>
+      {events.length > 0 && (
+        <Stack m='md' gap='md'>
+          <Title order={3}>
+            Kommande event på {restaurant.name} ({events.length} event)
+          </Title>
+          <PaginatedEventGrid events={events} loading={loading} />
         </Stack>
       )}
-    </Stack>
+    </>
   );
 }

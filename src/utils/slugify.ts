@@ -1,3 +1,5 @@
+import { staticRouteLabels } from '../data/staticRouteLabels';
+
 export function generateEventSlug(title: string, id: number): string {
   return `${slugify(title)}-${id}`;
 }
@@ -10,13 +12,11 @@ export function slugify(text?: string): string {
 
   return text
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
     .replace(/å/g, 'a')
     .replace(/ä/g, 'a')
     .replace(/ö/g, 'o')
     .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '');
+    .replace(/[^\w-]/g, '');
 }
 
 // export function generateEventSlug(title: string, id: number): string {
@@ -39,4 +39,8 @@ export function extractIdFromSlug(slug: string): number | null {
     id = parseInt(parts[parts.length - 1]);
   }
   return isNaN(id!) ? null : id;
+}
+
+export function getStaticLabel(slug: string): string | undefined {
+  return staticRouteLabels.find((label) => slugify(label) === slug);
 }

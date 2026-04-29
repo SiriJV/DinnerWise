@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
@@ -10,13 +10,15 @@ import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
 export default function CityPage() {
-  const navigationType = useNavigationType();
   const { slug } = useParams<{ slug: string }>();
   const [city, setCity] = useState<{ id: number; name: string } | null>(null);
 
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [availableTags, setAvailableTags] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [categoryFilters, setCategoryFilters] = useState<number[]>([]);
@@ -40,6 +42,27 @@ export default function CityPage() {
 
     loadCity();
   }, [slug]);
+
+  // Fetch tags based on selected category, or all tags if no category selected
+  useEffect(() => {
+    async function loadTags() {
+      try {
+        let url: string;
+        if (categoryFilters.length > 0) {
+          url = `http://localhost:3001/tags/category/${categoryFilters[0]}`;
+        } else {
+          url = 'http://localhost:3001/tags';
+        }
+        const res = await fetch(url);
+        const data = await res.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error loading tags:', err);
+        setAvailableTags([]);
+      }
+    }
+    loadTags();
+  }, [categoryFilters]);
 
   useEffect(() => {
     if (!city) return;
@@ -66,8 +89,6 @@ export default function CityPage() {
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
-        console.log('Fetching events for city page:', url.toString());
-
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
@@ -88,7 +109,9 @@ export default function CityPage() {
 
   return (
     <Stack p='md'>
-      <Title order={1}>{city.name}</Title>
+      <Title order={2}>
+        {city.name} ({events.length} event)
+      </Title>
 
       <Divider mt='sm' mb='lg' />
 
@@ -103,8 +126,8 @@ export default function CityPage() {
           />
 
           <SearchableFilterDropdown
-            label='Ämne'
-            fetchUrl='http://localhost:3001/tags'
+            label='Taggar'
+            items={availableTags}
             onApply={(selected) => setTagFilters(selected.map((s) => s.id))}
           />
 
@@ -123,16 +146,11 @@ export default function CityPage() {
             Laddar events…
           </Text>
         ) : events.length === 0 ? (
-          <Text p='md' ta='center'>
-            Inga events för denna stad.
+          <Text p='xl' ta='center' c='dimmed'>
+            Det finns just nu inga event som matchar dina filter.
           </Text>
         ) : (
-          <PaginatedEventGrid
-            events={events}
-            pageSize={9}
-            paginationKey={`citypage_activePage_${city.id}`}
-            navigationType={navigationType}
-          />
+          <PaginatedEventGrid events={events} loading={loading} />
         )}
       </Stack>
     </Stack>

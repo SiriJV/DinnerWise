@@ -1,23 +1,24 @@
 import {
   ActionIcon,
-  Anchor,
   Box,
   Burger,
   Group,
   Stack,
   Title,
   UnstyledButton,
+  Text,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
 import NotificationsPopup from '../NotificationsPopup/NotificationsPopup';
 import HeaderLoginButton from './HeaderLoginButton';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 import { Brain, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { headerLinks } from '../../data/HeaderLinks';
-import CreateEventModal from '../Modals/CreateEventModal/CreateEventModal';
+import { headerLinks } from '../../data/headerLinks';
 import CreateEventLoginModal from '../Modals/CreateEventModal/CreateEventLoginModal';
+import { APP_CONFIG } from '../../config/appConfig';
 
 interface HeaderProps {
   opened: boolean;
@@ -33,13 +34,13 @@ export default function Header({
   onClickCreate,
 }: HeaderProps) {
   const { isLoggedIn } = useAuth();
-  const [modalOpened, setModalOpened] = useState(false);
+  const { openCreateEvent } = useModal();
+  const [loginModalOpened, setLoginModalOpened] = useState(false);
 
   return (
     <Stack justify='space-between' p='md' h='100%'>
-      {/* Top row */}
-      <Group h='100%' justify='space-between' bg='#D3043B'>
-        <Group gap='sm'>
+      <Group h='100%' justify='space-between' bg='red'>
+        <Group gap='sm' style={{ flex: '0 1 auto', minWidth: 0 }}>
           <Burger
             opened={opened}
             onClick={onToggle}
@@ -49,7 +50,14 @@ export default function Header({
             aria-label='Toggle navigation'
           />
 
-          <NavLink to='/' onClick={onClose} style={{ textDecoration: 'none' }}>
+          <Link
+            to='/'
+            onClick={() => {
+              onClose();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onMouseEnter={() => import('../../routes/HomePage/HomePage')}
+            style={{ textDecoration: 'none' }}>
             <UnstyledButton
               c='white'
               style={{
@@ -57,18 +65,27 @@ export default function Header({
                 alignItems: 'center',
                 textDecoration: 'none',
               }}>
-              <Group gap='xs' align='center'>
-                <Brain color='white' />
+              <Group gap='xs' align='center' style={{ minWidth: 0 }}>
+                <Brain color='white' size={20} style={{ flexShrink: 0 }} />
                 <Title
                   order={1}
                   size='xl'
                   c='white'
-                  style={{ textDecoration: 'none' }}>
-                  DinnerWise
+                  style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  hiddenFrom='sm'>
+                  {APP_CONFIG.shortBrandName.toLocaleUpperCase()}
+                </Title>
+                <Title
+                  order={1}
+                  size='xl'
+                  c='white'
+                  style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+                  visibleFrom='sm'>
+                  {APP_CONFIG.brandName.toLocaleUpperCase()}
                 </Title>
               </Group>
             </UnstyledButton>
-          </NavLink>
+          </Link>
         </Group>
 
         <Box
@@ -87,7 +104,11 @@ export default function Header({
             variant='subtle'
             color='white'
             size='md'
-            onClick={onClickCreate || (() => setModalOpened(true))}>
+            onClick={
+              onClickCreate ||
+              (() =>
+                isLoggedIn ? openCreateEvent() : setLoginModalOpened(true))
+            }>
             <PlusCircle size={20} />
           </ActionIcon>
 
@@ -99,28 +120,22 @@ export default function Header({
       {/* Links */}
       <Group gap='xl' visibleFrom='sm' style={{ marginTop: '8px' }}>
         {headerLinks.map((link, i) => (
-          <Anchor
+          <Link
             key={link.path + link.label + i}
-            href={link.path}
-            c='white'
-            underline='hover'>
-            {link.label}
-          </Anchor>
+            to={link.path}
+            style={{ textDecoration: 'none' }}>
+            <Text c='white' className='link-hover'>
+              {link.label}
+            </Text>
+          </Link>
         ))}
       </Group>
 
       {/* Modals */}
-      {isLoggedIn ? (
-        <CreateEventModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      ) : (
-        <CreateEventLoginModal
-          opened={modalOpened}
-          onClose={() => setModalOpened(false)}
-        />
-      )}
+      <CreateEventLoginModal
+        opened={loginModalOpened}
+        onClose={() => setLoginModalOpened(false)}
+      />
     </Stack>
   );
 }

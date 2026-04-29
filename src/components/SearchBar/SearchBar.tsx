@@ -1,9 +1,13 @@
-import { Autocomplete, ActionIcon } from '@mantine/core';
+import { Autocomplete } from '@mantine/core';
 import { SearchIcon } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './SearchBar.scss';
-import { useNavigate } from 'react-router-dom';
-import { slugify } from '../../utils/slugify';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  generateEventSlug,
+  generateRestaurantSlug,
+  slugify,
+} from '../../utils/slugify';
 
 type Suggestion = {
   value: string;
@@ -22,6 +26,7 @@ export default function SearchBar({
   const [value, setValue] = useState('');
   const [data, setData] = useState<Suggestion[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -43,11 +48,12 @@ export default function SearchBar({
         if (!res.ok) throw new Error('Något gick fel');
 
         const json = await res.json();
-        const { events, cities, tags, categories, restaurants, users } = json.results;
+        const { events, cities, tags, categories, restaurants, users } =
+          json.results;
 
         const suggestions: Suggestion[] = [
           ...events.map((e: any) => ({
-            value: `event-${slugify(e.title)}-${e.id}`,
+            value: `event-${generateEventSlug(e.title, e.id)}`,
             label: `🌐${e.title} (event)`,
           })),
           ...cities.map((c: any) => ({
@@ -56,14 +62,14 @@ export default function SearchBar({
           })),
           ...tags.map((t: any) => ({
             value: `tag-${slugify(t.name)}`,
-            label: `🏷️${t.name} (ämne)`,
+            label: `🏷️${t.name} (tagg)`,
           })),
           ...categories.map((cat: any) => ({
             value: `category-${slugify(cat.name)}`,
             label: `🔡${cat.name} (kategori)`,
           })),
           ...restaurants.map((r: any) => ({
-            value: `restaurant-${slugify(r.name)}-${r.id}`,
+            value: `restaurant-${generateRestaurantSlug(r.name, r.id)}`,
             label: `🍽️${r.name}, ${r.city} (restaurang)`,
           })),
           ...users.map((u: any) => ({
@@ -105,7 +111,7 @@ export default function SearchBar({
         const [_, ...rest] = rawValue.split('-');
         const id = rest.pop();
         const slug = rest.join('-');
-        navigate(`/event/${slug}`, { state: { id } });
+        navigate(`/event/${slug}-${id}`, { state: { id } });
         break;
       }
 
@@ -113,8 +119,7 @@ export default function SearchBar({
         const [_, ...rest] = rawValue.split('-');
         const id = rest.pop();
         const slug = rest.join('-');
-
-        navigate(`/restaurang/${slug}`, { state: { id } });
+        navigate(`/restaurang/${slug}-${id}`, { state: { id } });
         break;
       }
 
@@ -126,11 +131,28 @@ export default function SearchBar({
     }
   };
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q');
+
+    if (location.pathname === '/search' && q) {
+      setValue(q);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (location.pathname !== '/search') {
+      setValue('');
+    }
+  }, [location.pathname]);
+
   if (variant === 'static') {
     return (
       <Autocomplete
         className='searchBar'
         placeholder='Sök...'
+        name='search'
+        autoComplete='off'
         onOptionSubmit={(val) => {
           handleNavigate(val);
         }}
@@ -150,15 +172,28 @@ export default function SearchBar({
         rightSection={
           <SearchIcon
             size={18}
-            className='searchBar-icon'
             onClick={handleClick}
             cursor='pointer'
+            color='var(--mantine-color-darkred-5)'
           />
         }
         data={data}
         value={value}
         onChange={setValue}
         maxDropdownHeight={200}
+        styles={{
+          input: {
+            border: '1px solid var(--mantine-color-gray-5)',
+            borderRadius: 'var(--mantine-radius-xl)',
+            backgroundColor: 'white',
+            height: '40px',
+            fontSize: '14px',
+            color: 'var(--mantine-color-darkred-5)',
+            '&:focus': {
+              borderColor: 'var(--mantine-color-darkred-5)',
+            },
+          },
+        }}
       />
     );
   }
@@ -169,6 +204,8 @@ export default function SearchBar({
         className='searchBar'
         style={{ width: '100%', ...style }}
         placeholder='Sök...'
+        name='search'
+        autoComplete='off'
         onOptionSubmit={(val) => {
           handleNavigate(val);
         }}
@@ -188,15 +225,28 @@ export default function SearchBar({
         rightSection={
           <SearchIcon
             size={18}
-            className='searchBar-icon'
             onClick={handleClick}
             cursor='pointer'
+            color='var(--mantine-color-darkred-5)'
           />
         }
         data={data}
         value={value}
         onChange={setValue}
         maxDropdownHeight={200}
+        styles={{
+          input: {
+            border: '1px solid var(--mantine-color-gray-5)',
+            borderRadius: 'var(--mantine-radius-xl)',
+            backgroundColor: 'white',
+            height: '40px',
+            fontSize: '14px',
+            color: 'var(--mantine-color-darkred-5)',
+            '&:focus': {
+              borderColor: 'var(--mantine-color-darkred-5)',
+            },
+          },
+        }}
       />
     );
   }

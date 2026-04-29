@@ -1,0 +1,12 @@
+.howto-step {
+  height: 350px;
+}
+@media (min-width: 768px) {
+  .howto-step {
+    height: 250px;
+  }
+}
+
+.list-item {
+  line-height: 1.7;
+}

@@ -1,28 +1,150 @@
-import { Container, Title, Text } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Stack,
+  Card,
+  Group,
+  Divider,
+  Button,
+} from '@mantine/core';
+import { newsLetters } from '../../data/newsletters';
+import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import { useSearchParams } from 'react-router-dom';
+import { slugify } from '../../utils/slugify';
+import DemoWarningText from '../../components/common/DemoWarningText/DemoWarningText';
 
 export default function NewsletterPage(): React.ReactNode {
+  const [params, setParams] = useSearchParams();
+  const selectedParam = params.get('newsletter');
+
+  const reversedNews = [...newsLetters].reverse(); // konsekvent
+
+  // Hitta index i reversedNews baserat på URL-param
+  let selectedIdx: number | null = null;
+  if (selectedParam) {
+    selectedIdx = reversedNews.findIndex((n, i) => {
+      const baseSlug = slugify(n.title);
+      // Hantera duplicerade titlar
+      if (selectedParam === baseSlug) return true;
+      if (selectedParam === `${baseSlug}-${newsLetters.length - 1 - i}`)
+        return true;
+      return false;
+    });
+  }
+
+  const [selected, setSelected] = useState<number | null>(selectedIdx);
+  const [prevScroll, setPrevScroll] = useState<number>(0);
+
+  // Sync state med URL-param
+  useEffect(() => {
+    setSelected(selectedIdx);
+  }, [selectedIdx]);
+
+  // Scroll to top when a newsletter is selected
+  useEffect(() => {
+    if (selected !== null) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [selected]);
+
+  // Hjälpfunktion för dagar sedan
+  function daysAgo(dateStr: string) {
+    const now = dayjs();
+    const date = dayjs(dateStr);
+    const diff = now.diff(date, 'day');
+    if (diff === 0) return '(idag)';
+    if (diff === 1) return '(1 dag sedan)';
+    return `(${diff} dagar sedan)`;
+  }
+
+  function handleSelect(idx: number) {
+    setPrevScroll(window.scrollY);
+    const nl = reversedNews[idx];
+    const originalIdx = newsLetters.findIndex((n) => n === nl);
+    const baseSlug = slugify(nl.title);
+    const sameTitleCount = newsLetters.filter(
+      (n) => n.title === nl.title,
+    ).length;
+    const param = sameTitleCount > 1 ? `${baseSlug}-${originalIdx}` : baseSlug;
+    setParams({ newsletter: param });
+  }
+
+  function handleBack() {
+    setParams({});
+    setTimeout(() => {
+      window.scrollTo({ top: prevScroll, behavior: 'smooth' });
+    }, 0);
+  }
+
   return (
-    <>
-      <Container size='lg'>
+    <Container size='sm' pt='md'>
+      {selected === null ? (
         <Title order={2} mb='md'>
           Nyhetsbrev
         </Title>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nulla
-          dapibus nisi molestie vehicula. Aenean viverra mauris id diam
-          convallis, et elementum quam aliquet. Curabitur molestie, elit ac
-          maximus consequat, velit turpis gravida est, varius ornare ex turpis
-          at magna. Morbi non erat venenatis, congue enim ut, ullamcorper nulla.
-          Pellentesque et dignissim enim. Phasellus commodo efficitur lobortis.
-          In id accumsan justo, at auctor libero. Nullam mattis lacus facilisis,
-          gravida elit et, imperdiet mi. Duis id mattis massa. Vestibulum vel
-          odio sit amet lorem porta pulvinar. Phasellus pharetra ac turpis a
-          fringilla. Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos. Pellentesque gravida ligula sit amet
-          mi egestas, sit amet convallis ipsum suscipit. Maecenas vulputate
-          magna faucibus lorem vehicula pretium.
-        </Text>
-      </Container>
-    </>
+      ) : (
+        <Title order={2} mb='md'>
+          Nyhetsbrev - {reversedNews[selected].title}
+        </Title>
+      )}
+
+      <Stack>
+        <DemoWarningText text='Alla nyheter är påhittade.' />
+        {selected === null ? (
+          reversedNews.map((nl, i) => (
+            <Card
+              withBorder
+              shadow='sm'
+              radius='md'
+              className='hover-style'
+              key={nl.title + i}
+              onClick={() => handleSelect(i)}
+              style={{ cursor: 'pointer' }}>
+              <Card.Section withBorder inheritPadding py='xs'>
+                <Group>
+                  <Text fw={600}>{nl.title}</Text>
+                  <Divider orientation='vertical' size='sm' visibleFrom='sm' />
+                  <Text size='xs' c='dimmed'>
+                    {dayjs(nl.date).format('YYYY-MM-DD')} {daysAgo(nl.date)}
+                  </Text>
+                </Group>
+              </Card.Section>
+              <Text mt='sm' c='dimmed' size='sm' lineClamp={3}>
+                {nl.content}
+              </Text>
+            </Card>
+          ))
+        ) : (
+          <>
+            <Card withBorder shadow='sm' radius='md'>
+              <Card.Section withBorder inheritPadding py='xs'>
+                <Group justify='space-between'>
+                  <Text fw={600}>{reversedNews[selected].title}</Text>
+                  <Text size='xs' c='dimmed'>
+                    {dayjs(reversedNews[selected].date).format('YYYY-MM-DD')}{' '}
+                    {daysAgo(reversedNews[selected].date)}
+                  </Text>
+                </Group>
+              </Card.Section>
+              <Text
+                mt='sm'
+                c='dimmed'
+                size='sm'
+                style={{ whiteSpace: 'pre-line' }}>
+                {reversedNews[selected].content}
+              </Text>
+            </Card>
+
+            <Group mt='md'>
+              <Button variant='transparent' c='red' onClick={handleBack}>
+                ← Tillbaka till alla nyheter
+              </Button>
+            </Group>
+          </>
+        )}
+      </Stack>
+    </Container>
   );
 }

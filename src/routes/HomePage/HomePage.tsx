@@ -1,34 +1,54 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType } from 'react-router-dom';
-import { Divider, Group, Stack, Text, Title } from '@mantine/core';
+import { Group, Stack, Text, Title } from '@mantine/core';
 
 import FilterDropdown from '../../components/Filters/FilterDropdown/FilterDropdown';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
-import FloatingActionButton from '../../components/FAB/FAB';
 
-import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
 
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
-import './HomePage.scss';
+import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
+import CategoryImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
 
 export default function HomePage() {
-  const navigationType = useNavigationType();
-
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [availableTags, setAvailableTags] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [categoryFilters, setCategoryFilters] = useState<number[]>([]);
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
+
+  // Fetch tags based on selected category, or all tags if no category selected
+  useEffect(() => {
+    async function loadTags() {
+      try {
+        let url: string;
+        if (categoryFilters.length > 0) {
+          url = `http://localhost:3001/tags/category/${categoryFilters[0]}`;
+        } else {
+          url = 'http://localhost:3001/tags';
+        }
+        const res = await fetch(url);
+        const data = await res.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error loading tags:', err);
+        setAvailableTags([]);
+      }
+    }
+    loadTags();
+  }, [categoryFilters]);
 
   useEffect(() => {
     async function loadEvents() {
@@ -72,69 +92,65 @@ export default function HomePage() {
   return (
     <>
       <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
-      <FloatingActionButton />
 
-      <Stack p='md'>
-        <ImageCarousel />
-        <Divider mt='sm' mb='lg' />
+      <Stack p='md' mb='lg'>
+        <CategoryImageCarousel />
+        {/* <Divider mt='sm' mb='lg' /> */}
+      </Stack>
 
-        <Stack mt='xs'>
-          <Title order={2}>{`Event (${events.length})`}</Title>
+      <NewsLetterCTA />
 
-          <Group justify='space-between'>
-            <Group>
-              <FilterDropdown
-                fetchUrl='http://localhost:3001/categories'
-                label='Kategori'
-                onApply={(selected) =>
-                  setCategoryFilters(selected.map((item) => item.id))
-                }
-              />
+      <Stack mt='lg' p='md'>
+        <Title order={2}>{`Event (${events.length})`}</Title>
 
-              <SearchableFilterDropdown
-                label='Stad'
-                fetchUrl='http://localhost:3001/cities'
-                onApply={(selected) =>
-                  setCityFilters(selected.map((item) => item.id))
-                }
-              />
+        <Group justify='space-between'>
+          <Group>
+            <FilterDropdown
+              fetchUrl='http://localhost:3001/categories'
+              label='Kategori'
+              onApply={(selected) =>
+                setCategoryFilters(selected.map((item) => item.id))
+              }
+            />
 
-              <SearchableFilterDropdown
-                label='Ämne'
-                fetchUrl='http://localhost:3001/tags'
-                onApply={(selected) =>
-                  setTagFilters(selected.map((item) => item.id))
-                }
-              />
+            <SearchableFilterDropdown
+              label='Stad'
+              fetchUrl='http://localhost:3001/cities'
+              onApply={(selected) =>
+                setCityFilters(selected.map((item) => item.id))
+              }
+            />
 
-              <PriceDropdown
-                label='Pris'
-                onApply={(selected) =>
-                  setPriceFilters(selected.map((item) => item.id))
-                }
-              />
-            </Group>
+            <SearchableFilterDropdown
+              label='Taggar'
+              items={availableTags}
+              onApply={(selected) =>
+                setTagFilters(selected.map((item) => item.id))
+              }
+            />
 
-            <Sort onSortChange={setSortBy} />
+            <PriceDropdown
+              label='Pris'
+              onApply={(selected) =>
+                setPriceFilters(selected.map((item) => item.id))
+              }
+            />
           </Group>
 
-          {loading ? (
-            <Text p='md' ta='center' c='dimmed'>
-              Laddar events…
-            </Text>
-          ) : error ? (
-            <Text p='md' c='red' ta='center'>
-              Ett fel uppstod: {error}
-            </Text>
-          ) : (
-            <PaginatedEventGrid
-              events={events}
-              pageSize={9}
-              paginationKey='homepage_activePage'
-              navigationType={navigationType}
-            />
-          )}
-        </Stack>
+          <Sort onSortChange={setSortBy} />
+        </Group>
+
+        {loading ? (
+          <Text p='md' ta='center' c='dimmed'>
+            Laddar events…
+          </Text>
+        ) : error ? (
+          <Text p='md' c='red' ta='center'>
+            Ett fel uppstod: {error}
+          </Text>
+        ) : (
+          <PaginatedEventGrid events={events} loading={loading} />
+        )}
       </Stack>
     </>
   );

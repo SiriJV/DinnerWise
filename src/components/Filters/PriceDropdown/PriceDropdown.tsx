@@ -24,10 +24,10 @@ export default function PriceDropdown({ label, onApply }: FilterDropdownProps) {
   const [applied, setApplied] = useState<FilterItem[]>([]);
 
   const toggleDraft = (item: FilterItem) => {
-    setDraft(current =>
-      current.some(i => i.id === item.id)
-        ? current.filter(i => i.id !== item.id)
-        : [...current, item]
+    setDraft((current) =>
+      current.some((i) => i.id === item.id)
+        ? current.filter((i) => i.id !== item.id)
+        : [...current, item],
     );
   };
 
@@ -42,14 +42,13 @@ export default function PriceDropdown({ label, onApply }: FilterDropdownProps) {
   return (
     <Menu
       opened={opened}
-      onChange={o => {
+      onChange={(o) => {
         setOpened(o);
         if (o) setDraft(applied);
       }}
       closeOnItemClick={false}
-      shadow="md"
-      width={220}
-    >
+      shadow='md'
+      width={220}>
       <Menu.Target>
         <Button rightSection={<ChevronDown size={20} />}>
           {label} {applied.length > 0 ? `(${applied.length})` : ''}
@@ -59,14 +58,13 @@ export default function PriceDropdown({ label, onApply }: FilterDropdownProps) {
       <Menu.Dropdown>
         <Menu.Label>{label}</Menu.Label>
 
-        {options.map(option => {
-          const checked = draft.some(i => i.id === option.id);
+        {options.map((option) => {
+          const checked = draft.some((i) => i.id === option.id);
           return (
             <Menu.Item
               key={option.id}
               onClick={() => toggleDraft(option)}
-              rightSection={checked ? <Check size={20} /> : null}
-            >
+              rightSection={checked ? <Check size={20} /> : null}>
               {option.name}
             </Menu.Item>
           );
@@ -74,8 +72,11 @@ export default function PriceDropdown({ label, onApply }: FilterDropdownProps) {
 
         <Menu.Divider />
 
-        <Group grow preventGrowOverflow={false} wrap="nowrap" gap="4">
-          <Button variant="subtle" disabled={draft.length === 0} onClick={clearDraft}>
+        <Group grow preventGrowOverflow={false} wrap='nowrap' gap='4'>
+          <Button
+            variant='subtle'
+            disabled={draft.length === 0}
+            onClick={clearDraft}>
             Rensa alla
           </Button>
           <Button onClick={handleSave}>Spara</Button>

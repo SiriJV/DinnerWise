@@ -1,5 +1,4 @@
 import { Avatar } from '@mantine/core';
-import './ProfilePage.scss';
 
 type ProfilePageAvatarProps = {
   src?: string;
@@ -14,7 +13,7 @@ export default function ProfilePageAvatar({ src }: ProfilePageAvatarProps) {
       bottom={12.5}
       left={24}
       variant='filled'
-      className='avatar'
+      bd='2px solid white'
     />
   );
 }

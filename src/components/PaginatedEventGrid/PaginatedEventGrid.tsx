@@ -1,106 +1,106 @@
 import { useEffect, useState, useRef } from 'react';
+import { useIsMobile } from '../../hooks/useResponsive';
 import {
   SimpleGrid,
   Group,
   Pagination,
   Text,
   Stack,
-  Title,
+  Skeleton,
 } from '@mantine/core';
 import EventCard from '../EventCard/EventCard';
 import type { EventType } from '../../types/EventType';
-import type { NavigationType } from 'react-router-dom';
-
-function chunk<T>(array: T[], size: number): T[][] {
-  if (!array.length) return [];
-  const head = array.slice(0, size);
-  const tail = array.slice(size);
-  return [head, ...chunk(tail, size)];
-}
+import { useSearchParams } from 'react-router-dom';
+import { HEADER_CONFIG } from '../../config/headerConfig';
 
 type PaginatedEventGridProps = {
   events: EventType[];
   pageSize?: number;
-  paginationKey?: string;
-  navigationType?: NavigationType;
+  loading?: boolean;
 };
 
 export default function PaginatedEventGrid({
   events,
-  pageSize = 9,
-  paginationKey,
-  navigationType,
+  pageSize = 12,
+  loading = false,
 }: PaginatedEventGridProps) {
-  const getInitialPage = () => {
-    if (!paginationKey) return 1;
-    const stored = sessionStorage.getItem(paginationKey);
-    return stored ? parseInt(stored, 10) || 1 : 1;
-  };
-
-  const [activePage, setActivePage] = useState<number>(getInitialPage);
-
+  const [params, setParams] = useSearchParams();
   const gridRef = useRef<HTMLDivElement>(null);
+  const isMobileScreen = useIsMobile();
+  const headerHeight = isMobileScreen
+    ? HEADER_CONFIG.MOBILE
+    : HEADER_CONFIG.DESKTOP;
 
-  const eventPages = chunk(events, pageSize);
-  const pagedEvents = eventPages[activePage - 1] || [];
+  const pageFromUrl = Number(params.get('page')) || 1;
+  const [activePage, setActivePage] = useState(pageFromUrl);
 
-  // Spara pagination i sessionStorage
+  const totalPages = Math.max(1, Math.ceil(events.length / pageSize));
+
+  // Sync URL → state (utan loopar)
   useEffect(() => {
-    if (paginationKey) {
-      sessionStorage.setItem(paginationKey, String(activePage));
+    if (pageFromUrl !== activePage) {
+      setActivePage(pageFromUrl);
     }
-  }, [activePage, paginationKey]);
+  }, [pageFromUrl]);
 
-  // Reset endast vid PUSH-navigation (t.ex. klick på länk)
+  // Clamp page om data ändras (t.ex. filter)
   useEffect(() => {
-    if (navigationType === 'PUSH') {
-      setActivePage(1);
-      if (paginationKey) {
-        sessionStorage.removeItem(paginationKey);
-      }
+    if (activePage > totalPages) {
+      handlePageChange(1);
     }
-  }, [navigationType, paginationKey]);
+  }, [events]);
+
+  const start = (activePage - 1) * pageSize;
+  const pagedEvents = events.slice(start, start + pageSize);
 
   const handlePageChange = (page: number) => {
     setActivePage(page);
 
-    // Scrolla upp till toppen av eventlistan
+    const newParams = new URLSearchParams(params);
+    newParams.set('page', page.toString());
+    setParams(newParams);
+
+    // Smooth scroll with header offset
     if (gridRef.current) {
-      const yOffset = -120; // justera om du har sticky header
-      const y =
-        gridRef.current.getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
+      const elementPosition =
+        gridRef.current.getBoundingClientRect().top + window.pageYOffset;
+      const yOffset = -(headerHeight + 20);
+      const y = elementPosition + yOffset;
+
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
+  const showEmpty = !loading && pagedEvents.length === 0;
+
   return (
     <>
-      <Stack>
-        <Title order={2} ref={gridRef}>{`Event (${events.length})`}</Title>
-
-        <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 3 }} spacing='md'>
-          {pagedEvents.length === 0 ? (
-            <Text p='xl' ta='center' c='dimmed'>
-              Det finns just nu inga event som matchar dina filter.
-            </Text>
-          ) : (
-            pagedEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                {...event}
-                date={new Date(event.date)}
-              />
-            ))
-          )}
-        </SimpleGrid>
+      <Stack ref={gridRef}>
+        {showEmpty ? (
+          <Text p='xl' ta='center' c='dimmed'>
+            Det finns just nu inga event som matchar dina filter.
+          </Text>
+        ) : (
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing='lg'>
+            {loading
+              ? Array.from({ length: pageSize }).map((_, i) => (
+                  <Skeleton key={i} height={280} radius='md' />
+                ))
+              : pagedEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    {...event}
+                    date={new Date(event.date)}
+                  />
+                ))}
+          </SimpleGrid>
+        )}
       </Stack>
 
-      {eventPages.length > 1 && (
+      {totalPages > 1 && (
         <Group justify='center' mt='md'>
           <Pagination
-            total={eventPages.length}
+            total={totalPages}
             value={activePage}
             onChange={handlePageChange}
             size='md'

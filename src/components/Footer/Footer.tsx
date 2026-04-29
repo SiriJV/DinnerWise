@@ -3,210 +3,113 @@ import {
   Text,
   Group,
   Stack,
+  SimpleGrid,
+  Box,
+  Grid,
   Anchor,
-  TextInput,
-  Button,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Footer.scss';
 import { getAccordionItems } from '../../data/AccordionItems';
 import NavBarAccordion from '../NavBarAccordion/NavBarAccordion';
-import { useMediaQuery } from '@mantine/hooks';
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
+import NewsLetterCTA from '../NewsLetterCTA/NewsLetterCTA';
+import { APP_CONFIG } from '../../config/appConfig';
+import FooterLink from './FooterLink';
+import FooterFULogo from './FooterFULogo';
 
 export default function Footer() {
-  const isMobile = useMediaQuery('(max-width: 768px)');
   const { isLoggedIn, logout } = useAuth();
   const { openLogin, openCreate } = useModal();
   const accordionItems = getAccordionItems(isLoggedIn);
 
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
-    <footer className='footer'>
-      <Container size='lg'>
-        {isMobile ? (
-          <Stack gap='md' pb='xl' className='newsletter-group'>
-            <Stack className='newsletter-stack'>
-              <Text fw={600}>Håll dig uppdaterad!</Text>
-              <Text size='sm'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </Text>
-            </Stack>
+    <>
+      <footer className='footer'>
+        {!isHomePage && <NewsLetterCTA />}
+        <Container size='lg'>
+          {/* Footer content */}
+          <Grid pt='xl' pb='xl'>
+            {/* Brand */}
+            <Grid.Col span={{ base: 12, md: 3 }}>
+              <Stack gap='xs'>
+                <Text fw={700} size='lg'>
+                  {APP_CONFIG.brandName}
+                </Text>
+                <Text size='xs' c='dimmed'>
+                  Små event, stora upplevelser.
+                </Text>
+                <FooterFULogo hiddenFromSmall={false} />
+                <Box hiddenFrom='sm'>
+                  <NavBarAccordion />
+                </Box>
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 9 }}>
+              {/* Links */}
+              <SimpleGrid cols={{ base: 5 }} spacing='lg' visibleFrom='sm'>
+                {accordionItems.map((group, groupIdx) => (
+                  <Stack key={group.value || group.label || groupIdx} gap={6}>
+                    <Text fw={600}>{group.label}</Text>
 
-            <Group style={{ width: '100%' }} gap={0}>
-              <TextInput
-                className='newsletter-input'
-                placeholder='exempel@epost.se'
-                radius='0'
-              />
-              <Button className='newsletter-button'>Registrera dig</Button>
-            </Group>
-          </Stack>
-        ) : (
-          <Group align='flex-end' gap='md' pb='xl' className='newsletter-group'>
-            <Stack className='newsletter-stack'>
-              <Text fw={600}>Håll dig uppdaterad!</Text>
-              <Text size='sm'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </Text>
-            </Stack>
+                    {group.panels.map((link, linkIdx) => {
+                      const key = `${link.label}-${linkIdx}`;
 
-            <Group style={{ flex: 1, maxWidth: '50%' }} gap={0}>
-              <TextInput
-                className='newsletter-input'
-                placeholder='exempel@epost.se'
-                radius='0'
-              />
-              <Button className='newsletter-button'>Registrera dig</Button>
-            </Group>
-          </Group>
-        )}
+                      let onClick;
 
-        {isMobile ? (
-          <Stack gap='md' pt='xl' pb='xl'>
-            <Stack gap='xs' className='footer-brand'>
-              <Text fw={700} size='lg'>
-                DinnerWise
-              </Text>
-              <Text size='xs' c='dimmed'>
-                Små event, stora upplevelser.
-              </Text>
-            </Stack>
-            <NavBarAccordion />
-          </Stack>
-        ) : (
-          <Group align='flex-start' justify='space-between' pt='xl' pb='xl'>
-            <Stack gap='xs' className='footer-brand'>
-              <Text fw={700} size='lg'>
-                DinnerWise
-              </Text>
-              <Text size='xs' c='dimmed'>
-                Små event, stora upplevelser.
-              </Text>
-            </Stack>
+                      if (link.modal === 'login') onClick = openLogin;
+                      if (link.modal === 'create') onClick = openCreate;
+                      if (link.modal === 'logout') onClick = logout;
 
-            <Group className='footer-groups' align='flex-start' wrap='wrap'>
-              {accordionItems.map((group, groupIdx) => (
-                <Stack
-                  key={group.value || group.label || groupIdx}
-                  gap={6}
-                  className='footer-group'>
-                  <Text fw={600} className='footer-title'>
-                    {group.label}
-                  </Text>
-
-                  {group.panels.map((link, linkIdx) => {
-                    const uniqueKey = `${link.label || ''}-${link.path || ''}-${linkIdx}`;
-                    if (link.modal === 'login') {
                       return (
-                        <button
-                          key={uniqueKey}
-                          className='footer-link'
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: 0,
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                          }}
-                          onClick={openLogin}>
-                          {link.label}
-                        </button>
+                        <FooterLink
+                          key={key}
+                          label={link.label}
+                          to={!link.modal ? link.path : undefined}
+                          onClick={onClick}
+                        />
                       );
-                    }
-                    if (link.modal === 'create') {
-                      return (
-                        <button
-                          key={uniqueKey}
-                          className='footer-link'
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: 0,
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                          }}
-                          onClick={openCreate}>
-                          {link.label}
-                        </button>
-                      );
-                    }
-                    if (link.modal === 'logout') {
-                      return (
-                        <button
-                          key={uniqueKey}
-                          className='footer-link'
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: 0,
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                          }}
-                          onClick={logout}>
-                          {link.label}
-                        </button>
-                      );
-                    }
-                    return (
-                      <NavLink
-                        key={uniqueKey}
-                        to={link.path}
-                        className='footer-link'>
-                        {link.label}
-                      </NavLink>
-                    );
-                  })}
-                </Stack>
-              ))}
+                    })}
+                  </Stack>
+                ))}
+              </SimpleGrid>
+            </Grid.Col>
+          </Grid>
+        </Container>
+
+        {/* Bottom bar */}
+        <Container size='lg'>
+          <FooterFULogo hiddenFromSmall={true} />
+
+          <Group justify='space-between' py='md' wrap='wrap'>
+            <Text size='xs' c='dimmed'>
+              © 2026 {APP_CONFIG.brandName}. All rights reserved.
+            </Text>
+
+            <Group gap='md'>
+              <Group gap='md'>
+                <Anchor component={Link} to='/kopvillkor' c='dimmed' size='xs'>
+                  Köpvillkor
+                </Anchor>
+                <Anchor
+                  component={Link}
+                  to='/integritetspolicy'
+                  c='dimmed'
+                  size='xs'>
+                  Integritetspolicy
+                </Anchor>
+                <Anchor component={Link} to='/cookies' c='dimmed' size='xs'>
+                  Cookies
+                </Anchor>
+              </Group>
             </Group>
           </Group>
-        )}
-      </Container>
-
-      <Container size='lg'>
-        <Group
-          justify='space-between'
-          align='center'
-          py='md'
-          className='footer-bottom'
-          wrap='wrap'>
-          <Text size='xs' c='dimmed'>
-            © 2026 DinnerWise. All rights reserved.
-          </Text>
-
-          <Group gap='md'>
-            <Anchor
-              component={NavLink}
-              to='/kopvillkor'
-              size='xs'
-              c='dimmed'
-              underline='hover'>
-              Köpvillkor
-            </Anchor>
-
-            <Anchor
-              component={NavLink}
-              to='/integritetspolicy'
-              size='xs'
-              c='dimmed'
-              underline='hover'>
-              Integritetspolicy
-            </Anchor>
-
-            <Anchor
-              component={NavLink}
-              to='/cookies'
-              size='xs'
-              c='dimmed'
-              underline='hover'>
-              Cookies
-            </Anchor>
-          </Group>
-        </Group>
-      </Container>
-    </footer>
+        </Container>
+      </footer>
+    </>
   );
 }

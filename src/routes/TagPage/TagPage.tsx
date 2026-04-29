@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Divider, Group, Stack, Text, Title } from '@mantine/core';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
@@ -20,7 +20,6 @@ export default function TagPage() {
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (!slug) return;
@@ -62,8 +61,6 @@ export default function TagPage() {
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
-        console.log('Fetching events for tag page:', url.toString());
-
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
@@ -84,7 +81,9 @@ export default function TagPage() {
 
   return (
     <Stack p='md'>
-      <Title order={1}>{tag.name}</Title>
+      <Title order={2}>
+        {tag.name} ({events.length} event)
+      </Title>
 
       <Divider mt='sm' mb='lg' />
 
@@ -115,12 +114,7 @@ export default function TagPage() {
             Inga events för denna tagg.
           </Text>
         ) : (
-          <PaginatedEventGrid
-            events={events}
-            pageSize={9}
-            paginationKey='tagpage_activePage'
-            navigationType={navigationType}
-          />
+          <PaginatedEventGrid events={events} loading={loading} />
         )}
       </Stack>
     </Stack>

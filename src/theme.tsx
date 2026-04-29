@@ -2,18 +2,47 @@
 import { createTheme } from '@mantine/core';
 
 export const theme = createTheme({
+  cursorType: 'pointer',
+  primaryColor: 'red',
+
   colors: {
-    primaryred: [
-      '#ffe5ea',
-      '#fbb3c2',
-      '#f3809a',
-      '#ec4d72',
-      '#e71f4d',
-      '#d3043b', // ← $primaryred
-      '#b00032',
-      '#8c0027',
-      '#68001c',
-      '#450011',
+    red: [
+      '#ffe6ec',
+      '#fbb3c4',
+      '#f47f9c',
+      '#ec4c74',
+      '#e51f54',
+      '#d90a47',
+      '#d3043b', // 👈 EXAKT din färg
+      '#b00332',
+      '#8c0228',
+      '#68011e',
+    ],
+
+    secondaryred: [
+      '#ffe9e7',
+      '#ffc6c1',
+      '#ff9f96',
+      '#ff776b',
+      '#ff5141',
+      '#e84132', // din red
+      '#c83226',
+      '#aa241b',
+      '#8b170f',
+      '#6d0a05',
+    ],
+
+    lightred: [
+      '#fff5f4',
+      '#ffe3e0',
+      '#ffd6d1',
+      '#ffc9c2',
+      '#ffbdb3',
+      '#ffccc7', // din lightred
+      '#f5a39c',
+      '#e07f76',
+      '#c95c52',
+      '#a63a31',
     ],
 
     darkred: [
@@ -22,24 +51,11 @@ export const theme = createTheme({
       '#ba95a3',
       '#9e6c7f',
       '#864f66',
-      '#74273e', // ← $darkred
+      '#74273e', // din darkred
       '#5f1f33',
       '#4a1728',
       '#35101d',
       '#200812',
-    ],
-
-    red: [
-      '#ffe9e7',
-      '#ffc6c1',
-      '#ff9f96',
-      '#ff776b',
-      '#ff5141',
-      '#e84132', // ← $red
-      '#c83226',
-      '#aa241b',
-      '#8b170f',
-      '#6d0a05',
     ],
 
     darkgreen: [
@@ -48,7 +64,7 @@ export const theme = createTheme({
       '#adc1ad',
       '#8da98d',
       '#6f936f',
-      '#243821', // ← $darkgreen
+      '#243821', // din darkgreen
       '#1e2e1c',
       '#182416',
       '#121b11',
@@ -61,13 +77,14 @@ export const theme = createTheme({
       '#9bb4ca',
       '#7597b6',
       '#507ca3',
-      '#123347', // ← $darkblue
+      '#123347', // din darkblue
       '#0f2a3a',
       '#0c212d',
       '#091820',
       '#060f13',
     ],
 
+    // neutrala / custom
     gray: [
       '#f8f9fa',
       '#f1f3f5',
@@ -80,9 +97,32 @@ export const theme = createTheme({
       '#343a40',
       '#212529',
     ],
+
+    yellow: [
+      '#fffdf5',
+      '#fffbeb',
+      '#fff7d6',
+      '#fff3c2',
+      '#ffeead',
+      '#ffeeba', // din yellow rgba(255, 238, 186, 1)
+      '#e6d5a7',
+      '#ccbc94',
+      '#a6996b',
+      '#785a0a', // din darkyellow
+    ],
   },
 
-  primaryColor: 'primaryred',
+  other: {
+    lightred: 'rgba(255, 204, 199, 1)',
+    lightgreen: 'rgba(216, 227, 222, 1)',
+    lightblue: 'rgba(222, 222, 227, 1)',
+    lightturquoise: 'rgba(189, 220, 216, 1)',
+    darkgrey: 'rgba(134, 120, 113, 1)',
+    lightgrey: 'rgba(222, 222, 227, 1)',
+    lightbeige: 'rgba(218, 211, 204, 1)',
+    yellow: 'rgba(255, 238, 186, 1)',
+    darkyellow: 'rgba(120, 90, 10, 1)',
+  },
 
   radius: {
     md: '0.8rem',

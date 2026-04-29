@@ -10,25 +10,48 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ModalProvider } from './contexts/ModalContext';
 import LoginModal from './components/Modals/LoginModal/LoginModal';
 import CreateAccountModal from './components/Modals/CreateAccountModal/CreateAccountModal';
-import DemoInfoModal from './components/Modals/DemoInfoModal/DemoInfoModal';
+import CreateEventModal from './components/Modals/CreateEventModal/CreateEventModal';
 import { useModal } from './contexts/ModalContext';
-import HomePage from './routes/HomePage/HomePage';
-import CookiesPage from './routes/info pages/CookiesPage';
-import EventDetails from './routes/EventDetails/EventDetails';
-import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
-import SearchPage from './routes/SearchPage';
-import ProfilePage from './routes/ProfilePage/ProfilePage';
-import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
-import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
-import CategoryPage from './routes/CategoryPage/CategoryPage';
-import TagPage from './routes/TagPage/TagPage';
-import CityPage from './routes/CityPage/CityPage';
+// import HomePage from './routes/HomePage/HomePage';
+// import CookiesPage from './routes/info pages/CookiesPage';
+// import EventDetails from './routes/EventDetails/EventDetails';
+// import RestaurangDetails from './routes/RestaurantDetails/RestaurantDetails';
+// import SearchPage from './routes/SearchPage';
+// import ProfilePage from './routes/ProfilePage/ProfilePage';
+// import CreateEventPage from './routes/CreateEventPage/CreateEventPage';
+// import SelectRestaurantPage from './routes/SelectRestaurantPage/SelectRestaurantPage';
+// import CategoryPage from './routes/CategoryPage/CategoryPage';
+// import TagPage from './routes/TagPage/TagPage';
+// import CityPage from './routes/CityPage/CityPage';
 import TestAuthPage from './routes/TestAuthPage/TestAuthPage';
 import TestAccountPage from './routes/TestAccountPage/TestAccountPage';
 import AdminLoginPage from './routes/AdminLoginPage/AdminLoginPage';
 import AdminPanelPage from './routes/AdminPanelPage/AdminPanelPage';
 import AcceptInvitationPage from './routes/AcceptInvitationPage/AcceptInvitationPage';
 import { infoPages } from './data/infoPages';
+import { lazy, useEffect, useState } from 'react';
+import Settings from './routes/ProfilePage/Settings/Settings';
+
+// Lazy load alla route-komponenter för bättre initial laddning
+const HomePage = lazy(() => import('./routes/HomePage/HomePage'));
+const EventDetails = lazy(() => import('./routes/EventDetails/EventDetails'));
+const ProfilePage = lazy(() => import('./routes/ProfilePage/ProfilePage'));
+const SearchPage = lazy(() => import('./routes/SearchPage'));
+const RestaurantDetails = lazy(
+  () => import('./routes/RestaurantDetails/RestaurantDetails'),
+);
+const CategoryPage = lazy(() => import('./routes/CategoryPage/CategoryPage'));
+const TagPage = lazy(() => import('./routes/TagPage/TagPage'));
+const CityPage = lazy(() => import('./routes/CityPage/CityPage'));
+const RestaurantAcceptancePage = lazy(
+  () => import('./routes/RestaurantAcceptancePage/RestaurantAcceptancePage'),
+);
+const EventFeedback = lazy(
+  () => import('./routes/EventFeedback/EventFeedback'),
+);
+const GeminiTestPage = lazy(
+  () => import('./routes/GeminiTestPage/GeminiTestPage'),
+);
 
 const router = createBrowserRouter([
   {
@@ -54,28 +77,24 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: '/cookies',
-        element: <CookiesPage />,
-      },
-      {
         path: '/profil/:alias',
         element: <ProfilePage />,
       },
       {
-        path: '/event/:slug/',
+        path: '/profil/:alias/installningar',
+        element: <Settings />,
+      },
+      {
+        path: '/event/:slug',
         element: <EventDetails />,
       },
       {
+        path: '/event/:slug/feedback',
+        element: <EventFeedback />,
+      },
+      {
         path: '/restaurang/:slug',
-        element: <RestaurangDetails />,
-      },
-      {
-        path: '/skapa-event',
-        element: <CreateEventPage />,
-      },
-      {
-        path: '/valj-restaurang',
-        element: <SelectRestaurantPage />,
+        element: <RestaurantDetails />,
       },
       {
         path: '/kategori/:slug',
@@ -105,6 +124,14 @@ const router = createBrowserRouter([
         path: '/accept-invitation',
         element: <AcceptInvitationPage />,
       },
+      {
+        path: '/bokningshantering/:slug',
+        element: <RestaurantAcceptancePage />,
+      },
+      {
+        path: '/test',
+        element: <GeminiTestPage />,
+      },
       ...infoPages.map(({ path, component: Comp }) => ({
         path,
         element: <Comp />,
@@ -121,10 +148,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-import { useEffect, useState } from 'react';
-
 function GlobalModals() {
-  const { loginOpen, createOpen, closeModals } = useModal();
+  const {
+    loginOpen,
+    createOpen,
+    closeModals,
+    createEventOpen,
+    closeCreateEvent,
+  } = useModal();
   const [demoOpen, setDemoOpen] = useState(true);
 
   // Visa bara första gången sidan laddas
@@ -134,9 +165,10 @@ function GlobalModals() {
 
   return (
     <>
-      <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} />
+      {/* <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} /> */}
       <LoginModal opened={loginOpen} onClose={closeModals} />
       <CreateAccountModal opened={createOpen} onClose={closeModals} />
+      <CreateEventModal opened={createEventOpen} onClose={closeCreateEvent} />
     </>
   );
 }

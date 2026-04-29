@@ -1,14 +1,27 @@
-import { Modal, Text, Group, ActionIcon, Popover, Stack } from '@mantine/core';
-import { CircleHelp, ChevronLeft } from 'lucide-react';
+import {
+  Modal,
+  Text,
+  Group,
+  ActionIcon,
+  Popover,
+  Stack,
+  Space,
+} from '@mantine/core';
+import { CircleHelp } from 'lucide-react';
 import './RegisteringBaseModal.scss';
+import { APP_CONFIG } from '../../../config/appConfig';
+import DemoWarningText from '../../common/DemoWarningText/DemoWarningText';
+
+const HEADER_HEIGHT = 60;
+const HEADER_OFFSET = 10;
 
 interface RegisteringBaseModalProps {
   opened: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  onBack?: () => void;
   isFull?: boolean;
+  helpText?: React.ReactNode;
 }
 
 export default function RegisteringBaseModal({
@@ -16,24 +29,34 @@ export default function RegisteringBaseModal({
   onClose,
   title,
   children,
-  onBack,
   isFull,
+  helpText,
 }: RegisteringBaseModalProps) {
   return (
     <Modal
-      size='lg'
+      size='xl'
       opened={opened}
       onClose={onClose}
-      yOffset='140'
+      centered
+      closeButtonProps={{
+        color: 'gray',
+        size: 'md',
+        radius: 'sm',
+      }}
       title={
         <Group gap='md' wrap='nowrap' className='modal-title-group'>
           <Text fw={600}>{title}</Text>
           <Group gap={0} className='modal-icons-group'>
-            <Popover width={300} position='bottom' withArrow shadow='md'>
+            <Popover
+              width={300}
+              position='bottom'
+              withArrow
+              shadow='md'
+              zIndex={2000}>
               <Popover.Target>
                 <ActionIcon
                   variant='subtle'
-                  color='red'
+                  color='gray'
                   size='md'
                   radius='sm'
                   className='modal-help-icon'>
@@ -45,23 +68,15 @@ export default function RegisteringBaseModal({
                   Hjälp{' '}
                 </Text>
                 <Stack gap='xs'>
-                  {isFull ? (
+                  <DemoWarningText text='Informationen är endast exempel.' />
+                  {helpText ? (
+                    <Text size='sm'>{helpText}</Text>
+                  ) : isFull ? (
                     <>
                       <Text size='sm'>
                         Eventet är fullt. Om du ställer dig på väntelistan blir
                         du kontaktad via e-post om en plats blir ledig. Du
                         behöver inte betala förrän du får en plats!
-                      </Text>
-                      <Text size='sm'>
-                        Behöver du mer hjälp? Kontakta oss på{' '}
-                        <Text span fw={500}>
-                          support@dinnerwise.se
-                        </Text>{' '}
-                        eller ring oss på{' '}
-                        <Text span fw={500}>
-                          08-123 456 78
-                        </Text>
-                        .
                       </Text>
                     </>
                   ) : (
@@ -71,38 +86,31 @@ export default function RegisteringBaseModal({
                         innan du går vidare. Välj en betalningsmetod och klicka
                         dig vidare. Nu är du anmäld!
                       </Text>
-                      <Text size='sm'>
-                        Behöver du mer hjälp? Kontakta oss på{' '}
-                        <Text span fw={500}>
-                          support@dinnerwise.se
-                        </Text>{' '}
-                        eller ring oss på{' '}
-                        <Text span fw={500}>
-                          08-123 456 78
-                        </Text>
-                        .
-                      </Text>
                     </>
                   )}
+                  <Text size='sm'>
+                    Behöver du mer hjälp? Kontakta oss på{' '}
+                    <Text span fw={600}>
+                      {APP_CONFIG.supportEmail}{' '}
+                    </Text>{' '}
+                    eller ring oss på{' '}
+                    <Text span fw={600}>
+                      {APP_CONFIG.telephone}
+                    </Text>
+                    .
+                  </Text>
                 </Stack>
               </Popover.Dropdown>
             </Popover>
-            {onBack && (
-              <ActionIcon
-                variant='subtle'
-                color='gray'
-                size='md'
-                radius='sm'
-                className='modal-back-icon'
-                onClick={onBack}>
-                <ChevronLeft size={20} />
-              </ActionIcon>
-            )}
           </Group>
         </Group>
       }
-      centered
       styles={{
+        content: {
+          maxHeight: `calc(100vh - ${HEADER_HEIGHT + HEADER_OFFSET}px)`,
+          display: 'flex',
+          flexDirection: 'column',
+        },
         header: {
           display: 'flex',
           alignItems: 'center',
@@ -112,14 +120,21 @@ export default function RegisteringBaseModal({
           display: 'flex',
         },
         body: {
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
           overflowY: 'auto',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
+          overflowX: 'hidden',
+          padding: '24px',
         },
       }}
       classNames={{
         body: 'modal-scrollable-body',
-      }}>
+      }}
+      zIndex={1000}
+      withinPortal={true}>
+      <DemoWarningText text='Innehållet i modalen är endast exempel.' />
+      <Space h='md' />
       {children}
     </Modal>
   );

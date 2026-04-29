@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigationType, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import SearchableFilterDropdown from '../../components/Filters/SearchFilterDropdown/SearchFilterDropdown';
 import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown';
 import Sort from '../../components/Sort/Sort';
 import type { SortValue } from '../../components/Sort/Sort';
-import { Title, Text, Group, Stack, Divider, Pill } from '@mantine/core';
+import { Title, Text, Group, Stack, Divider } from '@mantine/core';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import PillComponent from '../../components/PillComponent/PillComponent';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,7 +27,6 @@ export default function CategoryPage() {
   const [cityFilters, setCityFilters] = useState<number[]>([]);
   const [tagFilters, setTagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (!slug) return;
@@ -93,8 +93,6 @@ export default function CategoryPage() {
 
         if (sortBy) url.searchParams.append('order', sortBy);
 
-        console.log('Fetching events for category page:', url.toString());
-
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
         const data: EventType[] = await res.json();
@@ -116,7 +114,9 @@ export default function CategoryPage() {
   return (
     <>
       <Stack p='md'>
-        <Title order={1}>{category.name}</Title>
+        <Title order={2}>
+          {category.name} ({events.length} event)
+        </Title>
         {category.description && (
           <Text size='lg' c='dimmed' mb='sm'>
             {category.description}
@@ -125,13 +125,8 @@ export default function CategoryPage() {
 
         {tags.length > 0 && (
           <Group gap='xs' mb='md' wrap='wrap'>
-            {tags.map((tag) => (
-              <NavLink
-                key={tag.id}
-                to={`/tagg/${slugify(tag.name)}`}
-                style={{ textDecoration: 'none' }}>
-                <Pill style={{ cursor: 'pointer' }}>{tag.name}</Pill>
-              </NavLink>
+            {tags.map((tag, index) => (
+              <PillComponent key={index} title={tag.name} />
             ))}
           </Group>
         )}
@@ -144,12 +139,6 @@ export default function CategoryPage() {
               label='Stad'
               fetchUrl='http://localhost:3001/cities'
               onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
-            />
-
-            <SearchableFilterDropdown
-              label='Ämne'
-              fetchUrl='http://localhost:3001/tags'
-              onApply={(selected) => setTagFilters(selected.map((s) => s.id))}
             />
 
             <PriceDropdown
@@ -167,16 +156,11 @@ export default function CategoryPage() {
               Laddar events…
             </Text>
           ) : events.length === 0 ? (
-            <Text p='md' ta='center'>
-              Inga events för denna kategori.
+            <Text p='xl' ta='center' c='dimmed'>
+              Det finns just nu inga event som matchar dina filter.
             </Text>
           ) : (
-            <PaginatedEventGrid
-              events={events}
-              pageSize={9}
-              paginationKey='categorypage_activePage'
-              navigationType={navigationType}
-            />
+            <PaginatedEventGrid events={events} loading={loading} />
           )}
         </Stack>
       </Stack>

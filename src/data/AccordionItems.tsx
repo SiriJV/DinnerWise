@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 import AboutPage from '../routes/info pages/AboutPage';
 import PaymentInfoPage from '../routes/info pages/PaymentInfoPage';
-import FAQPage from '../routes/info pages/FAQPage';
+import FAQPage from '../routes/info pages/FAQPage/FAQPage';
 import TermsPage from '../routes/info pages/TermsPage';
 import PrivacyPage from '../routes/info pages/PrivacyPage';
 import ContactPage from '../routes/info pages/ContactPage';
-import SupportPage from '../routes/info pages/SupportPage';
-import HelpPage from '../routes/info pages/HelpPage';
 import NewsletterPage from '../routes/info pages/NewsletterPage';
 import ProfilePage from '../routes/ProfilePage/ProfilePage';
+import HowToPage from '../routes/info pages/HowToPage/HowToPage';
+import { APP_CONFIG } from '../config/appConfig';
 
 type AccordionPanelItem = {
   label: string;
@@ -25,14 +25,19 @@ type AccordionItems = {
 
 export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
   {
-    value: 'dinnerwise',
-    label: 'DinnerWise',
+    value: `${APP_CONFIG.brandName.toLowerCase()}`,
+    label: `${APP_CONFIG.brandName}`,
     panels: [
       { label: 'Om oss', path: '/om-oss', element: <AboutPage /> },
       {
         label: 'Nyhetsbrev',
         path: '/nyhetsbrev',
         element: <NewsletterPage />,
+      },
+      {
+        label: 'Att skapa event',
+        path: '/att-skapa-event',
+        element: <HowToPage />,
       },
     ],
   },
@@ -67,14 +72,9 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     value: 'help',
     label: 'Hjälp & Support',
     panels: [
-      { label: 'Hjälp', path: '/hjalp', element: <HelpPage /> },
       { label: 'FAQ', path: '/faq', element: <FAQPage /> },
+      { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
       { label: 'Betalning', path: '/betalning', element: <PaymentInfoPage /> },
-      {
-        label: 'Kundservice',
-        path: '/kundservice',
-        element: <SupportPage />,
-      },
     ],
   },
   {
@@ -94,10 +94,9 @@ export const getAccordionItems = (isLoggedIn: boolean): AccordionItems[] => [
     ],
   },
   {
-    value: 'contact',
-    label: 'Kontakt',
+    value: 'social-media',
+    label: 'Sociala medier',
     panels: [
-      { label: 'Kontakta oss', path: '/kontakt', element: <ContactPage /> },
       { label: 'Instagram', path: '', element: <div>Instagram</div> },
       { label: 'Facebook', path: '', element: <div>Facebook</div> },
       { label: 'X', path: '', element: <div>X</div> },

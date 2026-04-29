@@ -1,6 +1,15 @@
-import { Avatar, Tooltip, Box, Popover, Text } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import {
+  Avatar,
+  Tooltip,
+  Box,
+  Popover,
+  Text,
+  Stack,
+  Group,
+} from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useIsMobile } from '../../hooks/useResponsive';
 
 type User = {
   id: number;
@@ -12,7 +21,7 @@ type User = {
 type ParticipantAvatarsProps = {
   participants: User[];
   maxVisible?: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'responsive';
   currentParticipants?: number;
   maxParticipants?: number;
 };
@@ -25,18 +34,29 @@ export default function ParticipantAvatars({
   maxParticipants,
 }: ParticipantAvatarsProps) {
   const [popoverOpened, setPopoverOpened] = useState(false);
+  const isMobile = useIsMobile();
+  const avatarSize = size === 'responsive' ? (isMobile ? 'md' : 'lg') : size;
+  const navigate = useNavigate();
 
   return (
     <Tooltip.Group openDelay={300} closeDelay={100}>
       <Avatar.Group spacing={size === 'lg' ? 'sm' : 'xs'}>
         {participants.slice(0, maxVisible).map((user) => (
           <Tooltip key={user.id} label={user.name} withArrow>
-            <NavLink
-              to={`/profil/${user.alias}`}
-              className='unstyledNavLink'
-              onClick={(e) => e.stopPropagation()}>
-              <Avatar src={user.profile_picture_url} radius='xl' size={size} />
-            </NavLink>
+            <Avatar
+              key={user.id}
+              src={user?.profile_picture_url}
+              alt={user.name}
+              radius='xl'
+              size={avatarSize}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate(`/profil/${user?.alias}`);
+              }}
+              className='hover-style'
+              style={{ cursor: 'pointer' }}
+            />
           </Tooltip>
         ))}
         {participants.length > maxVisible && (
@@ -76,20 +96,28 @@ export default function ParticipantAvatars({
                     {currentParticipants}/{maxParticipants} deltagare
                   </Text>
                 )}
-              {participants.slice(maxVisible).map((user) => (
-                <NavLink
-                  key={user.id}
-                  to={`/profil/${user.alias}`}
-                  className='unstyledNavLink'
-                  style={{
-                    display: 'block',
-                    padding: '2px 0',
-                    color: 'var(--mantine-color-white)',
-                    textDecoration: 'none',
-                  }}>
-                  {user.name}
-                </NavLink>
-              ))}
+              <Stack gap='xs'>
+                {participants.slice(maxVisible).map((user) => (
+                  <Group
+                    key={user.id}
+                    className='link-hover'
+                    style={{ cursor: 'pointer' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigate(`/profil/${user?.alias}`);
+                    }}>
+                    <Avatar
+                      src={user?.profile_picture_url}
+                      alt={user.name}
+                      radius='xl'
+                      size={avatarSize}
+                      bd='none'
+                    />
+                    {user.name}
+                  </Group>
+                ))}
+              </Stack>
             </Popover.Dropdown>
           </Popover>
         )}

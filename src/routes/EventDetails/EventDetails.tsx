@@ -15,7 +15,7 @@ import {
   Pill,
   Alert,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+// import { useDisclosure } from '@mantine/hooks';
 import './EventDetails.scss';
 import {
   BookmarkIcon,
@@ -37,13 +37,25 @@ import WaitlistConfirmationModal from '../../components/Modals/WaitlistConfirmat
 import type { EventType } from '../../types/EventType';
 import { fetchUsers, type User } from '../../api/users';
 import { reportEvent } from '../../api/events';
+import { Container, SimpleGrid } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+// import type { EventType } from '../../types/EventType';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
+import EventDetailsHeroImage from './EventDetailsHeroImage';
+import useEventUsers from '../../hooks/useEventUsers';
+import Map from '../../components/Map/Map';
+import EventDetailsHeader from './EventDetailsHeader';
+import EventModals from '../../components/Modals/EventModals/EventRegistrationModal';
+import EventDescription from './EventDescription';
+import EventInfoCards from './EventInfoCard';
+import EventParticipantsAndHost from './EventParticipantsAndHost';
+import EventActions from './EventActions';
+import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [host, setHost] = useState<User | null>(null);
-  const [participants, setParticipants] = useState<User[]>([]);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
   const { session } = useSession();
   const [modalOpened, { open: openModal, close: closeModal }] =
@@ -66,43 +78,46 @@ export default function EventDetails(): React.ReactNode {
   const [isNearFooter, setIsNearFooter] = useState(false);
   const [reportLoading, setReportLoading] = useState(false);
   const [reportMessage, setReportMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [category, setCategory] = useState<{ id: number; name: string } | null>(
+    null,
+  );
+  const [restaurantPhoto, setRestaurantPhoto] = useState<string | undefined>(
+    undefined,
+  );
+  const [registerOpened, registerHandlers] = useDisclosure(false);
+  const [paymentOpened, paymentHandlers] = useDisclosure(false);
+  const [confirmationOpened, confirmationHandlers] = useDisclosure(false);
+  const [waitlistOpened, waitlistHandlers] = useDisclosure(false);
+  const [shareOpened, shareHandlers] = useDisclosure(false);
+  const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
-  const hostFirstName = host?.name.split(' ')[0] || 'värden';
+  const {
+    reportEventOpen,
+    reportEventReason,
+    reportEventDescription,
+    openReportEvent,
+    closeReportEvent,
+    setReportEventReason,
+    setReportEventDescription,
+  } = useModal();
 
-  useEffect(() => {
-    async function loadUsers() {
-      if (!event) return;
+  const { host, participants } = useEventUsers(
+    event?.id || 0,
+    event?.current_participants || 0,
+  );
 
-      const data = await fetchUsers();
-
-      // Deterministic host based on event ID
-      const hostIndex = event.id % data.length;
-      setHost(data[hostIndex]);
-
-      // Deterministic participants based on event ID and current_participants
-      const numParticipants = Math.min(
-        event.current_participants || 0,
-        data.length,
-      );
-      const participantsList: User[] = [];
-      for (let i = 0; i < numParticipants; i++) {
-        const participantIndex = (event.id * 7 + i * 13) % data.length;
-        if (!participantsList.find((p) => p.id === data[participantIndex].id)) {
-          participantsList.push(data[participantIndex]);
-        }
-      }
-      setParticipants(participantsList);
-    }
-    loadUsers();
-  }, [event]);
-
-  let restaurantPhoto = undefined;
   const location = useLocation();
   const state = location.state as
     | { id?: string; restaurantPhoto?: string }
     | undefined;
-  if (state?.restaurantPhoto) {
-    restaurantPhoto = state.restaurantPhoto;
+
+  // Extrahera event-id från URL-slug om state saknas
+  let eventId: string | undefined = state?.id;
+  if (!eventId) {
+    const slugMatch = location.pathname.match(/event\/.+-(\d+)$/);
+    if (slugMatch) {
+      eventId = slugMatch[1];
+    }
   }
 
   useEffect(() => {
@@ -110,23 +125,59 @@ export default function EventDetails(): React.ReactNode {
       try {
         setLoading(true);
 
-        if (!state?.id) {
+        if (!eventId) {
           throw new Error('Event ID saknas');
         }
 
-        const res = await fetch(`http://localhost:3001/events/${state.id}`);
+        const res = await fetch(`http://localhost:3001/events/${eventId}`);
         if (!res.ok) throw new Error('Kunde inte hämta event');
         const eventData = await res.json();
 
         setEvent(eventData);
 
-        // Fetch tags for this event
+        // Set restaurantPhoto from state if available, otherwise fetch from restaurant
+        if (state?.restaurantPhoto) {
+          setRestaurantPhoto(state.restaurantPhoto);
+        } else if (eventData.restaurant_id) {
+          try {
+            const restaurantRes = await fetch(
+              `http://localhost:3001/restaurants/${eventData.restaurant_id}`,
+            );
+            if (restaurantRes.ok) {
+              const restaurantData = await restaurantRes.json();
+              if (restaurantData.photos) {
+                try {
+                  const photosArr = JSON.parse(restaurantData.photos);
+                  if (Array.isArray(photosArr) && photosArr.length > 0) {
+                    setRestaurantPhoto(photosArr[0]);
+                  }
+                } catch (e) {}
+              }
+            }
+          } catch (err) {}
+        }
+
         const tagsRes = await fetch(
-          `http://localhost:3001/events/${state.id}/tags`,
+          `http://localhost:3001/events/${eventId}/tags`,
         );
         if (tagsRes.ok) {
           const tagsData = await tagsRes.json();
           setTags(tagsData);
+        }
+
+        // Fetch category by category_id
+        if (eventData.category_id) {
+          const categoriesRes = await fetch(`http://localhost:3001/categories`);
+          if (categoriesRes.ok) {
+            const categoriesData = await categoriesRes.json();
+            const foundCategory = categoriesData.find(
+              (cat: { id: number; name: string }) =>
+                cat.id === eventData.category_id,
+            );
+            if (foundCategory) {
+              setCategory(foundCategory);
+            }
+          }
         }
       } catch (err: any) {
         setError(err.message);
@@ -217,99 +268,70 @@ export default function EventDetails(): React.ReactNode {
   const displayMaxSpots = event.max_participants;
   const remainingSpots = displayMaxSpots - event.current_participants;
   const isFull = remainingSpots <= 0;
-  const isAlmostFull = remainingSpots > 0 && remainingSpots <= 2;
 
   return (
     <>
-      <Box p='md' style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-        <Stack gap={0} mb='lg'>
-          <Group justify='space-between' align='flex-start' wrap='wrap-reverse'>
-            <Title order={2}>{event.title}</Title>
-            <Badge
-              bg={
-                isFull
-                  ? 'rgba(255, 204, 199, 1)'
-                  : isAlmostFull
-                    ? 'rgba(255, 238, 186, 1)'
-                    : 'rgba(216, 227, 222, 1)'
-              }
-              c={
-                isFull
-                  ? 'rgba(116, 39, 62, 1)'
-                  : isAlmostFull
-                    ? 'rgba(120, 90, 10, 1)'
-                    : 'rgba(36, 56, 33, 1)'
-              }
-              size='xl'>
-              {isFull
-                ? 'Fullt (8/8)'
-                : `${event.current_participants} anmälda, ${remainingSpots} ${remainingSpots === 1 ? 'plats' : 'platser'} kvar`}
-            </Badge>
-          </Group>
-          <Text
-            component={NavLink}
-            to={host ? `/profil/${host.alias}` : '/profil/'}
-            w='fit-content'>
-            med{' '}
-            <Text span className='host-name-text'>
-              {host?.name || 'Anders Blom'}
-            </Text>
-          </Text>
-        </Stack>
+      <Box
+        p='md'
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}
+        pos='relative'>
+        <EventDetailsHeroImage
+          image={
+            restaurantPhoto ||
+            'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop'
+          }
+        />
 
-        <Text mb='xl'>{event.description}</Text>
+        <Container
+          fluid
+          pos='relative'
+          w={{ base: '100%', sm: '90%', lg: '75%' }}
+          bg='white'
+          bdrs='xs'
+          bd='1px solid gray.4'
+          py='xl'
+          px={{ base: 'md', sm: 'lg', lg: 'xl' }}
+          mt={{ base: 'md', sm: '-60px', lg: '-90px' }}
+          style={{ zIndex: 2 }}>
+          <Stack gap='xl'>
+            <EventDetailsHeader
+              title={event.title}
+              currentParticipants={event.current_participants}
+              maxParticipants={event.max_participants}
+              host={host}
+              restaurantName={event.restaurant_name}
+              restaurantId={event.restaurant_id}
+              restaurantCity={event.restaurant_city}
+            />
 
-        {tags.length > 0 && (
-          <Group gap='xs' mb='xl' wrap='wrap'>
-            {tags.map((tag) => (
-              <NavLink
-                key={tag.id}
-                to={`/tagg/${slugify(tag.name)}`}
-                style={{ textDecoration: 'none' }}>
-                <Pill style={{ cursor: 'pointer' }}>{tag.name}</Pill>
-              </NavLink>
-            ))}
-          </Group>
-        )}
+            <SimpleGrid cols={{ base: 1, md: 2 }} spacing='xl'>
+              <EventDescription
+                description={event.description}
+                category={category}
+                tags={tags}
+              />
 
-        <Grid gutter='xl'>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack>
-              <Text fw={600}>Information</Text>
-              <Group gap='md' mb='xl' grow>
-                <Box px='xs' py='xs' className='event-info'>
-                  <Stack align='center' gap='0' pt='xs' pb='xs'>
-                    <Text size='md'>Datum</Text>
-                    <Text size='md' fw={600}>
-                      {eventDate.toLocaleDateString('sv-SE', {
-                        weekday: 'short',
-                        day: 'numeric',
-                        month: 'short',
-                      })}
-                    </Text>
-                  </Stack>
-                </Box>
+              <EventInfoCards
+                eventDate={eventDate}
+                startTime={event.start_time}
+                endTime={event.end_time}
+                price={event.price}
+              />
+            </SimpleGrid>
 
-                <Box px='xs' py='xs' className='event-info'>
-                  <Stack align='center' gap='0' pt='xs' pb='xs'>
-                    <Text size='md'>Tid</Text>
-                    <Text size='md' fw={600}>
-                      {event.start_time.slice(0, 5)}-
-                      {event.end_time.slice(0, 5)}
-                    </Text>
-                  </Stack>
-                </Box>
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='xl' mt='xl'>
+              <Map
+                restaurant_address={event.restaurant_address}
+                restaurant_city={event.restaurant_city}
+              />
 
-                <Box px='xs' py='xs' className='event-info'>
-                  <Stack align='center' gap='0' pt='xs' pb='xs'>
-                    <Text size='md'>Pris</Text>
-                    <Text size='md' fw={600}>
-                      {Math.floor(event.price)} kr
-                    </Text>
-                  </Stack>
-                </Box>
-              </Group>
-            </Stack>
+              <EventParticipantsAndHost
+                participants={participants}
+                host={host}
+                maxParticipants={event.max_participants}
+                currentParticipants={event.current_participants}
+              />
+            </SimpleGrid>
 
             <Stack gap='xs'>
               <Text fw={600}>Om värden {hostFirstName}</Text>
@@ -488,40 +510,32 @@ export default function EventDetails(): React.ReactNode {
         )}
       </Box>
 
-      <RegisteringModal
-        opened={modalOpened}
-        onClose={closeModal}
-        onOpenPayment={openPaymentModal}
-        onOpenWaitlist={openWaitlistModal}
+      <EventModals
         event={event}
+        register={{ opened: registerOpened, ...registerHandlers }}
+        payment={{ opened: paymentOpened, ...paymentHandlers }}
+        confirmation={{ opened: confirmationOpened, ...confirmationHandlers }}
+        waitlist={{ opened: waitlistOpened, ...waitlistHandlers }}
+        share={{ opened: shareOpened, ...shareHandlers }}
       />
-      <PaymentModal
-        opened={paymentModalOpened}
-        onClose={closePaymentModal}
-        onOpenConfirmation={openConfirmationModal}
-        onOpenRegistration={openModal}
-        event={event}
-      />
-      <ConfirmationModal
-        opened={confirmationModalOpened}
-        onClose={closeConfirmationModal}
-        onOpenPayment={openPaymentModal}
-        event={event}
-      />
-      <ShareModal
-        opened={shareModalOpened}
-        onClose={closeShareModal}
-        eventUrl={
-          event
-            ? `https://dinnerwise.se/event/${slugify(event.title)}`
-            : undefined
-        }
-      />
-      <WaitlistConfirmationModal
-        opened={waitlistModalOpened}
-        onClose={closeWaitlistModal}
-        onOpenWaitlist={openModal}
-        event={event}
+
+      <ReportModal
+        opened={reportEventOpen}
+        onClose={closeReportEvent}
+        title='Rapportera event'
+        reasons={[
+          'Vilseledande beskrivning',
+          'Otrevligt eller olämpligt event',
+          'Spam eller bedrägeri',
+          'Felaktig plats eller tid',
+          'Olämpligt innehåll',
+          'Tekniska fel',
+          'Annat (ange i beskrivning)',
+        ]}
+        reason={reportEventReason}
+        onReasonChange={setReportEventReason}
+        description={reportEventDescription}
+        onDescriptionChange={setReportEventDescription}
       />
     </>
   );

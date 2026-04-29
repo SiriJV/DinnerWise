@@ -1,9 +1,5 @@
-import { Stack } from '@mantine/core';
-import BaseButton from '../BaseButton/BaseButton';
+import { Button, Stack } from '@mantine/core';
 import { useAuth } from '../../../contexts/AuthContext';
-import { useState } from 'react';
-import LoginModal from '../../Modals/LoginModal/LoginModal';
-import CreateAccountModal from '../../Modals/CreateAccountModal/CreateAccountModal';
 import { useModal } from '../../../contexts/ModalContext';
 
 type LoginButtonsProps = {
@@ -12,20 +8,20 @@ type LoginButtonsProps = {
 
 export default function LoginButtons({ onClose }: LoginButtonsProps) {
   const { isLoggedIn, logout } = useAuth();
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const { openLogin, openCreate } = useModal();
 
   if (isLoggedIn) {
     return (
-      <Stack gap='xs' align='stretch' p='md'>
-        <BaseButton
-          variantType='primary'
+      <Stack gap='xs' align='stretch'>
+        <Button
+          variant='outline'
           fullWidth
-          onClick={logout}
-          onClose={onClose}>
+          onClick={() => {
+            logout();
+            onClose();
+          }}>
           Logga ut
-        </BaseButton>
+        </Button>
       </Stack>
     );
   }
@@ -34,31 +30,27 @@ export default function LoginButtons({ onClose }: LoginButtonsProps) {
     <>
       <Stack gap='xs' align='stretch'>
         <Stack gap='xs'>
-          <BaseButton
-            variantType='primary'
+          <Button
+            variant='filled'
             fullWidth
-            onClick={openLogin}
-            onClose={onClose}>
+            onClick={() => {
+              openLogin();
+              onClose();
+            }}>
             Logga in
-          </BaseButton>
+          </Button>
 
-          <BaseButton
-            variantType='secondary'
+          <Button
+            variant='outline'
             fullWidth
-            onClick={openCreate}
-            onClose={onClose}>
+            onClick={() => {
+              openCreate();
+              onClose();
+            }}>
             Skapa konto
-          </BaseButton>
+          </Button>
         </Stack>
       </Stack>
-      <LoginModal
-        opened={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
-      />
-      <CreateAccountModal
-        opened={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-      />
     </>
   );
 }

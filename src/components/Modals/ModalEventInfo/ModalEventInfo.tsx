@@ -1,22 +1,21 @@
 import { Alert, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
-import './ModalEventInfo.scss';
-
-type User = {
-  id: number;
-  name: string;
-  alias: string;
-};
+import { getDeterministicHost } from '../../../utils/deterministicUsers';
+import type { User } from '../../../api/users';
 
 interface ModalEventInfoProps {
   event: EventType;
   showPrice?: boolean;
+  showTitle?: boolean;
+  showDescription?: boolean;
 }
 
 export default function ModalEventInfo({
   event,
   showPrice = true,
+  showTitle = true,
+  showDescription = false,
 }: ModalEventInfoProps) {
   const [host, setHost] = useState<User | null>(null);
 
@@ -25,10 +24,8 @@ export default function ModalEventInfo({
       try {
         const res = await fetch('http://localhost:3001/users');
         const data: User[] = await res.json();
-
-        // Deterministic host based on event ID (same as EventCard/EventDetails)
-        const hostIndex = event.id % data.length;
-        setHost(data[hostIndex]);
+        const hostUser = getDeterministicHost(event.id, data);
+        setHost(hostUser);
       } catch (err) {
         console.error('Failed to load host:', err);
       }
@@ -47,13 +44,17 @@ export default function ModalEventInfo({
     <Alert
       color='red'
       title={
-        <Text size='lg' fw={600} pb='xs'>
-          {event.title}
-        </Text>
+        showTitle ? (
+          <Text size='lg' fw={600} pb='xs'>
+            {event.title}
+          </Text>
+        ) : (
+          ''
+        )
       }>
       <Text>
         <Text span fw={600}>
-          Datum:
+          Datum:{' '}
         </Text>
         {formattedDate}
       </Text>
@@ -83,6 +84,14 @@ export default function ModalEventInfo({
             Kostnad:{' '}
           </Text>
           {Math.floor(event.price)} kr
+        </Text>
+      )}{' '}
+      {showDescription && (
+        <Text pt='lg'>
+          <Text span fw={600}>
+            Beskrivning:{' '}
+          </Text>
+          {event.description}{' '}
         </Text>
       )}{' '}
     </Alert>
