@@ -51,3 +51,43 @@ export async function fetchEventById(id: number): Promise<Event | null> {
     return null;
   }
 }
+
+/**
+ * Report an event (authentication optional for temporary testing)
+ */
+export async function reportEvent(
+  eventId: number,
+  token?: string | null,
+  reason?: string
+): Promise<{ success: boolean; message: string; isDuplicate?: boolean }> {
+  try {
+    const url = `http://localhost:3001/events/${eventId}/report`;
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ reason: reason || null }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Kunde inte rapportera eventet');
+    }
+
+    console.log('[api] reportEvent success:', data);
+    return data;
+  } catch (err: any) {
+    console.error('[api] reportEvent error:', err.message);
+    throw err;
+  }
+}
