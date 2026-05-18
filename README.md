@@ -205,17 +205,30 @@ Run migrations to create tables:
 3. Run migrations on production database
 4. Test endpoints against production URLs
 
-## Backend Development
-
-### Code Structure
+## Project Structure
 
 ```
 src/
-	├── config/          # Configuration management
-	├── middleware/      # Express middleware
-	├── routes/          # API routes
-	├── services/        # Business logic
-	├── migrations/      # Database schema
+	├── api/            # API clients
+	├── assets/         # Static assets
+	├── components/     # UI components
+	├── config/         # Frontend config
+	├── contexts/       # React contexts
+	├── data/           # Static data
+	├── hooks/          # Custom hooks
+	├── routes/         # Route pages
+	├── types/          # Shared types
+	├── utils/          # Frontend utilities
+	├── App.tsx         # App root
+	└── main.tsx        # Entry point
+
+backend/src/
+	├── config/         # Configuration management
+	├── middleware/     # Express middleware
+	├── routes/         # API routes
+	├── services/       # Business logic
+	├── migrations/     # Database schema
+	├── scripts/        # Migrations and seeds
 	├── app.ts          # Express app setup
 	├── db.ts           # Database connection
 	└── server.ts       # Server entry point
