@@ -16,7 +16,6 @@ import {
   isUserHosting,
   isUserParticipating,
 } from '../../utils/deterministicUsers';
-import type { EventType } from '../../types/EventType';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 import { useIsMobile } from '../../hooks/useResponsive';
 

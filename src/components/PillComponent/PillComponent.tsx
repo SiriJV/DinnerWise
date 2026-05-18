@@ -1,4 +1,4 @@
-import { Button, Pill, Text } from '@mantine/core';
+import { Pill, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { slugify } from '../../utils/slugify';
 

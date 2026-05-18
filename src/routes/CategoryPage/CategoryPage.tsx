@@ -25,7 +25,7 @@ export default function CategoryPage() {
 
   const [sortBy, setSortBy] = useState<SortValue | null>(null);
   const [cityFilters, setCityFilters] = useState<number[]>([]);
-  const [tagFilters, setTagFilters] = useState<number[]>([]);
+  const [tagFilters] = useState<number[]>([]);
   const [priceFilters, setPriceFilters] = useState<number[]>([]);
 
   useEffect(() => {

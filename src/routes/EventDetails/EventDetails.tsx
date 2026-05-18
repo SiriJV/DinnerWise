@@ -1,24 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSession } from '@clerk/clerk-react';
-import { generateRestaurantSlug } from '../../utils/slugify';
+ 
 import {
   Text,
-  Image,
-  Grid,
   Stack,
   Box,
-  Group,
   Container,
   SimpleGrid,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  BookmarkIcon,
-  ChevronRight,
-  MapPin,
-} from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+ 
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
@@ -33,15 +24,14 @@ import EventParticipantsAndHost from './EventParticipantsAndHost';
 import EventActions from './EventActions';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 import type { EventType } from '../../types/EventType';
-import ParticipantAvatars from '../../components/ParticipantAvatars/ParticipantAvatars';
+ 
 
 export default function EventDetails(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
-  const { session } = useSession();
-  const [isNearFooter, setIsNearFooter] = useState(false);
+ 
   const [category, setCategory] = useState<{ id: number; name: string } | null>(
     null,
   );
@@ -154,30 +144,7 @@ export default function EventDetails(): React.ReactNode {
 
 
 
-  useEffect(() => {
-    let timeoutId: number;
-
-    const handleScroll = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        const footer = document.querySelector('footer');
-        if (footer) {
-          const footerRect = footer.getBoundingClientRect();
-          const windowHeight = window.innerHeight;
-          // Add buffer zone to make transition smoother
-          setIsNearFooter(footerRect.top < windowHeight + 80);
-        }
-      }, 16);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial state
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+ 
 
   if (loading) {
     return (

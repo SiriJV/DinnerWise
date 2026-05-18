@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Menu, Button, Group, SegmentedControl, Box } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
+import type { DateStringValue, DatesRangeValue } from '@mantine/dates';
 import { ChevronDown } from 'lucide-react';
 
 type DateMode = 'single' | 'multiple' | 'range';
@@ -9,13 +10,13 @@ export default function DateFilterDropdown() {
   const [opened, setOpened] = useState(false);
   const [mode, setMode] = useState<DateMode>('single');
 
-  const [draftSingle, setDraftSingle] = useState<Date | null>(null);
-  const [draftMultiple, setDraftMultiple] = useState<Date[]>([]);
-  const [draftRange, setDraftRange] = useState<[Date | null, Date | null]>([ null, null, ]);
+  const [draftSingle, setDraftSingle] = useState<DateStringValue | null>(null);
+  const [draftMultiple, setDraftMultiple] = useState<DateStringValue[]>([]);
+  const [draftRange, setDraftRange] = useState<DatesRangeValue<DateStringValue>>([null, null]);
 
-  const [appliedSingle, setAppliedSingle] = useState<Date | null>(null);
-  const [appliedMultiple, setAppliedMultiple] = useState<Date[]>([]);
-  const [appliedRange, setAppliedRange] = useState<[Date | null, Date | null]>([ null, null, ]);
+  const [appliedSingle, setAppliedSingle] = useState<DateStringValue | null>(null);
+  const [appliedMultiple, setAppliedMultiple] = useState<DateStringValue[]>([]);
+  const [appliedRange, setAppliedRange] = useState<DatesRangeValue<DateStringValue>>([null, null]);
 
   const appliedCount =
     mode === 'single'

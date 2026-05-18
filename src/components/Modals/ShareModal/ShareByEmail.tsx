@@ -21,7 +21,7 @@ export default function ShareByEmail({
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailTo, setEmailTo] = useState('');
   const [emailSent, setEmailSent] = useState(false);
-  const [event, setEvent] = useState(eventName);
+  const event = eventName;
   const [firstName, setFirstName] = useState('');
   const { isTouched, handleBlur } = useFormTouched();
   const { isValid: isEmailValid, error: emailError } = validateEmail(emailTo);

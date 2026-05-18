@@ -1,4 +1,4 @@
-import type { Appearance } from '@clerk/types';
+import type { Appearance } from '@clerk/shared/types';
 
 export const clerkAuthAppearance: Appearance = {
   layout: {
