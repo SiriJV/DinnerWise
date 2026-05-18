@@ -1,4 +1,8 @@
 import express from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'yaml';
+import swaggerUi from 'swagger-ui-express';
 import { clerkMiddleware } from '@clerk/express';
 import restaurantRoutes from './routes/restaurants.js';
 import eventsRouter from './routes/events.js';
@@ -45,6 +49,20 @@ console.log(`  Secret Key: ${hasSecretKey ? '✓' : '✗'}`);
 console.log(`  Publishable Key: ${hasPublishableKey ? '✓' : '✗'}`);
 
 app.use(express.json());
+
+const openApiPath = path.resolve(process.cwd(), 'openapi.yaml');
+const openApiDoc = yaml.parse(fs.readFileSync(openApiPath, 'utf8'));
+const openApiDocWithServer = {
+  ...openApiDoc,
+  servers: [{ url: env.api.publicUrl }],
+};
+
+app.get('/api/openapi.json', (_req, res) => {
+  res.json(openApiDocWithServer);
+});
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocWithServer));
+console.log('[APP] Swagger docs available at /api/docs');
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

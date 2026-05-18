@@ -18,6 +18,7 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 - Vite
 
 **Backend:**
+
 - Node.js
 - Express
 - TypeScript
@@ -155,27 +156,27 @@ The backend server will start at `http://localhost:3001` and log its configurati
 - Prod overrides: `NODE_ENV=production`, `FRONTEND_URL=https://your-domain.com`, `API_PUBLIC_URL=https://api.your-domain.com`
 - Optional integrations: `TRIPADVISOR_API_KEY`, `GOOGLE_GENERATIVE_AI_KEY`, `RESEND_API_KEY`
 
-## Backend API Endpoints
+## Backend API Endpoints (OpenAPI / Swagger)
 
-All endpoints are prefixed with `/api/v1/` in production configuration.
+Use the Swagger UI to explore every backend endpoint.
 
-### Health Check
+- Local docs: http://localhost:3001/api/docs
+- Raw spec (JSON): http://localhost:3001/api/openapi.json
+- Source file: [backend/openapi.yaml](backend/openapi.yaml)
 
-- `GET /health` - Server health check
+To view the docs locally:
 
-### Events
+1. Start the backend (`npm run dev` in `backend/`).
+2. Open http://localhost:3001/api/docs in your browser.
 
-- `GET /events` - Get all events
-- `GET /events/:id` - Get event by ID
-- `POST /events/:id/report` - Report an event
+How the docs are generated:
 
-### Restaurants
+- The backend loads [backend/openapi.yaml](backend/openapi.yaml) at startup.
+- It serves the spec at `/api/openapi.json`.
+- Swagger UI renders that spec at `/api/docs`.
 
-- `GET /restaurants` - Get all restaurants
-- `GET /restaurants/:id` - Get restaurant by ID
-- `GET /restaurants/:id/events` - Get events for a restaurant
-
-### And more... (see routes/ directory)
+Whenever you add or change a route, update
+[backend/openapi.yaml](backend/openapi.yaml) so the docs stay accurate.
 
 ## Database Schema
 

@@ -1,0 +1,1075 @@
+openapi: 3.0.3
+info:
+  title: DinnerWise API
+  version: 1.0.0
+  description: OpenAPI spec for the DinnerWise backend.
+tags:
+  - name: Health
+  - name: Events
+  - name: Restaurants
+  - name: Categories
+  - name: Tags
+  - name: Cities
+  - name: Users
+  - name: Search
+  - name: Account
+  - name: Account Reports
+  - name: Admin
+  - name: Email
+  - name: Gemini
+  - name: Tripadvisor
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+
+  /events:
+    get:
+      tags: [Events]
+      summary: Get all events
+      parameters:
+        - name: category_ids
+          in: query
+          schema: { type: array, items: { type: integer } }
+        - name: restaurant_id
+          in: query
+          schema: { type: integer }
+        - name: city_ids
+          in: query
+          schema: { type: array, items: { type: integer } }
+        - name: price_ids
+          in: query
+          schema: { type: array, items: { type: integer } }
+        - name: date
+          in: query
+          schema: { type: string }
+        - name: order
+          in: query
+          schema: { type: string, enum: [price, availability] }
+        - name: tag_ids
+          in: query
+          schema: { type: array, items: { type: integer } }
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+
+  /events/{id}:
+    get:
+      tags: [Events]
+      summary: Get event by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /events/{id}/tags:
+    get:
+      tags: [Events]
+      summary: Get tags for an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tag' }
+
+  /events/{id}/report:
+    post:
+      tags: [Events]
+      summary: Report an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: Report accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /restaurants:
+    get:
+      tags: [Restaurants]
+      summary: Get all restaurants
+      parameters:
+        - name: city
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of restaurants
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Restaurant' }
+
+  /restaurants/search:
+    get:
+      tags: [Restaurants]
+      summary: Search restaurants
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Restaurant' }
+
+  /restaurants/{id}:
+    get:
+      tags: [Restaurants]
+      summary: Get restaurant by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Restaurant
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Restaurant' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /restaurants/{id}/events:
+    get:
+      tags: [Restaurants]
+      summary: Get events for a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Event' }
+
+  /categories:
+    get:
+      tags: [Categories]
+      summary: Get all categories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Category' }
+
+  /categories/{id}:
+    get:
+      tags: [Categories]
+      summary: Get category by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Category
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Category' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /tags:
+    get:
+      tags: [Tags]
+      summary: Get all tags
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tag' }
+
+  /tags/search:
+    get:
+      tags: [Tags]
+      summary: Search tags
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tag' }
+
+  /tags/category/{categoryId}:
+    get:
+      tags: [Tags]
+      summary: Get tags by category
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tag' }
+
+  /cities:
+    get:
+      tags: [Cities]
+      summary: Get all cities
+      parameters:
+        - name: q
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of cities
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/City' }
+
+  /cities/search:
+    get:
+      tags: [Cities]
+      summary: Search cities
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/City' }
+
+  /users:
+    get:
+      tags: [Users]
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/User' }
+
+  /users/search:
+    get:
+      tags: [Users]
+      summary: Search users
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/User' }
+
+  /users/alias/{alias}:
+    get:
+      tags: [Users]
+      summary: Get user by alias
+      parameters:
+        - name: alias
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /users/{userId}/report:
+    post:
+      tags: [Users]
+      summary: Report a legacy user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: Report accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /search:
+    get:
+      tags: [Search]
+      summary: Global search
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string, enum: [all, events, cities, restaurants, users, tags, categories] }
+        - name: limit
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SearchResponse' }
+
+  /auth/account/me:
+    get:
+      tags: [Account]
+      summary: Get own account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Account
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AccountUser' }
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    delete:
+      tags: [Account]
+      summary: Delete own account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /account-users/resolve-target:
+    get:
+      tags: [Account Reports]
+      summary: Resolve report target
+      parameters:
+        - name: alias
+          in: query
+          schema: { type: string }
+        - name: legacyUserId
+          in: query
+          schema: { type: integer }
+        - name: name
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Resolved target
+          content:
+            application/json:
+              schema: { type: object }
+
+  /account-users/{userId}/report:
+    post:
+      tags: [Account Reports]
+      summary: Report an account user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: Report accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List account users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of account users
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/AccountUser' }
+
+  /admin/users/{userId}:
+    delete:
+      tags: [Admin]
+      summary: Delete an account user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /admin/events:
+    get:
+      tags: [Admin]
+      summary: List events
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Event' }
+
+  /admin/events/{eventId}:
+    get:
+      tags: [Admin]
+      summary: Get event details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Event
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Event' }
+    delete:
+      tags: [Admin]
+      summary: Delete event
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /admin/event-reports/{reportId}:
+    delete:
+      tags: [Admin]
+      summary: Dismiss event report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Dismissed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /admin/user-reports/{reportId}:
+    delete:
+      tags: [Admin]
+      summary: Dismiss user report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Dismissed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessMessage' }
+
+  /admin/reported-users:
+    get:
+      tags: [Admin]
+      summary: List reported users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { type: object }
+
+  /admin/reported-events:
+    get:
+      tags: [Admin]
+      summary: List reported events
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { type: object }
+
+  /admin/invitations:
+    post:
+      tags: [Admin]
+      summary: Send admin invitation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emailAddress]
+              properties:
+                emailAddress: { type: string }
+      responses:
+        '200':
+          description: Invitation created
+          content:
+            application/json:
+              schema: { type: object }
+
+  /email/send-welcome-email:
+    post:
+      tags: [Email]
+      summary: Send welcome email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmailTo' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-host-email:
+    post:
+      tags: [Email]
+      summary: Send host booking email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/HostBookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-restaurant-booking-email:
+    post:
+      tags: [Email]
+      summary: Send restaurant booking email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RestaurantBookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-confirmation-email-to-host:
+    post:
+      tags: [Email]
+      summary: Send confirmation email to host
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConfirmationEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-booking-email:
+    post:
+      tags: [Email]
+      summary: Send booking email to participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-booking-email-to-host:
+    post:
+      tags: [Email]
+      summary: Send booking email to host (participant joined)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/HostBookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-waitlist-email:
+    post:
+      tags: [Email]
+      summary: Send waitlist email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-waitlist-email-to-host:
+    post:
+      tags: [Email]
+      summary: Send waitlist email to host
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/HostBookingEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-feedback-email:
+    post:
+      tags: [Email]
+      summary: Send feedback email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FeedbackEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-share-email:
+    post:
+      tags: [Email]
+      summary: Send share email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ShareEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /email/send-newsletter-confirmation-email:
+    post:
+      tags: [Email]
+      summary: Send newsletter confirmation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewsletterEmail' }
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailResponse' }
+
+  /gemini/generate-event-content:
+    post:
+      tags: [Gemini]
+      summary: Generate event content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/GeminiRequest' }
+      responses:
+        '200':
+          description: Generated content
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GeminiResponse' }
+
+  /api/restaurants:
+    get:
+      tags: [Tripadvisor]
+      summary: Get TripAdvisor restaurants (raw)
+      responses:
+        '200':
+          description: List of restaurants
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Restaurant' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Health:
+      type: object
+      properties:
+        status: { type: string }
+        timestamp: { type: string }
+    SuccessMessage:
+      type: object
+      properties:
+        success: { type: boolean }
+        message: { type: string }
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+        message: { type: string }
+    Event:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        description: { type: string }
+        category_id: { type: integer }
+        restaurant_id: { type: integer }
+        current_participants: { type: integer }
+        max_participants: { type: integer }
+        price: { type: number }
+        date: { type: string }
+        start_time: { type: string }
+        end_time: { type: string }
+    Restaurant:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        city: { type: string }
+    Category:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+    Tag:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        category_id: { type: integer }
+    City:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        latitude: { type: number }
+        longitude: { type: number }
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        alias: { type: string }
+        bio: { type: string }
+        profile_picture_url: { type: string }
+        banner_picture_url: { type: string }
+    AccountUser:
+      type: object
+      properties:
+        id: { type: integer }
+        clerk_user_id: { type: string }
+        email: { type: string }
+        first_name: { type: string }
+        last_name: { type: string }
+        role: { type: string }
+    SearchResponse:
+      type: object
+      properties:
+        type: { type: string }
+        results:
+          type: object
+    EmailTo:
+      type: object
+      required: [to]
+      properties:
+        to: { type: string }
+    HostBookingEmail:
+      type: object
+      required: [restaurant, date, event, participants, eventId, name, to]
+      properties:
+        restaurant: { type: string }
+        date: { type: string }
+        event: { type: string }
+        participants: { type: string }
+        eventId: { type: string }
+        name: { type: string }
+        to: { type: string }
+        path: { type: string }
+        startTime: { type: string }
+    RestaurantBookingEmail:
+      type: object
+      required: [restaurant, date, event, participants, eventId, name, slug, to]
+      properties:
+        restaurant: { type: string }
+        date: { type: string }
+        event: { type: string }
+        participants: { type: string }
+        eventId: { type: string }
+        name: { type: string }
+        slug: { type: string }
+        to: { type: string }
+    ConfirmationEmail:
+      type: object
+      required: [restaurant, date, event, participants, eventId, name, path, to]
+      properties:
+        restaurant: { type: string }
+        date: { type: string }
+        event: { type: string }
+        participants: { type: string }
+        eventId: { type: string }
+        name: { type: string }
+        path: { type: string }
+        to: { type: string }
+    BookingEmail:
+      type: object
+      required: [restaurant, date, startTime, event, path, to]
+      properties:
+        restaurant: { type: string }
+        date: { type: string }
+        startTime: { type: string }
+        event: { type: string }
+        path: { type: string }
+        to: { type: string }
+    FeedbackEmail:
+      type: object
+      required: [event, path, name, to]
+      properties:
+        event: { type: string }
+        path: { type: string }
+        name: { type: string }
+        to: { type: string }
+    ShareEmail:
+      type: object
+      required: [to, event, path, emailMessage]
+      properties:
+        to: { type: string }
+        event: { type: string }
+        path: { type: string }
+        emailMessage: { type: string }
+    NewsletterEmail:
+      type: object
+      required: [to, name]
+      properties:
+        to: { type: string }
+        name: { type: string }
+    EmailResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data: { type: object }
+    GeminiRequest:
+      type: object
+      required: [prompt]
+      properties:
+        prompt: { type: string }
+        type: { type: string, enum: [event_description, event_title, general] }
+    GeminiResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        content: { type: string }
+        error: { type: string }
+        errorType: { type: string }
+        message: { type: string }
