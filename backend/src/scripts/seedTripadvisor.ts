@@ -2,10 +2,14 @@ import dotenv from 'dotenv';
 import { db } from '../db.js';
 dotenv.config();
 
-const API_KEY = process.env.TRIPADVISOR_API_KEY;
-if (!API_KEY) throw new Error('Missing TRIPADVISOR_API_KEY');
-
 const LETTERS = ['a', 'e', 'r', 's', 't'];
+const CITY_NAMES = ['Stockholm', 'Göteborg', 'Malmö'];
+const DELAY_MS = 1000;
+
+const API_KEY = process.env.TRIPADVISOR_API_KEY;
+if (!API_KEY) {
+  throw new Error('Missing TRIPADVISOR_API_KEY');
+}
 
 interface TripAdvisorAddress {
   street1?: string;
@@ -34,9 +38,9 @@ interface TripAdvisorSearchResponse {
   };
 }
 
-async function createTable() {
-  console.log('Creating tripadvisor_restaurants table...');
-  await db.query(`DROP TABLE IF EXISTS tripadvisor_restaurants`);
+async function createTripadvisorTable() {
+  console.log('Recreating tripadvisor_restaurants table...');
+  await db.query('DROP TABLE IF EXISTS tripadvisor_restaurants');
   await db.query(`
     CREATE TABLE IF NOT EXISTS tripadvisor_restaurants (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,19 +59,23 @@ async function createTable() {
 }
 
 export async function seedTripadvisorBasic() {
-  await createTable();
-
   let totalInserted = 0;
 
   let dbCities: any[] = [];
   try {
     const [rows]: any = await db.query(`SELECT id, name, latitude, longitude FROM new_cities`);
     dbCities = rows;
+
+    const cityLookup = new Set(CITY_NAMES.map((name) => name.toLowerCase()));
+    dbCities = dbCities.filter((city) => cityLookup.has(city.name.toLowerCase()));
+
     console.log(`✅ Loaded ${dbCities.length} cities from new_cities table`);
   } catch (err) {
     console.error('❌ Failed to load cities from database:', err);
     throw new Error('Cannot fetch cities from new_cities table. Make sure seedNewCities() was run first.');
   }
+
+  await createTripadvisorTable();
 
   for (const city of dbCities) {
     console.log(`\n🌆 Fetching restaurants for city: ${city.name}`);
@@ -89,13 +97,12 @@ export async function seedTripadvisorBasic() {
         const data = (await response.json()) as TripAdvisorSearchResponse;
 
         for (const r of data.data || []) {
-          const resCity = r.address_obj?.city;
-          if (resCity && resCity.toLowerCase() === city.name.toLowerCase()) {
-            uniqueRestaurants.set(String(r.location_id), r);
-          }
+          uniqueRestaurants.set(String(r.location_id), r);
         }
 
-        await new Promise(res => setTimeout(res, 1000));
+        if (DELAY_MS > 0) {
+          await new Promise((res) => setTimeout(res, DELAY_MS));
+        }
       } catch (err) {
         console.error(`    ❌ Error fetching letter ${letter}:`, err);
       }
@@ -117,7 +124,7 @@ export async function seedTripadvisorBasic() {
         `, [
           restaurant.location_id,
           restaurant.name,
-          restaurant.address_obj?.city || null,
+          city.name,
           restaurant.address_obj?.address_string || null,
           restaurant.address_obj?.postalcode || null
         ]);

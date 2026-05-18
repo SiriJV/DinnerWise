@@ -1,6 +1,7 @@
 import { seedCategories } from './seedCategories.js';
 import { seedTags } from './seedTags.js';
 import { seedTripadvisorBasic } from './seedTripadvisor.js';
+import { seedTripadvisorDetails } from './seedTripadvisorDetails.js';
 import { seedEvents } from './seedEvents.js';
 import { seedUsers } from './seedUsers.js';
 import { seedNewCities } from './seedNewCities.js';
@@ -8,6 +9,8 @@ import { db } from '../db.js';
 
 async function dropTables() {
   await db.query(`DROP TABLE IF EXISTS users;`);
+  await db.query('DROP TABLE IF EXISTS event_reports');
+  await db.query('DROP TABLE IF EXISTS user_reports');
   await db.query('DROP TABLE IF EXISTS user_followed_tags');
   await db.query('DROP TABLE IF EXISTS user_events_saved');
   await db.query('DROP TABLE IF EXISTS user_events_participating');
@@ -39,11 +42,21 @@ async function seedAll() {
     console.log('Seeding new_cities...');
     await seedNewCities();
 
-    console.log('Seeding tripadvisor restaurants...');
+    console.log('Seeding tripadvisor restaurants (3 cities)...');
     await seedTripadvisorBasic();
+    console.log('Seeding tripadvisor details (images, limited)...');
+    await seedTripadvisorDetails();
 
-    console.log('Seeding events...');
-    await seedEvents();
+    const [countRows]: any = await db.query(
+      'SELECT COUNT(*) as count FROM tripadvisor_restaurants'
+    );
+    const restaurantCount = countRows?.[0]?.count ?? 0;
+    if (restaurantCount > 0) {
+      console.log('Seeding events (templates)...');
+      await seedEvents();
+    } else {
+      console.log('Skipping events seed (no restaurants available).');
+    }
 
     console.log('Seeding complete!');
   } catch (err) {

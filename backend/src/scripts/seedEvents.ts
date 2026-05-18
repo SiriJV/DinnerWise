@@ -7,7 +7,7 @@ export async function seedEvents() {
   // await db.query('DROP TABLE IF EXISTS events');
 
   await db.query(`
-    CREATE TABLE events (
+    CREATE TABLE IF NOT EXISTS events (
       id INT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
       description TEXT,
@@ -24,8 +24,24 @@ export async function seedEvents() {
     );
   `);
 
-  await db.query(`    INSERT INTO events 
-      (title, description, category_id, restaurant_id, current_participants, price, date, start_time, end_time)
+  await db.query('DROP TABLE IF EXISTS event_templates');
+  await db.query(`
+    CREATE TABLE event_templates (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      category_id INT NOT NULL,
+      restaurant_slot INT NOT NULL,
+      current_participants INT NOT NULL DEFAULT 0,
+      price DECIMAL(10,2) NOT NULL DEFAULT 0,
+      date DATE NOT NULL,
+      start_time TIME NOT NULL,
+      end_time TIME NOT NULL
+    );
+  `);
+
+  await db.query(`    INSERT INTO event_templates 
+      (title, description, category_id, restaurant_slot, current_participants, price, date, start_time, end_time)
     VALUES
       ('Kreativt skrivande workshop', 'Lär dig skriva kreativt med övningar.', 1, 22, 3, 200, '2026-03-01', '17:00:00', '19:00:00'),
       ('Poesikväll', 'Diskutera poesi och skriv egna dikter.', 1, 1, 4, 100, '2026-03-05', '18:00:00', '20:00:00'),
@@ -171,6 +187,58 @@ export async function seedEvents() {
       
   `);
 
+  const [restaurants]: any = await db.query(
+    `SELECT id FROM tripadvisor_restaurants
+     WHERE city IN ('Stockholm', 'Göteborg', 'Malmö')
+     ORDER BY city ASC, id ASC`
+  );
+
+  if (!restaurants?.length) {
+    console.log('Skipping events (no restaurants in selected cities).');
+    await db.query('DROP TABLE IF EXISTS event_templates');
+    return;
+  }
+
+  const [templates]: any = await db.query(
+    `SELECT title, description, category_id, current_participants, price, date, start_time, end_time
+     FROM event_templates
+     ORDER BY id ASC`
+  );
+
+  if (!templates?.length) {
+    console.log('Skipping events (no templates found).');
+    await db.query('DROP TABLE IF EXISTS event_templates');
+    return;
+  }
+
+  const values: any[] = [];
+  const placeholders = templates.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+  for (let i = 0; i < templates.length; i += 1) {
+    const template = templates[i];
+    const restaurantId = restaurants[i % restaurants.length].id;
+    values.push(
+      template.title,
+      template.description,
+      template.category_id,
+      restaurantId,
+      template.current_participants,
+      template.price,
+      template.date,
+      template.start_time,
+      template.end_time
+    );
+  }
+
+  await db.query(
+    `INSERT INTO events
+      (title, description, category_id, restaurant_id, current_participants, price, date, start_time, end_time)
+     VALUES ${placeholders}`,
+    values
+  );
+
+  await db.query('DROP TABLE IF EXISTS event_templates');
+
+  await db.query('DROP TABLE IF EXISTS event_tags');
   await db.query(`
     CREATE TABLE event_tags (
       event_id INT NOT NULL,

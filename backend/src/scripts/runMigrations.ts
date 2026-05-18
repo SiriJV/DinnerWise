@@ -10,10 +10,15 @@ const __dirname = path.dirname(__filename);
 
 async function runMigrations() {
   try {
-    const migrationFile = path.join(__dirname, '..', 'migrations', '001_create_account_users_table.sql');
+    const migrationFileName = '001_create_account_users_table.sql';
+    const distMigrationFile = path.join(__dirname, '..', 'migrations', migrationFileName);
+    const srcMigrationFile = path.join(process.cwd(), 'src', 'migrations', migrationFileName);
+    const migrationFile = fs.existsSync(distMigrationFile)
+      ? distMigrationFile
+      : srcMigrationFile;
     const sql = fs.readFileSync(migrationFile, 'utf-8');
     
-    console.log('Running migration: 001_create_account_users_table.sql');
+    console.log(`Running migration: ${migrationFileName}`);
     
     const statements = sql.split(';').filter(stmt => stmt.trim());
     

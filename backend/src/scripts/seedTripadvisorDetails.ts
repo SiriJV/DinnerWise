@@ -2,15 +2,21 @@ import dotenv from 'dotenv';
 import { db } from '../db.js';
 dotenv.config();
 
+const DELAY_MS = 1500;
+
 const API_KEY = process.env.TRIPADVISOR_API_KEY;
 if (!API_KEY) throw new Error('Missing TRIPADVISOR_API_KEY');
 
 export async function seedTripadvisorDetails() {
   console.log('Fetching all restaurants for detail update...');
-  const [restaurants]: any = await db.query(`SELECT location_id, name FROM tripadvisor_restaurants`);
+  const [restaurants]: any = await db.query(
+    `SELECT location_id, name FROM tripadvisor_restaurants`
+  );
+  const targetRestaurants = restaurants as any[];
+
   let totalUpdated = 0;
 
-  for (const r of restaurants) {
+  for (const r of targetRestaurants) {
     try {
       console.log(`\n📌 Fetching details for: ${r.name} (ID: ${r.location_id})`);
 
@@ -62,7 +68,7 @@ export async function seedTripadvisorDetails() {
       console.log(`  ✅ Updated details for ${r.name}`);
       totalUpdated++;
 
-      await new Promise(res => setTimeout(res, 1500));
+      await new Promise((res) => setTimeout(res, DELAY_MS));
 
     } catch (err) {
       console.error(`  ❌ Failed for location_id ${r.location_id}:`, err);
