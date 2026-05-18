@@ -18,13 +18,13 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 - Vite
 
 **Backend:**
-
 - Node.js
 - Express
 - TypeScript
 - MySQL
-- Tripadvisor API
+- Clerk
 - Resend
+- Tripadvisor API
 - Gemini API
 
 ## Deployment
