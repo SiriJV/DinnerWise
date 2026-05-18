@@ -9,6 +9,7 @@ import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import PillComponent from '../../components/PillComponent/PillComponent';
+import { getApiEndpoint } from '../../api/config';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -33,7 +34,7 @@ export default function CategoryPage() {
 
     async function loadCategory() {
       try {
-        const res = await fetch(`http://localhost:3001/categories`);
+        const res = await fetch(getApiEndpoint('/categories'));
         if (!res.ok) throw new Error('Failed to fetch categories');
         const data = await res.json();
         
@@ -63,7 +64,7 @@ export default function CategoryPage() {
     async function loadTags() {
       try {
         const res = await fetch(
-          `http://localhost:3001/tags/category/${currentCategory.id}`,
+          getApiEndpoint(`/tags/category/${currentCategory.id}`),
         );
         if (!res.ok) throw new Error('Kunde inte hämta taggar');
         const data = await res.json();
@@ -94,7 +95,7 @@ export default function CategoryPage() {
       try {
         setLoading(true);
 
-        const url = new URL('http://localhost:3001/events');
+        const url = new URL(getApiEndpoint('/events'));
 
         url.searchParams.append('category_ids', currentCategory.id.toString());
 
@@ -154,7 +155,7 @@ export default function CategoryPage() {
           <Group>
             <SearchableFilterDropdown
               label='Stad'
-              fetchUrl='http://localhost:3001/cities'
+              fetchUrl={getApiEndpoint('/cities')}
               onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
             />
 

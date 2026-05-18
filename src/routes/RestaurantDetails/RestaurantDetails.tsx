@@ -9,6 +9,7 @@ import Map from '../../components/Map/Map';
 import EventDetailsHeroImage from '../EventDetails/EventDetailsHeroImage';
 import { Box, Container, Stack } from '@mantine/core';
 import RestaurantPhotos from './RestaurantPhotos';
+import { getApiEndpoint } from '../../api/config';
 
 type Restaurant = {
   id: number;
@@ -66,7 +67,7 @@ export default function RestaurangDetails(): React.ReactNode {
         }
         if (typeof restaurantId === 'number' && !isNaN(restaurantId)) {
           const res = await fetch(
-            `http://localhost:3001/restaurants/${restaurantId}`,
+            getApiEndpoint(`/restaurants/${restaurantId}`),
           );
           if (!res.ok) throw new Error('Kunde inte hämta restaurang');
           restaurantData = await res.json();
@@ -75,7 +76,7 @@ export default function RestaurangDetails(): React.ReactNode {
         }
 
         setRestaurant(restaurantData);
-        const eventsRes = await fetch(`http://localhost:3001/events`);
+        const eventsRes = await fetch(getApiEndpoint('/events'));
         if (!eventsRes.ok) throw new Error('Kunde inte hämta events');
         const allEvents = await eventsRes.json();
 

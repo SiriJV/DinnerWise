@@ -8,6 +8,7 @@ import {
   isUserHosting,
   isUserParticipating,
 } from '../../utils/deterministicUsers';
+import { getApiEndpoint } from '../../api/config';
 
 type ProfilePageEventsProps = {
   userId: number;
@@ -40,8 +41,8 @@ export default function ProfilePageEvents({ userId }: ProfilePageEventsProps) {
     async function loadData() {
       try {
         const [eventsRes, usersRes] = await Promise.all([
-          fetch('http://localhost:3001/events'),
-          fetch('http://localhost:3001/users'),
+          fetch(getApiEndpoint('/events')),
+          fetch(getApiEndpoint('/users')),
         ]);
         const events: EventType[] = await eventsRes.json();
         const users: any[] = await usersRes.json();

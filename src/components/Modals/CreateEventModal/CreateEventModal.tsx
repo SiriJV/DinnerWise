@@ -14,6 +14,7 @@ import EventBasicsStep from './EventBasicsStep';
 import RestaurantSelectionStep from './RestaurantSelectionStep';
 import TimeSlotSelectionStep from './TimeSlotSelectionStep';
 import ConfirmationStep from './ConfirmationStep';
+import { getApiEndpoint } from '../../../api/config';
 
 interface EventDetails {
   title: string;
@@ -215,7 +216,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
       return;
     }
 
-    await fetch('http://localhost:3001/email/send-host-email', {
+    await fetch(getApiEndpoint('/email/send-host-email'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -229,7 +230,7 @@ const CreateEventModal = ({ opened, onClose }: CreateEventModalProps) => {
       }),
     });
 
-    await fetch('http://localhost:3001/email/send-restaurant-booking-email', {
+    await fetch(getApiEndpoint('/email/send-restaurant-booking-email'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

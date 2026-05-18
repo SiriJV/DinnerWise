@@ -10,6 +10,7 @@ import {
 import { AlertCircle, Search } from 'lucide-react';
 import SearchableFilterDropdown from '../../Filters/SearchFilterDropdown/SearchFilterDropdown';
 import type { Restaurant } from '../../../api/restaurants';
+import { getApiEndpoint } from '../../../api/config';
 
 interface RestaurantSelectionStepProps {
   selectedRestaurant: Restaurant | null;
@@ -68,7 +69,7 @@ export default function RestaurantSelectionStep({
 
       <Stack gap='xs'>
         <SearchableFilterDropdown
-          fetchUrl='http://localhost:3001/cities'
+          fetchUrl={getApiEndpoint('/cities')}
           label='Stad'
           onApply={(selected: Array<{ id: number; name: string }>) => {
             const selectedIds = selected.map(

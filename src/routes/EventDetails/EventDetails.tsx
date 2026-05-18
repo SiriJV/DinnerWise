@@ -24,6 +24,7 @@ import EventParticipantsAndHost from './EventParticipantsAndHost';
 import EventActions from './EventActions';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 import type { EventType } from '../../types/EventType';
+import { getApiEndpoint } from '../../api/config';
  
 
 export default function EventDetails(): React.ReactNode {
@@ -82,7 +83,7 @@ export default function EventDetails(): React.ReactNode {
           throw new Error('Event ID saknas');
         }
 
-        const res = await fetch(`http://localhost:3001/events/${eventId}`);
+        const res = await fetch(getApiEndpoint(`/events/${eventId}`));
         if (!res.ok) throw new Error('Kunde inte hämta event');
         const eventData = await res.json();
 
@@ -94,7 +95,7 @@ export default function EventDetails(): React.ReactNode {
         } else if (eventData.restaurant_id) {
           try {
             const restaurantRes = await fetch(
-              `http://localhost:3001/restaurants/${eventData.restaurant_id}`,
+              getApiEndpoint(`/restaurants/${eventData.restaurant_id}`),
             );
             if (restaurantRes.ok) {
               const restaurantData = await restaurantRes.json();
@@ -110,9 +111,7 @@ export default function EventDetails(): React.ReactNode {
           } catch (err) {}
         }
 
-        const tagsRes = await fetch(
-          `http://localhost:3001/events/${eventId}/tags`,
-        );
+        const tagsRes = await fetch(getApiEndpoint(`/events/${eventId}/tags`));
         if (tagsRes.ok) {
           const tagsData = await tagsRes.json();
           setTags(tagsData);
@@ -120,7 +119,7 @@ export default function EventDetails(): React.ReactNode {
 
         // Fetch category by category_id
         if (eventData.category_id) {
-          const categoriesRes = await fetch(`http://localhost:3001/categories`);
+          const categoriesRes = await fetch(getApiEndpoint('/categories'));
           if (categoriesRes.ok) {
             const categoriesData = await categoriesRes.json();
             const foundCategory = categoriesData.find(

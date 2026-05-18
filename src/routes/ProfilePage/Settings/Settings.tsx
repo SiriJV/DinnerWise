@@ -19,6 +19,7 @@ import BlockedSection from './sections/BlockedSection';
 import DeleteSection from './sections/DeleteSection';
 import NotificationsSettings from './sections/NotificationsSection';
 import MenuItems from './MenuItems';
+import { getApiEndpoint } from '../../../api/config';
 
 export default function Settings() {
   const { alias } = useParams<{ alias: string }>();
@@ -126,7 +127,7 @@ export default function Settings() {
     async function loadCategoriesAndTags() {
       try {
         const [catRes, tagsData] = await Promise.all([
-          fetch('http://localhost:3001/categories'),
+          fetch(getApiEndpoint('/categories')),
           fetchTags(),
         ]);
         if (!catRes.ok) throw new Error(`Categories HTTP ${catRes.status}`);

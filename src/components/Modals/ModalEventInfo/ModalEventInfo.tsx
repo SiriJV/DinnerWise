@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { EventType } from '../../../types/EventType';
 import { getDeterministicHost } from '../../../utils/deterministicUsers';
 import type { User } from '../../../api/users';
+import { getApiEndpoint } from '../../../api/config';
 
 interface ModalEventInfoProps {
   event: EventType;
@@ -22,7 +23,7 @@ export default function ModalEventInfo({
   useEffect(() => {
     async function loadHost() {
       try {
-        const res = await fetch('http://localhost:3001/users');
+        const res = await fetch(getApiEndpoint('/users'));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         

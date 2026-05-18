@@ -18,6 +18,7 @@ import {
 } from '../../utils/deterministicUsers';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 import { useIsMobile } from '../../hooks/useResponsive';
+import { getApiEndpoint } from '../../api/config';
 
 export default function ProfilePage() {
   const { alias } = useParams<{ alias: string }>();
@@ -90,7 +91,7 @@ export default function ProfilePage() {
 
         // Calculate events count - hosting + participating
         try {
-          const eventsRes = await fetch('http://localhost:3001/events');
+          const eventsRes = await fetch(getApiEndpoint('/events'));
           if (!eventsRes.ok) throw new Error(`HTTP ${eventsRes.status}`);
           const allEvents = await eventsRes.json();
           

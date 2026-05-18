@@ -16,6 +16,7 @@ import {
 import type { EventType } from '../../types/EventType';
 import ModalEventInfo from '../../components/Modals/ModalEventInfo/ModalEventInfo';
 import RatingComponent from '../../components/RatingComponent/RatingComponent';
+import { getApiEndpoint } from '../../api/config';
 
 export default function EventFeedback(): React.ReactNode {
   const [event, setEvent] = useState<EventType | null>(null);
@@ -53,7 +54,7 @@ export default function EventFeedback(): React.ReactNode {
       try {
         if (!eventId) throw new Error('Event ID saknas');
 
-        const res = await fetch(`http://localhost:3001/events/${eventId}`);
+        const res = await fetch(getApiEndpoint(`/events/${eventId}`));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         

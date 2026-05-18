@@ -5,6 +5,7 @@ import { fetchEventById } from '../../api/events';
 import type { Event } from '../../api/events';
 import { generateEventSlug } from '../../utils/slugify';
 import { APP_CONFIG } from '../../config/appConfig';
+import { getApiEndpoint } from '../../api/config';
 
 export default function RestaurantAcceptancePage(): React.ReactNode {
   const [approved, setApproved] = useState(false);
@@ -29,7 +30,8 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
 
   async function sendAcceptanceEmail() {
     if (!event) return;
-    await fetch('http://localhost:3001/email/send-confirmation-email-to-host', {
+    const baseUrl = window.location.origin;
+    await fetch(getApiEndpoint('/email/send-confirmation-email-to-host'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -39,7 +41,7 @@ export default function RestaurantAcceptancePage(): React.ReactNode {
         participants: event.max_participants,
         eventId: event.id,
         name: 'Anna Svensson (demo)', // Replace with actual host name if available
-        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        path: `${baseUrl}/event/${generateEventSlug(event.title, event.id)}`,
       }),
     });
   }

@@ -8,6 +8,7 @@ import type { SortValue } from '../../components/Sort/Sort';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import { getApiEndpoint } from '../../api/config';
 
 export default function TagPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,7 +27,7 @@ export default function TagPage() {
 
     async function loadTag() {
       try {
-        const res = await fetch(`http://localhost:3001/tags`);
+        const res = await fetch(getApiEndpoint('/tags'));
         if (!res.ok) throw new Error('Failed to fetch tags');
         const data = await res.json();
         
@@ -57,7 +58,7 @@ export default function TagPage() {
       try {
         setLoading(true);
 
-        const url = new URL('http://localhost:3001/events');
+        const url = new URL(getApiEndpoint('/events'));
 
         url.searchParams.append('tag_ids', currentTag.id.toString());
 
@@ -100,7 +101,7 @@ export default function TagPage() {
         <Group>
           <SearchableFilterDropdown
             label='Stad'
-            fetchUrl='http://localhost:3001/cities'
+            fetchUrl={getApiEndpoint('/cities')}
             onApply={(selected) => setCityFilters(selected.map((s) => s.id))}
           />
 

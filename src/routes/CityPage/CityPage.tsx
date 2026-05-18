@@ -8,6 +8,7 @@ import type { SortValue } from '../../components/Sort/Sort';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
+import { getApiEndpoint } from '../../api/config';
 
 export default function CityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,7 +31,7 @@ export default function CityPage() {
 
     async function loadCity() {
       try {
-        const res = await fetch(`http://localhost:3001/cities`);
+        const res = await fetch(getApiEndpoint('/cities'));
         if (!res.ok) throw new Error('Failed to fetch cities');
         const data = await res.json();
         
@@ -58,9 +59,9 @@ export default function CityPage() {
       try {
         let url: string;
         if (categoryFilters.length > 0) {
-          url = `http://localhost:3001/tags/category/${categoryFilters[0]}`;
+          url = getApiEndpoint(`/tags/category/${categoryFilters[0]}`);
         } else {
-          url = 'http://localhost:3001/tags';
+          url = getApiEndpoint('/tags');
         }
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch tags');
@@ -91,7 +92,7 @@ export default function CityPage() {
       try {
         setLoading(true);
 
-        const url = new URL('http://localhost:3001/events');
+        const url = new URL(getApiEndpoint('/events'));
 
         url.searchParams.append('city_ids', currentCity.id.toString());
 
@@ -137,7 +138,7 @@ export default function CityPage() {
         <Group>
           <SearchableFilterDropdown
             label='Kategori'
-            fetchUrl='http://localhost:3001/categories'
+            fetchUrl={getApiEndpoint('/categories')}
             onApply={(selected) =>
               setCategoryFilters(selected.map((s) => s.id))
             }

@@ -14,6 +14,7 @@ import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEve
 
 import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
 import CategoryImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
+import { getApiEndpoint } from '../../api/config';
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -35,9 +36,9 @@ export default function HomePage() {
       try {
         let url: string;
         if (categoryFilters.length > 0) {
-          url = `http://localhost:3001/tags/category/${categoryFilters[0]}`;
+          url = getApiEndpoint(`/tags/category/${categoryFilters[0]}`);
         } else {
-          url = 'http://localhost:3001/tags';
+          url = getApiEndpoint('/tags');
         }
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch tags');
@@ -64,7 +65,7 @@ export default function HomePage() {
       try {
         setLoading(true);
 
-        const url = new URL('http://localhost:3001/events');
+        const url = new URL(getApiEndpoint('/events'));
 
         if (sortBy) {
           url.searchParams.append('order', sortBy);
@@ -115,7 +116,7 @@ export default function HomePage() {
         <Group justify='space-between'>
           <Group>
             <FilterDropdown
-              fetchUrl='http://localhost:3001/categories'
+              fetchUrl={getApiEndpoint('/categories')}
               label='Kategori'
               onApply={(selected) =>
                 setCategoryFilters(selected.map((item) => item.id))
@@ -124,7 +125,7 @@ export default function HomePage() {
 
             <SearchableFilterDropdown
               label='Stad'
-              fetchUrl='http://localhost:3001/cities'
+              fetchUrl={getApiEndpoint('/cities')}
               onApply={(selected) =>
                 setCityFilters(selected.map((item) => item.id))
               }

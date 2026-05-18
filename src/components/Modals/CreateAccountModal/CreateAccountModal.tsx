@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { APP_CONFIG } from '../../../config/appConfig';
 import { validateEmail, validatePassword } from '../../../utils/formValidation';
 import { useFormTouched } from '../../../hooks/useFormTouched';
+import { getApiEndpoint } from '../../../api/config';
 
 interface CreateAccountModalProps {
   opened: boolean;
@@ -43,7 +44,7 @@ export default function CreateAccountModal({
     isPasswordValid && isEmailValid && emailsMatch && passwordsMatch;
 
   async function sendWelcomeEmail() {
-    await fetch('http://localhost:3001/email/send-welcome-email', {
+    await fetch(getApiEndpoint('/email/send-welcome-email'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

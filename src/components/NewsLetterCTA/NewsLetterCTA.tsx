@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { validateEmail } from '../../utils/formValidation';
 import { useFormTouched } from '../../hooks/useFormTouched';
 import TooltipButton from '../Buttons/DisabledTooltipButton/TooltipButton';
+import { getApiEndpoint } from '../../api/config';
 
 export default function NewsLetterCTA(): React.ReactNode {
   const [name, setName] = useState('');
@@ -36,7 +37,7 @@ export default function NewsLetterCTA(): React.ReactNode {
 
     try {
       const response = await fetch(
-        'http://localhost:3001/email/send-newsletter-confirmation-email',
+        getApiEndpoint('/email/send-newsletter-confirmation-email'),
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -18,6 +18,7 @@ import './PaymentModal.scss';
 import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModal';
 import { generateEventSlug } from '../../../../utils/slugify';
 import ModalEventInfo from '../../ModalEventInfo/ModalEventInfo';
+import { getApiEndpoint } from '../../../../api/config';
 
 interface Participant {
   firstName: string;
@@ -49,8 +50,9 @@ export default function PaymentModal({
 
   async function sendBookingEmails() {
     if (!event) return;
+    const baseUrl = window.location.origin;
     // Send to host
-    await fetch('http://localhost:3001/email/send-booking-email-to-host', {
+    await fetch(getApiEndpoint('/email/send-booking-email-to-host'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -58,13 +60,13 @@ export default function PaymentModal({
         date: event.date,
         startTime: event.start_time,
         event: event.title,
-        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        path: `${baseUrl}/event/${generateEventSlug(event.title, event.id)}`,
         name: `${participant.firstName} ${participant.lastName}`,
       }),
     });
 
     // Send to participant
-    await fetch('http://localhost:3001/email/send-booking-email', {
+    await fetch(getApiEndpoint('/email/send-booking-email'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -73,7 +75,7 @@ export default function PaymentModal({
         event: event.title,
         startTime: event.start_time,
         to: participant.email,
-        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        path: `${baseUrl}/event/${generateEventSlug(event.title, event.id)}`,
       }),
     });
   }

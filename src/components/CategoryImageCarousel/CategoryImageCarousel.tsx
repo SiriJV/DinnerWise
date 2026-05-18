@@ -7,6 +7,7 @@ import './CategoryImageCarousel.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import CategoryImage from './CategoryImage';
+import { getApiEndpoint } from '../../api/config';
 
 type Category = {
   id: number;
@@ -21,7 +22,7 @@ export default function CategoryImageCarousel() {
   useEffect(() => {
     async function loadCategories() {
       try {
-        const res = await fetch('http://localhost:3001/categories');
+        const res = await fetch(getApiEndpoint('/categories'));
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }

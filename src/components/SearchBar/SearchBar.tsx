@@ -8,6 +8,7 @@ import {
   generateRestaurantSlug,
   slugify,
 } from '../../utils/slugify';
+import { getApiEndpoint } from '../../api/config';
 
 type Suggestion = {
   value: string;
@@ -41,8 +42,9 @@ export default function SearchBar({
 
     async function fetchSuggestions() {
       try {
+        const query = `?q=${encodeURIComponent(value)}&type=all&limit=5`;
         const res = await fetch(
-          `http://localhost:3001/search?q=${encodeURIComponent(value)}&type=all&limit=5`,
+          getApiEndpoint('/search', query),
         );
 
         if (!res.ok) throw new Error('Något gick fel');

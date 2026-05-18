@@ -11,6 +11,7 @@ import { Mail } from 'lucide-react';
 import { useState } from 'react';
 import { validateEmail } from '../../../utils/formValidation';
 import { useFormTouched } from '../../../hooks/useFormTouched';
+import { getApiEndpoint } from '../../../api/config';
 
 type ShareByEmailProps = { eventName: string; generatedUrl: string };
 
@@ -50,7 +51,7 @@ export default function ShareByEmail({
     try {
       {
         const response = await fetch(
-          'http://localhost:3001/email/send-share-email',
+          getApiEndpoint('/email/send-share-email'),
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

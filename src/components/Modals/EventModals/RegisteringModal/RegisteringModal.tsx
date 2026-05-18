@@ -17,6 +17,7 @@ import RegisteringBaseModal from '../../RegisteringBaseModal/RegisteringBaseModa
 import { generateEventSlug } from '../../../../utils/slugify';
 import { validateEmail } from '../../../../utils/formValidation';
 import { useFormTouched } from '../../../../hooks/useFormTouched';
+import { getApiEndpoint } from '../../../../api/config';
 
 interface Participant {
   firstName: string;
@@ -62,9 +63,10 @@ export default function RegisteringModal({
 
   async function sendWaitlistEmails() {
     if (!event) return;
+    const baseUrl = window.location.origin;
 
     // Send to host
-    await fetch('http://localhost:3001/email/send-waitlist-email-to-host', {
+    await fetch(getApiEndpoint('/email/send-waitlist-email-to-host'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -72,13 +74,13 @@ export default function RegisteringModal({
         date: event.date,
         startTime: event.start_time,
         event: event.title,
-        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        path: `${baseUrl}/event/${generateEventSlug(event.title, event.id)}`,
         name: participantFullName,
       }),
     });
 
     // Send to participant
-    await fetch('http://localhost:3001/email/send-waitlist-email', {
+    await fetch(getApiEndpoint('/email/send-waitlist-email'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -87,7 +89,7 @@ export default function RegisteringModal({
         event: event.title,
         startTime: event.start_time,
         to: participant.email,
-        path: `http://localhost:5173/event/${generateEventSlug(event.title, event.id)}`,
+        path: `${baseUrl}/event/${generateEventSlug(event.title, event.id)}`,
       }),
     });
   }

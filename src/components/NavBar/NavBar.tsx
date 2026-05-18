@@ -18,6 +18,7 @@ import { useIsMobile } from '../../hooks/useResponsive';
 import { APP_CONFIG } from '../../config/appConfig';
 import { useModal } from '../../contexts/ModalContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { getApiEndpoint } from '../../api/config';
 
 type Category = {
   id: number;
@@ -42,7 +43,7 @@ export default function NavBar({ opened, onClose }: NavBarProps) {
   useEffect(() => {
     async function loadCategories() {
       try {
-        const res = await fetch('http://localhost:3001/categories');
+        const res = await fetch(getApiEndpoint('/categories'));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         
