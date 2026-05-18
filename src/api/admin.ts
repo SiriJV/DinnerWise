@@ -2,6 +2,8 @@ import type { AccountUser } from './clerkApi';
 import type { Event } from './events';
 import { API_URL } from './config';
 
+const API_BASE = API_URL;
+
 function getAuthHeaders(token?: string): HeadersInit {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',

@@ -31,7 +31,7 @@ export async function reportUser(
   userId: number,
   token?: string | null,
 ): Promise<{ success: boolean; message: string }> {
-  const url = `http://localhost:3001/users/${userId}/report`;
+  const url = `${API_URL}/users/${userId}/report`;
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -55,5 +55,5 @@ export async function reportUser(
     throw new Error(body || 'Kunde inte rapportera användaren');
   }
 
-  return body ? JSON.parse(body) : null;
+  return body ? JSON.parse(body) : { success: true, message: 'OK' };
 }

@@ -29,7 +29,7 @@ import AdminLoginPage from './routes/AdminLoginPage/AdminLoginPage';
 import AdminPanelPage from './routes/AdminPanelPage/AdminPanelPage';
 import AcceptInvitationPage from './routes/AcceptInvitationPage/AcceptInvitationPage';
 import { infoPages } from './data/infoPages';
-import { lazy, useEffect, useState } from 'react';
+import { lazy } from 'react';
 import Settings from './routes/ProfilePage/Settings/Settings';
 
 // Lazy load alla route-komponenter för bättre initial laddning
@@ -156,16 +156,8 @@ function GlobalModals() {
     createEventOpen,
     closeCreateEvent,
   } = useModal();
-  const [demoOpen, setDemoOpen] = useState(true);
-
-  // Visa bara första gången sidan laddas
-  useEffect(() => {
-    setDemoOpen(true);
-  }, []);
-
   return (
     <>
-      {/* <DemoInfoModal opened={demoOpen} onClose={() => setDemoOpen(false)} /> */}
       <LoginModal opened={loginOpen} onClose={closeModals} />
       <CreateAccountModal opened={createOpen} onClose={closeModals} />
       <CreateEventModal opened={createEventOpen} onClose={closeCreateEvent} />
