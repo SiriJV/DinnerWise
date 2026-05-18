@@ -436,7 +436,11 @@ paths:
           schema: { type: string }
         - name: type
           in: query
-          schema: { type: string, enum: [all, events, cities, restaurants, users, tags, categories] }
+          schema:
+            {
+              type: string,
+              enum: [all, events, cities, restaurants, users, tags, categories],
+            }
         - name: limit
           in: query
           schema: { type: integer }
