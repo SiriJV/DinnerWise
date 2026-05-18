@@ -16,28 +16,38 @@ import { db } from './db.js';
 import emailRouter from './routes/email.js';
 import geminiRouter from './routes/gemini.js';
 import cors from 'cors';
-
-import dotenv from 'dotenv';
-// important: load environment variables before any code that uses them
-dotenv.config();
+import { env } from './config/env.js';
 
 const app = express();
 
-app.use(
-  cors({
-    origin: /^http:\/\/localhost:\d+$/,
-    credentials: true,  // required for Clerk session cookies and authentication
-  })
-);
+// ============================================================================
+// CORS Configuration
+// ============================================================================
+// In development, allow localhost on any port
+// In production, allow only the configured frontend URL
+const corsOptions = {
+  origin: env.node.isDev
+    ? /^http:\/\/localhost:\d+$/  // Dev: localhost on any port
+    : new RegExp(`^${env.frontend.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`), // Prod: exact match
+  credentials: true, // Required for Clerk session cookies
+};
 
-const hasSecretKey = !!process.env.CLERK_SECRET_KEY;
-const hasPublishableKey = !!process.env.CLERK_PUBLISHABLE_KEY;
-console.log('[Clerk Config] CLERK_SECRET_KEY present:', hasSecretKey);
-console.log('[Clerk Config] CLERK_PUBLISHABLE_KEY present:', hasPublishableKey);
+app.use(cors(corsOptions));
+
+// ============================================================================
+// Authentication Setup
+// ============================================================================
+const hasSecretKey = !!env.clerk.secretKey;
+const hasPublishableKey = !!env.clerk.publishableKey;
+
+console.log('[APP] Clerk Configuration:');
+console.log(`  Secret Key: ${hasSecretKey ? '✓' : '✗'}`);
+console.log(`  Publishable Key: ${hasPublishableKey ? '✓' : '✗'}`);
 
 app.use(express.json());
+
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 app.post('/users/:userId/report', async (req, res) => {
@@ -72,24 +82,23 @@ app.post('/users/:userId/report', async (req, res) => {
   }
 });
 
-// important: @clerk/express requires both secret and publishable keys
+// Important: @clerk/express requires both secret and publishable keys
 if (hasSecretKey && hasPublishableKey) {
-  console.log('[APP.TS] Clerk keys found, initializing clerkMiddleware()');
+  console.log('[APP] Initializing Clerk middleware...');
   try {
     app.use(clerkMiddleware());
-    console.log('✓ Clerk middleware initialized');
+    console.log('[APP] ✓ Clerk middleware initialized');
   } catch (error) {
-    console.error('⚠️  Failed to initialize Clerk middleware:', error);
-    console.error('   Ensure CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY are correct in .env');
+    console.error('[APP] ✗ Failed to initialize Clerk middleware:', error);
+    console.error('     Ensure CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY are correct in .env');
   }
 } else {
   const missing = [];
   if (!hasSecretKey) missing.push('CLERK_SECRET_KEY');
   if (!hasPublishableKey) missing.push('CLERK_PUBLISHABLE_KEY');
-  console.warn('⚠️  Clerk authentication middleware DISABLED (missing keys)');
-  console.warn('   Missing: ' + missing.join(', '));
-  console.warn('   Temporary test auth endpoints (/auth/account) will not work.');
-  console.warn('   Add both keys to backend/.env to enable Clerk authentication.');
+  console.warn('[APP] ⚠️  Clerk authentication DISABLED (missing keys)');
+  console.warn(`     Missing: ${missing.join(', ')}`);
+  console.warn('     Add both keys to backend/.env to enable Clerk authentication');
 }
 
 app.use(resolveCurrentAccount);

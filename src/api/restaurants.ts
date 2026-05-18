@@ -1,6 +1,8 @@
+import { API_URL } from './config';
+
 export async function fetchRestaurants(): Promise<Restaurant[]> {
   try {
-    const res = await fetch('http://localhost:3001/restaurants');
+    const res = await fetch(`${API_URL}/restaurants`);
     if (!res.ok) {
       throw new Error('Failed to fetch restaurants');
     }
@@ -33,7 +35,7 @@ export async function fetchRestaurantById(
   id: number,
 ): Promise<Restaurant | null> {
   try {
-    const res = await fetch(`http://localhost:3001/restaurants/${id}`);
+    const res = await fetch(`${API_URL}/restaurants/${id}`);
     if (!res.ok) {
       throw new Error('Failed to fetch restaurant');
     }
@@ -50,7 +52,7 @@ export async function fetchRestaurantEvents(
 ): Promise<any[]> {
   try {
     const res = await fetch(
-      `http://localhost:3001/restaurants/${restaurantId}/events`,
+      `${API_URL}/restaurants/${restaurantId}/events`,
     );
     if (!res.ok) {
       throw new Error('Failed to fetch restaurant events');

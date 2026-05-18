@@ -1,3 +1,5 @@
+import { API_URL } from './config';
+
 export type Tag = {
   id: number;
   name: string;
@@ -6,7 +8,7 @@ export type Tag = {
 
 export async function fetchTags(): Promise<Tag[]> {
   try {
-    const res = await fetch('http://localhost:3001/tags');
+    const res = await fetch(`${API_URL}/tags`);
     if (!res.ok) {
       throw new Error('Failed to fetch tags');
     }
@@ -20,7 +22,7 @@ export async function fetchTags(): Promise<Tag[]> {
 
 export async function fetchTagsByCategory(categoryId: number): Promise<Tag[]> {
   try {
-    const res = await fetch(`http://localhost:3001/tags/category/${categoryId}`);
+    const res = await fetch(`${API_URL}/tags/category/${categoryId}`);
     if (!res.ok) {
       throw new Error('Failed to fetch tags');
     }

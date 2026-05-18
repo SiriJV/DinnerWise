@@ -38,12 +38,24 @@ function formatDate(date: string | Date): string {
   });
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Initialize Resend only if API key is provided
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 const router = Router();
 const devEmail = 'jessicaagren@hotmail.com';
 
+// Middleware to check if Resend is configured
+const checkResendConfigured = (req: any, res: any, next: any) => {
+  if (!resend) {
+    return res.status(503).json({ 
+      error: 'Email service is not configured. Set RESEND_API_KEY in .env' 
+    });
+  }
+  next();
+};
+
 // Välkomstmejl
-router.post('/send-welcome-email', async (req, res) => {
+router.post('/send-welcome-email', checkResendConfigured, async (req, res) => {
   const { to } = req.body;
 
   if (!to) {
@@ -67,7 +79,7 @@ router.post('/send-welcome-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -83,7 +95,7 @@ router.post('/send-welcome-email', async (req, res) => {
 });
 
 // Bokningsmejl till värd
-router.post('/send-host-email', async (req, res) => {
+router.post('/send-host-email', checkResendConfigured, async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, to } = req.body;
   if (
     !checkRequiredFields(
@@ -114,7 +126,7 @@ router.post('/send-host-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -130,7 +142,7 @@ router.post('/send-host-email', async (req, res) => {
 });
 
 // Bokningsmejl till restaurang
-router.post('/send-restaurant-booking-email', async (req, res) => {
+router.post('/send-restaurant-booking-email', checkResendConfigured, async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, slug, to } =
     req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
@@ -155,7 +167,7 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -171,7 +183,7 @@ router.post('/send-restaurant-booking-email', async (req, res) => {
 });
 
 // Bekräftelsemejl till värd
-router.post('/send-confirmation-email-to-host', async (req, res) => {
+router.post('/send-confirmation-email-to-host', checkResendConfigured, async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, path, to } =
     req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
@@ -196,7 +208,7 @@ router.post('/send-confirmation-email-to-host', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -212,7 +224,7 @@ router.post('/send-confirmation-email-to-host', async (req, res) => {
 });
 
 // Bokningsmejl till deltagare
-router.post('/send-booking-email', async (req, res) => {
+router.post('/send-booking-email', checkResendConfigured, async (req, res) => {
   const { restaurant, date, startTime, event, path, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -234,7 +246,7 @@ router.post('/send-booking-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       subject: `Bokningsbekräftelse för ${event}`,
@@ -249,7 +261,7 @@ router.post('/send-booking-email', async (req, res) => {
 });
 
 // Bokningsmejl till värd när deltagare anmält sig
-router.post('/send-booking-email-to-host', async (req, res) => {
+router.post('/send-booking-email-to-host', checkResendConfigured, async (req, res) => {
   const { restaurant, date, startTime, event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -271,7 +283,7 @@ router.post('/send-booking-email-to-host', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -287,7 +299,7 @@ router.post('/send-booking-email-to-host', async (req, res) => {
 });
 
 // Bokningsmejl till väntelistedeltagare
-router.post('/send-waitlist-email', async (req, res) => {
+router.post('/send-waitlist-email', checkResendConfigured, async (req, res) => {
   const { restaurant, date, startTime, event, path, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -311,7 +323,7 @@ router.post('/send-waitlist-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -327,7 +339,7 @@ router.post('/send-waitlist-email', async (req, res) => {
 });
 
 // Bokningsmejl till värd när deltagare skrivit upp sig på väntelista
-router.post('/send-waitlist-email-to-host', async (req, res) => {
+router.post('/send-waitlist-email-to-host', checkResendConfigured, async (req, res) => {
   const { restaurant, date, startTime, event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -349,7 +361,7 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -365,7 +377,7 @@ router.post('/send-waitlist-email-to-host', async (req, res) => {
 });
 
 // Feedbackmejl till deltagare
-router.post('/send-feedback-email', async (req, res) => {
+router.post('/send-feedback-email', checkResendConfigured, async (req, res) => {
   const { event, path, name, to } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -388,7 +400,7 @@ router.post('/send-feedback-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -404,7 +416,7 @@ router.post('/send-feedback-email', async (req, res) => {
 });
 
 // Delning på mejl
-router.post('/send-share-email', async (req, res) => {
+router.post('/send-share-email', checkResendConfigured, async (req, res) => {
   const { to, event, path, emailMessage } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -425,7 +437,7 @@ router.post('/send-share-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${contactEmail}>`,
       to: [to],
       // to: devEmail,
@@ -441,7 +453,7 @@ router.post('/send-share-email', async (req, res) => {
 });
 
 // Bekräftelse på nyhetsbrev
-router.post('/send-newsletter-confirmation-email', async (req, res) => {
+router.post('/send-newsletter-confirmation-email', checkResendConfigured, async (req, res) => {
   const { to, name } = req.body;
   if (!checkAllFieldsRequired(req.body, res)) return;
 
@@ -462,7 +474,7 @@ router.post('/send-newsletter-confirmation-email', async (req, res) => {
       </a>
     `;
 
-    const data = await resend.emails.send({
+    const data = await resend!.emails.send({
       from: `${brandName} <${newsLetterEmail}>`,
       to: [to],
       // to: devEmail,

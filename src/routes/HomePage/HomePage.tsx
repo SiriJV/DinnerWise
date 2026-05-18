@@ -40,7 +40,16 @@ export default function HomePage() {
           url = 'http://localhost:3001/tags';
         }
         const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch tags');
         const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('HomePage: tags response is not an array', data);
+          setAvailableTags([]);
+          return;
+        }
+        
         setAvailableTags(data);
       } catch (err) {
         console.error('Error loading tags:', err);

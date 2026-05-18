@@ -27,10 +27,19 @@ export default function FilterDropdown({
     async function fetchOptions() {
       try {
         const res = await fetch(fetchUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        setOptions(data);
+        
+        // Validate response is an array
+        if (Array.isArray(data)) {
+          setOptions(data);
+        } else {
+          console.warn('FilterDropdown: API response is not an array', data);
+          setOptions([]);
+        }
       } catch (error) {
         console.error('Failed to fetch filter options:', error);
+        setOptions([]);
       }
     }
     fetchOptions();
@@ -73,7 +82,7 @@ export default function FilterDropdown({
       <Menu.Dropdown>
         <Menu.Label>{label}</Menu.Label>
 
-        {options
+        {Array.isArray(options) && options
           .sort((a, b) => {
             const aSelected = draft.some((i) => i.id === a.id);
             const bSelected = draft.some((i) => i.id === b.id);

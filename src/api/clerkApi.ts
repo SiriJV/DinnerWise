@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3001';
+import { API_URL } from './config';
 
 export interface AccountUser {
   id: number;
@@ -34,7 +34,7 @@ export const clerkApi = {
    * Get current user's account info
    */
   async getCurrentAccount(token?: string): Promise<AccountUser> {
-    const response = await fetch(`${API_BASE}/auth/account/me`, {
+    const response = await fetch(`${API_URL}/auth/account/me`, {
       method: 'GET',
       headers: getAuthHeaders(token),
       credentials: 'include',
@@ -50,7 +50,7 @@ export const clerkApi = {
   async deleteOwnAccount(token?: string): Promise<{ success: boolean }> {
     if (!token) throw new Error('Clerk token is required');
 
-    const response = await fetch(`${API_BASE}/auth/account/me`, {
+    const response = await fetch(`${API_URL}/auth/account/me`, {
       method: 'DELETE',
       headers: getAuthHeaders(token),
       credentials: 'include',
@@ -76,7 +76,7 @@ export const clerkApi = {
     },
     token?: string
   ): Promise<{ success: boolean; account: AccountUser }> {
-    const response = await fetch(`${API_BASE}/auth/account/sync`, {
+    const response = await fetch(`${API_URL}/auth/account/sync`, {
       method: 'POST',
       headers: getAuthHeaders(token),
       credentials: 'include',
@@ -91,7 +91,7 @@ export const clerkApi = {
    * Get all account users (admin only)
    */
   async getAllAccounts(token?: string): Promise<AccountUser[]> {
-    const response = await fetch(`${API_BASE}/auth/account/all`, {
+    const response = await fetch(`${API_URL}/auth/account/all`, {
       method: 'GET',
       headers: getAuthHeaders(token),
       credentials: 'include',
@@ -109,7 +109,7 @@ export const clerkApi = {
     role: 'user' | 'admin',
     token?: string
   ): Promise<{ success: boolean; account: AccountUser }> {
-    const response = await fetch(`${API_BASE}/auth/account/${accountId}/role`, {
+    const response = await fetch(`${API_URL}/auth/account/${accountId}/role`, {
       method: 'PUT',
       headers: getAuthHeaders(token),
       credentials: 'include',
@@ -124,7 +124,7 @@ export const clerkApi = {
    * Delete user account (admin only)
    */
   async deleteAccount(accountId: number, token?: string): Promise<{ success: boolean; deleted: any }> {
-    const response = await fetch(`${API_BASE}/auth/account/${accountId}`, {
+    const response = await fetch(`${API_URL}/auth/account/${accountId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(token),
       credentials: 'include',

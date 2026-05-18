@@ -27,7 +27,16 @@ export default function TagPage() {
     async function loadTag() {
       try {
         const res = await fetch(`http://localhost:3001/tags`);
-        const data: { id: number; name: string }[] = await res.json();
+        if (!res.ok) throw new Error('Failed to fetch tags');
+        const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('TagPage: tags response is not an array', data);
+          setError('Ogiltigt svar från servern');
+          return;
+        }
+        
         const found = data.find((t) => slugify(t.name) === slug);
         setTag(found || null);
       } catch (err) {

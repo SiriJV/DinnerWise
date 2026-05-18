@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { API_URL } from './config';
+
 const REQUEST_TIMEOUT = 60000;
 
 interface GenerateContentResponse {
@@ -32,7 +33,7 @@ export const geminiApi = {
       const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
       const response = await fetch(
-        `${API_BASE_URL}/gemini/generate-event-content`,
+        `${API_URL}/gemini/generate-event-content`,
         {
           method: 'POST',
           headers: {

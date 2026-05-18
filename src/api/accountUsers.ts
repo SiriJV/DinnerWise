@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3001';
+import { API_URL } from './config';
 
 export async function resolveReportableAccountUserId(
   alias: string,
@@ -10,7 +10,7 @@ export async function resolveReportableAccountUserId(
   params.set('legacyUserId', String(legacyUserId));
   if (name) params.set('name', name);
 
-  const url = `${API_BASE}/account-users/resolve-target?${params.toString()}`;
+  const url = `${API_URL}/account-users/resolve-target?${params.toString()}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {

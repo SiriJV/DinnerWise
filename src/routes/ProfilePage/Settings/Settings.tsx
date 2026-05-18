@@ -129,11 +129,28 @@ export default function Settings() {
           fetch('http://localhost:3001/categories'),
           fetchTags(),
         ]);
-        const data: Category[] = await catRes.json();
-        setCategories(data);
-        setTags(tagsData);
+        if (!catRes.ok) throw new Error(`Categories HTTP ${catRes.status}`);
+        const data = await catRes.json();
+        
+        // Validate categories response is an array
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.warn('Settings: categories response is not an array', data);
+          setCategories([]);
+        }
+        
+        // Validate tags response is an array
+        if (Array.isArray(tagsData)) {
+          setTags(tagsData);
+        } else {
+          console.warn('Settings: tags response is not an array', tagsData);
+          setTags([]);
+        }
       } catch (err) {
         console.error('Failed to load categories or tags:', err);
+        setCategories([]);
+        setTags([]);
       }
     }
     loadCategoriesAndTags();

@@ -34,8 +34,16 @@ export default function CategoryPage() {
     async function loadCategory() {
       try {
         const res = await fetch(`http://localhost:3001/categories`);
-        const data: { id: number; name: string; description: string }[] =
-          await res.json();
+        if (!res.ok) throw new Error('Failed to fetch categories');
+        const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('CategoryPage: categories response is not an array', data);
+          setError('Ogiltigt svar från servern');
+          return;
+        }
+        
         const found = data.find((c) => slugify(c.name) === slug);
         setCategory(found || null);
       } catch (err) {
@@ -58,10 +66,19 @@ export default function CategoryPage() {
           `http://localhost:3001/tags/category/${currentCategory.id}`,
         );
         if (!res.ok) throw new Error('Kunde inte hämta taggar');
-        const data: { id: number; name: string }[] = await res.json();
+        const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('CategoryPage: tags response is not an array', data);
+          setTags([]);
+          return;
+        }
+        
         setTags(data);
       } catch (err) {
         console.error(err);
+        setTags([]);
       }
     }
 

@@ -29,7 +29,13 @@ export default function SearchableFilterDropdown({
   useEffect(() => {
     // If items are provided directly, use them
     if (externalItems) {
-      setItems(externalItems);
+      // Ensure it's actually an array
+      if (Array.isArray(externalItems)) {
+        setItems(externalItems);
+      } else {
+        console.warn('SearchableFilterDropdown: externalItems is not an array', externalItems);
+        setItems([]);
+      }
       return;
     }
 
@@ -41,9 +47,25 @@ export default function SearchableFilterDropdown({
     fetch(`${fetchUrl}?q=${encodeURIComponent(search)}`, {
       signal: controller.signal,
     })
-      .then((res) => res.json())
-      .then(setItems)
-      .catch(() => {});
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // Ensure response is an array
+        if (Array.isArray(data)) {
+          setItems(data);
+        } else {
+          console.warn('SearchableFilterDropdown: API response is not an array', data);
+          setItems([]);
+        }
+      })
+      .catch((err) => {
+        console.error('SearchableFilterDropdown: fetch error', err);
+        setItems([]);
+      });
 
     return () => controller.abort();
   }, [fetchUrl, search, externalItems]);
@@ -91,7 +113,7 @@ export default function SearchableFilterDropdown({
         />
 
         <ScrollArea h={240} type='auto'>
-          {items
+          {Array.isArray(items) && items
             .sort((a, b) => {
               const aSelected = draft.some((i) => i.id === a.id);
               const bSelected = draft.some((i) => i.id === b.id);

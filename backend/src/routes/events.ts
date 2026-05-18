@@ -188,6 +188,7 @@ router.post('/:id/report', async (req: Request, res: Response) => {
     const auth = getAuth(req);
     const clerkUserId = auth?.userId;
 
+    if (clerkUserId) {
       let email = 'unknown@example.com';
       let firstName: string | undefined;
       let lastName: string | undefined;

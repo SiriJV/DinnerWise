@@ -23,11 +23,20 @@ export default function ModalEventInfo({
     async function loadHost() {
       try {
         const res = await fetch('http://localhost:3001/users');
-        const data: User[] = await res.json();
-        const hostUser = getDeterministicHost(event.id, data);
-        setHost(hostUser);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        
+        // Validate response is an array
+        if (Array.isArray(data)) {
+          const hostUser = getDeterministicHost(event.id, data);
+          setHost(hostUser);
+        } else {
+          console.warn('ModalEventInfo: users response is not an array', data);
+          setHost(null);
+        }
       } catch (err) {
         console.error('Failed to load host:', err);
+        setHost(null);
       }
     }
     loadHost();

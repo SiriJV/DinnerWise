@@ -31,7 +31,16 @@ export default function CityPage() {
     async function loadCity() {
       try {
         const res = await fetch(`http://localhost:3001/cities`);
-        const data: { id: number; name: string }[] = await res.json();
+        if (!res.ok) throw new Error('Failed to fetch cities');
+        const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('CityPage: cities response is not an array', data);
+          setError('Ogiltigt svar från servern');
+          return;
+        }
+        
         const found = data.find((c) => slugify(c.name) === slug);
         setCity(found || null);
       } catch (err) {
@@ -54,7 +63,16 @@ export default function CityPage() {
           url = 'http://localhost:3001/tags';
         }
         const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch tags');
         const data = await res.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(data)) {
+          console.warn('CityPage: tags response is not an array', data);
+          setAvailableTags([]);
+          return;
+        }
+        
         setAvailableTags(data);
       } catch (err) {
         console.error('Error loading tags:', err);

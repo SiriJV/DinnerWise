@@ -92,22 +92,29 @@ export default function ProfilePage() {
         // Calculate events count - hosting + participating
         try {
           const eventsRes = await fetch('http://localhost:3001/events');
-          const allEvents: EventType[] = await eventsRes.json();
+          if (!eventsRes.ok) throw new Error(`HTTP ${eventsRes.status}`);
+          const allEvents = await eventsRes.json();
+          
+          // Validate events response is an array
+          if (!Array.isArray(allEvents)) {
+            console.warn('ProfilePage: events response is not an array', allEvents);
+            setEventsCount(0);
+          } else {
+            const hostingCount = allEvents.filter((event) =>
+              isUserHosting(data.id, event.id, allUsers),
+            ).length;
 
-          const hostingCount = allEvents.filter((event) =>
-            isUserHosting(data.id, event.id, allUsers),
-          ).length;
+            const participatingCount = allEvents.filter((event) =>
+              isUserParticipating(
+                data.id,
+                event.id,
+                event.current_participants,
+                allUsers,
+              ),
+            ).length;
 
-          const participatingCount = allEvents.filter((event) =>
-            isUserParticipating(
-              data.id,
-              event.id,
-              event.current_participants,
-              allUsers,
-            ),
-          ).length;
-
-          setEventsCount(hostingCount + participatingCount);
+            setEventsCount(hostingCount + participatingCount);
+          }
         } catch (err) {
           console.error('Failed to load events count:', err);
           setEventsCount(0);

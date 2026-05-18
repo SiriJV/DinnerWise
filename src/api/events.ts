@@ -1,4 +1,5 @@
 import type { EventType } from '../types/EventType';
+import { API_URL } from './config';
 
 export type Event = EventType;
 
@@ -11,7 +12,7 @@ export async function fetchEvents(params?: {
       queryParams.append('category_id', params.category_id.toString());
     }
 
-    const url = `http://localhost:3001/events${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    const url = `${API_URL}/events${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     const res = await fetch(url);
 
     if (!res.ok) {
@@ -27,7 +28,7 @@ export async function fetchEvents(params?: {
 
 export async function fetchEventById(id: number): Promise<Event | null> {
   try {
-    const res = await fetch(`http://localhost:3001/events/${id}`);
+    const res = await fetch(`${API_URL}/events/${id}`);
     if (!res.ok) {
       throw new Error('Failed to fetch event');
     }
@@ -48,7 +49,7 @@ export async function reportEvent(
   reason?: string
 ): Promise<{ success: boolean; message: string; isDuplicate?: boolean }> {
   try {
-    const url = `http://localhost:3001/events/${eventId}/report`;
+    const url = `${API_URL}/events/${eventId}/report`;
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',

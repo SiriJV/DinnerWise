@@ -22,10 +22,21 @@ export default function CategoryImageCarousel() {
     async function loadCategories() {
       try {
         const res = await fetch('http://localhost:3001/categories');
-        const data: Category[] = await res.json();
-        setCategories(data);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        
+        // Validate that response is an array
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.warn('CategoryImageCarousel: API response is not an array', data);
+          setCategories([]);
+        }
       } catch (err) {
         console.error('Failed to load categories:', err);
+        setCategories([]);
       }
     }
     loadCategories();

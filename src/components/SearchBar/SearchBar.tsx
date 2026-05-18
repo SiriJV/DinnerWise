@@ -48,31 +48,39 @@ export default function SearchBar({
         if (!res.ok) throw new Error('Något gick fel');
 
         const json = await res.json();
-        const { events, cities, tags, categories, restaurants, users } =
-          json.results;
+        const { events = [], cities = [], tags = [], categories = [], restaurants = [], users = [] } =
+          json.results || {};
+
+        // Validate all results are arrays
+        const safeEvents = Array.isArray(events) ? events : [];
+        const safeCities = Array.isArray(cities) ? cities : [];
+        const safeTags = Array.isArray(tags) ? tags : [];
+        const safeCategories = Array.isArray(categories) ? categories : [];
+        const safeRestaurants = Array.isArray(restaurants) ? restaurants : [];
+        const safeUsers = Array.isArray(users) ? users : [];
 
         const suggestions: Suggestion[] = [
-          ...events.map((e: any) => ({
+          ...safeEvents.map((e: any) => ({
             value: `event-${generateEventSlug(e.title, e.id)}`,
             label: `🌐${e.title} (event)`,
           })),
-          ...cities.map((c: any) => ({
+          ...safeCities.map((c: any) => ({
             value: `city-${slugify(c.name)}`,
             label: `📍${c.name} (stad)`,
           })),
-          ...tags.map((t: any) => ({
+          ...safeTags.map((t: any) => ({
             value: `tag-${slugify(t.name)}`,
             label: `🏷️${t.name} (tagg)`,
           })),
-          ...categories.map((cat: any) => ({
+          ...safeCategories.map((cat: any) => ({
             value: `category-${slugify(cat.name)}`,
             label: `🔡${cat.name} (kategori)`,
           })),
-          ...restaurants.map((r: any) => ({
+          ...safeRestaurants.map((r: any) => ({
             value: `restaurant-${generateRestaurantSlug(r.name, r.id)}`,
             label: `🍽️${r.name}, ${r.city} (restaurang)`,
           })),
-          ...users.map((u: any) => ({
+          ...safeUsers.map((u: any) => ({
             value: `user-${slugify(u.alias)}`,
             label: `👤${u.name} (@${u.alias})`,
           })),

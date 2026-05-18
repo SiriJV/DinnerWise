@@ -1,3 +1,5 @@
+import { API_URL } from './config';
+
 export type User = {
   id: number;
   name: string;
@@ -9,7 +11,7 @@ export type User = {
 
 export async function fetchUsers(): Promise<User[]> {
   try {
-    const res = await fetch('http://localhost:3001/users');
+    const res = await fetch(`${API_URL}/users`);
     if (!res.ok) {
       throw new Error('Failed to fetch users');
     }
@@ -23,7 +25,7 @@ export async function fetchUsers(): Promise<User[]> {
 
 export async function fetchUserByAlias(alias: string): Promise<User | null> {
   try {
-    const res = await fetch(`http://localhost:3001/users/alias/${alias}`);
+    const res = await fetch(`${API_URL}/users/alias/${alias}`);
     if (!res.ok) {
       throw new Error('Failed to fetch user');
     }
@@ -37,7 +39,7 @@ export async function fetchUserByAlias(alias: string): Promise<User | null> {
 
 export async function fetchUserById(id: number): Promise<User | null> {
   try {
-    const res = await fetch(`http://localhost:3001/users/${id}`);
+    const res = await fetch(`${API_URL}/users/${id}`);
     if (!res.ok) {
       throw new Error('Failed to fetch user');
     }

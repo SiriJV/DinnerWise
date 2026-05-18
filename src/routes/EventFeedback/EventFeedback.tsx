@@ -54,9 +54,15 @@ export default function EventFeedback(): React.ReactNode {
         if (!eventId) throw new Error('Event ID saknas');
 
         const res = await fetch(`http://localhost:3001/events/${eventId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-
-        setEvent(data);
+        
+        // Validate that data is an object (single event), not an array
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          setEvent(data);
+        } else {
+          throw new Error('Invalid event data format');
+        }
       } catch (err) {
         console.error(err);
       } finally {

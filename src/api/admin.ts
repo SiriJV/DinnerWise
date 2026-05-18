@@ -1,7 +1,6 @@
 import type { AccountUser } from './clerkApi';
 import type { Event } from './events';
-
-const API_BASE = 'http://localhost:3001';
+import { API_URL } from './config';
 
 function getAuthHeaders(token?: string): HeadersInit {
   const headers: HeadersInit = {
@@ -17,7 +16,7 @@ function getAuthHeaders(token?: string): HeadersInit {
  * Hämta alla account_users
  */
 export async function fetchAdminUsers(token: string): Promise<AccountUser[]> {
-  const url = `${API_BASE}/admin/users`;
+  const url = `${API_URL}/admin/users`;
   const res = await fetch(url, {
     headers: getAuthHeaders(token),
     credentials: 'include',
@@ -32,7 +31,7 @@ export async function fetchAdminUsers(token: string): Promise<AccountUser[]> {
  * Hämta alla events
  */
 export async function fetchAdminEvents(token: string): Promise<Event[]> {
-  const url = `${API_BASE}/admin/events`;
+  const url = `${API_URL}/admin/events`;
   const res = await fetch(url, {
     headers: getAuthHeaders(token),
     credentials: 'include',

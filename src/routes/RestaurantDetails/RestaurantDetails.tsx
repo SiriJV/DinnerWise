@@ -76,13 +76,19 @@ export default function RestaurangDetails(): React.ReactNode {
 
         setRestaurant(restaurantData);
         const eventsRes = await fetch(`http://localhost:3001/events`);
-        const allEvents: EventType[] = await eventsRes.json();
+        if (!eventsRes.ok) throw new Error('Kunde inte hämta events');
+        const allEvents = await eventsRes.json();
 
-        const restaurantEvents = allEvents.filter(
-          (e) => e.restaurant_id === restaurantData.id,
-        );
-
-        setEvents(restaurantEvents);
+        // Validate events response is an array
+        if (Array.isArray(allEvents)) {
+          const restaurantEvents = allEvents.filter(
+            (e) => e.restaurant_id === restaurantData.id,
+          );
+          setEvents(restaurantEvents);
+        } else {
+          console.warn('RestaurantDetails: events response is not an array', allEvents);
+          setEvents([]);
+        }
       } catch (err: any) {
         setError(err.message);
       } finally {
