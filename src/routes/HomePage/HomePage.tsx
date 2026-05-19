@@ -9,6 +9,7 @@ import PriceDropdown from '../../components/Filters/PriceDropdown/PriceDropdown'
 
 import HeroImage from '../../components/HeroImage/HeroImage';
 import type { EventType } from '../../types/EventType';
+import heroImageSrc from '../../assets/3.jpg';
 
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 
@@ -101,7 +102,7 @@ export default function HomePage() {
 
   return (
     <>
-      <HeroImage src='src/assets/3.jpg' alt='Hero Image' position='center' />
+      <HeroImage src={heroImageSrc} alt='Hero Image' position='center' />
 
       <Stack p='md' mb='lg'>
         <CategoryImageCarousel />
