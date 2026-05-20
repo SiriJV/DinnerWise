@@ -1,10 +1,23 @@
 # DinnerWise
 
-An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://github.com/jessicaagren).
-
 ## Project Overview
 
 **DinnerWise** is a web application designed to help users discover, create, and participate in local dining events. The platform allows users to browse, join and/or schedule events at local restaurants. DinnerWise is intended for individuals seeking to meet new people, explore interests, and enjoy good food in a social setting.
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Tech Stack](#tech-stack)
+- [Deployment](#deployment)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Backend Scripts](#backend-scripts)
+- [Backend Environment Details](#backend-environment-details)
+- [Backend API Endpoints (OpenAPI / Swagger)](#backend-api-endpoints-openapi--swagger)
+- [Database Schema](#database-schema)
+- [Deployment](#deployment-1)
+- [Project Structure](#project-structure)
+
 
 ## Tech Stack
 
