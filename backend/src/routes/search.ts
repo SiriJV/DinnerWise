@@ -192,6 +192,10 @@ LIMIT ?`,
           'Ogiltig söktyp. Tillåtna värden: all, events, cities, restaurants, users, tags, categories'
         );
     }
+  } catch (error) {
+    console.error('[search] query error:', error);
+    throw ApiError.internal('Kunde inte genomföra sökningen');
+  }
 }));
 
 export default router;
