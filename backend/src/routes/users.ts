@@ -1,23 +1,20 @@
 import { Router } from 'express';
 import { db } from '../db.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const router = Router();
 
-router.get('/', async (_req, res) => {
-  try {
-    const [users] = await db.query(`
+router.get('/', asyncHandler(async (_req, res) => {
+  const [users] = await db.query(`
       SELECT id, name, alias, bio, profile_picture_url, banner_picture_url
       FROM users
       ORDER BY id
     `);
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta users' });
-  }
-});
+  res.json(users);
+}));
 
-router.get('/search', async (req, res) => {
+router.get('/search', asyncHandler(async (req, res) => {
   const { q } = req.query;
 
   if (!q) {
@@ -26,9 +23,8 @@ router.get('/search', async (req, res) => {
 
   const term = q.toString().toLowerCase() + '%';
 
-  try {
-    const [rows]: any[] = await db.query(
-      `
+  const [rows]: any[] = await db.query(
+    `
       SELECT *
       FROM users
       WHERE LOWER(name) LIKE ?
@@ -36,54 +32,43 @@ router.get('/search', async (req, res) => {
          OR LOWER(alias) LIKE ?
       ORDER BY name ASC
       `,
-      [term, `% ${term}`, term],
-    );
+    [term, `% ${term}`, term],
+  );
 
-    res.json(rows);
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Could not search users' });
-  }
-});
+  res.json(rows);
+}));
 
-router.get('/alias/:alias', async (req, res) => {
+router.get('/alias/:alias', asyncHandler(async (req, res) => {
   const alias = req.params.alias;
 
-  try {
-    const [[user]]: any = await db.query(
-      'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE alias = ?',
-      [alias],
-    );
+  const [[user]]: any = await db.query(
+    'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE alias = ?',
+    [alias],
+  );
 
-    if (!user) {
-      return res.status(404).json({ error: 'User hittades inte' });
-    }
-
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta user' });
+  if (!user) {
+    throw ApiError.notFound('Användare hittades inte', { alias });
   }
-});
 
-router.get('/:id', async (req, res) => {
+  res.json(user);
+}));
+
+router.get('/:id', asyncHandler(async (req, res) => {
   const userId = Number(req.params.id);
-
-  try {
-    const [[user]]: any = await db.query(
-      'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE id = ?',
-      [userId],
-    );
-
-    if (!user) {
-      return res.status(404).json({ error: 'User hittades inte' });
-    }
-
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta user' });
+  if (!Number.isInteger(userId) || userId <= 0) {
+    throw ApiError.badRequest('Ogiltigt användar-ID', { userId });
   }
-});
+
+  const [[user]]: any = await db.query(
+    'SELECT id, name, alias, bio, profile_picture_url, banner_picture_url FROM users WHERE id = ?',
+    [userId],
+  );
+
+  if (!user) {
+    throw ApiError.notFound('Användare hittades inte', { userId });
+  }
+
+  res.json(user);
+}));
 
 export default router;

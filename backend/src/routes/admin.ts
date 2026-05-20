@@ -2,19 +2,20 @@ import { Router, Request, Response } from 'express';
 import { clerkClient, getAuth } from '@clerk/express';
 import * as accountService from '../services/accountUserService.js';
 import { db } from '../db.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const router = Router();
 
 /**
  * Returns the local account if the caller is an authenticated admin, or null if not.
  */
-async function resolveAdmin(req: Request, res: Response): Promise<any | null> {
+async function resolveAdmin(req: Request): Promise<any> {
   const auth = getAuth(req);
   const clerkUserId = auth?.userId;
 
   if (!clerkUserId) {
-    res.status(401).json({ error: 'Inte inloggad' });
-    return null;
+    throw ApiError.unauthorized('Inte inloggad');
   }
 
   let email = 'unknown@example.com';
@@ -41,45 +42,36 @@ async function resolveAdmin(req: Request, res: Response): Promise<any | null> {
   );
 
   if (!account) {
-    res.status(401).json({ error: 'Inte inloggad' });
-    return null;
+    throw ApiError.unauthorized('Inte inloggad');
   }
 
   if (account.role !== 'admin') {
-    res.status(403).json({ error: 'Du har inte behörighet' });
-    return null;
+    throw ApiError.forbidden('Du har inte behörighet');
   }
   return account;
 }
 
-router.get('/users', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.get('/users', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
-  try {
-    const users = await accountService.getAllAccounts();
-    return res.json(users);
-  } catch (error: any) {
-    console.error('Error fetching admin users:', error);
-    return res.status(500).json({ error: 'Kunde inte hämta data' });
-  }
-});
+  const users = await accountService.getAllAccounts();
+  return res.json(users);
+}));
 
 /**
  * DELETE /admin/users/:userId
  * Deletes a local account user (and tries to delete Clerk user) (admin only)
  */
-router.delete('/users/:userId', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.delete('/users/:userId', asyncHandler(async (req: Request, res: Response) => {
+  const admin = await resolveAdmin(req);
 
   const userId = Number(req.params.userId);
   if (!Number.isInteger(userId) || userId <= 0) {
-    return res.status(400).json({ error: 'Ogiltigt användar-ID' });
+    throw ApiError.badRequest('Ogiltigt användar-ID', { userId });
   }
 
   if (userId === admin.id) {
-    return res.status(403).json({ error: 'Du kan inte ta bort dig själv' });
+    throw ApiError.forbidden('Du kan inte ta bort dig själv');
   }
 
   let connection: any;
@@ -95,7 +87,7 @@ router.delete('/users/:userId', async (req: Request, res: Response) => {
     const targetUser = Array.isArray(rows) ? rows[0] : null;
     if (!targetUser) {
       await connection.rollback();
-      return res.status(404).json({ error: 'Användaren hittades inte' });
+      throw ApiError.notFound('Användaren hittades inte', { userId });
     }
 
     await connection.query(
@@ -111,7 +103,7 @@ router.delete('/users/:userId', async (req: Request, res: Response) => {
     const deletedRows = deletedUsers?.affectedRows ?? 0;
     if (deletedRows === 0) {
       await connection.rollback();
-      return res.status(404).json({ error: 'Användaren hittades inte' });
+      throw ApiError.notFound('Användaren hittades inte', { userId });
     }
 
     await connection.commit();
@@ -132,23 +124,23 @@ router.delete('/users/:userId', async (req: Request, res: Response) => {
     if (connection) {
       await connection.rollback();
     }
-    console.error('Error deleting user:', error);
-    return res.status(500).json({ error: 'Kunde inte ta bort användaren' });
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw ApiError.internal('Kunde inte ta bort användaren');
   } finally {
     connection?.release?.();
   }
-});
+}));
 
 /**
  * GET /admin/events
  * Returns all events from the database
  */
-router.get('/events', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.get('/events', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
-  try {
-    const [rows]: any[] = await db.query(`
+  const [rows]: any[] = await db.query(`
       SELECT
         e.id,
         e.title,
@@ -168,26 +160,23 @@ router.get('/events', async (req: Request, res: Response) => {
       LEFT JOIN categories c ON e.category_id = c.id
       ORDER BY e.id DESC
     `);
-    return res.json(rows);
-  } catch (error: any) {
-    console.error('Error fetching admin events:', error);
-    return res.status(500).json({ error: 'Kunde inte hämta data' });
-  }
-});
+  return res.json(rows);
+}));
 
 /**
  * GET /admin/events/:eventId
  * Returns full details for a single event
  */
-router.get('/events/:eventId', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.get('/events/:eventId', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
-  const { eventId } = req.params;
+  const eventId = Number(req.params.eventId);
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    throw ApiError.badRequest('Ogiltigt event-ID', { eventId });
+  }
 
-  try {
-    const [rows]: any[] = await db.query(
-      `
+  const [rows]: any[] = await db.query(
+    `
       SELECT
         e.id,
         e.title,
@@ -210,30 +199,28 @@ router.get('/events/:eventId', async (req: Request, res: Response) => {
       WHERE e.id = ?
       LIMIT 1
       `,
-      [eventId]
-    );
+    [eventId]
+  );
 
-    const event = Array.isArray(rows) ? rows[0] : null;
-    if (!event) {
-      return res.status(404).json({ error: 'Eventet hittades inte' });
-    }
-
-    return res.status(200).json(event);
-  } catch (error: any) {
-    console.error('Error fetching event details:', error);
-    return res.status(500).json({ error: 'Kunde inte hämta eventet' });
+  const event = Array.isArray(rows) ? rows[0] : null;
+  if (!event) {
+    throw ApiError.notFound('Eventet hittades inte', { eventId });
   }
-});
+
+  return res.status(200).json(event);
+}));
 
 /**
  * DELETE /admin/events/:eventId
  * Deletes an event and related moderation rows
  */
-router.delete('/events/:eventId', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.delete('/events/:eventId', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
-  const { eventId } = req.params;
+  const eventId = Number(req.params.eventId);
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    throw ApiError.badRequest('Ogiltigt event-ID', { eventId });
+  }
 
   let connection: any;
   try {
@@ -247,22 +234,20 @@ router.delete('/events/:eventId', async (req: Request, res: Response) => {
 
     if (!Array.isArray(eventRows) || eventRows.length === 0) {
       await connection.rollback();
-      return res.status(404).json({ error: 'Eventet hittades inte' });
+      throw ApiError.notFound('Eventet hittades inte', { eventId });
     }
 
-    const event = eventRows[0];
-
-    const [deletedReports]: any[] = await connection.query(
+    await connection.query(
       `DELETE FROM event_reports WHERE event_id = ?`,
       [eventId]
     );
 
-    const [deletedTags]: any[] = await connection.query(
+    await connection.query(
       `DELETE FROM event_tags WHERE event_id = ?`,
       [eventId]
     );
 
-    const [deletedEvents]: any[] = await connection.query(
+    await connection.query(
       `DELETE FROM events WHERE id = ?`,
       [eventId]
     );
@@ -277,53 +262,51 @@ router.delete('/events/:eventId', async (req: Request, res: Response) => {
     if (connection) {
       await connection.rollback();
     }
-    console.error('Error deleting event:', error);
-    return res.status(500).json({ error: 'Kunde inte ta bort eventet' });
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw ApiError.internal('Kunde inte ta bort eventet');
   } finally {
     connection?.release?.();
   }
-});
+}));
 
 /**
  * DELETE /admin/event-reports/:reportId
  * Dismisses a report without deleting the event
  */
-router.delete('/event-reports/:reportId', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.delete('/event-reports/:reportId', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
-  const { reportId } = req.params;
-
-  try {
-    const [result]: any[] = await db.query(
-      `DELETE FROM event_reports WHERE id = ?`,
-      [reportId]
-    );
-
-    const deletedRows = result?.affectedRows ?? 0;
-
-    if (deletedRows === 0) {
-      return res.status(404).json({ error: 'Rapporten hittades inte' });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'Rapporten har avfärdats',
-    });
-  } catch (error: any) {
-    console.error('Error dismissing event report:', error);
-    return res.status(500).json({ error: 'Kunde inte avfärda rapporten' });
+  const reportId = Number(req.params.reportId);
+  if (!Number.isInteger(reportId) || reportId <= 0) {
+    throw ApiError.badRequest('Ogiltigt rapport-ID', { reportId });
   }
-});
+
+  const [result]: any[] = await db.query(
+    `DELETE FROM event_reports WHERE id = ?`,
+    [reportId]
+  );
+
+  const deletedRows = result?.affectedRows ?? 0;
+
+  if (deletedRows === 0) {
+    throw ApiError.notFound('Rapporten hittades inte', { reportId });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: 'Rapporten har avfärdats',
+  });
+}));
 
 /**
  * GET /admin/reported-users
  * Returns all reported users from the user_reports table
  * Joins with users table (legacy demo users) to get user details
  */
-router.get('/reported-users', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.get('/reported-users', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
   try {
     const [rows]: any[] = await db.query(`
@@ -352,63 +335,55 @@ router.get('/reported-users', async (req: Request, res: Response) => {
     if (error?.code === 'ER_NO_SUCH_TABLE') {
       return res.status(200).json([]);
     }
-    console.error('Error fetching reported users:', error);
-    return res.status(500).json({ error: 'Kunde inte hämta rapporterade användare' });
+    throw ApiError.internal('Kunde inte hämta rapporterade användare');
   }
-});
+}));
 
 /**
  * DELETE /admin/user-reports/:reportId
  * Dismisses a user report without deleting the user
  */
-router.delete('/user-reports/:reportId', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.delete('/user-reports/:reportId', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
   const reportId = Number(req.params.reportId);
   if (!Number.isInteger(reportId) || reportId <= 0) {
-    return res.status(400).json({ error: 'Ogiltigt rapport-ID' });
+    throw ApiError.badRequest('Ogiltigt rapport-ID', { reportId });
   }
 
-  try {
-    const [result]: any[] = await db.query(
-      `DELETE FROM user_reports WHERE id = ?`,
-      [reportId]
-    );
+  const [result]: any[] = await db.query(
+    `DELETE FROM user_reports WHERE id = ?`,
+    [reportId]
+  );
 
-    const deletedRows = result?.affectedRows ?? 0;
+  const deletedRows = result?.affectedRows ?? 0;
 
-    if (deletedRows === 0) {
-      return res.status(404).json({ error: 'Rapporten hittades inte' });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'Rapporten har avfärdats',
-    });
-  } catch (error) {
-    console.error('Error dismissing user report:', error);
-    return res.status(500).json({ error: 'Kunde inte avfärda rapporten' });
+  if (deletedRows === 0) {
+    throw ApiError.notFound('Rapporten hittades inte', { reportId });
   }
-});
+
+  return res.status(200).json({
+    success: true,
+    message: 'Rapporten har avfärdats',
+  });
+}));
 
 /**
  * POST /admin/invitations
  * Send a Clerk invitation to a new admin email address.
  */
-router.post('/invitations', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.post('/invitations', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
   const { emailAddress } = req.body;
 
   if (!emailAddress || typeof emailAddress !== 'string') {
-    return res.status(400).json({ error: 'E-postadress krävs' });
+    throw ApiError.badRequest('E-postadress krävs');
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(emailAddress)) {
-    return res.status(400).json({ error: 'Ogiltig e-postadress' });
+    throw ApiError.badRequest('Ogiltig e-postadress');
   }
 
   try {
@@ -433,37 +408,34 @@ router.post('/invitations', async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    console.error('[admin/invitations] ✗ Error:', error.message);
-
     if (error?.errors) {
       const clerkErrors = error.errors;
       for (const e of clerkErrors) {
         if (e.code === 'duplicate_record' || e.message?.includes('already')) {
-          return res.status(409).json({
-            error: 'En inbjudan har redan skickats till denna e-postadress, eller så finns användaren redan',
-          });
+          throw ApiError.conflict(
+            'En inbjudan har redan skickats till denna e-postadress, eller så finns användaren redan'
+          );
         }
       }
     }
 
-    if (error.message?.includes('already')) {
-      return res.status(409).json({
-        error: 'En inbjudan har redan skickats till denna e-postadress, eller så finns användaren redan',
-      });
+    if (error?.message?.includes('already')) {
+      throw ApiError.conflict(
+        'En inbjudan har redan skickats till denna e-postadress, eller så finns användaren redan'
+      );
     }
 
-    return res.status(500).json({ error: 'Kunde inte skicka inbjudan' });
+    throw ApiError.internal('Kunde inte skicka inbjudan');
   }
-});
+}));
 
 /**
  * GET /admin/reported-events
  * Returns all reported events
  * Joins event_reports, events, and account_users to provide full context
  */
-router.get('/reported-events', async (req: Request, res: Response) => {
-  const admin = await resolveAdmin(req, res);
-  if (!admin) return;
+router.get('/reported-events', asyncHandler(async (req: Request, res: Response) => {
+  await resolveAdmin(req);
 
   try {
     const [rows]: any[] = await db.query(`
@@ -506,9 +478,8 @@ router.get('/reported-events', async (req: Request, res: Response) => {
       return res.status(200).json([]);
     }
 
-    console.error('[admin/reported-events] Error:', err);
-    return res.status(500).json({ error: 'Kunde inte hämta rapporterade events' });
+    throw ApiError.internal('Kunde inte hämta rapporterade events');
   }
-});
+}));
 
 export default router;

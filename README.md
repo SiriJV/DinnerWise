@@ -184,6 +184,27 @@ Whenever you add or change a route, update
 Base URL (local): `http://localhost:3001`.
 Routes are mounted directly (e.g. `/events`, `/restaurants`, `/users`).
 
+### Error Responses
+
+All error responses use the same format:
+
+```json
+{
+	"success": false,
+	"error": {
+		"code": "NOT_FOUND",
+		"message": "Eventet hittades inte",
+		"details": {
+			"id": 123
+		}
+	}
+}
+```
+
+Notes:
+- Gemini returns a custom error payload.
+- Common `code` values: `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `SERVICE_UNAVAILABLE`, `INTERNAL_SERVER_ERROR`.
+
 ## Database Schema
 
 Run migrations to create tables:

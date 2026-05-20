@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { Resend } from 'resend';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const brandName = process.env.BRAND_NAME;
 const contactEmail = process.env.CONTACT_EMAIL;
@@ -8,25 +10,21 @@ const newsLetterEmail = process.env.NEWSLETTER_EMAIL;
 if (!contactEmail) {
   throw new Error('CONTACT_EMAIL is not defined');
 }
-// Centralized error handling for required fields in email routes
-function checkAllFieldsRequired(obj: any, res: any): boolean {
+
+function checkAllFieldsRequired(obj: any): void {
   for (const field of Object.keys(obj)) {
     if (!obj[field]) {
-      res.status(400).json({ error: `Missing ${field}` });
-      return false;
+      throw ApiError.badRequest(`Fältet ${field} saknas`);
     }
   }
-  return true;
 }
-// Helper for sending missing field error in email routes
-function checkRequiredFields(obj: any, fields: string[], res: any): boolean {
+
+function checkRequiredFields(obj: any, fields: string[]): void {
   for (const field of fields) {
     if (!obj[field]) {
-      res.status(400).json({ error: `Missing ${field}` });
-      return false;
+      throw ApiError.badRequest(`Fältet ${field} saknas`);
     }
   }
-  return true;
 }
 
 function formatDate(date: string | Date): string {
@@ -45,21 +43,23 @@ const router = Router();
 const devEmail = 'jessicaagren@hotmail.com';
 
 // Middleware to check if Resend is configured
-const checkResendConfigured = (req: any, res: any, next: any) => {
+const checkResendConfigured = (_req: any, _res: any, next: any) => {
   if (!resend) {
-    return res.status(503).json({ 
-      error: 'Email service is not configured. Set RESEND_API_KEY in .env' 
-    });
+    return next(
+      ApiError.serviceUnavailable(
+        'E-posttjänsten är inte konfigurerad. Ange RESEND_API_KEY i .env'
+      )
+    );
   }
   next();
 };
 
 // Välkomstmejl
-router.post('/send-welcome-email', checkResendConfigured, async (req, res) => {
+router.post('/send-welcome-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { to } = req.body;
 
   if (!to) {
-    return res.status(400).json({ error: 'Missing to' });
+    throw ApiError.badRequest('Mottagare saknas');
   }
 
   try {
@@ -90,21 +90,17 @@ router.post('/send-welcome-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till värd
-router.post('/send-host-email', checkResendConfigured, async (req, res) => {
+router.post('/send-host-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, to } = req.body;
-  if (
-    !checkRequiredFields(
-      req.body,
-      ['restaurant', 'date', 'event', 'participants', 'eventId', 'name'],
-      res,
-    )
-  )
-    return;
+  checkRequiredFields(
+    req.body,
+    ['restaurant', 'date', 'event', 'participants', 'eventId', 'name'],
+  );
 
   try {
     const bookingUrl = `http://localhost:5173/`;
@@ -137,15 +133,15 @@ router.post('/send-host-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till restaurang
-router.post('/send-restaurant-booking-email', checkResendConfigured, async (req, res) => {
+router.post('/send-restaurant-booking-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, slug, to } =
     req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const bookingUrl = `http://localhost:5173/bokningshantering/${slug}?eventId=${eventId}`;
@@ -178,15 +174,15 @@ router.post('/send-restaurant-booking-email', checkResendConfigured, async (req,
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bekräftelsemejl till värd
-router.post('/send-confirmation-email-to-host', checkResendConfigured, async (req, res) => {
+router.post('/send-confirmation-email-to-host', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, event, participants, eventId, name, path, to } =
     req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const formattedDate = formatDate(date);
@@ -219,14 +215,14 @@ router.post('/send-confirmation-email-to-host', checkResendConfigured, async (re
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till deltagare
-router.post('/send-booking-email', checkResendConfigured, async (req, res) => {
+router.post('/send-booking-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, startTime, event, path, to } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const formattedDate = formatDate(date);
@@ -256,14 +252,14 @@ router.post('/send-booking-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till värd när deltagare anmält sig
-router.post('/send-booking-email-to-host', checkResendConfigured, async (req, res) => {
+router.post('/send-booking-email-to-host', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, startTime, event, path, name, to } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const formattedDate = formatDate(date);
@@ -294,14 +290,14 @@ router.post('/send-booking-email-to-host', checkResendConfigured, async (req, re
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till väntelistedeltagare
-router.post('/send-waitlist-email', checkResendConfigured, async (req, res) => {
+router.post('/send-waitlist-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, startTime, event, path, to } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const formattedDate = formatDate(date);
@@ -334,14 +330,14 @@ router.post('/send-waitlist-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bokningsmejl till värd när deltagare skrivit upp sig på väntelista
-router.post('/send-waitlist-email-to-host', checkResendConfigured, async (req, res) => {
+router.post('/send-waitlist-email-to-host', checkResendConfigured, asyncHandler(async (req, res) => {
   const { restaurant, date, startTime, event, path, name, to } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const formattedDate = formatDate(date);
@@ -372,14 +368,14 @@ router.post('/send-waitlist-email-to-host', checkResendConfigured, async (req, r
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Feedbackmejl till deltagare
-router.post('/send-feedback-email', checkResendConfigured, async (req, res) => {
+router.post('/send-feedback-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { event, path, name, to } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const html = `
@@ -411,14 +407,14 @@ router.post('/send-feedback-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Delning på mejl
-router.post('/send-share-email', checkResendConfigured, async (req, res) => {
+router.post('/send-share-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { to, event, path, emailMessage } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const html = `
@@ -448,14 +444,14 @@ router.post('/send-share-email', checkResendConfigured, async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 // Bekräftelse på nyhetsbrev
-router.post('/send-newsletter-confirmation-email', checkResendConfigured, async (req, res) => {
+router.post('/send-newsletter-confirmation-email', checkResendConfigured, asyncHandler(async (req, res) => {
   const { to, name } = req.body;
-  if (!checkAllFieldsRequired(req.body, res)) return;
+  checkAllFieldsRequired(req.body);
 
   try {
     const html = `
@@ -485,8 +481,8 @@ router.post('/send-newsletter-confirmation-email', checkResendConfigured, async 
     res.json({ success: true, data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    throw ApiError.internal('Kunde inte skicka e-post');
   }
-});
+}));
 
 export default router;

@@ -2,10 +2,12 @@ import { Router, Request, Response } from 'express';
 import { clerkClient, getAuth } from '@clerk/express';
 import * as accountService from '../services/accountUserService.js';
 import { db } from '../db.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const router = Router();
 
-router.get('/resolve-target', async (req: Request, res: Response) => {
+router.get('/resolve-target', asyncHandler(async (req: Request, res: Response) => {
   const alias = typeof req.query.alias === 'string' ? req.query.alias.trim() : '';
   const legacyUserId = Number(req.query.legacyUserId);
   const name = typeof req.query.name === 'string' ? req.query.name.trim() : '';
@@ -67,19 +69,19 @@ router.get('/resolve-target', async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(404).json({ error: 'Användaren hittades inte' });
+    throw ApiError.notFound('Användaren hittades inte');
   } catch (error) {
     console.error('[user-report] resolve-target error:', error);
-    return res.status(500).json({ error: 'Kunde inte hitta rapporterbar användare' });
+    throw ApiError.internal('Kunde inte hitta rapporterbar användare');
   }
-});
+}));
 
-router.post('/:userId/report', async (req: Request, res: Response) => {
+router.post('/:userId/report', asyncHandler(async (req: Request, res: Response) => {
   const { userId } = req.params;
   const incomingUserId = Number(userId);
 
   if (!Number.isInteger(incomingUserId) || incomingUserId <= 0) {
-    return res.status(400).json({ error: 'Ogiltigt användar-ID' });
+    throw ApiError.badRequest('Ogiltigt användar-ID', { userId: incomingUserId });
   }
 
   const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : null;
@@ -121,9 +123,9 @@ router.post('/:userId/report', async (req: Request, res: Response) => {
     }
 
     if (resolvedAccountUserId === null) {
-      return res.status(404).json({
-        error: 'Användaren finns inte i account_users än. Användarens profil har möjligt inte synkats till det nya systemet.',
-      });
+      throw ApiError.notFound(
+        'Användaren finns inte i account_users än. Användarens profil har möjligt inte synkats till det nya systemet.'
+      );
     }
 
     await db.query(`
@@ -164,8 +166,8 @@ router.post('/:userId/report', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('[user-report] SQL error:', error);
-    return res.status(500).json({ error: 'Kunde inte rapportera användaren' });
+    throw ApiError.internal('Kunde inte rapportera användaren');
   }
-});
+}));
 
 export default router;

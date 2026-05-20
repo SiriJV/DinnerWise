@@ -21,6 +21,9 @@ import emailRouter from './routes/email.js';
 import geminiRouter from './routes/gemini.js';
 import cors from 'cors';
 import { env } from './config/env.js';
+import { asyncHandler } from './utils/asyncHandler.js';
+import { ApiError } from './utils/ApiError.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
@@ -68,21 +71,25 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.post('/users/:userId/report', async (req, res) => {
-  const userId = Number(req.params.userId);
-  if (!Number.isInteger(userId) || userId <= 0) {
-    return res.status(400).json({ error: 'Ogiltigt användar-ID' });
-  }
-  const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : null;
-  const normalizedReason = reason && reason.length > 0 ? reason : null;
-  try {
+app.post(
+  '/users/:userId/report',
+  asyncHandler(async (req, res) => {
+    const userId = Number(req.params.userId);
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw ApiError.badRequest('Ogiltigt användar-ID', { userId });
+    }
+
+    const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : null;
+    const normalizedReason = reason && reason.length > 0 ? reason : null;
+
     const [userLookup]: any[] = await db.query(
       'SELECT id, name FROM users WHERE id = ? LIMIT 1',
       [userId]
     );
     if (!Array.isArray(userLookup) || userLookup.length === 0) {
-      return res.status(404).json({ error: 'Användaren hittades inte' });
+      throw ApiError.notFound('Användaren hittades inte', { userId });
     }
+
     await db.query(
       `CREATE TABLE IF NOT EXISTS user_reports (id INT AUTO_INCREMENT PRIMARY KEY, reported_user_id INT NOT NULL, reported_by_account_user_id INT NULL, reason TEXT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX idx_user_reports_reported_user (reported_user_id), INDEX idx_user_reports_reporter (reported_by_account_user_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
     );
@@ -90,15 +97,13 @@ app.post('/users/:userId/report', async (req, res) => {
       `INSERT INTO user_reports (reported_account_user_id, reported_by_account_user_id, reason, created_at) VALUES (?, NULL, ?, NOW())`,
       [userId, normalizedReason]
     );
+
     return res.status(200).json({
       success: true,
       message: 'Användaren har rapporterats',
     });
-  } catch (error: any) {
-    console.error('Error reporting user:', error);
-    return res.status(500).json({ error: 'Kunde inte rapportera användaren' });
-  }
-});
+  })
+);
 
 // Important: @clerk/express requires both secret and publishable keys
 if (hasSecretKey && hasPublishableKey) {
@@ -136,17 +141,11 @@ app.use('/cities', citiesRouter);
 app.use('/email', emailRouter);
 app.use('/gemini', geminiRouter);
 
-// Error handling middleware
-app.use((err: any, _req: any, res: any, _next: any) => {
-  console.error('Unhandled error:', err);
-  res
-    .status(500)
-    .json({ error: 'Internal server error', message: err?.message });
+// 404 handler
+app.use((_req, _res, next) => {
+  next(ApiError.notFound('Route hittades inte'));
 });
 
-// 404 handler
-app.use((_req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+app.use(errorHandler);
 
 export default app;

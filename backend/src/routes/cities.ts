@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { db } from '../db.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', asyncHandler(async (req, res) => {
   const q = (req.query.q as string | undefined)?.toLowerCase();
 
   let sql = 'SELECT * FROM new_cities';
@@ -16,17 +17,12 @@ router.get('/', async (req, res) => {
 
   sql += ' ORDER BY id';
 
-  try {
-    const [rows] = await db.query(sql, params);
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta städer' });
-  }
-});
+  const [rows] = await db.query(sql, params);
+  res.json(rows);
+}));
 
 
-router.get('/search', async (req, res) => {
+router.get('/search', asyncHandler(async (req, res) => {
   const { q } = req.query;
 
   if (!q) {
@@ -35,22 +31,17 @@ router.get('/search', async (req, res) => {
 
   const term = q.toString().toLowerCase();
 
-  try {
-    const [rows]: any[] = await db.query(
-      `
+  const [rows]: any[] = await db.query(
+    `
       SELECT *
       FROM new_cities
       WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?
       ORDER BY name ASC
       `,
-      [`${term}%`, `% ${term}%`]
-    );
+    [`${term}%`, `% ${term}%`]
+  );
 
-    res.json(rows);
-  } catch (err) {
-    console.error('Search error:', err);
-    res.status(500).json({ error: 'Kunde inte söka städer' });
-  }
-});
+  res.json(rows);
+}));
 
 export default router;

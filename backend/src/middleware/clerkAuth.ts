@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { clerkClient, getAuth } from '@clerk/express';
 import { db } from '../db.js';
 import * as accountService from '../services/accountUserService.js';
+import { ApiError } from '../utils/ApiError.js';
 
 process.stderr.write('[STARTUP] clerkAuth.ts file loaded!\n');
 
@@ -131,7 +132,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     const hasHeader = !!req.headers.authorization;
     const headerPrefix = req.headers.authorization ? req.headers.authorization.substring(0, 30) : 'none';
     console.log('[requireAuth REJECT]', { path: req.path, header: hasHeader, userId: !!req.auth?.userId });
-    return res.status(401).json({ error: 'Unauthorized - Clerk authentication required' });
+    return next(ApiError.unauthorized('Inte inloggad - Clerk-autentisering krävs'));
   }
   
   next();
@@ -139,11 +140,11 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.currentAccount) {
-    return res.status(401).json({ error: 'Unauthorized - account not found' });
+    return next(ApiError.unauthorized('Inte inloggad - konto saknas'));
   }
 
   if (req.currentAccount.role !== 'admin') {
-    return res.status(403).json({ error: 'Forbidden - admin privileges required' });
+    return next(ApiError.forbidden('Behörighet saknas - admin krävs'));
   }
 
   next();

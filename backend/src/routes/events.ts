@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { db } from '../db.js';
 import { getAuth, clerkClient } from '@clerk/express';
 import * as accountService from '../services/accountUserService.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const router = Router();
 
@@ -11,7 +13,7 @@ function parseIds(param: any): number[] {
   return [Number(param)].filter(Boolean);
 }
 
-router.get('/', async (req, res) => {
+router.get('/', asyncHandler(async (req, res) => {
   const {
     category_ids,
     restaurant_id,
@@ -104,21 +106,18 @@ router.get('/', async (req, res) => {
     sql += ` ORDER BY e.date ASC, e.start_time ASC `;
   }
 
-  try {
-    const [rows] = await db.query(sql, params);
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta event' });
+  const [rows] = await db.query(sql, params);
+  res.json(rows);
+}));
+
+router.get('/:id', asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw ApiError.badRequest('Ogiltigt event-ID', { id });
   }
-});
 
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const [rows] = await db.query(
-      `
+  const [rows] = await db.query(
+    `
       SELECT 
         e.id,
         e.title,
@@ -138,49 +137,47 @@ router.get('/:id', async (req, res) => {
       JOIN tripadvisor_restaurants r ON e.restaurant_id = r.id
       WHERE e.id = ?
       `,
-      [id],
-    );
+    [id],
+  );
 
-    const events = rows as any[];
-    if (events.length === 0) {
-      return res.status(404).json({ error: 'Event hittades inte' });
-    }
-
-    res.json(events[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta event' });
+  const events = rows as any[];
+  if (events.length === 0) {
+    throw ApiError.notFound('Event hittades inte', { id });
   }
-});
 
-router.get('/:id/tags', async (req, res) => {
-  const { id } = req.params;
+  res.json(events[0]);
+}));
 
-  try {
-    const [rows] = await db.query(
-      `
+router.get('/:id/tags', asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw ApiError.badRequest('Ogiltigt event-ID', { id });
+  }
+
+  const [rows] = await db.query(
+    `
       SELECT t.id, t.name, t.category_id
       FROM tags t
       JOIN event_tags et ON t.id = et.tag_id
       WHERE et.event_id = ?
       `,
-      [id],
-    );
+    [id],
+  );
 
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Kunde inte hämta taggar för eventet' });
-  }
-});
+  res.json(rows);
+}));
 
 /**
  * POST /events/:id/report
  * Report an event
  */
-router.post('/:id/report', async (req: Request, res: Response) => {
-  const { id } = req.params;
+router.post('/:id/report', asyncHandler(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
   const { reason } = req.body;
+
+  if (!Number.isInteger(id) || id <= 0) {
+    throw ApiError.badRequest('Ogiltigt event-ID', { id });
+  }
 
   let reporterId: number | null = null;
 
@@ -216,34 +213,24 @@ router.post('/:id/report', async (req: Request, res: Response) => {
     reporterId = null;
   }
 
-  try {
-    const [eventRows] = await db.query('SELECT id FROM events WHERE id = ?', [id]);
-    if ((eventRows as any[]).length === 0) {
-      return res.status(404).json({ error: 'Eventet hittades inte' });
-    }
-  } catch (err) {
-    console.error('Error checking event existence:', err);
-    return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
+  const [eventRows] = await db.query('SELECT id FROM events WHERE id = ?', [id]);
+  if ((eventRows as any[]).length === 0) {
+    throw ApiError.notFound('Eventet hittades inte', { id });
   }
 
   if (reporterId !== null) {
-    try {
-      const [existingReports] = await db.query(
-        `SELECT id FROM event_reports 
+    const [existingReports] = await db.query(
+      `SELECT id FROM event_reports 
          WHERE event_id = ? AND reported_by_account_user_id = ? AND status = 'open'`,
-        [id, reporterId]
-      );
+      [id, reporterId]
+    );
 
-      if ((existingReports as any[]).length > 0) {
-        return res.status(200).json({
-          success: true,
-          message: 'Du har redan rapporterat detta event',
-          isDuplicate: true,
-        });
-      }
-    } catch (err) {
-      console.error('Error checking for duplicate reports:', err);
-      return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
+    if ((existingReports as any[]).length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'Du har redan rapporterat detta event',
+        isDuplicate: true,
+      });
     }
   }
 
@@ -267,10 +254,8 @@ router.post('/:id/report', async (req: Request, res: Response) => {
         isDuplicate: true,
       });
     }
-
-    console.error('Error creating report:', err);
-    return res.status(500).json({ error: 'Kunde inte rapportera eventet' });
+    throw err;
   }
-});
+}));
 
 export default router;

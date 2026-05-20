@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { db } from '../db.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', asyncHandler(async (req, res) => {
   const { q, type, limit = 10 } = req.query;
 
   if (!q || typeof q !== 'string') {
-    return res
-      .status(400)
-      .json({ error: 'Sökparameter "q" saknas eller är ogiltig' });
+    throw ApiError.badRequest('Sökparameter "q" saknas eller är ogiltig');
   }
 
   const search = `%${q}%`;
@@ -188,15 +188,10 @@ LIMIT ?`,
       }
 
       default:
-        return res.status(400).json({
-          error:
-            'Ogiltig söktyp. Tillåtna värden: all, events, cities, restaurants, users, tags, categories',
-        });
+        throw ApiError.badRequest(
+          'Ogiltig söktyp. Tillåtna värden: all, events, cities, restaurants, users, tags, categories'
+        );
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Sökningen misslyckades' });
-  }
-});
+}));
 
 export default router;

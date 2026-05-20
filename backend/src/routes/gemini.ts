@@ -19,7 +19,7 @@ router.post(
       const { prompt, type = 'event_description' } = req.body;
 
       if (!prompt || prompt.trim().length === 0) {
-        res.status(400).json({ error: 'Prompt is required' });
+        res.status(400).json({ error: 'Prompt krävs' });
         return;
       }
 
@@ -107,7 +107,7 @@ Do not include any markdown formatting, just plain text.`;
         content: '',
         error: userErrorMessage,
         errorType,
-        message: errorMessage, // For debugging
+        message: 'Ett internt fel inträffade.',
       });
     }
   },
