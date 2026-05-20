@@ -38,7 +38,7 @@ An app by [@SiriJV](https://github.com/SiriJV) and [@jessicaagren](https://githu
 
 - Node.js 18+ (with npm)
 - MySQL 8.0+
-- Clerk account (for authentication)
+- Clerk account (for authentication in production)
 
 ## Getting Started
 
@@ -57,6 +57,8 @@ cd backend
 npm install
 ```
 
+Note: run backend commands from the `backend/` directory.
+
 ### 2. Setup Environment Variables (Backend)
 
 ```bash
@@ -74,7 +76,7 @@ DB_USER=root
 DB_PASSWORD=root
 DB_NAME=dinnerwise
 
-# Clerk Authentication (dev + prod)
+# Clerk Authentication (optional in development, required in production)
 CLERK_SECRET_KEY=your_key_here
 CLERK_PUBLISHABLE_KEY=your_key_here
 
@@ -151,7 +153,8 @@ The backend server will start at `http://localhost:3001` and log its configurati
 
 ### Development vs Production
 
-- Always required: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`
+- Always required: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
+- Production only: `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`
 - Dev defaults: `NODE_ENV=development`, `FRONTEND_URL=http://localhost:5173`, `API_PUBLIC_URL=http://localhost:3001`
 - Prod overrides: `NODE_ENV=production`, `FRONTEND_URL=https://your-domain.com`, `API_PUBLIC_URL=https://api.your-domain.com`
 - Optional integrations: `TRIPADVISOR_API_KEY`, `GOOGLE_GENERATIVE_AI_KEY`, `RESEND_API_KEY`
@@ -177,6 +180,9 @@ How the docs are generated:
 
 Whenever you add or change a route, update
 [backend/openapi.yaml](backend/openapi.yaml) so the docs stay accurate.
+
+Base URL (local): `http://localhost:3001`.
+Routes are mounted directly (e.g. `/events`, `/restaurants`, `/users`).
 
 ## Database Schema
 

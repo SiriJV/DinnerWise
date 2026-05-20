@@ -6,7 +6,7 @@ Node.js + Express backend for the DinnerWise application.
 
 - Node.js 18+ (with npm)
 - MySQL 8.0+
-- Clerk account (for authentication)
+- Clerk account (for authentication in production)
 
 ## Getting Started
 
@@ -26,7 +26,7 @@ DB_USER=root
 DB_PASSWORD=root
 DB_NAME=dinnerwise
 
-# Clerk Authentication (get from https://dashboard.clerk.com)
+# Clerk Authentication (optional in development, required in production)
 CLERK_SECRET_KEY=sk_test_your_key_here
 CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
 
@@ -94,6 +94,8 @@ This ensures you catch configuration issues immediately rather than experiencing
 - `DB_USER` - MySQL user
 - `DB_PASSWORD` - MySQL password
 - `DB_NAME` - MySQL database name
+Production only:
+
 - `CLERK_SECRET_KEY` - Clerk authentication key
 - `CLERK_PUBLISHABLE_KEY` - Clerk public key
 
@@ -109,7 +111,8 @@ This ensures you catch configuration issues immediately rather than experiencing
 
 ## API Endpoints
 
-All endpoints are prefixed with `/api/v1/` in production configuration.
+Endpoints are mounted directly (e.g. `/events`, `/restaurants`, `/users`).
+Use `API_PUBLIC_URL` to configure the base URL clients should call.
 
 ### Health Check
 

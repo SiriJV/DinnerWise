@@ -77,8 +77,8 @@ export const env = {
 
   // Clerk Authentication
   clerk: {
-    secretKey: getEnvVar('CLERK_SECRET_KEY'),
-    publishableKey: getEnvVar('CLERK_PUBLISHABLE_KEY'),
+    secretKey: process.env.CLERK_SECRET_KEY,
+    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
   },
 
   // Frontend URL (for CORS)
@@ -113,8 +113,13 @@ export function validateEnv(): void {
   if (!env.db.database) errors.push('DB_NAME is required');
 
   // Validate Clerk
-  if (!env.clerk.secretKey) errors.push('CLERK_SECRET_KEY is required');
-  if (!env.clerk.publishableKey) errors.push('CLERK_PUBLISHABLE_KEY is required');
+  if (env.node.isProd) {
+    if (!env.clerk.secretKey) errors.push('CLERK_SECRET_KEY is required in production');
+    if (!env.clerk.publishableKey)
+      errors.push('CLERK_PUBLISHABLE_KEY is required in production');
+  } else if (!env.clerk.secretKey || !env.clerk.publishableKey) {
+    console.warn('[CONFIG] Clerk keys are not set. Auth will be disabled in dev.');
+  }
 
   if (errors.length > 0) {
     console.error('\n❌ CONFIGURATION ERRORS:');
@@ -140,6 +145,6 @@ export function logEnvInfo(): void {
   console.log(`  Database Pool: ${env.db.connectionLimit} connections max`);
   console.log(`  Frontend URL: ${env.frontend.url}`);
   console.log(`  API Public URL: ${env.api.publicUrl}`);
-  console.log(`  Clerk: ${env.clerk.publishableKey ? '✓ Configured' : '✗ Missing'}`);
+  console.log(`  Clerk: ${env.clerk.publishableKey ? 'Configured' : 'Missing'}`);
   console.log();
 }
