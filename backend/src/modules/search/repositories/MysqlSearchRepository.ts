@@ -1,8 +1,16 @@
 import { db } from '../../../shared/db/mysql.js';
+import type {
+  SearchCategory,
+  SearchCity,
+  SearchEvent,
+  SearchRestaurant,
+  SearchTag,
+  SearchUser,
+} from '../domain/SearchResults.js';
 import type { SearchRepository } from './SearchRepository.js';
 
 export class MysqlSearchRepository implements SearchRepository {
-  async searchEvents(term: string, limit: number): Promise<any[]> {
+  async searchEvents(term: string, limit: number): Promise<SearchEvent[]> {
     const [events] = await db.query(
       `SELECT 
   e.id,
@@ -27,10 +35,10 @@ LIMIT ?`,
       [term, term, limit]
     );
 
-    return events as any[];
+    return events as SearchEvent[];
   }
 
-  async searchCities(term: string, limit: number): Promise<any[]> {
+  async searchCities(term: string, limit: number): Promise<SearchCity[]> {
     const [rows] = await db.query(
       `SELECT id, name, latitude, longitude
          FROM new_cities
@@ -40,10 +48,10 @@ LIMIT ?`,
       [term, limit]
     );
 
-    return rows as any[];
+    return rows as SearchCity[];
   }
 
-  async searchRestaurants(term: string, limit: number): Promise<any[]> {
+  async searchRestaurants(term: string, limit: number): Promise<SearchRestaurant[]> {
     const [rows] = await db.query(
       `SELECT id, name, city
          FROM tripadvisor_restaurants
@@ -53,10 +61,10 @@ LIMIT ?`,
       [term, limit]
     );
 
-    return rows as any[];
+    return rows as SearchRestaurant[];
   }
 
-  async searchUsers(term: string, limit: number): Promise<any[]> {
+  async searchUsers(term: string, limit: number): Promise<SearchUser[]> {
     const [rows] = await db.query(
       `SELECT id, name, alias
         FROM users
@@ -66,10 +74,10 @@ LIMIT ?`,
       [term, term, limit]
     );
 
-    return rows as any[];
+    return rows as SearchUser[];
   }
 
-  async searchTags(term: string, limit: number): Promise<any[]> {
+  async searchTags(term: string, limit: number): Promise<SearchTag[]> {
     const [rows] = await db.query(
       `SELECT id, name
          FROM tags
@@ -79,10 +87,10 @@ LIMIT ?`,
       [term, limit]
     );
 
-    return rows as any[];
+    return rows as SearchTag[];
   }
 
-  async searchCategories(term: string, limit: number): Promise<any[]> {
+  async searchCategories(term: string, limit: number): Promise<SearchCategory[]> {
     const [rows] = await db.query(
       `SELECT id, name
          FROM categories
@@ -92,6 +100,6 @@ LIMIT ?`,
       [term, limit]
     );
 
-    return rows as any[];
+    return rows as SearchCategory[];
   }
 }

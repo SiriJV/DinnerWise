@@ -1,4 +1,5 @@
 import { db } from '../../../shared/db/mysql.js';
+import type { AccountUserReportTarget } from '../domain/AccountUserReportTarget.js';
 import type { AccountUserReportRepository } from './AccountUserReportRepository.js';
 
 export class MysqlAccountUserReportRepository implements AccountUserReportRepository {
@@ -6,7 +7,7 @@ export class MysqlAccountUserReportRepository implements AccountUserReportReposi
     legacyUserId?: number | null;
     name?: string | null;
     alias?: string | null;
-  }): Promise<{ accountUserId: number; source: string } | null> {
+  }): Promise<AccountUserReportTarget | null> {
     const { legacyUserId, name, alias } = params;
 
     if (legacyUserId && Number.isInteger(legacyUserId) && legacyUserId > 0) {

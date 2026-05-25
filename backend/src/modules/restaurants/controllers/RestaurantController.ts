@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { ApiError } from '../../../shared/errors/ApiError.js';
 import type { RestaurantService } from '../services/RestaurantService.js';
 
 export class RestaurantController {
@@ -24,20 +23,14 @@ export class RestaurantController {
   };
 
   listEvents = async (req: Request, res: Response) => {
-    const restaurantId = Number(req.params.id);
-    if (!Number.isInteger(restaurantId) || restaurantId <= 0) {
-      throw ApiError.badRequest('Ogiltigt restaurang-ID', { restaurantId });
-    }
+    const restaurantId = res.locals.params.id as number;
 
     const events = await this.service.listEvents(restaurantId);
     res.json({ success: true, data: events });
   };
 
   getById = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      throw ApiError.badRequest('Ogiltigt restaurang-ID', { id });
-    }
+    const id = res.locals.params.id as number;
 
     const restaurant = await this.service.getById(id);
     res.json({ success: true, data: restaurant });

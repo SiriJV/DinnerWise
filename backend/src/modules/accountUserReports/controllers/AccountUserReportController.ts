@@ -31,12 +31,7 @@ export class AccountUserReportController {
   };
 
   reportUser = async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    const incomingUserId = Number(userId);
-
-    if (!Number.isInteger(incomingUserId) || incomingUserId <= 0) {
-      throw ApiError.badRequest('Ogiltigt anvandar-ID', { userId: incomingUserId });
-    }
+    const incomingUserId = res.locals.params.userId as number;
 
     const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : null;
     const normalizedReason = reason && reason.length > 0 ? reason : null;

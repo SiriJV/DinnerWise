@@ -1,11 +1,12 @@
 import { db } from '../../../shared/db/mysql.js';
+import type { City } from '../domain/City.js';
 import type { CityRepository } from './CityRepository.js';
 
 export class MysqlCityRepository implements CityRepository {
-  async list(search?: string | null): Promise<any[]> {
+  async list(search?: string | null): Promise<City[]> {
     const q = search?.toLowerCase();
 
-    let sql = 'SELECT * FROM new_cities';
+    let sql = 'SELECT id, name, latitude, longitude FROM new_cities';
     const params: any[] = [];
 
     if (q) {
@@ -16,15 +17,15 @@ export class MysqlCityRepository implements CityRepository {
     sql += ' ORDER BY id';
 
     const [rows] = await db.query(sql, params);
-    return rows as any[];
+    return rows as City[];
   }
 
-  async search(term: string): Promise<any[]> {
+  async search(term: string): Promise<City[]> {
     const searchTerm = term.toLowerCase();
 
     const [rows] = await db.query(
       `
-      SELECT *
+      SELECT id, name, latitude, longitude
       FROM new_cities
       WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?
       ORDER BY name ASC
@@ -32,6 +33,6 @@ export class MysqlCityRepository implements CityRepository {
       [`${searchTerm}%`, `% ${searchTerm}%`]
     );
 
-    return rows as any[];
+    return rows as City[];
   }
 }

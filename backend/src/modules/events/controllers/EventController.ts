@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import { getAuth } from '@clerk/express';
-import { ApiError } from '../../../shared/errors/ApiError.js';
 import type { EventService } from '../services/EventService.js';
 import type { EventFilters } from '../dto/EventFilters.js';
 
@@ -31,32 +30,22 @@ export class EventController {
   };
 
   getById = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      throw ApiError.badRequest('Ogiltigt event-ID', { id });
-    }
+    const id = res.locals.params.id as number;
 
     const event = await this.service.getById(id);
     res.json({ success: true, data: event });
   };
 
   listTags = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      throw ApiError.badRequest('Ogiltigt event-ID', { id });
-    }
+    const id = res.locals.params.id as number;
 
     const tags = await this.service.listTags(id);
     res.json({ success: true, data: tags });
   };
 
   report = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
+    const id = res.locals.params.id as number;
     const { reason } = req.body;
-
-    if (!Number.isInteger(id) || id <= 0) {
-      throw ApiError.badRequest('Ogiltigt event-ID', { id });
-    }
 
     const auth = getAuth(req);
     const clerkUserId = auth?.userId || undefined;

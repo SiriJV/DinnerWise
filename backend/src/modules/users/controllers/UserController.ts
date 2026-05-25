@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { ApiError } from '../../../shared/errors/ApiError.js';
 import type { UserService } from '../services/UserService.js';
 
 export class UserController {
@@ -29,10 +28,7 @@ export class UserController {
   };
 
   getById = async (req: Request, res: Response) => {
-    const userId = Number(req.params.id);
-    if (!Number.isInteger(userId) || userId <= 0) {
-      throw ApiError.badRequest('Ogiltigt anvandar-ID', { userId });
-    }
+    const userId = res.locals.params.id as number;
 
     const user = await this.service.getById(userId);
     res.json({ success: true, data: user });

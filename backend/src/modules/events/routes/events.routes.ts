@@ -6,6 +6,7 @@ import { EventController } from '../controllers/EventController.js';
 import { MysqlAccountUserRepository } from '../../accountUsers/repositories/MysqlAccountUserRepository.js';
 import { AccountUserService } from '../../accountUsers/services/AccountUserService.js';
 import { ClerkUserProviderImpl } from '../services/ClerkUserProviderImpl.js';
+import { requirePositiveIntParam } from '../../../shared/validators/requestValidators.js';
 
 const router = Router();
 
@@ -17,8 +18,20 @@ const eventService = new EventService(eventRepo, accountService, clerkProvider);
 const controller = new EventController(eventService);
 
 router.get('/', asyncHandler(controller.list));
-router.get('/:id', asyncHandler(controller.getById));
-router.get('/:id/tags', asyncHandler(controller.listTags));
-router.post('/:id/report', asyncHandler(controller.report));
+router.get(
+	'/:id',
+	requirePositiveIntParam('id', 'Ogiltigt event-ID'),
+	asyncHandler(controller.getById)
+);
+router.get(
+	'/:id/tags',
+	requirePositiveIntParam('id', 'Ogiltigt event-ID'),
+	asyncHandler(controller.listTags)
+);
+router.post(
+	'/:id/report',
+	requirePositiveIntParam('id', 'Ogiltigt event-ID'),
+	asyncHandler(controller.report)
+);
 
 export default router;

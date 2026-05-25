@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { ApiError } from '../../../shared/errors/ApiError.js';
 import type { TagService } from '../services/TagService.js';
 
 export class TagController {
@@ -23,10 +22,7 @@ export class TagController {
   };
 
   listByCategory = async (req: Request, res: Response) => {
-    const categoryId = Number(req.params.categoryId);
-    if (!Number.isInteger(categoryId) || categoryId <= 0) {
-      throw ApiError.badRequest('Ogiltigt kategori-ID', { categoryId });
-    }
+    const categoryId = res.locals.params.categoryId as number;
 
     const tags = await this.service.listByCategory(categoryId);
     res.json({ success: true, data: tags });

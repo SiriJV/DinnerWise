@@ -1,6 +1,8 @@
+import type { UserProfile } from '../domain/UserProfile.js';
+
 export interface UserRepository {
-  list(): Promise<any[]>;
-  search(term: string): Promise<any[]>;
-  getByAlias(alias: string): Promise<any | null>;
-  getById(id: number): Promise<any | null>;
+  list(): Promise<UserProfile[]>;
+  search(term: string): Promise<UserProfile[]>;
+  getByAlias(alias: string): Promise<UserProfile | null>;
+  getById(id: number): Promise<UserProfile | null>;
 }

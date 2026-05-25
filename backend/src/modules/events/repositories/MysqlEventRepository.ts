@@ -1,6 +1,7 @@
 import { db } from '../../../shared/db/mysql.js';
 import type { EventFilters } from '../dto/EventFilters.js';
 import type { EventListItem } from '../domain/EventListItem.js';
+import type { EventTag } from '../domain/EventTag.js';
 import type { EventRepository } from './EventRepository.js';
 
 export class MysqlEventRepository implements EventRepository {
@@ -116,7 +117,7 @@ export class MysqlEventRepository implements EventRepository {
     return events[0] ?? null;
   }
 
-  async listTags(eventId: number): Promise<any[]> {
+  async listTags(eventId: number): Promise<EventTag[]> {
     const [rows] = await db.query(
       `
       SELECT t.id, t.name, t.category_id
@@ -127,7 +128,7 @@ export class MysqlEventRepository implements EventRepository {
       [eventId]
     );
 
-    return rows as any[];
+    return rows as EventTag[];
   }
 
   async exists(eventId: number): Promise<boolean> {

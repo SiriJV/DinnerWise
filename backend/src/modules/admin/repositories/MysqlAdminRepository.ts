@@ -1,4 +1,10 @@
 import { db } from '../../../shared/db/mysql.js';
+import type {
+  AdminEventDetail,
+  AdminEventListItem,
+  AdminReportedEvent,
+  AdminReportedUser,
+} from '../domain/AdminTypes.js';
 import type { AdminRepository } from './AdminRepository.js';
 
 export class MysqlAdminRepository implements AdminRepository {
@@ -42,7 +48,7 @@ export class MysqlAdminRepository implements AdminRepository {
     }
   }
 
-  async listEvents(): Promise<any[]> {
+  async listEvents(): Promise<AdminEventListItem[]> {
     const [rows]: any[] = await db.query(`
       SELECT
         e.id,
@@ -64,10 +70,10 @@ export class MysqlAdminRepository implements AdminRepository {
       ORDER BY e.id DESC
     `);
 
-    return rows;
+    return rows as AdminEventListItem[];
   }
 
-  async getEventById(eventId: number): Promise<any | null> {
+  async getEventById(eventId: number): Promise<AdminEventDetail | null> {
     const [rows]: any[] = await db.query(
       `
       SELECT
@@ -95,7 +101,7 @@ export class MysqlAdminRepository implements AdminRepository {
       [eventId]
     );
 
-    return Array.isArray(rows) ? rows[0] : null;
+    return Array.isArray(rows) ? (rows[0] as AdminEventDetail) : null;
   }
 
   async deleteEvent(eventId: number): Promise<void> {
@@ -134,7 +140,7 @@ export class MysqlAdminRepository implements AdminRepository {
     return result?.affectedRows ?? 0;
   }
 
-  async listReportedUsers(): Promise<any[]> {
+  async listReportedUsers(): Promise<AdminReportedUser[]> {
     const [rows]: any[] = await db.query(`
       SELECT
         ur.id AS report_id,
@@ -155,7 +161,7 @@ export class MysqlAdminRepository implements AdminRepository {
       ORDER BY ur.created_at DESC
     `);
 
-    return Array.isArray(rows) ? rows : [];
+    return Array.isArray(rows) ? (rows as AdminReportedUser[]) : [];
   }
 
   async deleteUserReport(reportId: number): Promise<number> {
@@ -163,7 +169,7 @@ export class MysqlAdminRepository implements AdminRepository {
     return result?.affectedRows ?? 0;
   }
 
-  async listReportedEvents(): Promise<any[]> {
+  async listReportedEvents(): Promise<AdminReportedEvent[]> {
     const [rows]: any[] = await db.query(`
       SELECT
         er.id AS report_id,
@@ -197,6 +203,6 @@ export class MysqlAdminRepository implements AdminRepository {
       ORDER BY er.created_at DESC
     `);
 
-    return Array.isArray(rows) ? rows : [];
+    return Array.isArray(rows) ? (rows as AdminReportedEvent[]) : [];
   }
 }

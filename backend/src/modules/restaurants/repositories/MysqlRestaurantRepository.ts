@@ -1,8 +1,10 @@
 import { db } from '../../../shared/db/mysql.js';
+import type { EventListItem } from '../../events/domain/EventListItem.js';
+import type { Restaurant } from '../domain/Restaurant.js';
 import type { RestaurantRepository } from './RestaurantRepository.js';
 
 export class MysqlRestaurantRepository implements RestaurantRepository {
-  async list(city?: string | null): Promise<any[]> {
+  async list(city?: string | null): Promise<Restaurant[]> {
     let sql = 'SELECT * FROM tripadvisor_restaurants';
     const params: any[] = [];
 
@@ -12,10 +14,10 @@ export class MysqlRestaurantRepository implements RestaurantRepository {
     }
 
     const [rows] = await db.query(sql, params);
-    return rows as any[];
+    return rows as Restaurant[];
   }
 
-  async search(term: string): Promise<any[]> {
+  async search(term: string): Promise<Restaurant[]> {
     const searchTerm = term.toLowerCase();
     const [rows] = await db.query(
       `
@@ -26,10 +28,10 @@ export class MysqlRestaurantRepository implements RestaurantRepository {
       `,
       [`${searchTerm}%`]
     );
-    return rows as any[];
+    return rows as Restaurant[];
   }
 
-  async listEvents(restaurantId: number): Promise<any[]> {
+  async listEvents(restaurantId: number): Promise<EventListItem[]> {
     const [events] = await db.query(
       `
       SELECT 
@@ -54,11 +56,11 @@ export class MysqlRestaurantRepository implements RestaurantRepository {
       [restaurantId]
     );
 
-    return events as any[];
+    return events as EventListItem[];
   }
 
-  async getById(id: number): Promise<any | null> {
+  async getById(id: number): Promise<Restaurant | null> {
     const [rows] = await db.query('SELECT * FROM tripadvisor_restaurants WHERE id = ?', [id]);
-    return (rows as any[])[0] || null;
+    return (rows as Restaurant[])[0] || null;
   }
 }

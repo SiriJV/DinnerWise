@@ -1,4 +1,6 @@
+import type { Category } from '../domain/Category.js';
+
 export interface CategoryRepository {
-  list(): Promise<any[]>;
-  getById(id: number): Promise<any | null>;
+  list(): Promise<Category[]>;
+  getById(id: number): Promise<Category | null>;
 }
