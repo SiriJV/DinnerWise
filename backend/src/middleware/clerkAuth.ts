@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { clerkClient, getAuth } from '@clerk/express';
-import { db } from '../db.js';
-import * as accountService from '../services/accountUserService.js';
 import { ApiError } from '../utils/ApiError.js';
+import { MysqlAccountUserRepository } from '../modules/accountUsers/repositories/MysqlAccountUserRepository.js';
+import { AccountUserService } from '../modules/accountUsers/services/AccountUserService.js';
 
 process.stderr.write('[STARTUP] clerkAuth.ts file loaded!\n');
 
@@ -15,7 +15,7 @@ declare global {
       };
       currentAccount?: {
         id: number;
-        clerk_user_id: string;
+        clerk_user_id: string | null;
         email: string;
         first_name: string | null;
         last_name: string | null;
@@ -26,6 +26,9 @@ declare global {
     }
   }
 }
+
+const accountRepo = new MysqlAccountUserRepository();
+const accountService = new AccountUserService(accountRepo);
 
 export async function resolveCurrentAccount(req: Request, res: Response, next: NextFunction) {
   try {
@@ -83,16 +86,7 @@ export async function resolveCurrentAccount(req: Request, res: Response, next: N
 
 export async function getCurrentAccount(clerkUserId: string) {
   try {
-    const [rows]: any[] = await db.query(
-      'SELECT * FROM account_users WHERE clerk_user_id = ?',
-      [clerkUserId]
-    );
-
-    if (rows.length > 0) {
-      return rows[0];
-    }
-
-    return null;
+    return await accountService.getAccountByClerkId(clerkUserId);
   } catch (error) {
     console.error('Error getting current account:', error);
     return null;
@@ -111,14 +105,7 @@ export async function createAccountFromClerk(
       return existing;
     }
 
-    await db.execute(
-      `INSERT INTO account_users (clerk_user_id, email, first_name, last_name, role)
-       VALUES (?, ?, ?, ?, 'user')`,
-      [clerkUserId, email, firstName || null, lastName || null]
-    );
-
-    const account = await getCurrentAccount(clerkUserId);
-    return account;
+    return accountService.findOrCreateLocalAccount(clerkUserId, email, firstName, lastName);
   } catch (error) {
     console.error('Error creating account from Clerk:', error);
     throw error;
