@@ -1,5 +1,5 @@
 import type { EventType } from '../types/EventType';
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse, unwrapApiErrorMessage } from './config';
 
 export type Event = EventType;
 
@@ -18,7 +18,7 @@ export async function fetchEvents(params?: {
     if (!res.ok) {
       throw new Error('Failed to fetch events');
     }
-    const data: Event[] = await res.json();
+    const data = unwrapApiResponse<Event[]>(await res.json());
     return data;
   } catch (err) {
     console.error('Failed to load events:', err);
@@ -32,7 +32,7 @@ export async function fetchEventById(id: number): Promise<Event | null> {
     if (!res.ok) {
       throw new Error('Failed to fetch event');
     }
-    const data: Event = await res.json();
+    const data = unwrapApiResponse<Event>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load event ${id}:`, err);
@@ -69,11 +69,11 @@ export async function reportEvent(
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || 'Kunde inte rapportera eventet');
+      throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte rapportera eventet');
     }
 
     console.log('[api] reportEvent success:', data);
-    return data;
+    return { success: true, ...unwrapApiResponse<{ message: string; isDuplicate?: boolean }>(data) };
   } catch (err: any) {
     console.error('[api] reportEvent error:', err.message);
     throw err;

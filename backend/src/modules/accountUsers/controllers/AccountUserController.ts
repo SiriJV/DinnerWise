@@ -47,7 +47,7 @@ export class AccountUserController {
       throw ApiError.internal('Kunde inte hamta lokalt konto');
     }
 
-    return res.status(200).json(account);
+    return res.status(200).json({ success: true, data: account });
   };
 
   deleteMe = async (req: Request, res: Response) => {
@@ -77,6 +77,6 @@ export class AccountUserController {
       throw ApiError.internal('Kunde inte ta bort Clerk-anvandare');
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, data: { deleted: true } });
   };
 }

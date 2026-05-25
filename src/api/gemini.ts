@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse, unwrapApiErrorMessage } from './config';
 
 const REQUEST_TIMEOUT = 60000;
 
@@ -54,12 +54,16 @@ export const geminiApi = {
         return {
           success: false,
           content: '',
-          error: data.error || `HTTP error! status: ${response.status}`,
-          errorType: data.errorType || 'server_error',
+          error: unwrapApiErrorMessage(data) || `HTTP error! status: ${response.status}`,
+          errorType: data.error?.details?.errorType || 'server_error',
         };
       }
 
-      return data;
+      const result = unwrapApiResponse<{ content: string }>(data);
+      return {
+        success: true,
+        content: result?.content || '',
+      };
     } catch (error) {
       console.error('Error generating content:', error);
 

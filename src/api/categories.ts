@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export type Category = {
   id: number;
@@ -13,7 +13,7 @@ export async function fetchCategories(): Promise<Category[]> {
     if (!res.ok) {
       throw new Error('Failed to fetch categories');
     }
-    const data: Category[] = await res.json();
+    const data = unwrapApiResponse<Category[]>(await res.json());
     return data;
   } catch (err) {
     console.error('Failed to load categories:', err);
@@ -27,7 +27,7 @@ export async function fetchCategoryById(id: number): Promise<Category | null> {
     if (!res.ok) {
       throw new Error('Failed to fetch category');
     }
-    const data: Category = await res.json();
+    const data = unwrapApiResponse<Category>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load category ${id}:`, err);

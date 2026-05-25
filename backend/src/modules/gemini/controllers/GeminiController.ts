@@ -13,14 +13,14 @@ export class GeminiController {
       };
 
       if (!prompt || prompt.trim().length === 0) {
-        return res.status(400).json({ error: 'Prompt kravs' });
+        throw ApiError.badRequest('Prompt kravs');
       }
 
       const content = await this.service.generateContent(prompt, type);
 
       return res.json({
         success: true,
-        content,
+        data: { content },
       });
     } catch (error) {
       console.error('Gemini API error:', error);
@@ -52,13 +52,7 @@ export class GeminiController {
         errorType = 'server_error';
       }
 
-      return res.status(statusCode).json({
-        success: false,
-        content: '',
-        error: userErrorMessage,
-        errorType,
-        message: 'Ett internt fel intraffade.',
-      });
+      throw new ApiError(statusCode, 'AI_ERROR', userErrorMessage, { errorType });
     }
   };
 }

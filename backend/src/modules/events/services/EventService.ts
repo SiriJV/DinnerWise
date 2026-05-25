@@ -61,7 +61,6 @@ export class EventService {
       const hasReport = await this.repo.hasOpenReport(eventId, reporterId);
       if (hasReport) {
         return {
-          success: true,
           message: 'Du har redan rapporterat detta event',
           isDuplicate: true,
         };
@@ -71,14 +70,12 @@ export class EventService {
     try {
       await this.repo.createReport({ eventId, reporterId, reason });
       return {
-        success: true,
         message: 'Eventet har rapporterats',
         isDuplicate: false,
       };
     } catch (err: any) {
       if (err?.code === 'ER_DUP_ENTRY') {
         return {
-          success: true,
           message: 'Du har redan rapporterat detta event',
           isDuplicate: true,
         };

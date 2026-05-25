@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export async function resolveReportableAccountUserId(
   alias: string,
@@ -22,7 +22,9 @@ export async function resolveReportableAccountUserId(
     return null;
   }
 
-  const data = await res.json();
+  const data = unwrapApiResponse<{ accountUserId: number; source: string }>(
+    await res.json()
+  );
   const id = Number(data?.accountUserId);
   return Number.isInteger(id) && id > 0 ? id : null;
 }
@@ -55,5 +57,14 @@ export async function reportUser(
     throw new Error(body || 'Kunde inte rapportera användaren');
   }
 
-  return body ? JSON.parse(body) : { success: true, message: 'OK' };
+  if (!body) {
+    return { success: true, message: 'OK' };
+  }
+
+  const parsed = JSON.parse(body);
+  if (parsed?.data?.message) {
+    return { success: true, message: parsed.data.message };
+  }
+
+  return parsed;
 }

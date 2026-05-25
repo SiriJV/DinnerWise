@@ -7,25 +7,25 @@ export class UserController {
 
   list = async (_req: Request, res: Response) => {
     const users = await this.service.list();
-    res.json(users);
+    res.json({ success: true, data: users });
   };
 
   search = async (req: Request, res: Response) => {
     const { q } = req.query;
 
     if (!q) {
-      return res.json([]);
+      return res.json({ success: true, data: [] });
     }
 
     const term = q.toString();
     const rows = await this.service.search(term);
-    res.json(rows);
+    res.json({ success: true, data: rows });
   };
 
   getByAlias = async (req: Request, res: Response) => {
     const alias = Array.isArray(req.params.alias) ? req.params.alias[0] : req.params.alias;
     const user = await this.service.getByAlias(alias || '');
-    res.json(user);
+    res.json({ success: true, data: user });
   };
 
   getById = async (req: Request, res: Response) => {
@@ -35,6 +35,6 @@ export class UserController {
     }
 
     const user = await this.service.getById(userId);
-    res.json(user);
+    res.json({ success: true, data: user });
   };
 }

@@ -27,7 +27,7 @@ export class EventController {
     };
 
     const events = await this.service.listUpcoming(filters);
-    res.json(events);
+    res.json({ success: true, data: events });
   };
 
   getById = async (req: Request, res: Response) => {
@@ -37,7 +37,7 @@ export class EventController {
     }
 
     const event = await this.service.getById(id);
-    res.json(event);
+    res.json({ success: true, data: event });
   };
 
   listTags = async (req: Request, res: Response) => {
@@ -47,7 +47,7 @@ export class EventController {
     }
 
     const tags = await this.service.listTags(id);
-    res.json(tags);
+    res.json({ success: true, data: tags });
   };
 
   report = async (req: Request, res: Response) => {
@@ -67,6 +67,6 @@ export class EventController {
       clerkUserId,
     });
 
-    return res.status(200).json(result);
+    return res.status(200).json({ success: true, data: result });
   };
 }

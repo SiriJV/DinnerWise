@@ -1,6 +1,6 @@
 import type { AccountUser } from './clerkApi';
 import type { Event } from './events';
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse, unwrapApiErrorMessage } from './config';
 
 const API_BASE = API_URL;
 
@@ -26,7 +26,8 @@ export async function fetchAdminUsers(token: string): Promise<AccountUser[]> {
   if (!res.ok) {
     throw new Error('Kunde inte hämta användare');
   }
-  return res.json();
+  const payload = unwrapApiResponse<AccountUser[]>(await res.json());
+  return payload;
 }
 
 /**
@@ -41,7 +42,8 @@ export async function fetchAdminEvents(token: string): Promise<Event[]> {
   if (!res.ok) {
     throw new Error('Kunde inte hämta events');
   }
-  return res.json();
+  const payload = unwrapApiResponse<Event[]>(await res.json());
+  return payload;
 }
 
 export interface ReportedEvent {
@@ -114,7 +116,8 @@ export async function fetchAdminReportedEvents(token: string): Promise<ReportedE
   if (!res.ok) {
     throw new Error('Kunde inte hämta rapporterade events');
   }
-  return res.json();
+  const payload = unwrapApiResponse<ReportedEvent[]>(await res.json());
+  return payload;
 }
 
 export async function fetchAdminReportedUsers(token: string): Promise<ReportedUser[]> {
@@ -128,7 +131,7 @@ export async function fetchAdminReportedUsers(token: string): Promise<ReportedUs
     throw new Error('Kunde inte hämta rapporterade användare');
   }
 
-  const data = await res.json();
+  const data = unwrapApiResponse<ReportedUser[]>(await res.json());
   return data;
 }
 
@@ -144,10 +147,9 @@ export async function fetchAdminEventDetails(
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte hämta eventet');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte hämta eventet');
   }
-
-  return data;
+  return unwrapApiResponse<AdminEventDetails>(data);
 }
 
 export async function deleteAdminEvent(
@@ -163,10 +165,9 @@ export async function deleteAdminEvent(
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte ta bort eventet');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte ta bort eventet');
   }
-
-  return data;
+  return { success: true, ...unwrapApiResponse<{ message: string }>(data) };
 }
 
 export async function dismissAdminReport(
@@ -190,10 +191,10 @@ export async function dismissAdminReport(
   }
 
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte avfärda rapporten');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte avfärda rapporten');
   }
 
-  return data;
+  return { success: true, ...unwrapApiResponse<{ message: string }>(data) };
 }
 
 export async function dismissAdminUserReport(
@@ -209,10 +210,9 @@ export async function dismissAdminUserReport(
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte avfärda rapporten');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte avfärda rapporten');
   }
-
-  return data;
+  return { success: true, ...unwrapApiResponse<{ message: string }>(data) };
 }
 
 export async function deleteAdminUser(
@@ -228,10 +228,9 @@ export async function deleteAdminUser(
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte ta bort användaren');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte ta bort användaren');
   }
-
-  return data;
+  return { success: true, ...unwrapApiResponse<{ message: string }>(data) };
 }
 
 export interface InviteResult {
@@ -259,7 +258,7 @@ export async function inviteAdmin(
   });
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Kunde inte skicka inbjudan');
+    throw new Error(unwrapApiErrorMessage(data) || 'Kunde inte skicka inbjudan');
   }
-  return data;
+  return { success: true, ...unwrapApiResponse<{ message: string; invitation?: InviteResult['invitation'] }>(data) };
 }

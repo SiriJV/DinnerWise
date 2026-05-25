@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export type User = {
   id: number;
@@ -15,7 +15,7 @@ export async function fetchUsers(): Promise<User[]> {
     if (!res.ok) {
       throw new Error('Failed to fetch users');
     }
-    const data: User[] = await res.json();
+    const data = unwrapApiResponse<User[]>(await res.json());
     return data;
   } catch (err) {
     console.error('Failed to load users:', err);
@@ -29,7 +29,7 @@ export async function fetchUserByAlias(alias: string): Promise<User | null> {
     if (!res.ok) {
       throw new Error('Failed to fetch user');
     }
-    const data: User = await res.json();
+    const data = unwrapApiResponse<User>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load user ${alias}:`, err);
@@ -43,7 +43,7 @@ export async function fetchUserById(id: number): Promise<User | null> {
     if (!res.ok) {
       throw new Error('Failed to fetch user');
     }
-    const data: User = await res.json();
+    const data = unwrapApiResponse<User>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load user ${id}:`, err);

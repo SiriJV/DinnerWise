@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export type Tag = {
   id: number;
@@ -12,7 +12,7 @@ export async function fetchTags(): Promise<Tag[]> {
     if (!res.ok) {
       throw new Error('Failed to fetch tags');
     }
-    const data: Tag[] = await res.json();
+    const data = unwrapApiResponse<Tag[]>(await res.json());
     return data;
   } catch (err) {
     console.error('Failed to load tags:', err);
@@ -26,7 +26,7 @@ export async function fetchTagsByCategory(categoryId: number): Promise<Tag[]> {
     if (!res.ok) {
       throw new Error('Failed to fetch tags');
     }
-    const data: Tag[] = await res.json();
+    const data = unwrapApiResponse<Tag[]>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load tags for category ${categoryId}:`, err);

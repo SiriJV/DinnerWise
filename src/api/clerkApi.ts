@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export interface AccountUser {
   id: number;
@@ -41,13 +41,14 @@ export const clerkApi = {
     });
 
     if (!response.ok) throw new Error('Failed to fetch account');
-    return response.json();
+    const payload = unwrapApiResponse<AccountUser>(await response.json());
+    return payload;
   },
 
   /**
    * Delete own account
    */
-  async deleteOwnAccount(token?: string): Promise<{ success: boolean }> {
+  async deleteOwnAccount(token?: string): Promise<{ deleted: boolean }> {
     if (!token) throw new Error('Clerk token is required');
 
     const response = await fetch(`${API_URL}/auth/account/me`, {
@@ -61,7 +62,8 @@ export const clerkApi = {
       throw new Error(`deleteOwnAccount failed: ${response.status} ${text}`);
     }
     
-    return response.json();
+    const payload = unwrapApiResponse<{ deleted: boolean }>(await response.json());
+    return payload;
   },
 
   /**
@@ -84,7 +86,10 @@ export const clerkApi = {
     });
 
     if (!response.ok) throw new Error('Failed to sync account');
-    return response.json();
+    const payload = unwrapApiResponse<{ success: boolean; account: AccountUser }>(
+      await response.json()
+    );
+    return payload;
   },
 
   /**
@@ -98,7 +103,8 @@ export const clerkApi = {
     });
 
     if (!response.ok) throw new Error('Failed to fetch accounts');
-    return response.json();
+    const payload = unwrapApiResponse<AccountUser[]>(await response.json());
+    return payload;
   },
 
   /**
@@ -117,13 +123,16 @@ export const clerkApi = {
     });
 
     if (!response.ok) throw new Error('Failed to update role');
-    return response.json();
+    const payload = unwrapApiResponse<{ success: boolean; account: AccountUser }>(
+      await response.json()
+    );
+    return payload;
   },
 
   /**
    * Delete user account (admin only)
    */
-  async deleteAccount(accountId: number, token?: string): Promise<{ success: boolean; deleted: any }> {
+  async deleteAccount(accountId: number, token?: string): Promise<{ deleted: boolean }> {
     const response = await fetch(`${API_URL}/auth/account/${accountId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(token),
@@ -131,6 +140,7 @@ export const clerkApi = {
     });
 
     if (!response.ok) throw new Error('Failed to delete account');
-    return response.json();
+    const payload = unwrapApiResponse<{ deleted: boolean }>(await response.json());
+    return payload;
   },
 };

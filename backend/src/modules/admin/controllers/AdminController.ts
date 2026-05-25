@@ -20,7 +20,7 @@ export class AdminController {
   listUsers = async (req: Request, res: Response) => {
     await this.resolveAdmin(req);
     const users = await this.service.listUsers();
-    return res.json(users);
+    return res.json({ success: true, data: users });
   };
 
   deleteUser = async (req: Request, res: Response) => {
@@ -32,13 +32,13 @@ export class AdminController {
     }
 
     const result = await this.service.deleteUser({ userId, adminId: admin.id });
-    return res.status(200).json(result);
+    return res.status(200).json({ success: true, data: result });
   };
 
   listEvents = async (req: Request, res: Response) => {
     await this.resolveAdmin(req);
     const rows = await this.service.listEvents();
-    return res.json(rows);
+    return res.json({ success: true, data: rows });
   };
 
   getEvent = async (req: Request, res: Response) => {
@@ -50,7 +50,7 @@ export class AdminController {
     }
 
     const event = await this.service.getEvent(eventId);
-    return res.status(200).json(event);
+    return res.status(200).json({ success: true, data: event });
   };
 
   deleteEvent = async (req: Request, res: Response) => {
@@ -62,7 +62,7 @@ export class AdminController {
     }
 
     const result = await this.service.deleteEvent(eventId);
-    return res.status(200).json(result);
+    return res.status(200).json({ success: true, data: result });
   };
 
   deleteEventReport = async (req: Request, res: Response) => {
@@ -74,13 +74,13 @@ export class AdminController {
     }
 
     const result = await this.service.deleteEventReport(reportId);
-    return res.status(200).json(result);
+    return res.status(200).json({ success: true, data: result });
   };
 
   listReportedUsers = async (req: Request, res: Response) => {
     await this.resolveAdmin(req);
     const reports = await this.service.listReportedUsers();
-    return res.status(200).json(reports);
+    return res.status(200).json({ success: true, data: reports });
   };
 
   deleteUserReport = async (req: Request, res: Response) => {
@@ -92,7 +92,7 @@ export class AdminController {
     }
 
     const result = await this.service.deleteUserReport(reportId);
-    return res.status(200).json(result);
+    return res.status(200).json({ success: true, data: result });
   };
 
   sendInvitation = async (req: Request, res: Response) => {
@@ -100,12 +100,12 @@ export class AdminController {
 
     const { emailAddress } = req.body;
     const result = await this.service.sendInvitation(emailAddress);
-    return res.json(result);
+    return res.json({ success: true, data: result });
   };
 
   listReportedEvents = async (req: Request, res: Response) => {
     await this.resolveAdmin(req);
     const reports = await this.service.listReportedEvents();
-    return res.status(200).json(reports);
+    return res.status(200).json({ success: true, data: reports });
   };
 }

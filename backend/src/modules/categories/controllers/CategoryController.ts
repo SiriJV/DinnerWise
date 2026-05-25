@@ -7,7 +7,7 @@ export class CategoryController {
 
   list = async (_req: Request, res: Response) => {
     const categories = await this.service.list();
-    res.json(categories);
+    res.json({ success: true, data: categories });
   };
 
   getById = async (req: Request, res: Response) => {
@@ -17,6 +17,6 @@ export class CategoryController {
     }
 
     const category = await this.service.getById(id);
-    res.json(category);
+    res.json({ success: true, data: category });
   };
 }

@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, unwrapApiResponse } from './config';
 
 export async function fetchRestaurants(): Promise<Restaurant[]> {
   try {
@@ -6,7 +6,7 @@ export async function fetchRestaurants(): Promise<Restaurant[]> {
     if (!res.ok) {
       throw new Error('Failed to fetch restaurants');
     }
-    const data: Restaurant[] = await res.json();
+    const data = unwrapApiResponse<Restaurant[]>(await res.json());
     return data;
   } catch (err) {
     console.error('Failed to load restaurants:', err);
@@ -39,7 +39,7 @@ export async function fetchRestaurantById(
     if (!res.ok) {
       throw new Error('Failed to fetch restaurant');
     }
-    const data: Restaurant = await res.json();
+    const data = unwrapApiResponse<Restaurant>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load restaurant ${id}:`, err);
@@ -57,7 +57,7 @@ export async function fetchRestaurantEvents(
     if (!res.ok) {
       throw new Error('Failed to fetch restaurant events');
     }
-    const data = await res.json();
+    const data = unwrapApiResponse<any[]>(await res.json());
     return data;
   } catch (err) {
     console.error(`Failed to load events for restaurant ${restaurantId}:`, err);

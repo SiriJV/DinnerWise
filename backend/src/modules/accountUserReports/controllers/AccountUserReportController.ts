@@ -19,8 +19,10 @@ export class AccountUserReportController {
 
       return res.status(200).json({
         success: true,
-        accountUserId: result.accountUserId,
-        source: result.source,
+        data: {
+          accountUserId: result.accountUserId,
+          source: result.source,
+        },
       });
     } catch (error) {
       console.error('[user-report] resolve-target error:', error);
@@ -47,7 +49,7 @@ export class AccountUserReportController {
         reason: normalizedReason,
       });
 
-      return res.status(200).json(result);
+      return res.status(200).json({ success: true, data: result });
     } catch (error: any) {
       console.error('[user-report] SQL error:', error);
       throw ApiError.internal('Kunde inte rapportera anvandaren');

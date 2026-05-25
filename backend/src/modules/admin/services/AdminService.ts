@@ -57,7 +57,6 @@ export class AdminService {
     }
 
     return {
-      success: true,
       message: 'Anvandaren har tagits bort',
     };
   }
@@ -84,7 +83,7 @@ export class AdminService {
       throw ApiError.internal('Kunde inte ta bort eventet');
     }
 
-    return { success: true, message: 'Eventet har tagits bort' };
+    return { message: 'Eventet har tagits bort' };
   }
 
   async deleteEventReport(reportId: number) {
@@ -93,7 +92,7 @@ export class AdminService {
       throw ApiError.notFound('Rapporten hittades inte', { reportId });
     }
 
-    return { success: true, message: 'Rapporten har avfardats' };
+    return { message: 'Rapporten har avfardats' };
   }
 
   async listReportedUsers() {
@@ -113,7 +112,7 @@ export class AdminService {
       throw ApiError.notFound('Rapporten hittades inte', { reportId });
     }
 
-    return { success: true, message: 'Rapporten har avfardats' };
+    return { message: 'Rapporten har avfardats' };
   }
 
   async sendInvitation(emailAddress: string) {
@@ -134,7 +133,6 @@ export class AdminService {
       });
 
       return {
-        success: true,
         message: `Inbjudan skickad till ${emailAddress}`,
         invitation: {
           id: invitation.id,

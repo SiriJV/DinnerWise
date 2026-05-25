@@ -8,7 +8,7 @@ export class TripadvisorController {
   listRestaurants = async (_req: Request, res: Response) => {
     try {
       const rows = await this.service.listRestaurants();
-      res.json(rows);
+      res.json({ success: true, data: rows });
     } catch (err: any) {
       console.error('Tripadvisor fetch failed:', err);
       throw ApiError.internal('Hamtnings misslyckades');

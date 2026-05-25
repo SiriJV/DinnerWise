@@ -23,7 +23,6 @@ export class AccountUserReportService {
     await this.repo.createReport({ reportedAccountUserId: userId, reason });
 
     return {
-      success: true,
       message: 'Anvandaren har rapporterats',
     };
   }

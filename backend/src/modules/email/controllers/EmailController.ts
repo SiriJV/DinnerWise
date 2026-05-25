@@ -18,56 +18,56 @@ export class EmailController {
 
   sendWelcome = async (req: Request, res: Response) => {
     const result = await this.service.sendWelcomeEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendHost = async (req: Request, res: Response) => {
     const result = await this.service.sendHostEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendRestaurantBooking = async (req: Request, res: Response) => {
     const result = await this.service.sendRestaurantBookingEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendConfirmationToHost = async (req: Request, res: Response) => {
     const result = await this.service.sendConfirmationEmailToHost(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendBooking = async (req: Request, res: Response) => {
     const result = await this.service.sendBookingEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendBookingToHost = async (req: Request, res: Response) => {
     const result = await this.service.sendBookingEmailToHost(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendWaitlist = async (req: Request, res: Response) => {
     const result = await this.service.sendWaitlistEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendWaitlistToHost = async (req: Request, res: Response) => {
     const result = await this.service.sendWaitlistEmailToHost(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendFeedback = async (req: Request, res: Response) => {
     const result = await this.service.sendFeedbackEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendShare = async (req: Request, res: Response) => {
     const result = await this.service.sendShareEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 
   sendNewsletterConfirmation = async (req: Request, res: Response) => {
     const result = await this.service.sendNewsletterConfirmationEmail(req.body);
-    res.json(result);
+    res.json({ success: true, data: result });
   };
 }

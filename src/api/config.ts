@@ -11,6 +11,24 @@
 // Get API URL from environment or use default
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+export type ApiEnvelope<T> = {
+  success: boolean;
+  data: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+  };
+};
+
+export function unwrapApiResponse<T>(payload: ApiEnvelope<T>): T {
+  return payload.data;
+}
+
+export function unwrapApiErrorMessage(payload: { error?: { message?: string } }): string | null {
+  return payload?.error?.message ?? null;
+}
+
 /**
  * Build a full API endpoint URL
  * 

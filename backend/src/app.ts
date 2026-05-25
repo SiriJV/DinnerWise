@@ -66,7 +66,10 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocWithServer));
 console.log('[APP] Swagger docs available at /api/docs');
 
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({
+    success: true,
+    data: { status: 'ok', timestamp: new Date().toISOString() },
+  });
 });
 
 

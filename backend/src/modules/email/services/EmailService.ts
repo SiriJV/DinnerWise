@@ -73,7 +73,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendHostEmail(payload: any) {
@@ -113,7 +113,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendRestaurantBookingEmail(payload: any) {
@@ -146,7 +146,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendConfirmationEmailToHost(payload: any) {
@@ -179,7 +179,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendBookingEmail(payload: any) {
@@ -210,7 +210,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendBookingEmailToHost(payload: any) {
@@ -241,7 +241,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendWaitlistEmail(payload: any) {
@@ -274,7 +274,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendWaitlistEmailToHost(payload: any) {
@@ -305,7 +305,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendFeedbackEmail(payload: any) {
@@ -337,7 +337,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendShareEmail(payload: any) {
@@ -367,7 +367,7 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 
   async sendNewsletterConfirmationEmail(payload: any) {
@@ -397,6 +397,6 @@ export class EmailService {
       html,
     });
 
-    return { success: true, data };
+    return data;
   }
 }

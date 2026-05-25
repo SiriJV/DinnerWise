@@ -18,7 +18,7 @@ export class SearchController {
         type: typeof type === 'string' ? (type as any) : undefined,
         limit: Number(limit),
       });
-      return res.json(result);
+      return res.json({ success: true, data: result });
     } catch (error) {
       console.error('[search] query error:', error);
       throw ApiError.internal('Kunde inte genomfora sokningen');

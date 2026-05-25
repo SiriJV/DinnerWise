@@ -8,19 +8,19 @@ export class RestaurantController {
   list = async (req: Request, res: Response) => {
     const city = req.query.city as string | undefined;
     const rows = await this.service.list(city);
-    res.json(rows);
+    res.json({ success: true, data: rows });
   };
 
   search = async (req: Request, res: Response) => {
     const { q } = req.query;
 
     if (!q) {
-      return res.json([]);
+      return res.json({ success: true, data: [] });
     }
 
     const term = q.toString();
     const rows = await this.service.search(term);
-    res.json(rows);
+    res.json({ success: true, data: rows });
   };
 
   listEvents = async (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ export class RestaurantController {
     }
 
     const events = await this.service.listEvents(restaurantId);
-    res.json(events);
+    res.json({ success: true, data: events });
   };
 
   getById = async (req: Request, res: Response) => {
@@ -40,6 +40,6 @@ export class RestaurantController {
     }
 
     const restaurant = await this.service.getById(id);
-    res.json(restaurant);
+    res.json({ success: true, data: restaurant });
   };
 }
