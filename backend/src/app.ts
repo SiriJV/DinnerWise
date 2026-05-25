@@ -24,6 +24,7 @@ import { ApiError } from './utils/ApiError.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
+const API_BASE = '/api/v1';
 
 // ============================================================================
 // CORS Configuration
@@ -55,7 +56,7 @@ const openApiPath = path.resolve(process.cwd(), 'openapi.yaml');
 const openApiDoc = yaml.parse(fs.readFileSync(openApiPath, 'utf8'));
 const openApiDocWithServer = {
   ...openApiDoc,
-  servers: [{ url: env.api.publicUrl }],
+  servers: [{ url: `${env.api.publicUrl}${API_BASE}` }],
 };
 
 app.get('/api/openapi.json', (_req, res) => {
@@ -65,7 +66,7 @@ app.get('/api/openapi.json', (_req, res) => {
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiDocWithServer));
 console.log('[APP] Swagger docs available at /api/docs');
 
-app.get('/health', (_req, res) => {
+app.get(`${API_BASE}/health`, (_req, res) => {
   res.json({
     success: true,
     data: { status: 'ok', timestamp: new Date().toISOString() },
@@ -93,22 +94,21 @@ if (hasSecretKey && hasPublishableKey) {
 }
 
 app.use(resolveCurrentAccount);
-app.use('/auth/account', accountUsersRouter);
-app.use('/account-users', accountUserReportsRouter);
-app.use('/admin', adminRouter);
+app.use(`${API_BASE}/auth/account`, accountUsersRouter);
+app.use(`${API_BASE}/user-reports`, accountUserReportsRouter);
+app.use(`${API_BASE}/admin`, adminRouter);
 
 // Database-dependent routes
-app.use('/api', tripadvisorRouter);
-app.use('/restaurants', restaurantRoutes);
-app.use('/events', eventsRouter);
-app.use('/categories', categoriesRouter);
-app.use('/tags', tagsRouter);
-app.use('/search', searchRouter);
-app.use('/users', accountUserReportsRouter);
-app.use('/users', usersRouter);
-app.use('/cities', citiesRouter);
-app.use('/email', emailRouter);
-app.use('/gemini', geminiRouter);
+app.use(`${API_BASE}/tripadvisor`, tripadvisorRouter);
+app.use(`${API_BASE}/restaurants`, restaurantRoutes);
+app.use(`${API_BASE}/events`, eventsRouter);
+app.use(`${API_BASE}/categories`, categoriesRouter);
+app.use(`${API_BASE}/tags`, tagsRouter);
+app.use(`${API_BASE}/search`, searchRouter);
+app.use(`${API_BASE}/users`, usersRouter);
+app.use(`${API_BASE}/cities`, citiesRouter);
+app.use(`${API_BASE}/email`, emailRouter);
+app.use(`${API_BASE}/gemini`, geminiRouter);
 
 // 404 handler
 app.use((_req, _res, next) => {

@@ -10,7 +10,7 @@ export async function resolveReportableAccountUserId(
   params.set('legacyUserId', String(legacyUserId));
   if (name) params.set('name', name);
 
-  const url = `${API_URL}/account-users/resolve-target?${params.toString()}`;
+  const url = `${API_URL}/user-reports/resolve-target?${params.toString()}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -33,7 +33,7 @@ export async function reportUser(
   userId: number,
   token?: string | null,
 ): Promise<{ success: boolean; message: string }> {
-  const url = `${API_URL}/users/${userId}/report`;
+  const url = `${API_URL}/user-reports/${userId}/report`;
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
