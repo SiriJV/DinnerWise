@@ -38,24 +38,14 @@ interface TripAdvisorSearchResponse {
   };
 }
 
-async function createTripadvisorTable() {
-  console.log('Recreating tripadvisor_restaurants table...');
-  await db.query('DROP TABLE IF EXISTS tripadvisor_restaurants');
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS tripadvisor_restaurants (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      location_id VARCHAR(50) NOT NULL UNIQUE,
-      name VARCHAR(255) NOT NULL,
-      city VARCHAR(100),
-      address_string VARCHAR(255),
-      postalcode VARCHAR(20),
-      latitude DECIMAL(9,6),
-      longitude DECIMAL(9,6),
-      phone_number VARCHAR(50),
-      website_url VARCHAR(255),
-      photos TEXT
-    );
-  `);
+async function resetTripadvisorTable() {
+  console.log('Clearing tripadvisor_restaurants table...');
+  const connection = await db.getConnection();
+  try {
+    await connection.query('DELETE FROM tripadvisor_restaurants');
+  } finally {
+    connection.release();
+  }
 }
 
 export async function seedTripadvisorBasic() {
@@ -75,7 +65,7 @@ export async function seedTripadvisorBasic() {
     throw new Error('Cannot fetch cities from new_cities table. Make sure seedNewCities() was run first.');
   }
 
-  await createTripadvisorTable();
+  await resetTripadvisorTable();
 
   for (const city of dbCities) {
     console.log(`\n🌆 Fetching restaurants for city: ${city.name}`);

@@ -24,7 +24,7 @@ import EventParticipantsAndHost from './EventParticipantsAndHost';
 import EventActions from './EventActions';
 import ReportModal from '../../components/Modals/ReportModal/ReportModal';
 import type { EventType } from '../../types/EventType';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiErrorMessage, unwrapApiResponse } from '../../api/config';
  
 
 export default function EventDetails(): React.ReactNode {
@@ -84,8 +84,11 @@ export default function EventDetails(): React.ReactNode {
         }
 
         const res = await fetch(getApiEndpoint(`/events/${eventId}`));
-        if (!res.ok) throw new Error('Kunde inte hämta event');
-        const eventData = await res.json();
+        const eventPayload = await res.json();
+        if (!res.ok) {
+          throw new Error(unwrapApiErrorMessage(eventPayload) || 'Kunde inte hämta event');
+        }
+        const eventData = unwrapApiResponse<EventType>(eventPayload);
 
         setEvent(eventData);
 
@@ -97,9 +100,10 @@ export default function EventDetails(): React.ReactNode {
             const restaurantRes = await fetch(
               getApiEndpoint(`/restaurants/${eventData.restaurant_id}`),
             );
+            const restaurantPayload = await restaurantRes.json();
             if (restaurantRes.ok) {
-              const restaurantData = await restaurantRes.json();
-              if (restaurantData.photos) {
+              const restaurantData = unwrapApiResponse<any>(restaurantPayload);
+              if (restaurantData?.photos) {
                 try {
                   const photosArr = JSON.parse(restaurantData.photos);
                   if (Array.isArray(photosArr) && photosArr.length > 0) {
@@ -112,16 +116,20 @@ export default function EventDetails(): React.ReactNode {
         }
 
         const tagsRes = await fetch(getApiEndpoint(`/events/${eventId}/tags`));
+        const tagsPayload = await tagsRes.json();
         if (tagsRes.ok) {
-          const tagsData = await tagsRes.json();
+          const tagsData = unwrapApiResponse<{ id: number; name: string }[]>(tagsPayload);
           setTags(tagsData);
         }
 
         // Fetch category by category_id
         if (eventData.category_id) {
           const categoriesRes = await fetch(getApiEndpoint('/categories'));
+          const categoriesPayload = await categoriesRes.json();
           if (categoriesRes.ok) {
-            const categoriesData = await categoriesRes.json();
+            const categoriesData = unwrapApiResponse<{ id: number; name: string }[]>(
+              categoriesPayload,
+            );
             const foundCategory = categoriesData.find(
               (cat: { id: number; name: string }) =>
                 cat.id === eventData.category_id,

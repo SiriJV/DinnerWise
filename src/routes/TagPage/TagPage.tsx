@@ -8,7 +8,7 @@ import type { SortValue } from '../../components/Sort/Sort';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiErrorMessage, unwrapApiResponse } from '../../api/config';
 
 export default function TagPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -28,16 +28,12 @@ export default function TagPage() {
     async function loadTag() {
       try {
         const res = await fetch(getApiEndpoint('/tags'));
-        if (!res.ok) throw new Error('Failed to fetch tags');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('TagPage: tags response is not an array', data);
-          setError('Ogiltigt svar från servern');
-          return;
+        const payload = await res.json();
+        if (!res.ok) {
+          throw new Error(unwrapApiErrorMessage(payload) || 'Failed to fetch tags');
         }
-        
+
+        const data = unwrapApiResponse<{ id: number; name: string }[]>(payload);
         const found = data.find((t) => slugify(t.name) === slug);
         setTag(found || null);
       } catch (err) {
@@ -72,8 +68,11 @@ export default function TagPage() {
         if (sortBy) url.searchParams.append('order', sortBy);
 
         const res = await fetch(url.toString());
-        if (!res.ok) throw new Error('Kunde inte hämta events');
-        const data: EventType[] = await res.json();
+        const payload = await res.json();
+        if (!res.ok) {
+          throw new Error(unwrapApiErrorMessage(payload) || 'Kunde inte hämta events');
+        }
+        const data = unwrapApiResponse<EventType[]>(payload);
         setEvents(data);
       } catch (err: any) {
         console.error(err);

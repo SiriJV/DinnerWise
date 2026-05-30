@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "seed": "node dist/scripts/seedAll.js",
-    "migrate": "node --loader ts-node/esm src/scripts/runMigrations.ts",
+    "migrate": "node --loader ts-node/esm src/migrations/runMigrations.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

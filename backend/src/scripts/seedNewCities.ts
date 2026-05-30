@@ -2,16 +2,6 @@ import { db } from '../db.js';
 
 export async function seedNewCities() {
   try {
-    console.log('Creating new_cities table if it does not exist...');
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS new_cities (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL UNIQUE,
-        latitude DECIMAL(9,6) NOT NULL,
-        longitude DECIMAL(9,6) NOT NULL
-      );
-    `);
-
     const targetCities = [
       { name: 'Stockholm', latitude: 59.3293, longitude: 18.0686 },
       { name: 'Göteborg', latitude: 57.7089, longitude: 11.9746 },

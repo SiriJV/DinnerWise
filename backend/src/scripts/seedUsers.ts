@@ -2,18 +2,6 @@ import { db } from '../db.js';
 
 export async function seedUsers() {
   await db.query(`
-    CREATE TABLE users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      alias VARCHAR(50) NOT NULL UNIQUE,
-      bio TEXT,
-      profile_picture_url VARCHAR(255),
-            banner_picture_url VARCHAR(255)
-
-    );
-  `);
-
-  await db.query(`
     INSERT INTO users (name, alias, bio, profile_picture_url, banner_picture_url) VALUES
       ('Anna Svensson', 'anna_s', 'Älskar språk och god mat', 'https://images.unsplash.com/photo-1630898673656-778afcbc66ea?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1603437873662-dc1f44901825?w=1920&h=400&fit=crop'),
       ('Erik Karlsson', 'erik_k', 'Vin, ost och trevliga samtal', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop', 'https://images.unsplash.com/photo-1533537124921-db3248c9fa93?w=1920&h=400&fit=crop'),

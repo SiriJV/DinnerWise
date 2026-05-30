@@ -2,16 +2,6 @@ import { db } from '../db.js';
 
 export async function seedTags() {
   await db.query(`
-    CREATE TABLE tags (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      category_id INT NOT NULL,
-      UNIQUE (name, category_id),
-      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
-    );
-  `);
-
-  await db.query(`
     INSERT INTO tags (name, category_id) VALUES
       ('Kreativt skrivande', 1),
       ('Poesi', 1),

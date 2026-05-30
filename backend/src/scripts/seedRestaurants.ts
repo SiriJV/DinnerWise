@@ -1,33 +1,6 @@
 import { db } from '../db.js';
 
 export async function seedRestaurants() {
-  
-  await db.query(`
-    CREATE TABLE restaurants (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      address VARCHAR(255),
-      city VARCHAR(100),
-      latitude DECIMAL(9,6),
-      longitude DECIMAL(9,6),
-      phone_number VARCHAR(20),
-      website_url VARCHAR(255)
-    );
-  `);
-
-  await db.query(`
-    CREATE TABLE restaurant_opening_hours (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      restaurant_id INT NOT NULL,
-      day_of_week TINYINT NOT NULL,
-      open_time TIME,
-      close_time TIME,
-      is_closed BOOLEAN DEFAULT false,
-      FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
-        ON DELETE CASCADE
-    );
-  `);
-
   await db.query(`
     INSERT INTO restaurants (name, address, city, latitude, longitude, phone_number, website_url) VALUES
     ('Ved House', 'Vintergatan 2', 'Alingsås', 59.3175, 18.0560, NULL, 'https://vedhouse.se/'),

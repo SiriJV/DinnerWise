@@ -7,28 +7,28 @@ import { seedUsers } from './seedUsers.js';
 import { seedNewCities } from './seedNewCities.js';
 import { db } from '../db.js';
 
-async function dropTables() {
-  await db.query(`DROP TABLE IF EXISTS users;`);
-  await db.query('DROP TABLE IF EXISTS event_reports');
-  await db.query('DROP TABLE IF EXISTS user_reports');
-  await db.query('DROP TABLE IF EXISTS user_followed_tags');
-  await db.query('DROP TABLE IF EXISTS user_events_saved');
-  await db.query('DROP TABLE IF EXISTS user_events_participating');
-  await db.query('DROP TABLE IF EXISTS event_tags');
-  await db.query('DROP TABLE IF EXISTS events');
-  await db.query('DROP TABLE IF EXISTS tags');
-  await db.query('DROP TABLE IF EXISTS new_cities');
-  await db.query('DROP TABLE IF EXISTS tripadvisor_restaurants');
-  // Old tables (no longer used)
-  await db.query('DROP TABLE IF EXISTS restaurant_opening_hours');
-  await db.query('DROP TABLE IF EXISTS restaurants');
-  await db.query('DROP TABLE IF EXISTS cities'); // Completely removed - use new_cities
-  await db.query('DROP TABLE IF EXISTS categories'); 
+async function clearTables() {
+  const connection = await db.getConnection();
+  try {
+    await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+    await connection.query('TRUNCATE TABLE event_tags');
+    await connection.query('TRUNCATE TABLE events');
+    await connection.query('TRUNCATE TABLE tags');
+    await connection.query('TRUNCATE TABLE categories');
+    await connection.query('TRUNCATE TABLE tripadvisor_restaurants');
+    await connection.query('TRUNCATE TABLE new_cities');
+    await connection.query('TRUNCATE TABLE user_reports');
+    await connection.query('TRUNCATE TABLE event_reports');
+    await connection.query('TRUNCATE TABLE users');
+    await connection.query('SET FOREIGN_KEY_CHECKS = 1');
+  } finally {
+    connection.release();
+  }
 }
 
 async function seedAll() {
   try {
-    await dropTables();
+    await clearTables();
 
     console.log('Seeding users...');
     await seedUsers();

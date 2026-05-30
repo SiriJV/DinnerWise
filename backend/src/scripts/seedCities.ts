@@ -1,16 +1,7 @@
 import { db } from '../db.js';
 
 export async function seedCities() {
-  
   await db.query(`
-    CREATE TABLE cities (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL UNIQUE,
-        region VARCHAR(100) NOT NULL
-    );
-    `);
-    
-    await db.query(`
     INSERT INTO cities (name, region) VALUES
         ('Alingsås', 'Västra Götalands län'),
         ('Arboga', 'Västmanlands län'),
