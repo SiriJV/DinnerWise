@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, Button, Group } from '@mantine/core';
 import { Check, ChevronDown } from 'lucide-react';
+import { unwrapApiResponse } from '../../../api/config';
 
 interface FilterItem {
   id: number;
@@ -28,13 +29,12 @@ export default function FilterDropdown({
       try {
         const res = await fetch(fetchUrl);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (Array.isArray(data)) {
-          setOptions(data);
+        const payload = unwrapApiResponse<FilterItem[]>(await res.json());
+
+        if (Array.isArray(payload)) {
+          setOptions(payload);
         } else {
-          console.warn('FilterDropdown: API response is not an array', data);
+          console.warn('FilterDropdown: API response is not an array', payload);
           setOptions([]);
         }
       } catch (error) {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Menu, Button, TextInput, Group, ScrollArea } from '@mantine/core';
 import { Check, Search, ChevronDown } from 'lucide-react';
+import { unwrapApiResponse } from '../../../api/config';
 
 type FilterItem = {
   id: number;
@@ -54,15 +55,19 @@ export default function SearchableFilterDropdown({
         return res.json();
       })
       .then((data) => {
-        // Ensure response is an array
-        if (Array.isArray(data)) {
-          setItems(data);
+        const payload = unwrapApiResponse<FilterItem[]>(data);
+
+        if (Array.isArray(payload)) {
+          setItems(payload);
         } else {
-          console.warn('SearchableFilterDropdown: API response is not an array', data);
+          console.warn('SearchableFilterDropdown: API response is not an array', payload);
           setItems([]);
         }
       })
       .catch((err) => {
+        if (err?.name === 'AbortError') {
+          return;
+        }
         console.error('SearchableFilterDropdown: fetch error', err);
         setItems([]);
       });

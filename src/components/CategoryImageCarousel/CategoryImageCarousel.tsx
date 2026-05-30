@@ -7,7 +7,7 @@ import './CategoryImageCarousel.scss';
 import { useEffect, useState } from 'react';
 import { slugify } from '../../utils/slugify';
 import CategoryImage from './CategoryImage';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiResponse } from '../../api/config';
 
 type Category = {
   id: number;
@@ -26,13 +26,12 @@ export default function CategoryImageCarousel() {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }
-        const data = await res.json();
-        
-        // Validate that response is an array
-        if (Array.isArray(data)) {
-          setCategories(data);
+        const payload = unwrapApiResponse<Category[]>(await res.json());
+
+        if (Array.isArray(payload)) {
+          setCategories(payload);
         } else {
-          console.warn('CategoryImageCarousel: API response is not an array', data);
+          console.warn('CategoryImageCarousel: API response is not an array', payload);
           setCategories([]);
         }
       } catch (err) {

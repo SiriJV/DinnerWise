@@ -4,12 +4,17 @@ import type { CategoryRepository } from './CategoryRepository.js';
 
 export class MysqlCategoryRepository implements CategoryRepository {
   async list(): Promise<Category[]> {
-    const [rows] = await db.query('SELECT id, name FROM categories ORDER BY id');
+    const [rows] = await db.query(
+      'SELECT id, name, description, cover_picture_url FROM categories ORDER BY id'
+    );
     return rows as Category[];
   }
 
   async getById(id: number): Promise<Category | null> {
-    const [rows] = await db.query('SELECT id, name FROM categories WHERE id = ?', [id]);
+    const [rows] = await db.query(
+      'SELECT id, name, description, cover_picture_url FROM categories WHERE id = ?',
+      [id]
+    );
     return (rows as Category[])[0] || null;
   }
 }

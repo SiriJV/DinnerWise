@@ -8,7 +8,7 @@ import type { SortValue } from '../../components/Sort/Sort';
 import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiResponse } from '../../api/config';
 
 export default function CityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -33,16 +33,15 @@ export default function CityPage() {
       try {
         const res = await fetch(getApiEndpoint('/cities'));
         if (!res.ok) throw new Error('Failed to fetch cities');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('CityPage: cities response is not an array', data);
+        const payload = unwrapApiResponse<any[]>(await res.json());
+
+        if (!Array.isArray(payload)) {
+          console.warn('CityPage: cities response is not an array', payload);
           setError('Ogiltigt svar från servern');
           return;
         }
-        
-        const found = data.find((c) => slugify(c.name) === slug);
+
+        const found = payload.find((c) => slugify(c.name) === slug);
         setCity(found || null);
       } catch (err) {
         console.error(err);
@@ -65,16 +64,17 @@ export default function CityPage() {
         }
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch tags');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('CityPage: tags response is not an array', data);
+        const payload = unwrapApiResponse<{ id: number; name: string }[]>(
+          await res.json()
+        );
+
+        if (!Array.isArray(payload)) {
+          console.warn('CityPage: tags response is not an array', payload);
           setAvailableTags([]);
           return;
         }
-        
-        setAvailableTags(data);
+
+        setAvailableTags(payload);
       } catch (err) {
         console.error('Error loading tags:', err);
         setAvailableTags([]);
@@ -110,8 +110,8 @@ export default function CityPage() {
 
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
-        const data: EventType[] = await res.json();
-        setEvents(data);
+        const payload = unwrapApiResponse<EventType[]>(await res.json());
+        setEvents(Array.isArray(payload) ? payload : []);
       } catch (err: any) {
         console.error(err);
         setError(err.message || 'Kunde inte hämta events');

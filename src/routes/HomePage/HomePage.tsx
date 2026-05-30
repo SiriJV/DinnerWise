@@ -15,7 +15,7 @@ import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEve
 
 import NewsLetterCTA from '../../components/NewsLetterCTA/NewsLetterCTA';
 import CategoryImageCarousel from '../../components/CategoryImageCarousel/CategoryImageCarousel';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiResponse } from '../../api/config';
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -43,16 +43,17 @@ export default function HomePage() {
         }
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch tags');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('HomePage: tags response is not an array', data);
+        const payload = unwrapApiResponse<{ id: number; name: string }[]>(
+          await res.json()
+        );
+
+        if (!Array.isArray(payload)) {
+          console.warn('HomePage: tags response is not an array', payload);
           setAvailableTags([]);
           return;
         }
-        
-        setAvailableTags(data);
+
+        setAvailableTags(payload);
       } catch (err) {
         console.error('Error loading tags:', err);
         setAvailableTags([]);
@@ -88,8 +89,8 @@ export default function HomePage() {
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
 
-        const data: EventType[] = await res.json();
-        setEvents(data);
+        const payload = unwrapApiResponse<EventType[]>(await res.json());
+        setEvents(Array.isArray(payload) ? payload : []);
       } catch (err: any) {
         setError(err.message);
       } finally {

@@ -24,6 +24,7 @@ export default function PaginatedEventGrid({
   pageSize = 12,
   loading = false,
 }: PaginatedEventGridProps) {
+  const safeEvents = Array.isArray(events) ? events : [];
   const [params, setParams] = useSearchParams();
   const gridRef = useRef<HTMLDivElement>(null);
   const isMobileScreen = useIsMobile();
@@ -34,7 +35,7 @@ export default function PaginatedEventGrid({
   const pageFromUrl = Number(params.get('page')) || 1;
   const [activePage, setActivePage] = useState(pageFromUrl);
 
-  const totalPages = Math.max(1, Math.ceil(events.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(safeEvents.length / pageSize));
 
   // Sync URL → state (utan loopar)
   useEffect(() => {
@@ -48,10 +49,10 @@ export default function PaginatedEventGrid({
     if (activePage > totalPages) {
       handlePageChange(1);
     }
-  }, [events]);
+  }, [safeEvents, totalPages]);
 
   const start = (activePage - 1) * pageSize;
-  const pagedEvents = events.slice(start, start + pageSize);
+  const pagedEvents = safeEvents.slice(start, start + pageSize);
 
   const handlePageChange = (page: number) => {
     setActivePage(page);

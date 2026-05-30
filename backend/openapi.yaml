@@ -1328,6 +1328,8 @@ components:
       properties:
         id: { type: integer }
         name: { type: string }
+        description: { type: string }
+        cover_picture_url: { type: string }
     Tag:
       type: object
       properties:

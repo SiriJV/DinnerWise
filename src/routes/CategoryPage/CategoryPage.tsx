@@ -9,7 +9,7 @@ import type { EventType } from '../../types/EventType';
 import { slugify } from '../../utils/slugify';
 import PaginatedEventGrid from '../../components/PaginatedEventGrid/PaginatedEventGrid';
 import PillComponent from '../../components/PillComponent/PillComponent';
-import { getApiEndpoint } from '../../api/config';
+import { getApiEndpoint, unwrapApiResponse } from '../../api/config';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -36,16 +36,15 @@ export default function CategoryPage() {
       try {
         const res = await fetch(getApiEndpoint('/categories'));
         if (!res.ok) throw new Error('Failed to fetch categories');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('CategoryPage: categories response is not an array', data);
+        const payload = unwrapApiResponse<any[]>(await res.json());
+
+        if (!Array.isArray(payload)) {
+          console.warn('CategoryPage: categories response is not an array', payload);
           setError('Ogiltigt svar från servern');
           return;
         }
-        
-        const found = data.find((c) => slugify(c.name) === slug);
+
+        const found = payload.find((c) => slugify(c.name) === slug);
         setCategory(found || null);
       } catch (err) {
         console.error(err);
@@ -67,16 +66,17 @@ export default function CategoryPage() {
           getApiEndpoint(`/tags/category/${currentCategory.id}`),
         );
         if (!res.ok) throw new Error('Kunde inte hämta taggar');
-        const data = await res.json();
-        
-        // Validate response is an array
-        if (!Array.isArray(data)) {
-          console.warn('CategoryPage: tags response is not an array', data);
+        const payload = unwrapApiResponse<{ id: number; name: string }[]>(
+          await res.json()
+        );
+
+        if (!Array.isArray(payload)) {
+          console.warn('CategoryPage: tags response is not an array', payload);
           setTags([]);
           return;
         }
-        
-        setTags(data);
+
+        setTags(payload);
       } catch (err) {
         console.error(err);
         setTags([]);
@@ -113,8 +113,8 @@ export default function CategoryPage() {
 
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error('Kunde inte hämta events');
-        const data: EventType[] = await res.json();
-        setEvents(data);
+        const payload = unwrapApiResponse<EventType[]>(await res.json());
+        setEvents(Array.isArray(payload) ? payload : []);
       } catch (err: any) {
         console.error(err);
         setError(err.message || 'Kunde inte hämta events');
